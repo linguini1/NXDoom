@@ -17,8 +17,6 @@
 //     waking up to invoke callbacks set using OPL_Timer_SetCallback.
 //
 
-#include "SDL.h"
-
 #include "opl_timer.h"
 #include "opl_queue.h"
 
@@ -29,7 +27,9 @@ typedef enum
     THREAD_STATE_STOPPING,
 } thread_state_t;
 
+#if 0
 static SDL_Thread *timer_thread = NULL;
+#endif
 static thread_state_t timer_thread_state;
 static uint64_t current_time;
 
@@ -47,12 +47,14 @@ static uint64_t pause_offset = 0;
 // or current_time is being accessed.
 
 static opl_callback_queue_t *callback_queue;
+#if 0
 static SDL_mutex *callback_queue_mutex;
 
 // The timer mutex is held while timer callback functions are being
 // invoked, so that the calling code can prevent clashes.
 
 static SDL_mutex *timer_mutex;
+#endif
 
 // Returns true if there is a callback at the head of the queue ready
 // to be invoked.  Otherwise, next_time is set to the time when the
@@ -89,6 +91,7 @@ static int CallbackWaiting(uint64_t *next_time)
     return *next_time <= current_time;
 }
 
+#if 0
 static uint64_t GetNextTime(void)
 {
     opl_callback_t callback;
@@ -128,7 +131,9 @@ static uint64_t GetNextTime(void)
 
     return next_time;
 }
+#endif
 
+#if 0
 static int ThreadFunction(void *unused)
 {
     uint64_t next_time;
@@ -160,23 +165,29 @@ static int ThreadFunction(void *unused)
 
     return 0;
 }
+#endif
 
+#if 0
 static void InitResources(void)
 {
     callback_queue = OPL_Queue_Create();
     timer_mutex = SDL_CreateMutex();
     callback_queue_mutex = SDL_CreateMutex();
 }
+#endif
 
+#if 0
 static void FreeResources(void)
 {
     OPL_Queue_Destroy(callback_queue);
     SDL_DestroyMutex(callback_queue_mutex);
     SDL_DestroyMutex(timer_mutex);
 }
+#endif
 
 int OPL_Timer_StartThread(void)
 {
+#if 0
     InitResources();
 
     timer_thread_state = THREAD_STATE_RUNNING;
@@ -195,10 +206,13 @@ int OPL_Timer_StartThread(void)
     }
 
     return 1;
+#endif
+    return 0;
 }
 
 void OPL_Timer_StopThread(void)
 {
+#if 0
     timer_thread_state = THREAD_STATE_STOPPING;
 
     while (timer_thread_state != THREAD_STATE_STOPPED)
@@ -207,44 +221,57 @@ void OPL_Timer_StopThread(void)
     }
 
     FreeResources();
+#endif
 }
 
 void OPL_Timer_SetCallback(uint64_t us, opl_callback_t callback, void *data)
 {
+#if 0
     SDL_LockMutex(callback_queue_mutex);
     OPL_Queue_Push(callback_queue, callback, data,
                    current_time + us - pause_offset);
     SDL_UnlockMutex(callback_queue_mutex);
+#endif
 }
 
 void OPL_Timer_ClearCallbacks(void)
 {
+#if 0
     SDL_LockMutex(callback_queue_mutex);
     OPL_Queue_Clear(callback_queue);
     SDL_UnlockMutex(callback_queue_mutex);
+#endif
 }
 
 void OPL_Timer_AdjustCallbacks(float factor)
 {
+#if 0
     SDL_LockMutex(callback_queue_mutex);
     OPL_Queue_AdjustCallbacks(callback_queue, current_time, factor);
     SDL_UnlockMutex(callback_queue_mutex);
+#endif
 }
 
 void OPL_Timer_Lock(void)
 {
+#if 0
     SDL_LockMutex(timer_mutex);
+#endif
 }
 
 void OPL_Timer_Unlock(void)
 {
+#if 0
     SDL_UnlockMutex(timer_mutex);
+#endif
 }
 
 void OPL_Timer_SetPaused(int paused)
 {
+#if 0
     SDL_LockMutex(callback_queue_mutex);
     opl_timer_paused = paused;
     SDL_UnlockMutex(callback_queue_mutex);
+#endif
 }
 

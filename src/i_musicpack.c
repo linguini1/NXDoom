@@ -22,8 +22,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "SDL.h"
-
 #include "i_glob.h"
 
 #include "config.h"

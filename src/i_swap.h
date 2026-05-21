@@ -20,22 +20,20 @@
 #ifndef __I_SWAP__
 #define __I_SWAP__
 
-#include "SDL_endian.h"
+#include <endian.h>
 
 // Endianess handling.
 // WAD files are stored little endian.
 
-// Just use SDL's endianness swapping functions.
-
 // These are deliberately cast to signed values; this is the behaviour
 // of the macros in the original source and some code relies on it.
 
-#define SHORT(x)  ((signed short) SDL_SwapLE16(x))
-#define LONG(x)   ((signed int) SDL_SwapLE32(x))
+#define SHORT(x)  ((signed short) le16toh(x))
+#define LONG(x)   ((signed int) le32toh(x))
 
 // Defines for checking the endianness of the system.
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#if BYTE_ORDER == BIG_ENDIAN
 #define SYS_BIG_ENDIAN
 #endif
 

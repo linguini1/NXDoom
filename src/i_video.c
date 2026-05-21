@@ -16,19 +16,16 @@
 //	DOOM graphics stuff for SDL.
 //
 
+#include <nuttx/config.h>
+
+#include <nuttx/video/fb.h>
+#include <nuttx/video/rgbcolors.h>
 
 #include <stdlib.h>
 #include <string.h>
-
-#include "SDL.h"
-#include "SDL_opengl.h"
-
-#ifdef _WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
-#endif
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
 
 #include "config.h"
 #include "d_loop.h"
@@ -48,11 +45,48 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
+
+struct fb_state_s
+{
+  int fd;
+  struct fb_videoinfo_s vinfo;
+  struct fb_planeinfo_s pinfo;
+#ifdef CONFIG_FB_OVERLAY
+  struct fb_overlayinfo_s oinfo;
+#endif
+  FAR void *fbmem;
+  bool inited;
+};
+
+struct nx_colour_s {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t a;
+};
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+#if 0
 // These are (1) the window (or the full screen) that our game is rendered to
 // and (2) the renderer that scales the texture (see below) into this window.
 
 static SDL_Window *screen;
 static SDL_Renderer *renderer;
+#endif
+
+/* NuttX frame buffer data */
+
+struct fb_state_s fbstate = {0};
+
+/* 8-bit depth screen buffer */
+
+pixel_t *screenbuffer = NULL;
 
 // Window title
 
@@ -65,6 +99,7 @@ static const char *window_title = "";
 // is upscaled by an integer factor UPSCALE using "nearest" scaling and which
 // in turn is finally rendered to screen using "linear" scaling.
 
+#if 0
 static SDL_Surface *screenbuffer = NULL;
 static SDL_Surface *argbbuffer = NULL;
 static SDL_Texture *texture = NULL;
@@ -79,12 +114,10 @@ static SDL_Rect blit_rect = {
 
 // palette
 
-static SDL_Color palette[256];
+#endif
+
+static struct nx_colour_s palette[256];
 static boolean palette_to_set;
-
-// display has been set up?
-
-static boolean initialized = false;
 
 // disable mouse?
 
@@ -109,8 +142,8 @@ int video_display = 0;
 
 // Screen width and height, from configuration file.
 
-int window_width = 800;
-int window_height = 600;
+int window_width = 320;
+int window_height = 200;
 
 // Fullscreen mode, 0x0 for SDL_WINDOW_FULLSCREEN_DESKTOP.
 
@@ -206,7 +239,8 @@ static const unsigned int *icon_data;
 static int icon_w;
 static int icon_h;
 
-static boolean MouseShouldBeGrabbed()
+#if 0
+static boolean MouseShouldBeGrabbed(void)
 {
     // never grab the mouse when in screensaver mode
    
@@ -246,6 +280,7 @@ static boolean MouseShouldBeGrabbed()
         return true;
     }
 }
+#endif
 
 void I_SetGrabMouseCallback(grabmouse_callback_t func)
 {
@@ -259,6 +294,7 @@ void I_DisplayFPSDots(boolean dots_on)
     display_fps_dots = dots_on;
 }
 
+#if 0
 static void SetShowCursor(boolean show)
 {
     if (!screensaver_mode)
@@ -269,26 +305,19 @@ static void SetShowCursor(boolean show)
         SDL_GetRelativeMouseState(NULL, NULL);
     }
 }
+#endif
 
 void I_ShutdownGraphics(void)
 {
-    if (initialized)
+  if (!fbstate.inited)
     {
-        SetShowCursor(true);
-
-        SDL_FreeSurface(argbbuffer);
-        SDL_FreeSurface(screenbuffer);
-        SDL_DestroyTexture(texture_upscaled);
-        SDL_DestroyTexture(texture);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(screen);
-        SDL_QuitSubSystem(SDL_INIT_VIDEO);
-
-        initialized = false;
+      return;
     }
+
+  close(fbstate.fd);
+  munmap(fbstate.fbmem, fbstate.pinfo.fblen);
+  fbstate.inited = false;
 }
-
-
 
 //
 // I_StartFrame
@@ -318,6 +347,7 @@ static void AdjustWindowSize(void)
     }
 }
 
+#if 0
 static void HandleWindowEvent(SDL_WindowEvent *event)
 {
     int i;
@@ -381,9 +411,12 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
             break;
     }
 }
+#endif
 
-static boolean ToggleFullScreenKeyShortcut(SDL_Keysym *sym)
+#if 0
+static boolean ToggleFullScreenKeyShortcut(char key)
 {
+    /* Argument was SDL_Keysym *sym */
     Uint16 flags = (KMOD_LALT | KMOD_RALT);
 #if defined(__MACOSX__)
     flags |= (KMOD_LGUI | KMOD_RGUI);
@@ -391,7 +424,9 @@ static boolean ToggleFullScreenKeyShortcut(SDL_Keysym *sym)
     return (sym->scancode == SDL_SCANCODE_RETURN || 
             sym->scancode == SDL_SCANCODE_KP_ENTER) && (sym->mod & flags) != 0;
 }
+#endif
 
+#if 0
 static void I_ToggleFullScreen(void)
 {
     unsigned int flags = 0;
@@ -419,29 +454,33 @@ static void I_ToggleFullScreen(void)
         SDL_SetWindowSize(screen, window_width, window_height);
     }
 }
+#endif
 
 void I_GetEvent(void)
 {
-    SDL_Event sdlevent;
+    int err;
+#if CONFIG_GAMES_NXDOOM_KEYBOARD
+    struct keyboard_event_s kbdevent;
 
-    SDL_PumpEvents();
-
-    while (SDL_PollEvent(&sdlevent))
+    while ((err = get_kbd_event(&kbdevent)) == 0)
     {
-        switch (sdlevent.type)
+        switch (kbdevent.type)
         {
-            case SDL_KEYDOWN:
+            case KEYBOARD_PRESS:
+#if 0
                 if (ToggleFullScreenKeyShortcut(&sdlevent.key.keysym))
                 {
                     I_ToggleFullScreen();
                     break;
                 }
+#endif
                 // deliberate fall-though
 
-            case SDL_KEYUP:
-		I_HandleKeyboardEvent(&sdlevent);
+            case KEYBOARD_RELEASE:
+                I_HandleKeyboardEvent(&kbdevent);
                 break;
 
+#if 0
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP:
             case SDL_MOUSEWHEEL:
@@ -470,11 +509,12 @@ void I_GetEvent(void)
                     HandleWindowEvent(&sdlevent.window);
                 }
                 break;
-
+#endif
             default:
                 break;
         }
     }
+#endif
 }
 
 //
@@ -482,7 +522,7 @@ void I_GetEvent(void)
 //
 void I_StartTic (void)
 {
-    if (!initialized)
+    if (!fbstate.inited)
     {
         return;
     }
@@ -511,6 +551,7 @@ void I_UpdateNoBlit (void)
 
 static void UpdateGrab(void)
 {
+#if 0
     static boolean currently_grabbed = false;
     boolean grab;
 
@@ -544,10 +585,12 @@ static void UpdateGrab(void)
     }
 
     currently_grabbed = grab;
+#endif
 }
 
 static void LimitTextureSize(int *w_upscale, int *h_upscale)
 {
+#if 0
     SDL_RendererInfo rinfo;
     int orig_w, orig_h;
 
@@ -612,6 +655,7 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
                max_scaling_buffer_pixels,
                rinfo.max_texture_width, rinfo.max_texture_height);
     }
+#endif
 }
 
 static void CreateUpscaledTexture(boolean force)
@@ -620,15 +664,21 @@ static void CreateUpscaledTexture(boolean force)
     int h_upscale, w_upscale;
     static int h_upscale_old, w_upscale_old;
 
+#if 0
     SDL_Texture *new_texture, *old_texture;
+#endif
 
     // Get the size of the renderer output. The units this gives us will be
     // real world pixels, which are not necessarily equivalent to the screen's
     // window size (because of highdpi).
+#if 0
     if (SDL_GetRendererOutputSize(renderer, &w, &h) != 0)
     {
         I_Error("Failed to get renderer output size: %s", SDL_GetError());
     }
+#endif
+    w = fbstate.vinfo.xres;
+    h = fbstate.vinfo.yres;
 
     // When the screen or window dimensions do not match the aspect ratio
     // of the texture, the rendered area is scaled down to fit. Calculate
@@ -680,7 +730,8 @@ static void CreateUpscaledTexture(boolean force)
     // Set the scaling quality for rendering the upscaled texture to "linear",
     // which looks much softer and smoother than "nearest" but does a better
     // job at downscaling from the upscaled texture to screen.
-
+    //
+#if 0
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
     new_texture = SDL_CreateTexture(renderer,
@@ -696,6 +747,7 @@ static void CreateUpscaledTexture(boolean force)
     {
         SDL_DestroyTexture(old_texture);
     }
+#endif
 }
 
 //
@@ -706,13 +758,15 @@ void I_FinishUpdate (void)
     static int lasttic;
     int tics;
     int i;
+    int p_idx;
 
-    if (!initialized)
+    if (!fbstate.inited)
         return;
 
     if (noblit)
         return;
 
+#if 0
     if (need_resize)
     {
         if (SDL_GetTicks() > last_resize_time + RESIZE_DELAY)
@@ -741,6 +795,7 @@ void I_FinishUpdate (void)
     }
 
     UpdateGrab();
+#endif
 
 #if 0 // SDL2-TODO
     // Don't update the screen if the window isn't visible.
@@ -771,15 +826,19 @@ void I_FinishUpdate (void)
 
     if (palette_to_set)
     {
+#if 0
         SDL_SetPaletteColors(screenbuffer->format->palette, palette, 0, 256);
+#endif
         palette_to_set = false;
 
         if (vga_porch_flash)
         {
             // "flash" the pillars/letterboxes with palette changes, emulating
             // VGA "porch" behaviour (GitHub issue #832)
+#if 0
             SDL_SetRenderDrawColor(renderer, palette[0].r, palette[0].g,
                 palette[0].b, SDL_ALPHA_OPAQUE);
+#endif
         }
     }
 
@@ -787,6 +846,20 @@ void I_FinishUpdate (void)
     // 32-bit RGBA buffer and update the intermediate texture with the
     // contents of the RGBA buffer.
 
+    /* TODO: It would be best to do this more efficiently/with less memory.
+     * It also would be good if we could handle the palette translation here
+     * such that DOOM can be played on frame buffers with differing bit depths
+     * and formats.
+     */
+
+    for (unsigned xy = 0; xy < SCREENWIDTH * SCREENHEIGHT; xy++) {
+        p_idx = screenbuffer[xy];
+        ((uint32_t *)(fbstate.fbmem))[xy] =
+            ARGBTO32(palette[p_idx].a, palette[p_idx].r, palette[p_idx].g,
+                     palette[p_idx].b);
+    }
+
+#if 0
     SDL_LockTexture(texture, &blit_rect, &argbbuffer->pixels,
                     &argbbuffer->pitch);
     SDL_LowerBlit(screenbuffer, &blit_rect, argbbuffer, &blit_rect);
@@ -813,11 +886,14 @@ void I_FinishUpdate (void)
         SDL_SetRenderTarget(renderer, NULL);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
     }
+#endif
 
 
     // Draw!
 
+#if 0
     SDL_RenderPresent(renderer);
+#endif
 
     // Restore background and undo the disk indicator, if it was drawn.
     V_RestoreDiskBackground();
@@ -903,7 +979,9 @@ void I_InitWindowTitle(void)
     char *buf;
 
     buf = M_StringJoin(window_title, " - ", PACKAGE_STRING, NULL);
+#if 0
     SDL_SetWindowTitle(screen, buf);
+#endif
     free(buf);
 }
 
@@ -918,6 +996,7 @@ void I_RegisterWindowIcon(const unsigned int *icon, int width, int height)
 
 void I_InitWindowIcon(void)
 {
+#if 0
     SDL_Surface *surface;
 
     surface = SDL_CreateRGBSurfaceFrom((void *) icon_data, icon_w, icon_h,
@@ -927,6 +1006,7 @@ void I_InitWindowIcon(void)
 
     SDL_SetWindowIcon(screen, surface);
     SDL_FreeSurface(surface);
+#endif
 }
 
 // Set video size to a particular scale factor (1x, 2x, 3x, etc.)
@@ -1122,6 +1202,7 @@ void I_CheckIsScreensaver(void)
     }
 }
 
+#if 0
 static void SetSDLVideoDriver(void)
 {
     // Allow a default value for the SDL video driver to be specified
@@ -1136,12 +1217,14 @@ static void SetSDLVideoDriver(void)
         free(env_string);
     }
 }
+#endif
 
 // Check the display bounds of the display referred to by 'video_display' and
 // set x and y to a location that places the window in the center of that
 // display.
 static void CenterWindow(int *x, int *y, int w, int h)
 {
+#if 0
     SDL_Rect bounds;
 
     if (SDL_GetDisplayBounds(video_display, &bounds) < 0)
@@ -1153,10 +1236,15 @@ static void CenterWindow(int *x, int *y, int w, int h)
 
     *x = bounds.x + SDL_max((bounds.w - w) / 2, 0);
     *y = bounds.y + SDL_max((bounds.h - h) / 2, 0);
+#endif
+#define MAX(a,b) (((a)>(b))?(a):(b))
+    *x = MAX((fbstate.vinfo.xres - w) / 2, 0);
+    *y = MAX((fbstate.vinfo.yres - h) / 2, 0);
 }
 
 void I_GetWindowPosition(int *x, int *y, int w, int h)
 {
+#if 0
     // Check that video_display corresponds to a display that really exists,
     // and if it doesn't, reset it.
     if (video_display < 0 || video_display >= SDL_GetNumVideoDisplays())
@@ -1170,6 +1258,7 @@ void I_GetWindowPosition(int *x, int *y, int w, int h)
 
     // in fullscreen mode, the window "position" still matters, because
     // we use it to control which display we run fullscreen on.
+#endif
 
     if (fullscreen)
     {
@@ -1179,7 +1268,7 @@ void I_GetWindowPosition(int *x, int *y, int w, int h)
 
     // in windowed mode, the desired window position can be specified
     // in the configuration file.
-
+#if 0
     if (window_position == NULL || !strcmp(window_position, ""))
     {
         *x = *y = SDL_WINDOWPOS_UNDEFINED;
@@ -1197,10 +1286,12 @@ void I_GetWindowPosition(int *x, int *y, int w, int h)
         fprintf(stderr, "I_GetWindowPosition: invalid window_position setting\n");
         *x = *y = SDL_WINDOWPOS_UNDEFINED;
     }
+#endif
 }
 
 static void SetVideoMode(void)
 {
+#if 0
     int w, h;
     int x, y;
     int window_flags = 0, renderer_flags = 0;
@@ -1411,12 +1502,72 @@ static void SetVideoMode(void)
     // Initially create the upscaled texture for rendering to screen
 
     CreateUpscaledTexture(true);
+#endif
 }
 
 void I_InitGraphics(void)
 {
+  int err;
+  byte *doompal;
+
+  /* Open frame buffer */
+
+  fbstate.fd = open(CONFIG_GAMES_NXDOOM_FBPATH, O_RDWR);
+  if (fbstate.fd < 0)
+    {
+      I_Error("Failed to open frame buffer: %d", errno);
+    }
+
+  /* Get frame buffer characteristics */
+
+  err = ioctl(fbstate.fd, FBIOGET_VIDEOINFO,
+              (unsigned long)(uintptr_t)&fbstate.vinfo);
+  if (err < 0)
+    {
+      close(fbstate.fd);
+      I_Error("Failed to get video info: %d", errno);
+    }
+
+  /* TODO: FB is RGBA but DOOM is ARGB. We need to be agnostic
+   * to framebuffer characteristics eventually to support more
+   * devices.
+   */
+
+  printf("Framebuffer xres=%u\n", fbstate.vinfo.xres);
+  printf("Framebuffer yres=%u\n", fbstate.vinfo.yres);
+  printf("Framebuffer fmt=%u\n", fbstate.vinfo.fmt);
+
+  /* Get frame buffer plane info */
+
+  if (ioctl(fbstate.fd, FBIOGET_PLANEINFO,
+            (unsigned long)((uintptr_t)&fbstate.pinfo)) < 0)
+    {
+      I_Error("ERROR: ioctl(FBIOGET_PLANEINFO) failed: %d\n", errno);
+    }
+
+  printf("Framebuffer bpp=%u\n", fbstate.pinfo.bpp);
+  printf("Framebuffer stride=%u\n", fbstate.pinfo.stride);
+  printf("Framebuffer virtual_xres=%u\n", fbstate.pinfo.xres_virtual);
+  printf("Framebuffer virtual_yres=%u\n", fbstate.pinfo.yres_virtual);
+
+  /* Initialize frame buffer memory for actual rendering */
+
+  fbstate.fbmem = mmap(NULL, fbstate.pinfo.fblen, PROT_READ | PROT_WRITE,
+                       MAP_SHARED | MAP_FILE, fbstate.fd, 0);
+  if (fbstate.fbmem == MAP_FAILED)
+    {
+      I_Error("ERROR: mmap() of frame buffer failed: %d\n", errno);
+    }
+
+  /* Create an 8-bit depth screen buffer for DOOM to render to */
+
+  screenbuffer = malloc(SCREENWIDTH * SCREENHEIGHT);
+  if (screenbuffer == NULL) {
+      I_Error("Couldn't allocate screen buffer: %d\n", errno);
+  }
+
+#if 0
     SDL_Event dummy;
-    byte *doompal;
     char *env;
 
     // Pass through the XSCREENSAVER_WINDOW environment variable to 
@@ -1442,40 +1593,42 @@ void I_InitGraphics(void)
     {
         I_Error("Failed to initialize video: %s", SDL_GetError());
     }
+#endif
 
     // When in screensaver mode, run full screen and auto detect
     // screen dimensions (don't change video mode)
-    if (screensaver_mode)
-    {
-        fullscreen = true;
-    }
-
-    if (aspect_ratio_correct == 1)
-    {
-        actualheight = SCREENHEIGHT_4_3;
-    }
-    else
-    {
-        actualheight = SCREENHEIGHT;
-    }
+    // if (screensaver_mode)
+    // {
+    //     fullscreen = true;
+    // }
+    //
+    // if (aspect_ratio_correct == 1)
+    // {
+    //     actualheight = SCREENHEIGHT_4_3;
+    // }
+    // else
+    // {
+    //     actualheight = SCREENHEIGHT;
+    // }
 
     // Create the game window; this may switch graphic modes depending
     // on configuration.
-    AdjustWindowSize();
+    // AdjustWindowSize();
     SetVideoMode();
 
     // Start with a clear black screen
     // (screen will be flipped after we set the palette)
 
-    SDL_FillRect(screenbuffer, NULL, 0);
+    memset(screenbuffer, 0, SCREENHEIGHT * SCREENWIDTH);
 
     // Set the palette
 
     doompal = W_CacheLumpName(DEH_String("PLAYPAL"), PU_CACHE);
     I_SetPalette(doompal);
+#if 0
     SDL_SetPaletteColors(screenbuffer->format->palette, palette, 0, 256);
+#endif
 
-    // SDL2-TODO UpdateFocus();
     UpdateGrab();
 
     // On some systems, it takes a second or so for the screen to settle
@@ -1485,7 +1638,7 @@ void I_InitGraphics(void)
 
     if (fullscreen && !screensaver_mode)
     {
-        SDL_Delay(startup_delay);
+        usleep(startup_delay * 1000);
     }
 
     // The actual 320x200 canvas that we draw to. This is the pixel buffer of
@@ -1493,7 +1646,7 @@ void I_InitGraphics(void)
     // 32-bit RGBA screen buffer that gets loaded into a texture that gets
     // finally rendered into our window or full screen in I_FinishUpdate().
 
-    I_VideoBuffer = screenbuffer->pixels;
+    I_VideoBuffer = screenbuffer;
     V_RestoreBuffer();
 
     // Clear the screen to black.
@@ -1502,9 +1655,11 @@ void I_InitGraphics(void)
 
     // clear out any events waiting at the start and center the mouse
   
+#if 0
     while (SDL_PollEvent(&dummy));
+#endif
 
-    initialized = true;
+    fbstate.inited = true;
 
     // Call I_ShutdownGraphics on quit
 

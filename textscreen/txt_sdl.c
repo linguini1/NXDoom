@@ -15,8 +15,6 @@
 // Text mode emulation in SDL
 //
 
-#include "SDL.h"
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,10 +49,12 @@ typedef struct
 
 #define BLINK_PERIOD 250
 
+#if 0
 SDL_Window *TXT_SDLWindow;
 static SDL_Surface *screenbuffer;
-static unsigned char *screendata;
 static SDL_Renderer *renderer;
+#endif
+static unsigned char *screendata;
 
 // Current input mode.
 static txt_input_mode_t input_mode = TXT_INPUT_NORMAL;
@@ -63,7 +63,9 @@ static txt_input_mode_t input_mode = TXT_INPUT_NORMAL;
 // is the value that was passed to SDL_CreateWindow().
 static int screen_image_w, screen_image_h;
 
+#if 0
 static TxtSDLEventCallbackFunc event_callback;
+#endif
 static void *event_callback_data;
 
 // Font we are using:
@@ -85,6 +87,7 @@ static const struct {
 // Unicode key mapping; see codepage.h.
 static const short code_page_to_unicode[] = CODE_PAGE_TO_UNICODE;
 
+#if 0
 static const SDL_Color ega_colors[] =
 {
     {0x00, 0x00, 0x00, 0xff},          // 0: Black
@@ -104,6 +107,7 @@ static const SDL_Color ega_colors[] =
     {0xff, 0xff, 0x55, 0xff},          // 14: Yellow
     {0xff, 0xff, 0xff, 0xff},          // 15: Bright white
 };
+#endif
 
 #ifdef _WIN32
 
@@ -164,6 +168,7 @@ static const txt_font_t *FontForName(const char *name)
 
 static void ChooseFont(void)
 {
+#if 0
     SDL_DisplayMode desktop_info;
     char *env;
 
@@ -218,6 +223,7 @@ static void ChooseFont(void)
         // to use large_font if we initialize successfully".
         font = &highdpi_font;
     }
+#endif
 }
 
 //
@@ -228,6 +234,7 @@ static void ChooseFont(void)
 
 int TXT_Init(void)
 {
+#if 0
     int flags = 0;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -303,10 +310,12 @@ int TXT_Init(void)
     memset(screendata, 0, TXT_SCREEN_W * TXT_SCREEN_H * 2);
 
     return 1;
+#endif
 }
 
 void TXT_Shutdown(void)
 {
+#if 0
     free(screendata);
     screendata = NULL;
     SDL_FreeSurface(screenbuffer);
@@ -314,15 +323,18 @@ void TXT_Shutdown(void)
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(TXT_SDLWindow);
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
+#endif
 }
 
 void TXT_SetColor(txt_color_t color, int r, int g, int b)
 {
+#if 0
     SDL_Color c = {r, g, b, 0xff};
 
     SDL_LockSurface(screenbuffer);
     SDL_SetPaletteColors(screenbuffer->format->palette, &c, color, 1);
     SDL_UnlockSurface(screenbuffer);
+#endif
 }
 
 unsigned char *TXT_GetScreenData(void)
@@ -332,6 +344,7 @@ unsigned char *TXT_GetScreenData(void)
 
 static inline void UpdateCharacter(int x, int y)
 {
+#if 0
     unsigned char character;
     const uint8_t *p;
     unsigned char *s, *s1;
@@ -390,6 +403,7 @@ static inline void UpdateCharacter(int x, int y)
 
         s += screenbuffer->pitch;
     }
+#endif
 }
 
 static int LimitToRange(int val, int min, int max)
@@ -408,6 +422,7 @@ static int LimitToRange(int val, int min, int max)
     }
 }
 
+#if 0
 static void GetDestRect(SDL_Rect *rect)
 {
     int w, h;
@@ -418,9 +433,11 @@ static void GetDestRect(SDL_Rect *rect)
     rect->w = screenbuffer->w;
     rect->h = screenbuffer->h;
 }
+#endif
 
 void TXT_UpdateScreenArea(int x, int y, int w, int h)
 {
+#if 0
     SDL_Texture *screentx;
     SDL_Rect rect;
     int x1, y1;
@@ -456,6 +473,7 @@ void TXT_UpdateScreenArea(int x, int y, int w, int h)
     SDL_RenderPresent(renderer);
 
     SDL_DestroyTexture(screentx);
+#endif
 }
 
 void TXT_UpdateScreen(void)
@@ -465,6 +483,7 @@ void TXT_UpdateScreen(void)
 
 void TXT_GetMousePosition(int *x, int *y)
 {
+#if 0
     int window_w, window_h;
     int origin_x, origin_y;
 
@@ -496,6 +515,7 @@ void TXT_GetMousePosition(int *x, int *y)
     {
         *y = TXT_SCREEN_H - 1;
     }
+#endif
 }
 
 //
@@ -505,6 +525,7 @@ void TXT_GetMousePosition(int *x, int *y)
 // XXX: duplicate from doomtype.h
 #define arrlen(array) (sizeof(array) / sizeof(*array))
 
+#if 0
 static int TranslateScancode(SDL_Scancode scancode)
 {
     switch (scancode)
@@ -534,7 +555,9 @@ static int TranslateScancode(SDL_Scancode scancode)
             }
     }
 }
+#endif
 
+#if 0
 static int TranslateKeysym(const SDL_Keysym *sym)
 {
     int translated;
@@ -553,11 +576,13 @@ static int TranslateKeysym(const SDL_Keysym *sym)
         return translated;
     }
 }
+#endif
 
 // Convert an SDL button index to textscreen button index.
 //
 // Note special cases because 2 == mid in SDL, 3 == mid in textscreen/setup
 
+#if 0
 static int SDLButtonToTXTButton(int button)
 {
     switch (button)
@@ -572,9 +597,11 @@ static int SDLButtonToTXTButton(int button)
             return TXT_MOUSE_BASE + button + 1;
     }
 }
+#endif
 
 // Convert an SDL wheel motion to a textscreen button index.
 
+#if 0
 static int SDLWheelToTXTButton(const SDL_MouseWheelEvent *wheel)
 {
     if (wheel->y <= 0)
@@ -586,6 +613,7 @@ static int SDLWheelToTXTButton(const SDL_MouseWheelEvent *wheel)
         return TXT_MOUSE_SCROLLUP;
     }
 }
+#endif
 
 static int MouseHasMoved(void)
 {
@@ -607,6 +635,7 @@ static int MouseHasMoved(void)
 
 signed int TXT_GetChar(void)
 {
+#if 0
     SDL_Event ev;
 
     while (SDL_PollEvent(&ev))
@@ -684,10 +713,13 @@ signed int TXT_GetChar(void)
     }
 
     return -1;
+#endif
+    return -1;
 }
 
 int TXT_GetModifierState(txt_modifier_t mod)
 {
+#if 0
     SDL_Keymod state;
 
     state = SDL_GetModState();
@@ -703,6 +735,7 @@ int TXT_GetModifierState(txt_modifier_t mod)
         default:
             return 0;
     }
+#endif
 }
 
 int TXT_UnicodeCharacter(unsigned int c)
@@ -744,6 +777,7 @@ static int PrintableName(const char *s)
 
 static const char *NameForKey(int key)
 {
+#if 0
     const char *result;
     int i;
 
@@ -784,6 +818,8 @@ static const char *NameForKey(int key)
         }
     }
 
+    return NULL;
+#endif
     return NULL;
 }
 
@@ -845,6 +881,7 @@ int TXT_ScreenHasBlinkingChars(void)
 
 void TXT_Sleep(int timeout)
 {
+#if 0
     unsigned int start_time;
 
     if (TXT_ScreenHasBlinkingChars())
@@ -891,10 +928,12 @@ void TXT_Sleep(int timeout)
             SDL_Delay(1);
         }
     }
+#endif
 }
 
 void TXT_SetInputMode(txt_input_mode_t mode)
 {
+#if 0
     if (mode == TXT_INPUT_TEXT && !SDL_IsTextInputActive())
     {
         SDL_StartTextInput();
@@ -905,17 +944,23 @@ void TXT_SetInputMode(txt_input_mode_t mode)
     }
 
     input_mode = mode;
+#endif
 }
 
 void TXT_SetWindowTitle(const char *title)
 {
+#if 0
     SDL_SetWindowTitle(TXT_SDLWindow, title);
+#endif
 }
 
-void TXT_SDL_SetEventCallback(TxtSDLEventCallbackFunc callback, void *user_data)
+void TXT_SDL_SetEventCallback(void *user_data)
+    /* First argument was TxtSDLEventCallbackFunc callback */
 {
+#if 0
     event_callback = callback;
     event_callback_data = user_data;
+#endif
 }
 
 // Safe string functions.

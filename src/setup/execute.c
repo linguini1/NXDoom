@@ -270,6 +270,7 @@ static int ExecuteCommand(const char *program, const char *arg)
 
 boolean OpenFolder(const char *path)
 {
+#if 0
     char *cmd;
     int result;
 
@@ -282,6 +283,8 @@ boolean OpenFolder(const char *path)
     free(cmd);
 
     return result == 0;
+#endif
+    return 0;
 }
 
 // Given the specified program name, get the full path to the program,

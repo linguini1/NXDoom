@@ -22,8 +22,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "SDL.h"
-
 #include "doomtype.h"
 #include "i_system.h"
 #include "m_argv.h"
@@ -67,8 +65,6 @@ int main(int argc, char **argv)
 
     M_FindResponseFile();
     M_SetExeDir();
-
-    SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
 
     // start doom
 

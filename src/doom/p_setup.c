@@ -179,7 +179,7 @@ void P_LoadSegs (int lump)
     mapseg_t*		ml;
     seg_t*		li;
     line_t*		ldef;
-    int			linedef;
+    int			linedef_int;
     int			side;
     int                 sidenum;
 	
@@ -197,8 +197,8 @@ void P_LoadSegs (int lump)
 
 	li->angle = (SHORT(ml->angle))<<FRACBITS;
 	li->offset = (SHORT(ml->offset))<<FRACBITS;
-	linedef = SHORT(ml->linedef);
-	ldef = &lines[linedef];
+	linedef_int = SHORT(ml->linedef);
+	ldef = &lines[linedef_int];
 	li->linedef = ldef;
 	side = SHORT(ml->side);
 
@@ -206,7 +206,7 @@ void P_LoadSegs (int lump)
         if ((unsigned)ldef->sidenum[side] >= (unsigned)numsides)
         {
             I_Error("P_LoadSegs: linedef %d for seg %d references a non-existent sidedef %d",
-                    linedef, i, (unsigned)ldef->sidenum[side]);
+                    linedef_int, i, (unsigned)ldef->sidenum[side]);
         }
 
 	li->sidedef = &sides[ldef->sidenum[side]];

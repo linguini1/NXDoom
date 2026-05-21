@@ -16,10 +16,18 @@
 //     SDL implementation of system-specific input interface.
 //
 
-#include <string.h>
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
-#include "SDL.h"
-#include "SDL_keycode.h"
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
+#include <nuttx/input/kbd_codec.h>
+#endif
 
 #include "doomkeys.h"
 #include "doomtype.h"
@@ -28,7 +36,28 @@
 #include "m_argv.h"
 #include "m_config.h"
 
-static const int scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
+
+struct keyboard_dev {
+    int fd;
+    bool inited;
+};
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+#ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
+static const int g_scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
+
+struct keyboard_dev g_kbd_dev =
+{
+  .fd = -1,
+  .inited = false,
+};
+#endif
 
 // Lookup table for mapping ASCII characters to their equivalent when
 // shift is pressed on a US layout keyboard. This is the original table
@@ -101,53 +130,84 @@ int vanilla_keyboard_mapping = true;
 float mouse_acceleration = 2.0;
 int mouse_threshold = 10;
 
-// Translates the SDL key to a value of the type found in doomkeys.h
-static int TranslateKey(SDL_Keysym *sym)
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+/****************************************************************************
+ * Name: init_kbd_dev
+ *
+ * Description:
+ *   Set up the keyboard device for getting keyboard events.
+ *
+ * Return:
+ *   0 on success, error code otherwise.
+ *
+ ****************************************************************************/
+
+static int init_kbd_dev(struct keyboard_dev *dev)
 {
-    int scancode = sym->scancode;
-
-    switch (scancode)
+  if (dev->inited)
     {
-        case SDL_SCANCODE_LCTRL:
-        case SDL_SCANCODE_RCTRL:
-            return KEY_RCTRL;
+      return 0;
+    }
 
-        case SDL_SCANCODE_LSHIFT:
-        case SDL_SCANCODE_RSHIFT:
-            return KEY_RSHIFT;
+  dev->fd = open(CONFIG_GAMES_NXDOOM_KBDPATH, O_RDONLY | O_NONBLOCK);
+  if (dev->fd < 0)
+    {
+      return errno;
+    }
 
-        case SDL_SCANCODE_LALT:
-            return KEY_LALT;
+  dev->inited = true;
+  return 0;
+}
 
-        case SDL_SCANCODE_RALT:
-            return KEY_RALT;
+/****************************************************************************
+ * Name: translate_key
+ *
+ * Description:
+ *   Translates a NuttX key code into one from doomkeys.h.
+ *
+ * Return:
+ *   The translated key code.
+ *
+ ****************************************************************************/
 
+static int translate_key(uint32_t keycode)
+{
+    switch (keycode)
+    {
+        case KEYCODE_LEFT:
+            return KEY_LEFTARROW;
+        case KEYCODE_RIGHT:
+            return KEY_RIGHTARROW;
+        case KEYCODE_UP:
+            return KEY_UPARROW;
+        case KEYCODE_DOWN:
+            return KEY_DOWNARROW;
+        case KEYCODE_ENTER:
+            return KEY_ENTER;
         default:
-            if (scancode >= 0 && scancode < arrlen(scancode_translate_table))
-            {
-                return scancode_translate_table[scancode];
-            }
-            else
-            {
-                return 0;
-            }
+            return keycode;
     }
 }
 
 // Get the localized version of the key press. This takes into account the
 // keyboard layout, but does not apply any changes due to modifiers, (eg.
 // shift-, alt-, etc.)
-static int GetLocalizedKey(SDL_Keysym *sym)
+static int GetLocalizedKey(uint32_t sym)
 {
+    /* Argument was SDL_Keysym *sym */
+
     // When using Vanilla mapping, we just base everything off the scancode
     // and always pretend the user is using a US layout keyboard.
     if (vanilla_keyboard_mapping)
     {
-        return TranslateKey(sym);
+        return translate_key(sym);
     }
     else
     {
-        int result = sym->sym;
+        int result = sym;
 
         if (result < 0 || result >= 128)
         {
@@ -159,8 +219,9 @@ static int GetLocalizedKey(SDL_Keysym *sym)
 }
 
 // Get the equivalent ASCII (Unicode?) character for a keypress.
-static int GetTypedChar(SDL_Keysym *sym)
+static int GetTypedChar(uint32_t sym)
 {
+#if 0
     // We only return typed characters when entering text, after
     // I_StartTextInput() has been called. Otherwise we return nothing.
     if (!text_input_enabled)
@@ -239,21 +300,78 @@ static int GetTypedChar(SDL_Keysym *sym)
         // Failed to find anything :/
         return 0;
     }
+    return 0;
+#endif
+    return 0;
 }
 
-void I_HandleKeyboardEvent(SDL_Event *sdlevent)
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+#ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
+
+/****************************************************************************
+ * Name: get_kbd_event
+ *
+ * Description:
+ *   Read a single keyboard event from the keyboard device.
+ *
+ * Return:
+ *   0 on success, error code otherwise.
+ *
+ ****************************************************************************/
+
+int get_kbd_event(struct keyboard_event_s *sample)
+{
+  int err;
+  ssize_t nbytes;
+
+  /* Initialize the keyboard device if it isn't already */
+
+  err = init_kbd_dev(&g_kbd_dev);
+  if (err)
+    {
+      return err;
+    }
+
+  /* Read events until we're out of them */
+
+  nbytes = read(g_kbd_dev.fd, sample, sizeof(*sample));
+  if (nbytes < 0)
+    {
+      err = errno;
+      if (err != EINTR)
+        {
+          return err;
+        }
+    }
+  else if (nbytes != sizeof(*sample))
+    {
+      return EIO;
+    }
+  else if (nbytes == 0)
+    {
+      return EAGAIN; /* No event */
+    }
+
+  return 0;
+}
+#endif
+
+void I_HandleKeyboardEvent(struct keyboard_event_s *kevent)
 {
     // XXX: passing pointers to event for access after this function
     // has terminated is undefined behaviour
     event_t event;
 
-    switch (sdlevent->type)
+    switch (kevent->type)
     {
-        case SDL_KEYDOWN:
+        case KEYBOARD_PRESS:
             event.type = ev_keydown;
-            event.data1 = TranslateKey(&sdlevent->key.keysym);
-            event.data2 = GetLocalizedKey(&sdlevent->key.keysym);
-            event.data3 = GetTypedChar(&sdlevent->key.keysym);
+            event.data1 = translate_key(kevent->code);
+            event.data2 = GetLocalizedKey(kevent->code);
+            event.data3 = GetTypedChar(kevent->code);
 
             if (event.data1 != 0)
             {
@@ -261,9 +379,9 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
             }
             break;
 
-        case SDL_KEYUP:
+        case KEYBOARD_RELEASE:
             event.type = ev_keyup;
-            event.data1 = TranslateKey(&sdlevent->key.keysym);
+            event.data1 = translate_key(kevent->code);
 
             // data2/data3 are initialized to zero for ev_keyup.
             // For ev_keydown it's the shifted Unicode character
@@ -287,6 +405,7 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
 
 void I_StartTextInput(int x1, int y1, int x2, int y2)
 {
+#if 0
     text_input_enabled = true;
 
     if (!vanilla_keyboard_mapping)
@@ -294,18 +413,22 @@ void I_StartTextInput(int x1, int y1, int x2, int y2)
         // SDL2-TODO: SDL_SetTextInputRect(...);
         SDL_StartTextInput();
     }
+#endif
 }
 
 void I_StopTextInput(void)
 {
+#if 0
     text_input_enabled = false;
 
     if (!vanilla_keyboard_mapping)
     {
         SDL_StopTextInput();
     }
+#endif
 }
 
+#if 0
 static void UpdateMouseButtonState(unsigned int button, boolean on)
 {
     static event_t event;
@@ -361,7 +484,9 @@ static void UpdateMouseButtonState(unsigned int button, boolean on)
     event.data2 = event.data3 = 0;
     D_PostEvent(&event);
 }
+#endif
 
+#if 0
 static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
 {
     // SDL2 distinguishes button events from mouse wheel events.
@@ -393,9 +518,12 @@ static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
     up.data2 = up.data3 = 0;
     D_PostEvent(&up);
 }
+#endif
 
-void I_HandleMouseEvent(SDL_Event *sdlevent)
+void I_HandleMouseEvent(void)
 {
+    /* Argument was SDL_Event *sdlevent */
+#if 0
     switch (sdlevent->type)
     {
         case SDL_MOUSEBUTTONDOWN:
@@ -413,6 +541,7 @@ void I_HandleMouseEvent(SDL_Event *sdlevent)
         default:
             break;
     }
+#endif
 }
 
 static int AccelerateMouse(int val)
@@ -437,6 +566,7 @@ static int AccelerateMouse(int val)
 // motion event.
 void I_ReadMouse(void)
 {
+#if 0
     int x, y;
     event_t ev;
 
@@ -461,6 +591,7 @@ void I_ReadMouse(void)
         // this function
         D_PostEvent(&ev);
     }
+#endif
 }
 
 // Bind all variables controlling input options.

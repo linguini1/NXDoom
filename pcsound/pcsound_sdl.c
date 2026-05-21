@@ -20,16 +20,11 @@
 
 #include "config.h"
 
-#include "SDL.h"
-
 #include "pcsound.h"
 #include "pcsound_internal.h"
 
 
 #ifndef DISABLE_SDL2MIXER
-
-#include "SDL_mixer.h"
-
 
 #define MAX_SOUND_SLICE_TIME 70 /* ms */
 #define SQUARE_WAVE_AMP 0x2000

@@ -568,7 +568,7 @@ static unsigned int NumExtensions(const char **extensions)
 
 static int ZenityAvailable(void)
 {
-    return system(ZENITY_BINARY " --help >/dev/null 2>&1") == 0;
+    return 0;
 }
 
 int TXT_CanSelectFiles(void)

@@ -20,17 +20,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
 #include <stdarg.h>
-
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#else
 #include <unistd.h>
-#endif
-
-#include "SDL.h"
 
 #include "config.h"
 
@@ -218,12 +209,7 @@ void I_PrintStartupBanner(const char *gamedescription)
 
 boolean I_ConsoleStdout(void)
 {
-#ifdef _WIN32
-    // SDL "helpfully" always redirects stdout to a file.
-    return false;
-#else
     return isatty(fileno(stdout));
-#endif
 }
 
 //
@@ -262,7 +248,9 @@ void I_Quit (void)
         entry = entry->next;
     }
 
+#if 0
     SDL_Quit();
+#endif
 
     exit(0);
 }
@@ -333,13 +321,17 @@ void I_Error (const char *error, ...)
     // therefore be unable to otherwise see the message).
     if (exit_gui_popup && !I_ConsoleStdout())
     {
+#if 0
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  PACKAGE_STRING, msgbuf, NULL);
+#endif
     }
 
     // abort();
 
+#if 0
     SDL_Quit();
+#endif
 
     exit(-1);
 }

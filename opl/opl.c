@@ -21,8 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "SDL.h"
-
 #include "opl.h"
 #include "opl_internal.h"
 
@@ -451,10 +449,13 @@ typedef struct
 {
     int finished;
 
+#if 0
     SDL_mutex *mutex;
     SDL_cond *cond;
+#endif
 } delay_data_t;
 
+#if 0
 static void DelayCallback(void *_delay_data)
 {
     delay_data_t *delay_data = _delay_data;
@@ -466,11 +467,13 @@ static void DelayCallback(void *_delay_data)
 
     SDL_UnlockMutex(delay_data->mutex);
 }
+#endif
 
 // Delay for specified number of microseconds after OPL subsystem is initialized
 
 void OPL_Delay(uint64_t us)
 {
+#if 0
     delay_data_t delay_data;
 
     if (driver == NULL)
@@ -510,6 +513,7 @@ void OPL_Delay(uint64_t us)
 
     SDL_DestroyMutex(delay_data.mutex);
     SDL_DestroyCond(delay_data.cond);
+#endif
 }
 
 void OPL_SetPaused(int paused)

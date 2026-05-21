@@ -27,13 +27,6 @@
 #include "m_argv.h"
 #include "m_config.h"
 
-#ifndef DISABLE_SDL2MIXER
-
-#include "SDL_mixer.h"
-
-#endif  // DISABLE_SDL2MIXER
-
-
 // Sound sample rate to use for digital output (Hz)
 
 int snd_samplerate = 44100;

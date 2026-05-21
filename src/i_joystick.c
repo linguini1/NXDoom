@@ -16,10 +16,6 @@
 //
 
 
-#include "SDL.h"
-#include "SDL_joystick.h"
-#include "SDL_gamecontroller.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -33,8 +29,10 @@
 #include "m_fixed.h"
 #include "m_misc.h"
 
+#if 0
 static SDL_GameController *gamepad = NULL;
 static SDL_Joystick *joystick = NULL;
+#endif
 
 // Configuration variables:
 
@@ -95,14 +93,17 @@ static int joystick_physical_buttons[NUM_VIRTUAL_BUTTONS] = {
 
 void I_ShutdownGamepad(void)
 {
+#if 0
     if (gamepad != NULL)
     {
         SDL_GameControllerClose(gamepad);
         gamepad = NULL;
         SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
     }
+#endif
 }
 
+#if 0
 static int FindFirstGamepad(void)
 {
     int i;
@@ -119,7 +120,9 @@ static int FindFirstGamepad(void)
 
     return gamepadindex;
 }
+#endif
 
+#if 0
 static int FindSpecificGamepad(SDL_JoystickGUID guid)
 {
     SDL_JoystickGUID dev_guid;
@@ -138,7 +141,9 @@ static int FindSpecificGamepad(SDL_JoystickGUID guid)
 
     return gamepadindex;
 }
+#endif
 
+#if 0
 static int DeviceIndexGamepad(void)
 {
     SDL_JoystickGUID guid, dev_guid;
@@ -171,9 +176,11 @@ static int DeviceIndexGamepad(void)
 
     return index;
 }
+#endif
 
 void I_InitGamepad(void)
 {
+#if 0
     SDL_JoystickGUID guid;
     int index;
 
@@ -222,15 +229,19 @@ void I_InitGamepad(void)
 
     printf("I_InitGamepad: %s\n", SDL_GameControllerName(gamepad));
     I_AtExit(I_ShutdownGamepad, true);
+#endif
 }
 
+#if 0
 static int GetTriggerStateGamepad(SDL_GameControllerAxis trigger)
 {
     return (SDL_GameControllerGetAxis(gamepad, trigger) > TRIGGER_THRESHOLD);
 }
+#endif
 
 // Get the state of the given virtual button.
 
+#if 0
 static int ReadButtonStateGamepad(int vbutton)
 {
     int physbutton, state;
@@ -262,9 +273,11 @@ static int ReadButtonStateGamepad(int vbutton)
 
     return state;
 }
+#endif
 
 // Get a bitmask of all currently-pressed buttons
 
+#if 0
 static int GetButtonsStateGamepad(void)
 {
     int i;
@@ -280,9 +293,11 @@ static int GetButtonsStateGamepad(void)
 
     return result;
 }
+#endif
 
 // Read the state of an axis, inverting if necessary.
 
+#if 0
 static int GetAxisStateGamepad(const int *axis_values, int axis, int invert,
                                int dead_zone)
 {
@@ -314,9 +329,11 @@ static int GetAxisStateGamepad(const int *axis_values, int axis, int invert,
 
     return result;
 }
+#endif
 
 #define DIRECTION_DEADZONE (50 * 32768 / 100)
 
+#if 0
 static int GetDirectionalInputGamepad(const int *axis_values)
 {
     int value;
@@ -406,9 +423,11 @@ static int GetDirectionalInputGamepad(const int *axis_values)
     return ((dpad << DPAD_SHIFT) | (leftstick << LSTICK_SHIFT) |
             (rightstick << RSTICK_SHIFT));
 }
+#endif
 
 void I_UpdateGamepad(void)
 {
+#if 0
     if (gamepad != NULL)
     {
         event_t ev;
@@ -442,18 +461,22 @@ void I_UpdateGamepad(void)
 
         D_PostEvent(&ev);
     }
+#endif
 }
 
 void I_ShutdownJoystick(void)
 {
+#if 0
     if (joystick != NULL)
     {
         SDL_JoystickClose(joystick);
         joystick = NULL;
         SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
     }
+#endif
 }
 
+#if 0
 static boolean IsValidAxis(int axis)
 {
     int num_axes;
@@ -477,7 +500,9 @@ static boolean IsValidAxis(int axis)
 
     return axis < num_axes;
 }
+#endif
 
+#if 0
 static int DeviceIndex(void)
 {
     SDL_JoystickGUID guid, dev_guid;
@@ -511,9 +536,11 @@ static int DeviceIndex(void)
     // No joystick found with the expected GUID.
     return -1;
 }
+#endif
 
 void I_InitJoystick(void)
 {
+#if 0
     int index;
 
     if (!usejoystick || !strcmp(joystick_guid, ""))
@@ -575,8 +602,10 @@ void I_InitJoystick(void)
     printf("I_InitJoystick: %s\n", SDL_JoystickName(joystick));
 
     I_AtExit(I_ShutdownJoystick, true);
+#endif
 }
 
+#if 0
 static boolean IsAxisButton(int physbutton)
 {
     if (IS_BUTTON_AXIS(joystick_x_axis))
@@ -614,9 +643,11 @@ static boolean IsAxisButton(int physbutton)
 
     return false;
 }
+#endif
 
 // Get the state of the given virtual button.
 
+#if 0
 static int ReadButtonState(int vbutton)
 {
     int physbutton;
@@ -639,9 +670,10 @@ static int ReadButtonState(int vbutton)
 
     return SDL_JoystickGetButton(joystick, physbutton);
 }
+#endif
 
 // Get a bitmask of all currently-pressed buttons
-
+#if 0
 static int GetButtonsState(void)
 {
     int i;
@@ -657,9 +689,11 @@ static int GetButtonsState(void)
 
     return result;
 }
+#endif
 
 // Read the state of an axis, inverting if necessary.
 
+#if 0
 static int GetAxisState(int axis, int invert, int dead_zone)
 {
     int result;
@@ -737,7 +771,9 @@ static int GetAxisState(int axis, int invert, int dead_zone)
 
     return result;
 }
+#endif
 
+#if 0
 static int GetDirectionalInput(int x, int y)
 {
     int retval = JOY_DIR_NONE;
@@ -762,9 +798,11 @@ static int GetDirectionalInput(int x, int y)
 
     return (retval << DPAD_SHIFT);
 }
+#endif
 
 void I_UpdateJoystick(void)
 {
+#if 0
     if (use_gamepad)
     {
         I_UpdateGamepad();
@@ -788,6 +826,7 @@ void I_UpdateJoystick(void)
         ev.data6 = GetDirectionalInput(ev.data2, ev.data3);
         D_PostEvent(&ev);
     }
+#endif
 }
 
 void I_BindJoystickVariables(void)

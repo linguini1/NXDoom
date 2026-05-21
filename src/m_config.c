@@ -26,8 +26,6 @@
 #include <assert.h>
 #include <locale.h>
 
-#include "SDL_filesystem.h"
-
 #include "config.h"
 
 #include "doomtype.h"
@@ -2617,25 +2615,14 @@ float M_GetFloatVariable(const char *name)
 
 static char *GetDefaultConfigDir(void)
 {
-#if !defined(_WIN32) || defined(_WIN32_WCE)
-
     // Configuration settings are stored in an OS-appropriate path
     // determined by SDL.  On typical Unix systems, this might be
     // ~/.local/share/chocolate-doom.  On Windows, we behave like
     // Vanilla Doom and save in the current directory.
 
-    char *result;
-    char *copy;
-
-    result = SDL_GetPrefPath("", PACKAGE_TARNAME);
-    if (result != NULL)
-    {
-        copy = M_StringDuplicate(result);
-        SDL_free(result);
-        return copy;
-    }
-#endif /* #ifndef _WIN32 */
-    return M_StringDuplicate(exedir);
+    char *result = CONFIG_GAMES_NXDOOM_PREFDIR "/";
+    char *copy = M_StringDuplicate(result);
+    return copy;
 }
 
 // 
@@ -2689,12 +2676,7 @@ void M_SetMusicPackDir(void)
         return;
     }
 
-    prefdir = SDL_GetPrefPath("", PACKAGE_TARNAME);
-    if (prefdir == NULL)
-    {
-        printf("M_SetMusicPackDir: SDL_GetPrefPath failed, music pack directory not set\n");
-        return;
-    }
+    prefdir = CONFIG_GAMES_NXDOOM_PREFDIR "/";
     music_pack_path = M_StringJoin(prefdir, "music-packs", NULL);
 
     M_MakeDirectory(prefdir);
@@ -2709,7 +2691,6 @@ void M_SetMusicPackDir(void)
 
     free(readme_path);
     free(music_pack_path);
-    SDL_free(prefdir);
 }
 
 //
@@ -2789,15 +2770,8 @@ char *M_GetAutoloadDir(const char *iwadname)
 
     if (autoload_path == NULL || strlen(autoload_path) == 0)
     {
-        char *prefdir;
-        prefdir = SDL_GetPrefPath("", PACKAGE_TARNAME);
-        if (prefdir == NULL)
-        {
-            printf("M_GetAutoloadDir: SDL_GetPrefPath failed\n");
-            return NULL;
-        }
+        char *prefdir = CONFIG_GAMES_NXDOOM_PREFDIR "/";
         autoload_path = M_StringJoin(prefdir, "autoload", NULL);
-        SDL_free(prefdir);
     }
 
     M_MakeDirectory(autoload_path);

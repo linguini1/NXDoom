@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "SDL.h"
 
 #ifdef HAVE_LIBSAMPLERATE
 #include <samplerate.h>

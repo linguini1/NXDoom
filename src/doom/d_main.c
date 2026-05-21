@@ -184,27 +184,38 @@ boolean D_Display (void)
     // save the current screen if about to wipe
     if (gamestate != wipegamestate)
     {
-	wipe = true;
-	wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
+	  wipe = true;
+	  wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
     }
     else
-	wipe = false;
+    {
+      wipe = false;
+    }
 
-    if (gamestate == GS_LEVEL && gametic)
-	HU_Erase();
-    
+    if (gamestate == GS_LEVEL && gametic) {
+        HU_Erase();
+    }
+
     // do buffered drawing
     switch (gamestate)
     {
       case GS_LEVEL:
+
 	if (!gametic)
-	    break;
+    {
+        break;
+    }
+
 	if (automapactive)
-	    AM_Drawer ();
-	if (wipe || (viewheight != SCREENHEIGHT && fullscreen))
-	    redrawsbar = true;
-	if (inhelpscreensstate && !inhelpscreens)
-	    redrawsbar = true;              // just put away the help screen
+    {
+        AM_Drawer();
+    }
+	if (wipe || (viewheight != SCREENHEIGHT && fullscreen)) {
+        redrawsbar = true;
+    }
+	if (inhelpscreensstate && !inhelpscreens) {
+        redrawsbar = true;              // just put away the help screen
+    }
 	ST_Drawer (viewheight == SCREENHEIGHT, redrawsbar );
 	fullscreen = viewheight == SCREENHEIGHT;
 	break;
@@ -226,11 +237,13 @@ boolean D_Display (void)
     I_UpdateNoBlit ();
     
     // draw the view directly
-    if (gamestate == GS_LEVEL && !automapactive && gametic)
-	R_RenderPlayerView (&players[displayplayer]);
+    if (gamestate == GS_LEVEL && !automapactive && gametic) {
+        R_RenderPlayerView (&players[displayplayer]);
+    }
 
-    if (gamestate == GS_LEVEL && gametic)
-	HU_Drawer ();
+    if (gamestate == GS_LEVEL && gametic){
+        HU_Drawer ();
+    }
     
     // clean up border stuff
     if (gamestate != oldgamestate && gamestate != GS_LEVEL)
@@ -464,8 +477,9 @@ void D_DoomLoop (void)
                " may cause demos and network games to get out of sync.\n");
     }
 
-    if (demorecording)
-	G_BeginRecording ();
+    if (demorecording){
+        G_BeginRecording ();
+    }
 
     main_loop_started = true;
 

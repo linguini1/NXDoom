@@ -21,24 +21,26 @@
 // The textscreen API itself doesn't need SDL; however, SDL needs its
 // headers included where main() is defined.
 
-#include "SDL.h"
-
 // Event callback function type: a function of this type can be used
 // to intercept events in the textscreen event processing loop.  
 // Returning 1 will cause the event to be eaten; the textscreen code
 // will not see it.
 
+#if 0
 typedef int (*TxtSDLEventCallbackFunc)(SDL_Event *event, void *user_data);
+#endif
 
 // Set a callback function to call in the SDL event loop.  Useful for
 // intercepting events.  Pass callback=NULL to clear an existing
 // callback function.
 // user_data is a void pointer to be passed to the callback function.
 
-void TXT_SDL_SetEventCallback(TxtSDLEventCallbackFunc callback, void *user_data);
+void TXT_SDL_SetEventCallback(void *user_data);
 
 
+#if 0
 extern SDL_Window *TXT_SDLWindow;
+#endif
 
 
 #endif /* #ifndef TXT_SDL_H */

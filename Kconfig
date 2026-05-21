@@ -1,0 +1,69 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+config GAMES_NXDOOM
+	bool "NXDoom"
+	default n
+	depends on VIDEO_FB
+	---help---
+		Play DOOM on NuttX!
+
+if GAMES_NXDOOM
+
+comment "Program options"
+
+config GAMES_NXDOOM_PRIORITY
+	int "Priority"
+	default 100
+	---help---
+		The task priority for the NXDoom application.
+
+config GAMES_NXDOOM_STACKSIZE
+	int "Stack size"
+	default 4096
+	---help---
+		The stack size for the NXDoom application.
+
+comment "General game options"
+
+config GAMES_NXDOOM_PREFDIR
+	string "DOOM data directory"
+	default "/data"
+	---help---
+		Directory where DOOM WAD files are stored.
+
+comment "Graphics options"
+
+config GAMES_NXDOOM_FBPATH
+	string "Framebuffer path"
+	default "/dev/fb0"
+	---help---
+		Path to the framebuffer character driver to use for rendering.
+
+comment "Input options"
+
+choice # Input method
+	prompt "NXDoom input method"
+	default GAMES_NXDOOM_KEYBOARD
+
+	config GAMES_NXDOOM_KEYBOARD
+		bool "Keyboard"
+		default y
+		---help---
+			Use a NuttX keyboard character driver.
+
+endchoice # Input method
+
+if GAMES_NXDOOM_KEYBOARD
+
+config GAMES_NXDOOM_KBDPATH
+	string "Keyboard device path"
+	default "/dev/kbd0"
+	---help---
+		Path to the keyboard device to use as input.
+
+endif # GAMES_NXDOOM_KEYBOARD
+
+endif # GAMES_NXDOOM
