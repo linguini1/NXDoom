@@ -127,7 +127,7 @@ wipe_exitColorXForm
 }
 
 
-static int*	y;
+static int*	g_y;
 
 int
 wipe_initMelt
@@ -147,14 +147,14 @@ wipe_initMelt
     
     // setup initial column positions
     // (y<0 => not ready to scroll yet)
-    y = (int *) Z_Malloc(width*sizeof(int), PU_STATIC, 0);
-    y[0] = -(M_Random()%16);
+    g_y = (int *) Z_Malloc(width*sizeof(int), PU_STATIC, 0);
+    g_y[0] = -(M_Random()%16);
     for (i=1;i<width;i++)
     {
 	r = (M_Random()%3) - 1;
-	y[i] = y[i-1] + r;
-	if (y[i] > 0) y[i] = 0;
-	else if (y[i] == -16) y[i] = -15;
+	g_y[i] = g_y[i-1] + r;
+	if (g_y[i] > 0) g_y[i] = 0;
+	else if (g_y[i] == -16) g_y[i] = -15;
     }
 
     return 0;
@@ -181,27 +181,27 @@ wipe_doMelt
     {
 	for (i=0;i<width;i++)
 	{
-	    if (y[i]<0)
+	    if (g_y[i]<0)
 	    {
-		y[i]++; done = false;
+		g_y[i]++; done = false;
 	    }
-	    else if (y[i] < height)
+	    else if (g_y[i] < height)
 	    {
-		dy = (y[i] < 16) ? y[i]+1 : 8;
-		if (y[i]+dy >= height) dy = height - y[i];
-		s = &((dpixel_t *)wipe_scr_end)[i*height+y[i]];
-		d = &((dpixel_t *)wipe_scr)[y[i]*width+i];
+		dy = (g_y[i] < 16) ? g_y[i]+1 : 8;
+		if (g_y[i]+dy >= height) dy = height - g_y[i];
+		s = &((dpixel_t *)wipe_scr_end)[i*height+g_y[i]];
+		d = &((dpixel_t *)wipe_scr)[g_y[i]*width+i];
 		idx = 0;
 		for (j=dy;j;j--)
 		{
 		    d[idx] = *(s++);
 		    idx += width;
 		}
-		y[i] += dy;
+		g_y[i] += dy;
 		s = &((dpixel_t *)wipe_scr_start)[i*height];
-		d = &((dpixel_t *)wipe_scr)[y[i]*width+i];
+		d = &((dpixel_t *)wipe_scr)[g_y[i]*width+i];
 		idx = 0;
-		for (j=height-y[i];j;j--)
+		for (j=height-g_y[i];j;j--)
 		{
 		    d[idx] = *(s++);
 		    idx += width;
@@ -221,7 +221,7 @@ wipe_exitMelt
   int	height,
   int	ticks )
 {
-    Z_Free(y);
+    Z_Free(g_y);
     Z_Free(wipe_scr_start);
     Z_Free(wipe_scr_end);
     return 0;

@@ -2030,6 +2030,8 @@ void A_SpawnFly (mobj_t* mo)
     fog = P_SpawnMobj (targ->x, targ->y, targ->z, MT_SPAWNFIRE);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (fog, sfx_telept);
+#else
+    UNUSED(fog);
 #endif
 
     // Randomly select monster to spawn.

@@ -590,7 +590,7 @@ P_CrossSpecialLine
     line_t*     line;
     side_t*     sidedef; // [STRIFE]
     int         flag;    // [STRIFE]
-    int         ok;
+    int         is_ok;
 
     line = &lines[linenum];
 
@@ -607,7 +607,7 @@ P_CrossSpecialLine
         //   haleyjd: removed dead switch. Strife only excludes missiles and
         //   corpses, which is handled above.
  
-        ok = 0;
+        is_ok = 0;
 
         // [STRIFE] Added several line types. Removed none.
         switch(line->special)
@@ -623,10 +623,10 @@ P_CrossSpecialLine
         case 39:        // TELEPORT TRIGGER
         case 88:        // PLAT DOWN-WAIT-UP-STAY RETRIGGER
         case 4:         // RAISE DOOR
-            ok = 1;
+            is_ok = 1;
             break;
         }
-        if (!ok)
+        if (!is_ok)
             return;
     }
 

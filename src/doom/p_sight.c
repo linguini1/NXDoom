@@ -173,8 +173,8 @@ boolean P_CrossSubsector (int num)
     subsector_t*	sub;
     sector_t*		front;
     sector_t*		back;
-    fixed_t		opentop;
-    fixed_t		openbottom;
+    fixed_t		l_opentop;
+    fixed_t		l_openbottom;
     divline_t		divl;
     vertex_t*		v1;
     vertex_t*		v2;
@@ -249,32 +249,32 @@ boolean P_CrossSubsector (int num)
 	// possible occluder
 	// because of ceiling height differences
 	if (front->ceilingheight < back->ceilingheight)
-	    opentop = front->ceilingheight;
+	    l_opentop = front->ceilingheight;
 	else
-	    opentop = back->ceilingheight;
+	    l_opentop = back->ceilingheight;
 
 	// because of ceiling height differences
 	if (front->floorheight > back->floorheight)
-	    openbottom = front->floorheight;
+	    l_openbottom = front->floorheight;
 	else
-	    openbottom = back->floorheight;
+	    l_openbottom = back->floorheight;
 		
 	// quick test for totally closed doors
-	if (openbottom >= opentop)	
+	if (l_openbottom >= l_opentop)	
 	    return false;		// stop
 	
 	frac = P_InterceptVector2 (&strace, &divl);
 		
 	if (front->floorheight != back->floorheight)
 	{
-	    slope = FixedDiv (openbottom - sightzstart , frac);
+	    slope = FixedDiv (l_openbottom - sightzstart , frac);
 	    if (slope > bottomslope)
 		bottomslope = slope;
 	}
 		
 	if (front->ceilingheight != back->ceilingheight)
 	{
-	    slope = FixedDiv (opentop - sightzstart , frac);
+	    slope = FixedDiv (l_opentop - sightzstart , frac);
 	    if (slope < topslope)
 		topslope = slope;
 	}

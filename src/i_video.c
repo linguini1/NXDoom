@@ -160,7 +160,9 @@ int fullscreen = true;
 // Aspect ratio correction mode
 
 int aspect_ratio_correct = true;
+#if 0
 static int actualheight;
+#endif
 
 // Smooth pixel scaling
 int smooth_pixel_scaling = true;
@@ -223,9 +225,11 @@ static boolean window_focused = true;
 
 // Window resize state.
 
+#if 0
 static boolean need_resize = false;
 static unsigned int last_resize_time;
 #define RESIZE_DELAY 500
+#endif
 
 // Gamma correction level to use
 
@@ -328,6 +332,7 @@ void I_StartFrame (void)
 
 }
 
+#if 0
 // Adjust window_width / window_height variables to be an an aspect
 // ratio consistent with the aspect_ratio_correct variable.
 static void AdjustWindowSize(void)
@@ -347,7 +352,6 @@ static void AdjustWindowSize(void)
     }
 }
 
-#if 0
 static void HandleWindowEvent(SDL_WindowEvent *event)
 {
     int i;
@@ -588,9 +592,9 @@ static void UpdateGrab(void)
 #endif
 }
 
+#if 0
 static void LimitTextureSize(int *w_upscale, int *h_upscale)
 {
-#if 0
     SDL_RendererInfo rinfo;
     int orig_w, orig_h;
 
@@ -655,7 +659,6 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
                max_scaling_buffer_pixels,
                rinfo.max_texture_width, rinfo.max_texture_height);
     }
-#endif
 }
 
 static void CreateUpscaledTexture(boolean force)
@@ -664,19 +667,15 @@ static void CreateUpscaledTexture(boolean force)
     int h_upscale, w_upscale;
     static int h_upscale_old, w_upscale_old;
 
-#if 0
     SDL_Texture *new_texture, *old_texture;
-#endif
 
     // Get the size of the renderer output. The units this gives us will be
     // real world pixels, which are not necessarily equivalent to the screen's
     // window size (because of highdpi).
-#if 0
     if (SDL_GetRendererOutputSize(renderer, &w, &h) != 0)
     {
         I_Error("Failed to get renderer output size: %s", SDL_GetError());
     }
-#endif
     w = fbstate.vinfo.xres;
     h = fbstate.vinfo.yres;
 
@@ -731,7 +730,6 @@ static void CreateUpscaledTexture(boolean force)
     // which looks much softer and smoother than "nearest" but does a better
     // job at downscaling from the upscaled texture to screen.
     //
-#if 0
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
     new_texture = SDL_CreateTexture(renderer,
@@ -747,8 +745,8 @@ static void CreateUpscaledTexture(boolean force)
     {
         SDL_DestroyTexture(old_texture);
     }
-#endif
 }
+#endif
 
 //
 // I_FinishUpdate

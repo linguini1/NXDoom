@@ -56,6 +56,7 @@ static SDL_Renderer *renderer;
 #endif
 static unsigned char *screendata;
 
+#if 0
 // Current input mode.
 static txt_input_mode_t input_mode = TXT_INPUT_NORMAL;
 
@@ -63,9 +64,7 @@ static txt_input_mode_t input_mode = TXT_INPUT_NORMAL;
 // is the value that was passed to SDL_CreateWindow().
 static int screen_image_w, screen_image_h;
 
-#if 0
 static TxtSDLEventCallbackFunc event_callback;
-#endif
 static void *event_callback_data;
 
 // Font we are using:
@@ -83,6 +82,7 @@ static const struct {
     int key;
     const char *name;
 } key_names[] = KEY_NAMES_ARRAY;
+#endif
 
 // Unicode key mapping; see codepage.h.
 static const short code_page_to_unicode[] = CODE_PAGE_TO_UNICODE;
@@ -135,7 +135,6 @@ static int Win32_UseLargeFont(void)
     return dpix >= 144;
 }
 
-#endif
 
 static const txt_font_t *FontForName(const char *name)
 {
@@ -168,7 +167,6 @@ static const txt_font_t *FontForName(const char *name)
 
 static void ChooseFont(void)
 {
-#if 0
     SDL_DisplayMode desktop_info;
     char *env;
 
@@ -223,8 +221,8 @@ static void ChooseFont(void)
         // to use large_font if we initialize successfully".
         font = &highdpi_font;
     }
-#endif
 }
+#endif
 
 //
 // Initialize text mode screen
@@ -311,6 +309,7 @@ int TXT_Init(void)
 
     return 1;
 #endif
+    return 1;
 }
 
 void TXT_Shutdown(void)
@@ -406,6 +405,7 @@ static inline void UpdateCharacter(int x, int y)
 #endif
 }
 
+#if 0
 static int LimitToRange(int val, int min, int max)
 {
     if (val < min)
@@ -422,7 +422,6 @@ static int LimitToRange(int val, int min, int max)
     }
 }
 
-#if 0
 static void GetDestRect(SDL_Rect *rect)
 {
     int w, h;
@@ -613,7 +612,6 @@ static int SDLWheelToTXTButton(const SDL_MouseWheelEvent *wheel)
         return TXT_MOUSE_SCROLLUP;
     }
 }
-#endif
 
 static int MouseHasMoved(void)
 {
@@ -632,6 +630,7 @@ static int MouseHasMoved(void)
         return 0;
     }
 }
+#endif
 
 signed int TXT_GetChar(void)
 {
@@ -736,6 +735,7 @@ int TXT_GetModifierState(txt_modifier_t mod)
             return 0;
     }
 #endif
+    return 0;
 }
 
 int TXT_UnicodeCharacter(unsigned int c)
@@ -756,6 +756,7 @@ int TXT_UnicodeCharacter(unsigned int c)
     return -1;
 }
 
+#if 0
 // Returns true if the given UTF8 key name is printable to the screen.
 static int PrintableName(const char *s)
 {
@@ -774,6 +775,7 @@ static int PrintableName(const char *s)
 
     return 1;
 }
+#endif
 
 static const char *NameForKey(int key)
 {

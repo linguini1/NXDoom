@@ -1274,6 +1274,8 @@ G_CheckSpot
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (players[consoleplayer].viewz != 1) 
 	S_StartSound (mo, sfx_telept);	// don't start sound on first frame 
+#else
+    UNUSED(mo);
 #endif
  
     return true; 

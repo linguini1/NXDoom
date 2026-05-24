@@ -367,7 +367,9 @@ void F_StartCast (void)
 void F_CastTicker (void)
 {
     int		st;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     int		sfx;
+#endif
 	
     if (--casttics > 0)
 	return;			// not time to change state yet

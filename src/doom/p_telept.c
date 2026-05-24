@@ -118,6 +118,8 @@ EV_Teleport
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 		// emit sound, where?
 		S_StartSound (fog, sfx_telept);
+#else
+        UNUSED(fog);
 #endif
 		
 		// don't move for a bit

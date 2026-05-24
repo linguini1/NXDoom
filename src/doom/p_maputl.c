@@ -293,20 +293,20 @@ fixed_t openrange;
 fixed_t	lowfloor;
 
 
-void P_LineOpening (line_t* linedef)
+void P_LineOpening (line_t* p_linedef)
 {
     sector_t*	front;
     sector_t*	back;
 	
-    if (linedef->sidenum[1] == -1)
+    if (p_linedef->sidenum[1] == -1)
     {
 	// single sided line
 	openrange = 0;
 	return;
     }
 	 
-    front = linedef->frontsector;
-    back = linedef->backsector;
+    front = p_linedef->frontsector;
+    back = p_linedef->backsector;
 	
     if (front->ceilingheight < back->ceilingheight)
 	opentop = front->ceilingheight;
