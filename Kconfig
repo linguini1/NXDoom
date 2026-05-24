@@ -63,7 +63,6 @@ choice # Input method
 
 	config GAMES_NXDOOM_KEYBOARD
 		bool "Keyboard"
-		default y
 		---help---
 			Use a NuttX keyboard character driver.
 
