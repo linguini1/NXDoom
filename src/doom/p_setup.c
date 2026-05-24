@@ -38,7 +38,9 @@
 #include "p_local.h"
 #include "p_rejectpad.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#endif
 
 #include "doomstat.h"
 
@@ -737,7 +739,9 @@ P_SetupLevel
     players[consoleplayer].viewz = 1; 
 
     // Make sure all sounds are stopped before Z_FreeTags.
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_Start ();			
+#endif
 
     Z_FreeTags (PU_LEVEL, PU_PURGELEVEL-1);
 

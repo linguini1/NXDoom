@@ -26,10 +26,10 @@
 
 #include "g_game.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
-
-// Data.
 #include "sounds.h"
+#endif
 
 // State.
 #include "doomstat.h"
@@ -193,7 +193,9 @@ P_ChangeSwitchTexture
     int     texMid;
     int     texBot;
     int     i;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     int     sound;
+#endif
 	
     if (!useAgain)
 	line->special = 0;
@@ -202,17 +204,21 @@ P_ChangeSwitchTexture
     texMid = sides[line->sidenum[0]].midtexture;
     texBot = sides[line->sidenum[0]].bottomtexture;
 	
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     sound = sfx_swtchn;
 
     // EXIT SWITCH?
     if (line->special == 11)                
 	sound = sfx_swtchx;
+#endif
 	
     for (i = 0;i < numswitches*2;i++)
     {
 	if (switchlist[i] == texTop)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(buttonlist->soundorg,sound);
+#endif
 	    sides[line->sidenum[0]].toptexture = switchlist[i^1];
 
 	    if (useAgain)
@@ -224,7 +230,9 @@ P_ChangeSwitchTexture
 	{
 	    if (switchlist[i] == texMid)
 	    {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(buttonlist->soundorg,sound);
+#endif
 		sides[line->sidenum[0]].midtexture = switchlist[i^1];
 
 		if (useAgain)
@@ -236,7 +244,9 @@ P_ChangeSwitchTexture
 	    {
 		if (switchlist[i] == texBot)
 		{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		    S_StartSound(buttonlist->soundorg,sound);
+#endif
 		    sides[line->sidenum[0]].bottomtexture = switchlist[i^1];
 
 		    if (useAgain)

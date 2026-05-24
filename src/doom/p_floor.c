@@ -22,13 +22,15 @@
 #include "doomdef.h"
 #include "p_local.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // State.
 #include "doomstat.h"
 #include "r_state.h"
 // Data.
-#include "sounds.h"
 
 //e6y
 #define STAIRS_UNINITIALIZED_CRUSH_FIELD_VALUE 10
@@ -210,8 +212,10 @@ void T_MoveFloor(floormove_t* floor)
 		      floor->floordestheight,
 		      floor->crush,0,floor->direction);
     
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (!(leveltime&7))
 	S_StartSound(&floor->sector->soundorg, sfx_stnmov);
+#endif
     
     if (res == pastdest)
     {
@@ -241,7 +245,9 @@ void T_MoveFloor(floormove_t* floor)
 	}
 	P_RemoveThinker(&floor->thinker);
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound(&floor->sector->soundorg, sfx_pstop);
+#endif
     }
 
 }

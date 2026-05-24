@@ -61,11 +61,13 @@
 
 #include "p_local.h" 
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // Data.
 #include "dstrings.h"
-#include "sounds.h"
 
 // SKY handling - still the wrong place.
 #include "r_data.h"
@@ -1025,11 +1027,13 @@ void G_Ticker (void)
 		{ 
 		  case BTS_PAUSE: 
 		    paused ^= 1; 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		    if (paused) 
 			S_PauseSound (); 
 		    else 
 			S_ResumeSound (); 
 		    break; 
+#endif
 					 
 		  case BTS_SAVEGAME: 
 		    if (!savedescription[0]) 
@@ -1267,8 +1271,10 @@ G_CheckSpot
                          ss->sector->floorheight, MT_TFOG);
     }
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (players[consoleplayer].viewz != 1) 
 	S_StartSound (mo, sfx_telept);	// don't start sound on first frame 
+#endif
  
     return true; 
 } 
@@ -1821,7 +1827,9 @@ G_InitNew
     if (paused)
     {
 	paused = false;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_ResumeSound ();
+#endif
     }
 
     /*

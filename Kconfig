@@ -34,6 +34,18 @@ config GAMES_NXDOOM_PREFDIR
 	---help---
 		Directory where DOOM WAD files are stored.
 
+config GAMES_NXDOOM_NET
+	bool "Enable network features"
+	default n
+	---help---
+		Not ported! Will not work.
+
+config GAMES_NXDOOM_SOUND
+	bool "Enable sound features"
+	default n
+	---help---
+		Not ported! Will not work.
+
 comment "Graphics options"
 
 config GAMES_NXDOOM_FBPATH

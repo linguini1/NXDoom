@@ -42,19 +42,10 @@ BASESRCS =        \
   i_glob.c        \
   i_input.c       \
   i_joystick.c    \
-  i_musicpack.c   \
-  i_oplmusic.c    \
-  i_pcsound.c     \
-  i_sdlmusic.c    \
-  i_sdlsound.c    \
-  i_sound.c       \
   i_timer.c       \
   i_video.c       \
   i_videohr.c     \
   i_winmusic.c    \
-  midifallback.c  \
-  midifile.c      \
-  mus2mid.c       \
   m_bbox.c        \
   m_cheat.c       \
   m_config.c      \
@@ -84,7 +75,6 @@ BASESRCS =        \
   w_file.c        \
   w_file_stdc.c   \
   w_file_posix.c  \
-  w_file_win32.c  \
   w_merge.c       \
 
 DOOMSRCS =     \
@@ -96,7 +86,6 @@ DOOMSRCS =     \
   deh_frame.c  \
   deh_misc.c   \
   deh_ptr.c    \
-  deh_sound.c  \
   deh_thing.c  \
   deh_weapon.c \
   d_items.c    \
@@ -140,8 +129,6 @@ DOOMSRCS =     \
   r_segs.c     \
   r_sky.c      \
   r_things.c   \
-  s_sound.c    \
-  sounds.c     \
   statdump.c   \
   st_lib.c     \
   st_stuff.c   \
@@ -189,6 +176,24 @@ CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(COMMONSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(DEHACKEDSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(BASESRCS))
 CSRCS += $(patsubst %,$(DOOMSRCDIR)/%,$(DOOMSRCS))
+
+# Only include sound logic if enabled
+
+ifeq ($(CONFIG_GAMES_NXDOOM_SOUND),y)
+CSRCS += $(COMMONSRCDIR)/i_musicpack.c
+CSRCS += $(COMMONSRCDIR)/i_oplmusic.c
+CSRCS += $(COMMONSRCDIR)/i_pcsound.c
+CSRCS += $(COMMONSRCDIR)/i_sdlmusic.c
+CSRCS += $(COMMONSRCDIR)/i_sdlsound.c
+CSRCS += $(COMMONSRCDIR)/i_sound.c
+CSRCS += $(COMMONSRCDIR)/midifallback.c
+CSRCS += $(COMMONSRCDIR)/midifile.c
+CSRCS += $(COMMONSRCDIR)/mus2mid.c
+
+CSRCS += $(DOOMSRCDIR)/sounds.c
+CSRCS += $(DOOMSRCDIR)/s_sound.c
+CSRCS += $(DOOMSRCDIR)/deh_sound.c
+endif
 
 MAINSRC  = $(COMMONSRCDIR)/i_main.c
 

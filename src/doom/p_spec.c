@@ -39,14 +39,13 @@
 
 #include "g_game.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // State.
 #include "r_state.h"
-
-// Data.
-#include "sounds.h"
-
 
 //
 // Animating textures and planes
@@ -1172,7 +1171,9 @@ void P_UpdateSpecials (void)
 			buttonlist[i].btexture;
 		    break;
 		}
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&buttonlist[i].soundorg,sfx_swtchn);
+#endif
 		memset(&buttonlist[i],0,sizeof(button_t));
 	    }
 	}

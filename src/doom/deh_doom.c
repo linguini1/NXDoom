@@ -38,7 +38,11 @@ deh_section_t *deh_section_types[] =
     &deh_section_frame,
     &deh_section_misc,
     &deh_section_pointer,
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     &deh_section_sound,
+#else
+    NULL,
+#endif
     &deh_section_text,
     &deh_section_thing,
     &deh_section_weapon,

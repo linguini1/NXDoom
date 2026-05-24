@@ -47,7 +47,10 @@
 #include "am_map.h"
 #include "m_cheat.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // Needs access to LFB.
 #include "v_video.h"
@@ -57,7 +60,6 @@
 
 // Data.
 #include "dstrings.h"
-#include "sounds.h"
 
 //
 // STATUS BAR DATA
@@ -455,22 +457,32 @@ ST_Responder (event_t* ev)
 
 	if (gamemode == commercial || gameversion < exe_ultimate)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	  musnum = mus_runnin + (buf[0]-'0')*10 + buf[1]-'0' - 1;
+#endif
 	  
 	  if (((buf[0]-'0')*10 + buf[1]-'0') > 35
        && gameversion >= exe_doom_1_8)
 	    plyr->message = DEH_String(STSTR_NOMUS);
-	  else
-	    S_ChangeMusic(musnum, 1);
+	  else {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
+          S_ChangeMusic(musnum, 1);
+#endif
+      }
 	}
 	else
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	  musnum = mus_e1m1 + (buf[0]-'1')*9 + (buf[1]-'1');
+#endif
 	  
 	  if (((buf[0]-'1')*9 + buf[1]-'1') > 31)
 	    plyr->message = DEH_String(STSTR_NOMUS);
-	  else
-	    S_ChangeMusic(musnum, 1);
+	  else {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
+          S_ChangeMusic(musnum, 1);
+#endif
+      }
 	}
       }
       else if ( (logical_gamemission == doom 

@@ -24,12 +24,14 @@
 
 #include "doomdef.h"
 #include "p_local.h"
-#include "sounds.h"
 
 #include "st_stuff.h"
 #include "hu_stuff.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 #include "doomstat.h"
 
@@ -106,8 +108,10 @@ void P_ExplodeMissile (mobj_t* mo)
 
     mo->flags &= ~MF_MISSILE;
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (mo->info->deathsound)
 	S_StartSound (mo, mo->info->deathsound);
+#endif
 }
 
 
@@ -332,7 +336,9 @@ void P_ZMovement (mobj_t* mo)
 		// after hitting the ground (hard),
 		// and utter appropriate sound.
 		mo->player->deltaviewheight = mo->momz>>3;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound (mo, sfx_oof);
+#endif
 	    }
 	    mo->momz = 0;
 	}
@@ -414,14 +420,18 @@ P_NightmareRespawn (mobj_t* mobj)
 		      mobj->y,
 		      mobj->subsector->sector->floorheight , MT_TFOG); 
     // initiate teleport sound
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (mo, sfx_telept);
+#endif
 
     // spawn a teleport fog at the new spot
     ss = R_PointInSubsector (x,y); 
 
     mo = P_SpawnMobj (x, y, ss->sector->floorheight , MT_TFOG); 
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (mo, sfx_telept);
+#endif
 
     // spawn the new monster
     mthing = &mobj->spawnpoint;
@@ -601,7 +611,9 @@ void P_RemoveMobj (mobj_t* mobj)
     P_UnsetThingPosition (mobj);
     
     // stop any playing sound
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StopSound (mobj);
+#endif
     
     // free block
     P_RemoveThinker ((thinker_t*)mobj);
@@ -645,7 +657,9 @@ void P_RespawnSpecials (void)
     // spawn a teleport fog at the new spot
     ss = R_PointInSubsector (x,y); 
     mo = P_SpawnMobj (x, y, ss->sector->floorheight , MT_IFOG); 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (mo, sfx_itmbk);
+#endif
 
     // find which type to spawn
     for (i=0 ; i< NUMMOBJTYPES ; i++)
@@ -983,8 +997,10 @@ P_SpawnMissile
 		      source->y,
 		      source->z + 4*8*FRACUNIT, type);
     
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (th->info->seesound)
 	S_StartSound (th, th->info->seesound);
+#endif
 
     th->target = source;	// where it came from
     an = R_PointToAngle2 (source->x, source->y, dest->x, dest->y);
@@ -1056,8 +1072,10 @@ P_SpawnPlayerMissile
 	
     th = P_SpawnMobj (x,y,z, type);
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (th->info->seesound)
 	S_StartSound (th, th->info->seesound);
+#endif
 
     th->target = source;
     th->angle = an;

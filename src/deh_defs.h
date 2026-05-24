@@ -69,7 +69,9 @@ extern deh_section_t deh_section_misc;
 // deh_ptr.c:
 extern deh_section_t deh_section_pointer;
 // deh_sound.c
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 extern deh_section_t deh_section_sound;
+#endif
 // deh_text.c:
 extern deh_section_t deh_section_text;
 // deh_thing.c:

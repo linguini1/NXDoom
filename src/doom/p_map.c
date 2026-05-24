@@ -31,13 +31,15 @@
 #include "m_misc.h"
 #include "p_local.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // State.
 #include "doomstat.h"
 #include "r_state.h"
 // Data.
-#include "sounds.h"
 
 // Spechit overrun magic value.
 //
@@ -1144,7 +1146,9 @@ boolean	PTR_UseTraverse (intercept_t* in)
 	P_LineOpening (in->d.line);
 	if (openrange <= 0)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound (usething, sfx_noway);
+#endif
 	    
 	    // can't use through a wall
 	    return false;	
