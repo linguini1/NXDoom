@@ -757,6 +757,7 @@ void I_FinishUpdate (void)
     int tics;
     int i;
     int p_idx;
+    void *fbptr;
 
     if (!fbstate.inited)
         return;
@@ -850,12 +851,18 @@ void I_FinishUpdate (void)
      * and formats.
      */
 
-    for (unsigned xy = 0; xy < SCREENWIDTH * SCREENHEIGHT; xy++) {
-        p_idx = screenbuffer[xy];
-        ((uint32_t *)(fbstate.fbmem))[xy] =
-            ARGBTO32(palette[p_idx].a, palette[p_idx].r, palette[p_idx].g,
-                     palette[p_idx].b);
-    }
+    fbptr = fbstate.fbmem;
+    for (unsigned y = 0; y < SCREENHEIGHT; y++)
+      {
+        for (unsigned x = 0; x < SCREENWIDTH; x++)
+          {
+            p_idx = screenbuffer[y * SCREENWIDTH + x];
+            ((uint32_t *)(fbptr))[x] =
+                ARGBTO32(palette[p_idx].a, palette[p_idx].r, palette[p_idx].g,
+                         palette[p_idx].b);
+          }
+        fbptr += fbstate.pinfo.stride;
+      }
 
 #if 0
     SDL_LockTexture(texture, &blit_rect, &argbbuffer->pixels,
