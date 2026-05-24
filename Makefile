@@ -12,8 +12,6 @@ PROGNAME  = nxdoom
 COMMONSRCDIR = src
 TEXTSCREENSRCDIR = textscreen
 DOOMSRCDIR = $(COMMONSRCDIR)/doom
-OPLSRCDIR = opl
-PCSOUNDSRCDIR = pcsound
 
 # Includes
 
@@ -157,20 +155,6 @@ TXTSCREENSRCS =       \
   txt_window.c        \
   txt_window_action.c 
 
-OPLSRCS =      \
-  opl.c        \
-  opl_queue.c  \
-  opl_sdl.c    \
-  opl_timer.c  \
-  ioperm_sys.c \
-  opl3.c
-
-PCSOUNDSRCS =     \
-  pcsound.c       \
-  pcsound_sdl.c   \
-
-CSRCS += $(patsubst %,$(OPLSRCDIR)/%,$(OPLSRCS))
-CSRCS += $(patsubst %,$(PCSOUNDSRCDIR)/%,$(PCSOUNDSRCS))
 CSRCS += $(patsubst %,$(TEXTSCREENSRCDIR)/%,$(TXTSCREENSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(COMMONSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(DEHACKEDSRCS))
