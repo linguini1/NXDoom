@@ -22,13 +22,15 @@
 #include "doomdef.h"
 #include "p_local.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // State.
 #include "doomstat.h"
 #include "r_state.h"
 // Data.
-#include "sounds.h"
 
 //e6y
 #define STAIRS_UNINITIALIZED_CRUSH_FIELD_VALUE 10
@@ -210,8 +212,10 @@ void T_MoveFloor(floormove_t* floor)
 		      floor->floordestheight,
 		      floor->crush,0,floor->direction);
     
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (!(leveltime&7))
 	S_StartSound(&floor->sector->soundorg, sfx_stnmov);
+#endif
     
     if (res == pastdest)
     {
@@ -241,7 +245,9 @@ void T_MoveFloor(floormove_t* floor)
 	}
 	P_RemoveThinker(&floor->thinker);
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound(&floor->sector->soundorg, sfx_pstop);
+#endif
     }
 
 }
@@ -453,7 +459,7 @@ EV_BuildStairs
     int			i;
     int			newsecnum;
     int			texture;
-    int			ok;
+    int			is_ok;
     int			rtn;
     
     sector_t*		sec;
@@ -510,7 +516,7 @@ EV_BuildStairs
 	// 2.	Other side is the next sector to raise
 	do
 	{
-	    ok = 0;
+	    is_ok = 0;
 	    for (i = 0;i < sec->linecount;i++)
 	    {
 		if ( !((sec->lines[i])->flags & ML_TWOSIDED) )
@@ -551,10 +557,10 @@ EV_BuildStairs
 		// Uninitialized crush field will not be equal to 0 or 1 (true)
 		// with high probability. So, initialize it with any other value
 		floor->crush = STAIRS_UNINITIALIZED_CRUSH_FIELD_VALUE;
-		ok = 1;
+		is_ok = 1;
 		break;
 	    }
-	} while(ok);
+	} while(is_ok);
     }
     return rtn;
 }

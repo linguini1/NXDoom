@@ -23,7 +23,10 @@
 #include "p_local.h"
 #include "i_system.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 
 // State.
@@ -32,7 +35,6 @@
 
 // Data.
 #include "dstrings.h"
-#include "sounds.h"
 
 #if 0
 //
@@ -69,17 +71,23 @@ void T_VerticalDoor (vldoor_t* door)
 	    {
 	      case vld_blazeRaise:
 		door->direction = -1; // time to go back down
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&door->sector->soundorg, sfx_bdcls);
+#endif
 		break;
 		
 	      case vld_normal:
 		door->direction = -1; // time to go back down
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&door->sector->soundorg, sfx_dorcls);
+#endif
 		break;
 		
 	      case vld_close30ThenOpen:
 		door->direction = 1;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&door->sector->soundorg, sfx_doropn);
+#endif
 		break;
 		
 	      default:
@@ -97,7 +105,9 @@ void T_VerticalDoor (vldoor_t* door)
 	      case vld_raiseIn5Mins:
 		door->direction = 1;
 		door->type = vld_normal;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&door->sector->soundorg, sfx_doropn);
+#endif
 		break;
 		
 	      default:
@@ -120,7 +130,9 @@ void T_VerticalDoor (vldoor_t* door)
 	      case vld_blazeClose:
 		door->sector->specialdata = NULL;
 		P_RemoveThinker (&door->thinker);  // unlink and free
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&door->sector->soundorg, sfx_bdcls);
+#endif
 		break;
 		
 	      case vld_normal:
@@ -148,7 +160,9 @@ void T_VerticalDoor (vldoor_t* door)
 		
 	      default:
 		door->direction = 1;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&door->sector->soundorg, sfx_doropn);
+#endif
 		break;
 	    }
 	}
@@ -212,7 +226,9 @@ EV_DoLockedDoor
 	if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
 	{
 	    p->message = DEH_String(PD_BLUEO);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
+#endif
 	    return 0;
 	}
 	break;
@@ -222,7 +238,9 @@ EV_DoLockedDoor
 	if (!p->cards[it_redcard] && !p->cards[it_redskull])
 	{
 	    p->message = DEH_String(PD_REDO);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
+#endif
 	    return 0;
 	}
 	break;
@@ -233,7 +251,9 @@ EV_DoLockedDoor
 	    !p->cards[it_yellowskull])
 	{
 	    p->message = DEH_String(PD_YELLOWO);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
+#endif
 	    return 0;
 	}
 	break;	
@@ -281,20 +301,26 @@ EV_DoDoor
 	    door->topheight -= 4*FRACUNIT;
 	    door->direction = -1;
 	    door->speed = VDOORSPEED * 4;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(&door->sector->soundorg, sfx_bdcls);
+#endif
 	    break;
 	    
 	  case vld_close:
 	    door->topheight = P_FindLowestCeilingSurrounding(sec);
 	    door->topheight -= 4*FRACUNIT;
 	    door->direction = -1;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(&door->sector->soundorg, sfx_dorcls);
+#endif
 	    break;
 	    
 	  case vld_close30ThenOpen:
 	    door->topheight = sec->ceilingheight;
 	    door->direction = -1;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(&door->sector->soundorg, sfx_dorcls);
+#endif
 	    break;
 	    
 	  case vld_blazeRaise:
@@ -303,8 +329,10 @@ EV_DoDoor
 	    door->topheight = P_FindLowestCeilingSurrounding(sec);
 	    door->topheight -= 4*FRACUNIT;
 	    door->speed = VDOORSPEED * 4;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    if (door->topheight != sec->ceilingheight)
 		S_StartSound(&door->sector->soundorg, sfx_bdopn);
+#endif
 	    break;
 	    
 	  case vld_normal:
@@ -312,8 +340,10 @@ EV_DoDoor
 	    door->direction = 1;
 	    door->topheight = P_FindLowestCeilingSurrounding(sec);
 	    door->topheight -= 4*FRACUNIT;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    if (door->topheight != sec->ceilingheight)
 		S_StartSound(&door->sector->soundorg, sfx_doropn);
+#endif
 	    break;
 	    
 	  default:
@@ -353,7 +383,9 @@ EV_VerticalDoor
 	if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
 	{
 	    player->message = DEH_String(PD_BLUEK);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
+#endif
 	    return;
 	}
 	break;
@@ -367,7 +399,9 @@ EV_VerticalDoor
 	    !player->cards[it_yellowskull])
 	{
 	    player->message = DEH_String(PD_YELLOWK);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
+#endif
 	    return;
 	}
 	break;
@@ -380,7 +414,9 @@ EV_VerticalDoor
 	if (!player->cards[it_redcard] && !player->cards[it_redskull])
 	{
 	    player->message = DEH_String(PD_REDK);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
+#endif
 	    return;
 	}
 	break;
@@ -451,6 +487,7 @@ EV_VerticalDoor
 	}
     }
 	
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     // for proper sound
     switch(line->special)
     {
@@ -468,6 +505,7 @@ EV_VerticalDoor
 	S_StartSound(&sec->soundorg,sfx_doropn);
 	break;
     }
+#endif
 	
     
     // new door thinker

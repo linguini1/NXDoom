@@ -15,7 +15,6 @@
 //	System interface for PC speaker sound.
 //
 
-#include "SDL.h"
 #include <string.h>
 
 #include "doomtype.h"
@@ -32,7 +31,9 @@
 
 static boolean pcs_initialized = false;
 
+#if 0
 static SDL_mutex *sound_lock;
+#endif
 static GameMission_t gamemission;
 
 static uint8_t *current_sound_lump = NULL;
@@ -61,6 +62,7 @@ static const uint16_t divisors[] = {
      213,  207,  201,  195,  190,  184,  179,
 };
 
+#if 0
 static void PCSCallbackFunc(int *duration, int *freq)
 {
     unsigned int tone;
@@ -102,6 +104,7 @@ static void PCSCallbackFunc(int *duration, int *freq)
 
     SDL_UnlockMutex(sound_lock);
 }
+#endif
 
 static boolean CachePCSLump(sfxinfo_t *sfxinfo)
 {
@@ -171,7 +174,7 @@ static boolean IsDisabledSound(sfxinfo_t *sfxinfo)
 
     return false;
 }
-
+#if 0
 static int I_PCS_StartSound(sfxinfo_t *sfxinfo,
                             int channel,
                             int vol,
@@ -213,7 +216,9 @@ static int I_PCS_StartSound(sfxinfo_t *sfxinfo,
         return -1;
     }
 }
+#endif
 
+#if 0
 static void I_PCS_StopSound(int handle)
 {
     if (!pcs_initialized)
@@ -235,6 +240,7 @@ static void I_PCS_StopSound(int handle)
     
     SDL_UnlockMutex(sound_lock);
 }
+#endif
 
 //
 // Retrieve the raw data lump index
@@ -279,6 +285,7 @@ static boolean I_PCS_SoundIsPlaying(int handle)
     return current_sound_lump != NULL && current_sound_remaining > 0;
 }
 
+#if 0
 static boolean I_PCS_InitSound(GameMission_t mission)
 {
     gamemission = mission;
@@ -298,7 +305,9 @@ static boolean I_PCS_InitSound(GameMission_t mission)
 
     return pcs_initialized;
 }
+#endif
 
+#if 0
 static void I_PCS_ShutdownSound(void)
 {
     if (pcs_initialized)
@@ -306,6 +315,7 @@ static void I_PCS_ShutdownSound(void)
         PCSound_Shutdown();
     }
 }
+#endif
 
 static void I_PCS_UpdateSound(void)
 {
@@ -326,6 +336,7 @@ const sound_module_t sound_pcsound_module =
 {
     sound_pcsound_devices,
     arrlen(sound_pcsound_devices),
+#if 0
     I_PCS_InitSound,
     I_PCS_ShutdownSound,
     I_PCS_GetSfxLumpNum,
@@ -334,5 +345,5 @@ const sound_module_t sound_pcsound_module =
     I_PCS_StartSound,
     I_PCS_StopSound,
     I_PCS_SoundIsPlaying,
+#endif
 };
-

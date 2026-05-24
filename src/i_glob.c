@@ -369,5 +369,11 @@ const char *I_NextGlob(glob_t *glob)
     return "";
 }
 
+glob_t *I_StartMultiGlob(const char *directory, int flags,
+                         const char *glob, ...)
+{
+    return NULL;
+}
+
 #endif /* #ifdef NO_DIRENT_IMPLEMENTATION */
 

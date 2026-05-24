@@ -28,9 +28,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include "SDL.h"
-#include "SDL_thread.h"
-
 #include "pcsound.h"
 #include "pcsound_internal.h"
 

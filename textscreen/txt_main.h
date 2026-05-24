@@ -18,6 +18,8 @@
 #ifndef TXT_MAIN_H
 #define TXT_MAIN_H
 
+#include <stdarg.h>
+
 // For the moment, txt_sdl.c is the only implementation of the base 
 // text mode screen API:
 

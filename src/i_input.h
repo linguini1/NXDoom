@@ -22,8 +22,9 @@
 
 #include "doomtype.h"
 
-#include "SDL.h"
-
+#ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
+#include <nuttx/input/keyboard.h>
+#endif
 
 #define MAX_MOUSE_BUTTONS 8
 
@@ -42,8 +43,11 @@ void I_StartTextInput(int x1, int y1, int x2, int y2);
 // (if one is used).
 void I_StopTextInput(void);
 
-void I_HandleKeyboardEvent(SDL_Event *sdlevent);
-void I_HandleMouseEvent(SDL_Event *sdlevent);
+void I_HandleKeyboardEvent(struct keyboard_event_s *kevent);
+void I_HandleMouseEvent(void);
 
+#ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
+int get_kbd_event(struct keyboard_event_s *sample);
+#endif
 
 #endif

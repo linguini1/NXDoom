@@ -16,7 +16,8 @@
 //      Timer functions.
 //
 
-#include "SDL.h"
+#include <nuttx/clock.h>
+#include <unistd.h>
 
 #include "i_timer.h"
 #include "doomtype.h"
@@ -26,20 +27,15 @@
 // returns time in 1/35th second tics
 //
 
-static Uint32 basetime = 0;
+static struct timespec basetime =
+{
+  .tv_nsec = 0,
+  .tv_sec = 0
+};
 
 int  I_GetTime (void)
 {
-    Uint32 ticks;
-
-    ticks = SDL_GetTicks();
-
-    if (basetime == 0)
-        basetime = ticks;
-
-    ticks -= basetime;
-
-    return (ticks * TICRATE) / 1000;    
+    return (I_GetTimeMS() * TICRATE) / 1000;    
 }
 
 //
@@ -48,21 +44,24 @@ int  I_GetTime (void)
 
 int I_GetTimeMS(void)
 {
-    Uint32 ticks;
+    struct timespec curtime;
 
-    ticks = SDL_GetTicks();
+    /* NOTE: we ignore any possible error here */
 
-    if (basetime == 0)
-        basetime = ticks;
+    clock_gettime(CLOCK_MONOTONIC, &curtime);
+    if (basetime.tv_sec == 0 && basetime.tv_nsec == 0)
+    {
+      clock_gettime(CLOCK_MONOTONIC, &basetime);
+    }
 
-    return ticks - basetime;
+    return (clock_time2usec(&curtime) - clock_time2usec(&basetime)) / 1000;
 }
 
 // Sleep for a specified number of ms
 
 void I_Sleep(int ms)
 {
-    SDL_Delay(ms);
+    usleep(ms / 1000);
 }
 
 void I_WaitVBL(int count)
@@ -74,9 +73,10 @@ void I_WaitVBL(int count)
 void I_InitTimer(void)
 {
     // initialize timer
-
+#if 0
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 
     SDL_Init(SDL_INIT_TIMER);
+#endif
 }
 

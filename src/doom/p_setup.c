@@ -38,7 +38,9 @@
 #include "p_local.h"
 #include "p_rejectpad.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#endif
 
 #include "doomstat.h"
 
@@ -179,7 +181,7 @@ void P_LoadSegs (int lump)
     mapseg_t*		ml;
     seg_t*		li;
     line_t*		ldef;
-    int			linedef;
+    int			linedef_int;
     int			side;
     int                 sidenum;
 	
@@ -197,8 +199,8 @@ void P_LoadSegs (int lump)
 
 	li->angle = (SHORT(ml->angle))<<FRACBITS;
 	li->offset = (SHORT(ml->offset))<<FRACBITS;
-	linedef = SHORT(ml->linedef);
-	ldef = &lines[linedef];
+	linedef_int = SHORT(ml->linedef);
+	ldef = &lines[linedef_int];
 	li->linedef = ldef;
 	side = SHORT(ml->side);
 
@@ -206,7 +208,7 @@ void P_LoadSegs (int lump)
         if ((unsigned)ldef->sidenum[side] >= (unsigned)numsides)
         {
             I_Error("P_LoadSegs: linedef %d for seg %d references a non-existent sidedef %d",
-                    linedef, i, (unsigned)ldef->sidenum[side]);
+                    linedef_int, i, (unsigned)ldef->sidenum[side]);
         }
 
 	li->sidedef = &sides[ldef->sidenum[side]];
@@ -737,7 +739,9 @@ P_SetupLevel
     players[consoleplayer].viewz = 1; 
 
     // Make sure all sounds are stopped before Z_FreeTags.
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_Start ();			
+#endif
 
     Z_FreeTags (PU_LEVEL, PU_PURGELEVEL-1);
 

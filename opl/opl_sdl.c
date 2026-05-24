@@ -23,7 +23,6 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "SDL.h"
 #ifndef DISABLE_SDL2MIXER
 #include "SDL_mixer.h"
 #endif  // DISABLE_SDL2MIXER
@@ -52,7 +51,9 @@ typedef struct
 // When the callback mutex is locked using OPL_Lock, callback functions
 // are not invoked.
 
+#if 0
 static SDL_mutex *callback_mutex = NULL;
+#endif
 
 // Queue of callbacks waiting to be invoked.
 
@@ -60,7 +61,9 @@ static opl_callback_queue_t *callback_queue;
 
 // Mutex used to control access to the callback queue.
 
+#if 0
 static SDL_mutex *callback_queue_mutex = NULL;
+#endif
 
 // Current time, in us since startup:
 
@@ -97,12 +100,12 @@ static opl_timer_t timer2 = { 3125, 0, 0, 0 };
 
 static int sdl_was_initialized = 0;
 static int mixing_freq, mixing_channels;
-static Uint16 mixing_format;
+static uint16_t mixing_format;
 
 static int SDLIsInitialized(void)
 {
     int freq, channels;
-    Uint16 format;
+    uint16_t format;
 
     return Mix_QuerySpec(&freq, &format, &channels);
 }

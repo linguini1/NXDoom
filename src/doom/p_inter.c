@@ -22,7 +22,6 @@
 // Data.
 #include "doomdef.h"
 #include "dstrings.h"
-#include "sounds.h"
 
 #include "deh_main.h"
 #include "deh_misc.h"
@@ -35,7 +34,10 @@
 
 #include "p_local.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 #include "p_inter.h"
 
@@ -182,8 +184,10 @@ P_GiveWeapon
 	    P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
 	player->pendingweapon = weapon;
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (player == &players[consoleplayer])
 	    S_StartSound (NULL, sfx_wpnup);
+#endif
 	return false;
     }
 	
@@ -335,7 +339,9 @@ P_TouchSpecialThing
     player_t*	player;
     int		i;
     fixed_t	delta;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     int		sound;
+#endif
 		
     delta = special->z - toucher->z;
 
@@ -347,7 +353,9 @@ P_TouchSpecialThing
     }
     
 	
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     sound = sfx_itemup;	
+#endif
     player = toucher->player;
 
     // Dead thing touching.
@@ -397,8 +405,11 @@ P_TouchSpecialThing
 	    player->health = deh_max_soulsphere;
 	player->mo->health = player->health;
 	player->message = DEH_String(GOTSUPER);
+
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
       case SPR_MEGA:
@@ -410,8 +421,10 @@ P_TouchSpecialThing
         // affects the MegaArmor.
 	P_GiveArmor (player, 2);
 	player->message = DEH_String(GOTMSPHERE);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
 	// cards
@@ -487,8 +500,10 @@ P_TouchSpecialThing
 	if (!P_GivePower (player, pw_invulnerability))
 	    return;
 	player->message = DEH_String(GOTINVUL);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
       case SPR_PSTR:
@@ -497,40 +512,50 @@ P_TouchSpecialThing
 	player->message = DEH_String(GOTBERSERK);
 	if (player->readyweapon != wp_fist)
 	    player->pendingweapon = wp_fist;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
       case SPR_PINS:
 	if (!P_GivePower (player, pw_invisibility))
 	    return;
 	player->message = DEH_String(GOTINVIS);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
       case SPR_SUIT:
 	if (!P_GivePower (player, pw_ironfeet))
 	    return;
 	player->message = DEH_String(GOTSUIT);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
       case SPR_PMAP:
 	if (!P_GivePower (player, pw_allmap))
 	    return;
 	player->message = DEH_String(GOTMAP);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
       case SPR_PVIS:
 	if (!P_GivePower (player, pw_infrared))
 	    return;
 	player->message = DEH_String(GOTVISOR);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
+#endif
 	break;
 	
 	// ammo
@@ -607,7 +632,9 @@ P_TouchSpecialThing
 	if (!P_GiveWeapon (player, wp_bfg, false) )
 	    return;
 	player->message = DEH_String(GOTBFG9000);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
+#endif
 	break;
 	
       case SPR_MGUN:
@@ -615,28 +642,36 @@ P_TouchSpecialThing
                           (special->flags & MF_DROPPED) != 0))
             return;
 	player->message = DEH_String(GOTCHAINGUN);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
+#endif
 	break;
 	
       case SPR_CSAW:
 	if (!P_GiveWeapon (player, wp_chainsaw, false) )
 	    return;
 	player->message = DEH_String(GOTCHAINSAW);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
+#endif
 	break;
 	
       case SPR_LAUN:
 	if (!P_GiveWeapon (player, wp_missile, false) )
 	    return;
 	player->message = DEH_String(GOTLAUNCHER);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
+#endif
 	break;
 	
       case SPR_PLAS:
 	if (!P_GiveWeapon (player, wp_plasma, false) )
 	    return;
 	player->message = DEH_String(GOTPLASMA);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
+#endif
 	break;
 	
       case SPR_SHOT:
@@ -644,7 +679,9 @@ P_TouchSpecialThing
                           (special->flags & MF_DROPPED) != 0))
             return;
 	player->message = DEH_String(GOTSHOTGUN);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
+#endif
 	break;
 		
       case SPR_SGN2:
@@ -652,7 +689,9 @@ P_TouchSpecialThing
                           (special->flags & MF_DROPPED) != 0))
             return;
 	player->message = DEH_String(GOTSHOTGUN2);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
+#endif
 	break;
 		
       default:
@@ -663,8 +702,10 @@ P_TouchSpecialThing
 	player->itemcount++;
     P_RemoveMobj (special);
     player->bonuscount += BONUSADD;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (player == &players[consoleplayer])
 	S_StartSound (NULL, sound);
+#endif
 }
 
 

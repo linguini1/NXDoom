@@ -22,8 +22,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "SDL.h"
-
 #include "config.h"
 #include "doomtype.h"
 #include "memio.h"

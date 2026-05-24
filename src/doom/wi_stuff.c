@@ -33,12 +33,13 @@
 #include "g_game.h"
 
 #include "r_local.h"
+
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 #include "doomstat.h"
-
-// Data.
-#include "sounds.h"
 
 // Needs access to LFB.
 #include "v_video.h"
@@ -923,15 +924,19 @@ void WI_updateDeathmatchStats(void)
 	}
 	
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound(0, sfx_barexp);
+#endif
 	dm_state = 4;
     }
 
     
     if (dm_state == 2)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 	
 	stillticking = false;
 
@@ -970,7 +975,9 @@ void WI_updateDeathmatchStats(void)
 	}
 	if (!stillticking)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_barexp);
+#endif
 	    dm_state++;
 	}
 
@@ -979,7 +986,9 @@ void WI_updateDeathmatchStats(void)
     {
 	if (acceleratestage)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_slop);
+#endif
 
 	    if ( gamemode == commercial)
 		WI_initNoState();
@@ -1141,14 +1150,18 @@ void WI_updateNetgameStats(void)
 	    if (dofrags)
 		cnt_frags[i] = WI_fragSum(i);
 	}
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound(0, sfx_barexp);
+#endif
 	ng_state = 10;
     }
 
     if (ng_state == 2)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	stillticking = false;
 
@@ -1167,14 +1180,18 @@ void WI_updateNetgameStats(void)
 	
 	if (!stillticking)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_barexp);
+#endif
 	    ng_state++;
 	}
     }
     else if (ng_state == 4)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	stillticking = false;
 
@@ -1191,14 +1208,18 @@ void WI_updateNetgameStats(void)
 	}
 	if (!stillticking)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_barexp);
+#endif
 	    ng_state++;
 	}
     }
     else if (ng_state == 6)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	stillticking = false;
 
@@ -1217,14 +1238,18 @@ void WI_updateNetgameStats(void)
 	
 	if (!stillticking)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_barexp);
+#endif
 	    ng_state += 1 + 2*!dofrags;
 	}
     }
     else if (ng_state == 8)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	stillticking = false;
 
@@ -1243,7 +1268,9 @@ void WI_updateNetgameStats(void)
 	
 	if (!stillticking)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_pldeth);
+#endif
 	    ng_state++;
 	}
     }
@@ -1251,7 +1278,9 @@ void WI_updateNetgameStats(void)
     {
 	if (acceleratestage)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_sgcock);
+#endif
 	    if ( gamemode == commercial )
 		WI_initNoState();
 	    else
@@ -1352,7 +1381,9 @@ void WI_updateStats(void)
 	cnt_secret[0] = (plrs[me].ssecret * 100) / wbs->maxsecret;
 	cnt_time = plrs[me].stime / TICRATE;
 	cnt_par = wbs->partime / TICRATE;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound(0, sfx_barexp);
+#endif
 	sp_state = 10;
     }
 
@@ -1360,13 +1391,17 @@ void WI_updateStats(void)
     {
 	cnt_kills[0] += 2;
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	if (cnt_kills[0] >= (plrs[me].skills * 100) / wbs->maxkills)
 	{
 	    cnt_kills[0] = (plrs[me].skills * 100) / wbs->maxkills;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_barexp);
+#endif
 	    sp_state++;
 	}
     }
@@ -1374,13 +1409,17 @@ void WI_updateStats(void)
     {
 	cnt_items[0] += 2;
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	if (cnt_items[0] >= (plrs[me].sitems * 100) / wbs->maxitems)
 	{
 	    cnt_items[0] = (plrs[me].sitems * 100) / wbs->maxitems;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_barexp);
+#endif
 	    sp_state++;
 	}
     }
@@ -1388,21 +1427,27 @@ void WI_updateStats(void)
     {
 	cnt_secret[0] += 2;
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	if (cnt_secret[0] >= (plrs[me].ssecret * 100) / wbs->maxsecret)
 	{
 	    cnt_secret[0] = (plrs[me].ssecret * 100) / wbs->maxsecret;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_barexp);
+#endif
 	    sp_state++;
 	}
     }
 
     else if (sp_state == 8)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
+#endif
 
 	cnt_time += 3;
 
@@ -1417,7 +1462,9 @@ void WI_updateStats(void)
 
 	    if (cnt_time >= plrs[me].stime / TICRATE)
 	    {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(0, sfx_barexp);
+#endif
 		sp_state++;
 	    }
 	}
@@ -1426,7 +1473,9 @@ void WI_updateStats(void)
     {
 	if (acceleratestage)
 	{
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(0, sfx_sgcock);
+#endif
 
 	    if (gamemode == commercial)
 		WI_initNoState();
@@ -1519,11 +1568,13 @@ void WI_Ticker(void)
 
     if (bcnt == 1)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	// intermission music
   	if ( gamemode == commercial )
 	  S_ChangeMusic(mus_dm2int, true);
 	else
 	  S_ChangeMusic(mus_inter, true); 
+#endif
     }
 
     WI_checkForAccelerate();

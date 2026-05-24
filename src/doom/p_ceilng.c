@@ -21,14 +21,14 @@
 #include "doomdef.h"
 #include "p_local.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // State.
 #include "doomstat.h"
 #include "r_state.h"
-
-// Data.
-#include "sounds.h"
 
 //
 // CEILINGS
@@ -65,7 +65,9 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	      case silentCrushAndRaise:
 		break;
 	      default:
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&ceiling->sector->soundorg, sfx_stnmov);
+#endif
 		// ?
 		break;
 	    }
@@ -80,7 +82,9 @@ void T_MoveCeiling (ceiling_t* ceiling)
 		break;
 		
 	      case silentCrushAndRaise:
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&ceiling->sector->soundorg, sfx_pstop);
+#endif
 	      case fastCrushAndRaise:
 	      case crushAndRaise:
 		ceiling->direction = -1;
@@ -105,8 +109,10 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	    switch(ceiling->type)
 	    {
 	      case silentCrushAndRaise: break;
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	      default:
 		S_StartSound(&ceiling->sector->soundorg, sfx_stnmov);
+#endif
 	    }
 	}
 	
@@ -115,7 +121,9 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	    switch(ceiling->type)
 	    {
 	      case silentCrushAndRaise:
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound(&ceiling->sector->soundorg, sfx_pstop);
+#endif
 	      case crushAndRaise:
 		ceiling->speed = CEILSPEED;
 	      case fastCrushAndRaise:

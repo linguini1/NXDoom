@@ -531,6 +531,7 @@ void TXT_OpenURL(const char *url)
 
 void TXT_OpenURL(const char *url)
 {
+#if 0
     char *cmd;
     size_t cmd_len;
     int retval;
@@ -561,6 +562,7 @@ void TXT_OpenURL(const char *url)
             cmd, retval);
     }
     free(cmd);
+#endif
 }
 
 #endif /* #ifndef _WIN32 */

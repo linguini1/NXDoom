@@ -25,13 +25,16 @@
 
 #include "m_random.h"
 #include "p_local.h"
+
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 // State.
 #include "doomstat.h"
 
 // Data.
-#include "sounds.h"
 
 #include "p_pspr.h"
 
@@ -133,8 +136,10 @@ void P_BringUpWeapon (player_t* player)
     if (player->pendingweapon == wp_nochange)
 	player->pendingweapon = player->readyweapon;
 		
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (player->pendingweapon == wp_chainsaw)
 	S_StartSound (player->mo, sfx_sawup);
+#endif
 		
     newstate = weaponinfo[player->pendingweapon].upstate;
 
@@ -287,7 +292,9 @@ A_WeaponReady
     if (player->readyweapon == wp_chainsaw
 	&& psp->state == &states[S_SAW])
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound (player->mo, sfx_sawidl);
+#endif
     }
     
     // check for change
@@ -477,7 +484,9 @@ A_Punch
     // turn to face target
     if (linetarget)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound (player->mo, sfx_punch);
+#endif
 	player->mo->angle = R_PointToAngle2 (player->mo->x,
 					     player->mo->y,
 					     linetarget->x,
@@ -508,10 +517,14 @@ A_Saw
 
     if (!linetarget)
     {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound (player->mo, sfx_sawful);
+#endif
 	return;
     }
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (player->mo, sfx_sawhit);
+#endif
 	
     // turn to face target
     angle = R_PointToAngle2 (player->mo->x, player->mo->y,
@@ -657,7 +670,9 @@ A_FirePistol
 ( player_t*	player,
   pspdef_t*	psp ) 
 {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (player->mo, sfx_pistol);
+#endif
 
     P_SetMobjState (player->mo, S_PLAY_ATK2);
     DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 1);
@@ -681,7 +696,9 @@ A_FireShotgun
 {
     int		i;
 	
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (player->mo, sfx_shotgn);
+#endif
     P_SetMobjState (player->mo, S_PLAY_ATK2);
 
     DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 1);
@@ -711,7 +728,9 @@ A_FireShotgun2
     int		damage;
 		
 	
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (player->mo, sfx_dshtgn);
+#endif
     P_SetMobjState (player->mo, S_PLAY_ATK2);
 
     DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 2);
@@ -743,7 +762,9 @@ A_FireCGun
 ( player_t*	player,
   pspdef_t*	psp ) 
 {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (player->mo, sfx_pistol);
+#endif
 
     if (!player->ammo[weaponinfo[player->readyweapon].ammo])
 	return;
@@ -828,7 +849,9 @@ A_BFGsound
 ( player_t*	player,
   pspdef_t*	psp )
 {
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_StartSound (player->mo, sfx_bfg);
+#endif
 }
 
 

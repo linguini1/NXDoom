@@ -22,13 +22,12 @@
 #include "doomdef.h"
 #include "doomstat.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 #include "s_sound.h"
+#include "sounds.h"
+#endif
 
 #include "p_local.h"
-
-
-// Data.
-#include "sounds.h"
 
 // State.
 #include "r_state.h"
@@ -109,13 +108,17 @@ EV_Teleport
 
 		// spawn teleport fog at source and destination
 		fog = P_SpawnMobj (oldx, oldy, oldz, MT_TFOG);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		S_StartSound (fog, sfx_telept);
+#endif
 		an = m->angle >> ANGLETOFINESHIFT;
 		fog = P_SpawnMobj (m->x+20*finecosine[an], m->y+20*finesine[an]
 				   , thing->z, MT_TFOG);
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 		// emit sound, where?
 		S_StartSound (fog, sfx_telept);
+#endif
 		
 		// don't move for a bit
 		if (thing->player)

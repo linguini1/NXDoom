@@ -16,7 +16,6 @@
 //     for Hexen startup loading screen.
 //
 
-#include "SDL.h"
 #include "string.h"
 
 #include "doomtype.h"
@@ -30,12 +29,15 @@
 #define HR_SCREENWIDTH 640
 #define HR_SCREENHEIGHT 480
 
+#if 0
 static SDL_Window *hr_screen = NULL;
 static SDL_Surface *hr_surface = NULL;
+#endif
 static const char *window_title = "";
 
 boolean I_SetVideoModeHR(void)
 {
+#if 0
     int x, y;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -62,6 +64,8 @@ boolean I_SetVideoModeHR(void)
                                       8, 0, 0, 0, 0);
 
     return true;
+#endif
+    return false;
 }
 
 void I_SetWindowTitleHR(const char *title)
@@ -71,6 +75,7 @@ void I_SetWindowTitleHR(const char *title)
 
 void I_UnsetVideoModeHR(void)
 {
+#if 0
     if (hr_screen != NULL)
     {
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -78,17 +83,21 @@ void I_UnsetVideoModeHR(void)
         SDL_FreeSurface(hr_surface);
         hr_surface = NULL;
     }
+#endif
 }
 
 void I_ClearScreenHR(void)
 {
+#if 0
     SDL_Rect area = { 0, 0, HR_SCREENWIDTH, HR_SCREENHEIGHT };
 
     SDL_FillRect(hr_surface, &area, 0);
+#endif
 }
 
 void I_SlamBlockHR(int x, int y, int w, int h, const byte *src)
 {
+#if 0
     SDL_Rect blit_rect;
     const byte *srcptrs[4];
     byte srcbits[4];
@@ -153,6 +162,7 @@ void I_SlamBlockHR(int x, int y, int w, int h, const byte *src)
     SDL_BlitSurface(hr_surface, &blit_rect,
                     SDL_GetWindowSurface(hr_screen), &blit_rect);
     SDL_UpdateWindowSurfaceRects(hr_screen, &blit_rect, 1);
+#endif
 }
 
 void I_SlamHR(const byte *buffer)
@@ -167,6 +177,7 @@ void I_InitPaletteHR(void)
 
 void I_SetPaletteHR(const byte *palette)
 {
+#if 0
     SDL_Rect screen_rect = {0, 0, HR_SCREENWIDTH, HR_SCREENHEIGHT};
     SDL_Color sdlpal[16];
     int i;
@@ -183,10 +194,12 @@ void I_SetPaletteHR(const byte *palette)
     SDL_BlitSurface(hr_surface, &screen_rect,
                     SDL_GetWindowSurface(hr_screen), &screen_rect);
     SDL_UpdateWindowSurfaceRects(hr_screen, &screen_rect, 1);
+#endif
 }
 
 void I_FadeToPaletteHR(const byte *palette)
 {
+#if 0
     byte tmppal[16 * 3];
     int starttime;
     int elapsed;
@@ -221,6 +234,7 @@ void I_FadeToPaletteHR(const byte *palette)
     // Set the final palette
 
     I_SetPaletteHR(palette);
+#endif
 }
 
 void I_BlackPaletteHR(void)
@@ -235,6 +249,7 @@ void I_BlackPaletteHR(void)
 // Check if the user has hit the escape key to abort startup.
 boolean I_CheckAbortHR(void)
 {
+#if 0
     SDL_Event ev;
     boolean result = false;
 
@@ -253,5 +268,7 @@ boolean I_CheckAbortHR(void)
     }
 
     return result;
+#endif
+    return false;
 }
 

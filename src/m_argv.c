@@ -21,8 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "SDL_stdinc.h"
-
 #include "doomtype.h"
 #include "d_iwad.h"
 #include "i_system.h"

@@ -31,14 +31,17 @@
 #include "doomstat.h"
 
 #include "dstrings.h"
+
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
+#include "s_sound.h"
 #include "sounds.h"
+#endif
 
 #include "d_iwad.h"
 
 #include "z_zone.h"
 #include "w_main.h"
 #include "w_wad.h"
-#include "s_sound.h"
 #include "v_diskicon.h"
 #include "v_video.h"
 
@@ -184,27 +187,38 @@ boolean D_Display (void)
     // save the current screen if about to wipe
     if (gamestate != wipegamestate)
     {
-	wipe = true;
-	wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
+	  wipe = true;
+	  wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
     }
     else
-	wipe = false;
+    {
+      wipe = false;
+    }
 
-    if (gamestate == GS_LEVEL && gametic)
-	HU_Erase();
-    
+    if (gamestate == GS_LEVEL && gametic) {
+        HU_Erase();
+    }
+
     // do buffered drawing
     switch (gamestate)
     {
       case GS_LEVEL:
+
 	if (!gametic)
-	    break;
+    {
+        break;
+    }
+
 	if (automapactive)
-	    AM_Drawer ();
-	if (wipe || (viewheight != SCREENHEIGHT && fullscreen))
-	    redrawsbar = true;
-	if (inhelpscreensstate && !inhelpscreens)
-	    redrawsbar = true;              // just put away the help screen
+    {
+        AM_Drawer();
+    }
+	if (wipe || (viewheight != SCREENHEIGHT && fullscreen)) {
+        redrawsbar = true;
+    }
+	if (inhelpscreensstate && !inhelpscreens) {
+        redrawsbar = true;              // just put away the help screen
+    }
 	ST_Drawer (viewheight == SCREENHEIGHT, redrawsbar );
 	fullscreen = viewheight == SCREENHEIGHT;
 	break;
@@ -226,11 +240,13 @@ boolean D_Display (void)
     I_UpdateNoBlit ();
     
     // draw the view directly
-    if (gamestate == GS_LEVEL && !automapactive && gametic)
-	R_RenderPlayerView (&players[displayplayer]);
+    if (gamestate == GS_LEVEL && !automapactive && gametic) {
+        R_RenderPlayerView (&players[displayplayer]);
+    }
 
-    if (gamestate == GS_LEVEL && gametic)
-	HU_Drawer ();
+    if (gamestate == GS_LEVEL && gametic){
+        HU_Drawer ();
+    }
     
     // clean up border stuff
     if (gamestate != oldgamestate && gamestate != GS_LEVEL)
@@ -337,7 +353,9 @@ void D_BindVariables(void)
     I_BindInputVariables();
     I_BindVideoVariables();
     I_BindJoystickVariables();
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     I_BindSoundVariables();
+#endif
 
     M_BindBaseControls();
     M_BindWeaponControls();
@@ -353,12 +371,14 @@ void D_BindVariables(void)
     NET_BindVariables();
 
     M_BindIntVariable("mouse_sensitivity",      &mouseSensitivity);
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     M_BindIntVariable("sfx_volume",             &sfxVolume);
     M_BindIntVariable("music_volume",           &musicVolume);
+    M_BindIntVariable("snd_channels",           &snd_channels);
+#endif
     M_BindIntVariable("show_messages",          &showMessages);
     M_BindIntVariable("screenblocks",           &screenblocks);
     M_BindIntVariable("detaillevel",            &detailLevel);
-    M_BindIntVariable("snd_channels",           &snd_channels);
     M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
     M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
     M_BindIntVariable("show_endoom",            &show_endoom);
@@ -432,7 +452,9 @@ void D_RunFrame()
 
     TryRunTics (); // will run at least one tic
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     S_UpdateSounds (players[consoleplayer].mo);// move positional sounds
+#endif
 
     // Update display, next frame, with current state if no profiling is on
     if (screenvisible && !nodrawers)
@@ -464,8 +486,9 @@ void D_DoomLoop (void)
                " may cause demos and network games to get out of sync.\n");
     }
 
-    if (demorecording)
-	G_BeginRecording ();
+    if (demorecording){
+        G_BeginRecording ();
+    }
 
     main_loop_started = true;
 
@@ -570,10 +593,16 @@ void D_DoAdvanceDemo (void)
 	    pagetic = 170;
 	gamestate = GS_DEMOSCREEN;
 	pagename = DEH_String("TITLEPIC");
-	if ( gamemode == commercial )
-	  S_StartMusic(mus_dm2ttl);
-	else
-	  S_StartMusic (mus_intro);
+
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
+	if ( gamemode == commercial ) {
+        S_StartMusic(mus_dm2ttl);
+    }
+	else {
+        S_StartMusic (mus_intro);
+    }
+#endif
+
 	break;
       case 1:
 	G_DeferedPlayDemo(DEH_String("demo1"));
@@ -592,7 +621,9 @@ void D_DoAdvanceDemo (void)
 	{
 	    pagetic = TICRATE * 11;
 	    pagename = DEH_String("TITLEPIC");
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartMusic(mus_dm2ttl);
+#endif
 	}
 	else
 	{
@@ -1768,8 +1799,10 @@ void D_DoomMain (void)
     I_CheckIsScreensaver();
     I_InitTimer();
     I_InitJoystick();
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     I_InitSound(doom);
     I_InitMusic();
+#endif
 
     printf ("NET_Init: Init network subsystem.\n");
     NET_Init ();
@@ -1925,8 +1958,10 @@ void D_DoomMain (void)
     DEH_printf("\nP_Init: Init Playloop state.\n");
     P_Init ();
 
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
     DEH_printf("S_Init: Setting up sound.\n");
     S_Init (sfxVolume * 8, musicVolume * 8);
+#endif
 
     DEH_printf("D_CheckNetGame: Checking network game status.\n");
     D_CheckNetGame ();
