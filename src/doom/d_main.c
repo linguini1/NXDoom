@@ -167,7 +167,7 @@ boolean D_Display (void)
     static  boolean		viewactivestate = false;
     static  boolean		menuactivestate = false;
     static  boolean		inhelpscreensstate = false;
-    static  boolean		fullscreen = false;
+    static  boolean		d_fullscreen = false;
     static  gamestate_t		oldgamestate = -1;
     static  int			borderdrawcount;
     int				y;
@@ -213,14 +213,14 @@ boolean D_Display (void)
     {
         AM_Drawer();
     }
-	if (wipe || (viewheight != SCREENHEIGHT && fullscreen)) {
+	if (wipe || (viewheight != SCREENHEIGHT && d_fullscreen)) {
         redrawsbar = true;
     }
 	if (inhelpscreensstate && !inhelpscreens) {
         redrawsbar = true;              // just put away the help screen
     }
 	ST_Drawer (viewheight == SCREENHEIGHT, redrawsbar );
-	fullscreen = viewheight == SCREENHEIGHT;
+	d_fullscreen = viewheight == SCREENHEIGHT;
 	break;
 
       case GS_INTERMISSION:

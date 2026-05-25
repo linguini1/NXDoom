@@ -6,6 +6,7 @@
 config GAMES_NXDOOM
 	bool "NXDoom"
 	default n
+	depends on ALLOW_GPL_COMPONENTS
 	depends on VIDEO_FB
 	---help---
 		Play DOOM on NuttX!
@@ -62,7 +63,6 @@ choice # Input method
 
 	config GAMES_NXDOOM_KEYBOARD
 		bool "Keyboard"
-		default y
 		---help---
 			Use a NuttX keyboard character driver.
 

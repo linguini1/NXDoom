@@ -445,7 +445,9 @@ ST_Responder (event_t* ev)
       {
 	
 	char	buf[3];
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
 	int		musnum;
+#endif
 	
 	plyr->message = DEH_String(STSTR_MUS);
 	cht_GetParam(&cheat_mus, buf);
@@ -1010,10 +1012,10 @@ void ST_diffDraw(void)
     ST_drawWidgets(false);
 }
 
-void ST_Drawer (boolean fullscreen, boolean refresh)
+void ST_Drawer (boolean p_fullscreen, boolean refresh)
 {
   
-    st_statusbaron = (!fullscreen) || automapactive;
+    st_statusbaron = (!p_fullscreen) || automapactive;
     st_firsttime = st_firsttime || refresh;
 
     // Do red-/gold-shifts from damage/items

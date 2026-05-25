@@ -50,14 +50,15 @@ struct keyboard_dev {
  ****************************************************************************/
 
 #ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
-static const int g_scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
-
 struct keyboard_dev g_kbd_dev =
 {
   .fd = -1,
   .inited = false,
 };
 #endif
+
+#if 0
+static const int g_scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
 
 // Lookup table for mapping ASCII characters to their equivalent when
 // shift is pressed on a US layout keyboard. This is the original table
@@ -107,6 +108,7 @@ static boolean text_input_enabled = true;
 
 // Bit mask of mouse button state.
 static unsigned int mouse_button_state = 0;
+#endif
 
 // Disallow mouse and joystick movement to cause forward/backward
 // motion.  Specified with the '-novert' command line parameter.
@@ -544,6 +546,7 @@ void I_HandleMouseEvent(void)
 #endif
 }
 
+#if 0
 static int AccelerateMouse(int val)
 {
     if (val < 0)
@@ -558,6 +561,7 @@ static int AccelerateMouse(int val)
         return val;
     }
 }
+#endif
 
 //
 // Read the change in mouse state to generate mouse motion events

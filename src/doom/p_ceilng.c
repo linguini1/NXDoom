@@ -112,6 +112,9 @@ void T_MoveCeiling (ceiling_t* ceiling)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	      default:
 		S_StartSound(&ceiling->sector->soundorg, sfx_stnmov);
+#else
+          default:
+        break;
 #endif
 	    }
 	}
