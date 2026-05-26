@@ -123,7 +123,7 @@ static void DoQuit(void *widget, void *dosave)
 {
     if (dosave != NULL)
     {
-        M_SaveDefaults();
+        m_save_defaults();
     }
 
     TXT_Shutdown();
@@ -164,7 +164,7 @@ static void LaunchDoom(void *unused1, void *unused2)
     
     // Save configuration first
 
-    M_SaveDefaults();
+    m_save_defaults();
 
     // Shut down textscreen GUI
 
@@ -255,17 +255,17 @@ void MainMenu(void)
 
 static void InitConfig(void)
 {
-    M_SetConfigDir(NULL);
-    InitBindings();
+    m_set_config_dir(NULL);
+    init_bindings();
 
     SetChatMacroDefaults();
     SetPlayerNameDefault();
 
-    M_LoadDefaults();
+    m_load_defaults();
 
     // Create and configure the music pack directory if it does not
     // already exist.
-    M_SetMusicPackDir();
+    m_set_music_pack_dir();
 }
 
 //
@@ -289,9 +289,9 @@ static void SetWindowTitle(void)
 {
     char *title;
 
-    title = M_StringReplace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION,
+    title = m_string_replace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION,
                             "Doom",
-                            GetGameTitle());
+                            get_game_title());
 
 
     TXT_SetDesktopTitle(title);

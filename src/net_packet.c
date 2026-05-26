@@ -27,13 +27,13 @@ net_packet_t *NET_NewPacket(int initial_size)
 {
     net_packet_t *packet;
 
-    packet = (net_packet_t *) Z_Malloc(sizeof(net_packet_t), PU_STATIC, 0);
+    packet = (net_packet_t *) z_malloc(sizeof(net_packet_t), PU_STATIC, 0);
     
     if (initial_size == 0)
         initial_size = 256;
 
     packet->alloced = initial_size;
-    packet->data = Z_Malloc(initial_size, PU_STATIC, 0);
+    packet->data = z_malloc(initial_size, PU_STATIC, 0);
     packet->len = 0;
     packet->pos = 0;
 
@@ -63,8 +63,8 @@ void NET_FreePacket(net_packet_t *packet)
     //printf("%p: destroyed\n", packet);
     
     total_packet_memory -= sizeof(net_packet_t) + packet->alloced;
-    Z_Free(packet->data);
-    Z_Free(packet);
+    z_free(packet->data);
+    z_free(packet);
 }
 
 // Read a byte from the packet, returning true if read
@@ -244,11 +244,11 @@ static void NET_IncreasePacket(net_packet_t *packet)
    
     packet->alloced *= 2;
 
-    newdata = Z_Malloc(packet->alloced, PU_STATIC, 0);
+    newdata = z_malloc(packet->alloced, PU_STATIC, 0);
 
     memcpy(newdata, packet->data, packet->len);
 
-    Z_Free(packet->data);
+    z_free(packet->data);
     packet->data = newdata;
 
     total_packet_memory += packet->alloced;
@@ -318,7 +318,7 @@ void NET_WriteString(net_packet_t *packet, const char *string)
 
     p = packet->data + packet->len;
 
-    M_StringCopy((char *) p, string, string_size);
+    m_str_copy((char *) p, string, string_size);
 
     packet->len += string_size;
 }

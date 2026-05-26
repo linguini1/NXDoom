@@ -149,14 +149,14 @@ wad_file_t *W_AddFile (const char *filename)
         // them back.  Effectively we're constructing a "fake WAD directory"
         // here, as it would appear on disk.
 
-	fileinfo = Z_Malloc(sizeof(filelump_t), PU_STATIC, 0);
+	fileinfo = z_malloc(sizeof(filelump_t), PU_STATIC, 0);
 	fileinfo->filepos = LONG(0);
 	fileinfo->size = LONG(wad_file->length);
 
         // Name the lump after the base of the filename (without the
         // extension).
 
-	M_ExtractFileBase (filename, fileinfo->name);
+	m_extract_file_base (filename, fileinfo->name);
 	numfilelumps = 1;
     }
     else
@@ -190,7 +190,7 @@ wad_file_t *W_AddFile (const char *filename)
 
 	header.infotableofs = LONG(header.infotableofs);
 	length = header.numlumps*sizeof(filelump_t);
-	fileinfo = Z_Malloc(length, PU_STATIC, 0);
+	fileinfo = z_malloc(length, PU_STATIC, 0);
 
         W_Read(wad_file, header.infotableofs, fileinfo, length);
 	numfilelumps = header.numlumps;
@@ -222,11 +222,11 @@ wad_file_t *W_AddFile (const char *filename)
         ++filerover;
     }
 
-    Z_Free(fileinfo);
+    z_free(fileinfo);
 
     if (lumphash != NULL)
     {
-        Z_Free(lumphash);
+        z_free(lumphash);
         lumphash = NULL;
     }
 
@@ -378,7 +378,7 @@ void W_ReadLump(lumpindex_t lump, void *dest)
 // 'tag' is the type of zone memory buffer to allocate for the lump
 // (usually PU_STATIC or PU_CACHE).  If the lump is loaded as 
 // PU_STATIC, it should be released back using W_ReleaseLumpNum
-// when no longer needed (do not use Z_ChangeTag).
+// when no longer needed (do not use z_change_tag).
 //
 
 void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
@@ -409,13 +409,13 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
         // Already cached, so just switch the zone tag.
 
         result = lump->cache;
-        Z_ChangeTag(lump->cache, tag);
+        z_change_tag(lump->cache, tag);
     }
     else
     {
         // Not yet loaded, so load it now
 
-        lump->cache = Z_Malloc(W_LumpLength(lumpnum), tag, &lump->cache);
+        lump->cache = z_malloc(W_LumpLength(lumpnum), tag, &lump->cache);
 	W_ReadLump (lumpnum, lump->cache);
         result = lump->cache;
     }
@@ -438,7 +438,7 @@ void *W_CacheLumpName(const char *name, int tag)
 // without having to read from disk again, or alternatively, discarded
 // if we run out of memory.
 //
-// Back in Vanilla Doom, this was just done using Z_ChangeTag 
+// Back in Vanilla Doom, this was just done using z_change_tag 
 // directly, but now that we have WAD mmap, things are a bit more
 // complicated ...
 //
@@ -460,7 +460,7 @@ void W_ReleaseLumpNum(lumpindex_t lumpnum)
     }
     else
     {
-        Z_ChangeTag(lump->cache, PU_CACHE);
+        z_change_tag(lump->cache, PU_CACHE);
     }
 }
 
@@ -508,7 +508,7 @@ void W_Profile (void)
     }
     profilecount++;
 	
-    f = M_fopen ("waddump.txt","w");
+    f = m_fopen ("waddump.txt","w");
     name[8] = 0;
 
     for (i=0 ; i<numlumps ; i++)
@@ -544,13 +544,13 @@ void W_GenerateHashTable(void)
     // Free the old hash table, if there is one:
     if (lumphash != NULL)
     {
-        Z_Free(lumphash);
+        z_free(lumphash);
     }
 
     // Generate hash table
     if (numlumps > 0)
     {
-        lumphash = Z_Malloc(sizeof(lumpindex_t) * numlumps, PU_STATIC, NULL);
+        lumphash = z_malloc(sizeof(lumpindex_t) * numlumps, PU_STATIC, NULL);
 
         for (i = 0; i < numlumps; ++i)
         {
@@ -594,7 +594,7 @@ void W_Reload(void)
     {
         if (lumpinfo[i]->cache != NULL)
         {
-            Z_Free(lumpinfo[i]->cache);
+            z_free(lumpinfo[i]->cache);
         }
     }
 
@@ -620,7 +620,7 @@ void W_Reload(void)
 
 const char *W_WadNameForLump(const lumpinfo_t *lump)
 {
-	return M_BaseName(lump->wad_file->path);
+	return m_base_name(lump->wad_file->path);
 }
 
 boolean W_IsIWADLump(const lumpinfo_t *lump)

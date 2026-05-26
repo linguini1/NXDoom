@@ -49,7 +49,7 @@ wipe_shittyColMajorXform
     int		y;
     dpixel_t*	dest;
 
-    dest = (dpixel_t*) Z_Malloc(width*height*sizeof(*dest), PU_STATIC, 0);
+    dest = (dpixel_t*) z_malloc(width*height*sizeof(*dest), PU_STATIC, 0);
 
     for(y=0;y<height;y++)
 	for(x=0;x<width;x++)
@@ -57,7 +57,7 @@ wipe_shittyColMajorXform
 
     memcpy(array, dest, width*height*sizeof(*dest));
 
-    Z_Free(dest);
+    z_free(dest);
 
 }
 
@@ -147,7 +147,7 @@ wipe_initMelt
     
     // setup initial column positions
     // (y<0 => not ready to scroll yet)
-    g_y = (int *) Z_Malloc(width*sizeof(int), PU_STATIC, 0);
+    g_y = (int *) z_malloc(width*sizeof(int), PU_STATIC, 0);
     g_y[0] = -(M_Random()%16);
     for (i=1;i<width;i++)
     {
@@ -221,9 +221,9 @@ wipe_exitMelt
   int	height,
   int	ticks )
 {
-    Z_Free(g_y);
-    Z_Free(wipe_scr_start);
-    Z_Free(wipe_scr_end);
+    z_free(g_y);
+    z_free(wipe_scr_start);
+    z_free(wipe_scr_end);
     return 0;
 }
 
@@ -234,8 +234,8 @@ wipe_StartScreen
   int	width,
   int	height )
 {
-    wipe_scr_start = Z_Malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_start), PU_STATIC, NULL);
-    I_ReadScreen(wipe_scr_start);
+    wipe_scr_start = z_malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_start), PU_STATIC, NULL);
+    i_read_screen(wipe_scr_start);
     return 0;
 }
 
@@ -246,9 +246,9 @@ wipe_EndScreen
   int	width,
   int	height )
 {
-    wipe_scr_end = Z_Malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end), PU_STATIC, NULL);
-    I_ReadScreen(wipe_scr_end);
-    V_DrawBlock(x, y, width, height, wipe_scr_start); // restore start scr.
+    wipe_scr_end = z_malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end), PU_STATIC, NULL);
+    i_read_screen(wipe_scr_end);
+    v_draw_block(x, y, width, height, wipe_scr_start); // restore start scr.
     return 0;
 }
 
@@ -272,15 +272,15 @@ wipe_ScreenWipe
     if (!go)
     {
 	go = 1;
-	// wipe_scr = (pixel_t *) Z_Malloc(width*height, PU_STATIC, 0); // DEBUG
+	// wipe_scr = (pixel_t *) z_malloc(width*height, PU_STATIC, 0); // DEBUG
 	wipe_scr = I_VideoBuffer;
 	(*wipes[wipeno*3])(width, height, ticks);
     }
 
     // do a piece of wipe-in
-    V_MarkRect(0, 0, width, height);
+    v_mark_rect(0, 0, width, height);
     rc = (*wipes[wipeno*3+1])(width, height, ticks);
-    //  V_DrawBlock(x, y, 0, width, height, wipe_scr); // DEBUG
+    //  v_draw_block(x, y, 0, width, height, wipe_scr); // DEBUG
 
     // final stuff
     if (rc)

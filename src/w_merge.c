@@ -145,7 +145,7 @@ static void InitSpriteList(void)
     if (sprite_frames == NULL)
     {
         sprite_frames_alloced = 128;
-        sprite_frames = Z_Malloc(sizeof(*sprite_frames) * sprite_frames_alloced,
+        sprite_frames = z_malloc(sizeof(*sprite_frames) * sprite_frames_alloced,
                                  PU_STATIC, NULL);
     }
 
@@ -204,11 +204,11 @@ static sprite_frame_t *FindSpriteFrame(char *name, int frame)
     {
         sprite_frame_t *newframes;
 
-        newframes = Z_Malloc(sprite_frames_alloced * 2 * sizeof(*sprite_frames),
+        newframes = z_malloc(sprite_frames_alloced * 2 * sizeof(*sprite_frames),
                              PU_STATIC, NULL);
         memcpy(newframes, sprite_frames,
                sprite_frames_alloced * sizeof(*sprite_frames));
-        Z_Free(sprite_frames);
+        z_free(sprite_frames);
         sprite_frames_alloced *= 2;
         sprite_frames = newframes;
     }
@@ -708,7 +708,7 @@ void W_NWTDashMerge(const char *filename)
             // Replace this entry with an empty string.  This is what
             // nwt -merge does.
 
-            M_StringCopy(iwad_sprites.lumps[i]->name, "", 8);
+            m_str_copy(iwad_sprites.lumps[i]->name, "", 8);
         }
     }
 

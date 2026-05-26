@@ -34,7 +34,7 @@ static wad_file_t *W_StdC_OpenFile(const char *path)
     stdc_wad_file_t *result;
     FILE *fstream;
 
-    fstream = M_fopen(path, "rb");
+    fstream = m_fopen(path, "rb");
 
     if (fstream == NULL)
     {
@@ -43,11 +43,11 @@ static wad_file_t *W_StdC_OpenFile(const char *path)
 
     // Create a new stdc_wad_file_t to hold the file handle.
 
-    result = Z_Malloc(sizeof(stdc_wad_file_t), PU_STATIC, 0);
+    result = z_malloc(sizeof(stdc_wad_file_t), PU_STATIC, 0);
     result->wad.file_class = &stdc_wad_file;
     result->wad.mapped = NULL;
-    result->wad.length = M_FileLength(fstream);
-    result->wad.path = M_StringDuplicate(path);
+    result->wad.length = m_file_length(fstream);
+    result->wad.path = m_string_duplicate(path);
     result->fstream = fstream;
 
     return &result->wad;
@@ -60,7 +60,7 @@ static void W_StdC_CloseFile(wad_file_t *wad)
     stdc_wad = (stdc_wad_file_t *) wad;
 
     fclose(stdc_wad->fstream);
-    Z_Free(stdc_wad);
+    z_free(stdc_wad);
 }
 
 // Read data from the specified position in the file into the 

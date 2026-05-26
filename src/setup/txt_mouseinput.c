@@ -76,22 +76,22 @@ static void GetMouseButtonDescription(int button, char *buf, size_t buf_len)
     switch (button)
     {
         case 0:
-            M_StringCopy(buf, "LEFT", buf_len);
+            m_str_copy(buf, "LEFT", buf_len);
             break;
         case 1:
-            M_StringCopy(buf, "RIGHT", buf_len);
+            m_str_copy(buf, "RIGHT", buf_len);
             break;
         case 2:
-            M_StringCopy(buf, "MID", buf_len);
+            m_str_copy(buf, "MID", buf_len);
             break;
         case 3:
-            M_StringCopy(buf, "WHEEL UP", buf_len);
+            m_str_copy(buf, "WHEEL UP", buf_len);
             break;
         case 4:
-            M_StringCopy(buf, "WHEEL DOWN", buf_len);
+            m_str_copy(buf, "WHEEL DOWN", buf_len);
             break;
         default:
-            M_snprintf(buf, buf_len, "BUTTON #%i", button - 1);
+            m_snprintf(buf, buf_len, "BUTTON #%i", button - 1);
             break;
     }
 }
@@ -104,7 +104,7 @@ static void TXT_MouseInputDrawer(TXT_UNCAST_ARG(mouse_input))
 
     if (*mouse_input->variable < 0)
     {
-        M_StringCopy(buf, "(none)", sizeof(buf));
+        m_str_copy(buf, "(none)", sizeof(buf));
     }
     else
     {

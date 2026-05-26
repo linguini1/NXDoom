@@ -25,11 +25,11 @@
 #include <nuttx/video/fb.h>
 #include <nuttx/video/rgbcolors.h>
 
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
-#include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 
 #include "config.h"
 #include "d_loop.h"
@@ -48,6 +48,12 @@
 #include "v_video.h"
 #include "w_wad.h"
 #include "z_zone.h"
+
+/****************************************************************************
+ * Preprocessor Definitions
+ ****************************************************************************/
+
+#define RESIZE_DELAY 500
 
 /****************************************************************************
  * Private Types
@@ -104,6 +110,57 @@ static boolean palette_to_set;
 // disable mouse?
 
 static boolean nomouse = false;
+
+// Maximum number of pixels to use for intermediate scale buffer.
+
+static int max_scaling_buffer_pixels = 16000000;
+
+// Time to wait for the screen to settle on startup before starting the
+// game (ms)
+
+static int startup_delay = 1000;
+
+// Grab the mouse? (int type for config code). nograbmouse_override allows
+// this to be temporarily disabled via the command line.
+
+static int grabmouse = true;
+static boolean nograbmouse_override = false;
+
+// If true, we display dots at the bottom of the screen to
+// indicate FPS.
+
+static boolean display_fps_dots;
+
+// If this is true, the screen is rendered but not blitted to the
+// video buffer.
+
+static boolean noblit;
+
+// Callback function to invoke to determine whether to grab the
+// mouse pointer.
+
+static grabmouse_callback_t grabmouse_callback = NULL;
+
+// Does the window currently have focus?
+
+static boolean window_focused = true;
+
+// Window resize state.
+
+#if 0
+static boolean need_resize = false;
+static unsigned int last_resize_time;
+#endif
+
+// Icon RGB data and dimensions
+static const unsigned int *icon_data;
+static int icon_w;
+static int icon_h;
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
 int usemouse = 1;
 
 // Save screenshots in PNG format.
@@ -131,10 +188,6 @@ int window_height = 200;
 
 int fullscreen_width = 0, fullscreen_height = 0;
 
-// Maximum number of pixels to use for intermediate scale buffer.
-
-static int max_scaling_buffer_pixels = 16000000;
-
 // Run in full screen mode?  (int type for config code)
 
 int fullscreen = true;
@@ -155,17 +208,6 @@ int vga_porch_flash = false;
 
 int force_software_renderer = false;
 
-// Time to wait for the screen to settle on startup before starting the
-// game (ms)
-
-static int startup_delay = 1000;
-
-// Grab the mouse? (int type for config code). nograbmouse_override allows
-// this to be temporarily disabled via the command line.
-
-static int grabmouse = true;
-static boolean nograbmouse_override = false;
-
 // The screen buffer; this is modified to draw things to the screen
 
 pixel_t *I_VideoBuffer = NULL;
@@ -179,48 +221,12 @@ boolean screensaver_mode = false;
 
 boolean screenvisible = true;
 
-// If true, we display dots at the bottom of the screen to 
-// indicate FPS.
-
-static boolean display_fps_dots;
-
-// If this is true, the screen is rendered but not blitted to the
-// video buffer.
-
-static boolean noblit;
-
-// Callback function to invoke to determine whether to grab the 
-// mouse pointer.
-
-static grabmouse_callback_t grabmouse_callback = NULL;
-
-// Does the window currently have focus?
-
-static boolean window_focused = true;
-
-// Window resize state.
-
-#if 0
-static boolean need_resize = false;
-static unsigned int last_resize_time;
-#define RESIZE_DELAY 500
-#endif
-
 // Gamma correction level to use
 
 int usegamma = 0;
 
 // Joystick/gamepad hysteresis
 unsigned int joywait = 0;
-
-// Icon RGB data and dimensions
-static const unsigned int *icon_data;
-static int icon_w;
-static int icon_h;
-
-/****************************************************************************
- * Public Data
- ****************************************************************************/
 
 /* TODO: I'm sure more of the variables above can be private */
 
@@ -308,18 +314,6 @@ static boolean MouseShouldBeGrabbed(void)
 }
 #endif
 
-void I_SetGrabMouseCallback(grabmouse_callback_t func)
-{
-    grabmouse_callback = func;
-}
-
-// Set the variable controlling FPS dots.
-
-void I_DisplayFPSDots(boolean dots_on)
-{
-    display_fps_dots = dots_on;
-}
-
 #if 0
 static void SetShowCursor(boolean show)
 {
@@ -332,28 +326,6 @@ static void SetShowCursor(boolean show)
     }
 }
 #endif
-
-void I_ShutdownGraphics(void)
-{
-  if (!g_graphics_state.inited)
-    {
-      return;
-    }
-
-  close(g_graphics_state.fd);
-  munmap(g_graphics_state.fbmem, g_graphics_state.pinfo.fblen);
-  free(g_graphics_state.scrnbuf);
-  g_graphics_state.inited = false;
-}
-
-//
-// I_StartFrame
-//
-void I_StartFrame (void)
-{
-    // er?
-
-}
 
 #if 0
 // Adjust window_width / window_height variables to be an an aspect
@@ -483,17 +455,51 @@ static void I_ToggleFullScreen(void)
 }
 #endif
 
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+void i_set_grab_mouse_callback(grabmouse_callback_t func)
+{
+  grabmouse_callback = func;
+}
+
+// Set the variable controlling FPS dots.
+
+void i_display_fps_dots(boolean dots_on) { display_fps_dots = dots_on; }
+
+void i_shutdown_graphics(void)
+{
+  if (!g_graphics_state.inited)
+    {
+      return;
+    }
+
+  close(g_graphics_state.fd);
+  munmap(g_graphics_state.fbmem, g_graphics_state.pinfo.fblen);
+  free(g_graphics_state.scrnbuf);
+  g_graphics_state.inited = false;
+}
+
+//
+// i_start_frame
+//
+void i_start_frame(void)
+{
+  // er?
+}
+
 void I_GetEvent(void)
 {
-    int err;
+  int err;
 #if CONFIG_GAMES_NXDOOM_KEYBOARD
-    struct keyboard_event_s kbdevent;
+  struct keyboard_event_s kbdevent;
 
-    while ((err = get_kbd_event(&kbdevent)) == 0)
+  while ((err = get_kbd_event(&kbdevent)) == 0)
     {
-        switch (kbdevent.type)
+      switch (kbdevent.type)
         {
-            case KEYBOARD_PRESS:
+        case KEYBOARD_PRESS:
 #if 0
                 if (ToggleFullScreenKeyShortcut(&sdlevent.key.keysym))
                 {
@@ -501,11 +507,11 @@ void I_GetEvent(void)
                     break;
                 }
 #endif
-                // deliberate fall-though
+          // deliberate fall-though
 
-            case KEYBOARD_RELEASE:
-                I_HandleKeyboardEvent(&kbdevent);
-                break;
+        case KEYBOARD_RELEASE:
+          i_handle_keyboard_event(&kbdevent);
+          break;
 
 #if 0
             case SDL_MOUSEBUTTONDOWN:
@@ -513,7 +519,7 @@ void I_GetEvent(void)
             case SDL_MOUSEWHEEL:
                 if (usemouse && !nomouse && window_focused)
                 {
-                    I_HandleMouseEvent(&sdlevent);
+                    i_handle_mouse_event(&sdlevent);
                 }
                 break;
 
@@ -537,17 +543,17 @@ void I_GetEvent(void)
                 }
                 break;
 #endif
-            default:
-                break;
+        default:
+          break;
         }
     }
 #endif
 }
 
 //
-// I_StartTic
+// i_start_tic
 //
-void I_StartTic(void)
+void i_start_tic(void)
 {
   if (!g_graphics_state.inited)
     {
@@ -558,7 +564,7 @@ void I_StartTic(void)
 
   if (usemouse && !nomouse && window_focused)
     {
-      I_ReadMouse();
+      i_read_mouse();
     }
 
   if (joywait < I_GetTime())
@@ -568,11 +574,11 @@ void I_StartTic(void)
 }
 
 //
-// I_UpdateNoBlit
+// i_update_no_blit
 //
-void I_UpdateNoBlit (void)
+void i_update_no_blit(void)
 {
-    // what is this?
+  // what is this?
 }
 
 static void UpdateGrab(void)
@@ -771,19 +777,17 @@ static void CreateUpscaledTexture(boolean force)
 #endif
 
 //
-// I_FinishUpdate
+// i_finish_update
 //
-void I_FinishUpdate (void)
+void i_finish_update(void)
 {
-    static int lasttic;
-    int tics;
-    int i;
+  static int lasttic;
+  int tics;
+  int i;
 
-    if (!g_graphics_state.inited)
-        return;
+  if (!g_graphics_state.inited) return;
 
-    if (noblit)
-        return;
+  if (noblit) return;
 
 #if 0
     if (need_resize)
@@ -825,30 +829,30 @@ void I_FinishUpdate (void)
         return;
 #endif
 
-    // draws little dots on the bottom of the screen
+  // draws little dots on the bottom of the screen
 
-    if (display_fps_dots)
+  if (display_fps_dots)
     {
-	i = I_GetTime();
-	tics = i - lasttic;
-	lasttic = i;
-	if (tics > 20) tics = 20;
+      i = I_GetTime();
+      tics = i - lasttic;
+      lasttic = i;
+      if (tics > 20) tics = 20;
 
-	for (i=0 ; i<tics*4 ; i+=4)
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0xff;
-	for ( ; i<20*4 ; i+=4)
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0x0;
+      for (i = 0; i < tics * 4; i += 4)
+        I_VideoBuffer[(SCREENHEIGHT - 1) * SCREENWIDTH + i] = 0xff;
+      for (; i < 20 * 4; i += 4)
+        I_VideoBuffer[(SCREENHEIGHT - 1) * SCREENWIDTH + i] = 0x0;
     }
 
-    // Draw disk icon before blit, if necessary.
-    V_DrawDiskIcon();
+  // Draw disk icon before blit, if necessary.
+  V_DrawDiskIcon();
 
-    if (palette_to_set)
-      {
-        palette_to_set = false;
-      }
+  if (palette_to_set)
+    {
+      palette_to_set = false;
+    }
 
-    blit_screen();
+  blit_screen();
 
 #if 0
     SDL_LockTexture(texture, &blit_rect, &argbbuffer->pixels,
@@ -879,34 +883,31 @@ void I_FinishUpdate (void)
     }
 #endif
 
-
-    // Draw!
+  // Draw!
 
 #if 0
     SDL_RenderPresent(renderer);
 #endif
 
-    // Restore background and undo the disk indicator, if it was drawn.
-    V_RestoreDiskBackground();
+  // Restore background and undo the disk indicator, if it was drawn.
+  V_RestoreDiskBackground();
 }
 
-
 //
-// I_ReadScreen
+// i_read_screen
 //
-void I_ReadScreen (pixel_t* scr)
+void i_read_screen(pixel_t *scr)
 {
-    memcpy(scr, I_VideoBuffer, SCREENWIDTH*SCREENHEIGHT*sizeof(*scr));
+  memcpy(scr, I_VideoBuffer, SCREENWIDTH * SCREENHEIGHT * sizeof(*scr));
 }
-
 
 /****************************************************************************
- * Name: I_SetPalette
+ * Name: i_set_palette
  ****************************************************************************/
 
-void I_SetPalette (byte *doompalette)
+void i_set_palette(byte *doompalette)
 {
-    for (int i=0; i<256; ++i)
+  for (int i = 0; i < 256; ++i)
     {
       /* Zero out the bottom two bits of each channel - the PC VGA
        * controller only supports 6 bits of accuracy.
@@ -918,11 +919,11 @@ void I_SetPalette (byte *doompalette)
       g_palette[i].b = gammatable[usegamma][*doompalette++] & ~3;
     }
 
-    palette_to_set = true;
+  palette_to_set = true;
 }
 
 /****************************************************************************
- * Name: I_GetPaletteIndex
+ * Name: i_get_palette_index
  *
  * Description:
  *  Given an RGB value, find the closest matching palette index.
@@ -932,7 +933,7 @@ void I_SetPalette (byte *doompalette)
  *
  ****************************************************************************/
 
-int I_GetPaletteIndex(int r, int g, int b)
+int i_get_palette_index(int r, int g, int b)
 {
   int best = 0;
   int best_diff = INT_MAX;
@@ -960,54 +961,51 @@ int I_GetPaletteIndex(int r, int g, int b)
 }
 
 /****************************************************************************
- * Name: I_SetWindowTitle
+ * Name: i_set_window_title
  *
  * Description:
  *  Set the window title internally.
  *
  ****************************************************************************/
 
-void I_SetWindowTitle(const char *title)
-{
-    g_window_title = title;
-}
+void i_set_window_title(const char *title) { g_window_title = title; }
 
 /****************************************************************************
- * Name: I_InitWindowTitle
+ * Name: i_init_window_title
  *
  * Description:
  *   Actually cause the window title to update with whatever window title was
- *   last set via I_SetWindowTitle.
+ *   last set via i_set_window_title.
  *
  ****************************************************************************/
 
-void I_InitWindowTitle(void)
+void i_init_window_title(void)
 {
 #if 0
     char *buf;
 
-    buf = M_StringJoin(g_window_title, " - ", PACKAGE_STRING, NULL);
+    buf = m_string_join(g_window_title, " - ", PACKAGE_STRING, NULL);
     SDL_SetWindowTitle(screen, buf);
     free(buf);
 #endif
 }
 
 /****************************************************************************
- * Name: I_SetWindowTitle
+ * Name: i_set_window_title
  ****************************************************************************/
 
-void I_RegisterWindowIcon(const unsigned int *icon, int width, int height)
+void i_register_window_icon(const unsigned int *icon, int width, int height)
 {
-    icon_data = icon;
-    icon_w = width;
-    icon_h = height;
+  icon_data = icon;
+  icon_w = width;
+  icon_h = height;
 }
 
 /****************************************************************************
- * Name: I_InitWindowIcon
+ * Name: i_init_window_icon
  ****************************************************************************/
 
-void I_InitWindowIcon(void)
+void i_init_window_icon(void)
 {
 #if 0
     SDL_Surface *surface;
@@ -1022,142 +1020,142 @@ void I_InitWindowIcon(void)
 #endif
 }
 
-void I_GraphicsCheckCommandLine(void)
+void i_graphics_check_commandline(void)
 {
-    int i;
+  int i;
 
-    //!
-    // @category video
-    // @vanilla
-    //
-    // Disable blitting the screen.
-    //
+  //!
+  // @category video
+  // @vanilla
+  //
+  // Disable blitting the screen.
+  //
 
-    noblit = M_CheckParm ("-noblit");
+  noblit = m_check_parm("-noblit");
 
-    //!
-    // @category video 
-    //
-    // Don't grab the mouse when running in windowed mode.
-    //
+  //!
+  // @category video
+  //
+  // Don't grab the mouse when running in windowed mode.
+  //
 
-    nograbmouse_override = M_ParmExists("-nograbmouse");
+  nograbmouse_override = m_parm_exists("-nograbmouse");
 
-    // default to fullscreen mode, allow override with command line
-    // nofullscreen because we love prboom
+  // default to fullscreen mode, allow override with command line
+  // nofullscreen because we love prboom
 
-    //!
-    // @category video 
-    //
-    // Run in a window.
-    //
+  //!
+  // @category video
+  //
+  // Run in a window.
+  //
 
-    if (M_CheckParm("-window") || M_CheckParm("-nofullscreen"))
+  if (m_check_parm("-window") || m_check_parm("-nofullscreen"))
     {
-        fullscreen = false;
+      fullscreen = false;
     }
 
-    //!
-    // @category video 
-    //
-    // Run in fullscreen mode.
-    //
+  //!
+  // @category video
+  //
+  // Run in fullscreen mode.
+  //
 
-    if (M_CheckParm("-fullscreen"))
+  if (m_check_parm("-fullscreen"))
     {
-        fullscreen = true;
+      fullscreen = true;
     }
 
-    //!
-    // @category video 
-    //
-    // Disable the mouse.
-    //
+  //!
+  // @category video
+  //
+  // Disable the mouse.
+  //
 
-    nomouse = M_CheckParm("-nomouse") > 0;
+  nomouse = m_check_parm("-nomouse") > 0;
 
-    //!
-    // @category video
-    // @arg <W>
-    //
-    // Specify the screen width, in pixels.  Implies -window.
-    //
+  //!
+  // @category video
+  // @arg <W>
+  //
+  // Specify the screen width, in pixels.  Implies -window.
+  //
 
-    i = M_CheckParmWithArgs("-width", 1);
+  i = m_check_parm_with_args("-width", 1);
 
-    if (i > 0)
+  if (i > 0)
     {
-        window_width = atoi(myargv[i + 1]);
-        fullscreen = false;
+      window_width = atoi(myargv[i + 1]);
+      fullscreen = false;
     }
 
-    //!
-    // @category video
-    // @arg <H>
-    //
-    // Specify the screen height, in pixels.  Implies -window.
-    //
+  //!
+  // @category video
+  // @arg <H>
+  //
+  // Specify the screen height, in pixels.  Implies -window.
+  //
 
-    i = M_CheckParmWithArgs("-height", 1);
+  i = m_check_parm_with_args("-height", 1);
 
-    if (i > 0)
+  if (i > 0)
     {
-        window_height = atoi(myargv[i + 1]);
-        fullscreen = false;
+      window_height = atoi(myargv[i + 1]);
+      fullscreen = false;
     }
 
-    //!
-    // @category video
-    // @arg <WxH>
-    //
-    // Specify the dimensions of the window.  Implies -window.
-    //
+  //!
+  // @category video
+  // @arg <WxH>
+  //
+  // Specify the dimensions of the window.  Implies -window.
+  //
 
-    i = M_CheckParmWithArgs("-geometry", 1);
+  i = m_check_parm_with_args("-geometry", 1);
 
-    if (i > 0)
+  if (i > 0)
     {
-        int w, h, s;
+      int w, h, s;
 
-        s = sscanf(myargv[i + 1], "%ix%i", &w, &h);
-        if (s == 2)
+      s = sscanf(myargv[i + 1], "%ix%i", &w, &h);
+      if (s == 2)
         {
-            window_width = w;
-            window_height = h;
-            fullscreen = false;
+          window_width = w;
+          window_height = h;
+          fullscreen = false;
         }
     }
 
-    //!
-    // @category video
-    // @arg <x>
-    //
-    // Specify the display number on which to show the screen.
-    //
+  //!
+  // @category video
+  // @arg <x>
+  //
+  // Specify the display number on which to show the screen.
+  //
 
-    i = M_CheckParmWithArgs("-display", 1);
+  i = m_check_parm_with_args("-display", 1);
 
-    if (i > 0)
+  if (i > 0)
     {
-        int display = atoi(myargv[i + 1]);
-        if (display >= 0)
+      int display = atoi(myargv[i + 1]);
+      if (display >= 0)
         {
-            video_display = display;
+          video_display = display;
         }
     }
 }
 
 // Check if we have been invoked as a screensaver by xscreensaver.
 
-void I_CheckIsScreensaver(void)
+void i_check_is_screensaver(void)
 {
-    char *env;
+  char *env;
 
-    env = getenv("XSCREENSAVER_WINDOW");
+  env = getenv("XSCREENSAVER_WINDOW");
 
-    if (env != NULL)
+  if (env != NULL)
     {
-        screensaver_mode = true;
+      screensaver_mode = true;
     }
 }
 
@@ -1171,7 +1169,7 @@ static void SetSDLVideoDriver(void)
     {
         char *env_string;
 
-        env_string = M_StringJoin("SDL_VIDEODRIVER=", video_driver, NULL);
+        env_string = m_string_join("SDL_VIDEODRIVER=", video_driver, NULL);
         putenv(env_string);
         free(env_string);
     }
@@ -1196,12 +1194,12 @@ static void CenterWindow(int *x, int *y, int w, int h)
     *x = bounds.x + SDL_max((bounds.w - w) / 2, 0);
     *y = bounds.y + SDL_max((bounds.h - h) / 2, 0);
 #endif
-#define MAX(a,b) (((a)>(b))?(a):(b))
-    *x = MAX((g_graphics_state.vinfo.xres - w) / 2, 0);
-    *y = MAX((g_graphics_state.vinfo.yres - h) / 2, 0);
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+  *x = MAX((g_graphics_state.vinfo.xres - w) / 2, 0);
+  *y = MAX((g_graphics_state.vinfo.yres - h) / 2, 0);
 }
 
-void I_GetWindowPosition(int *x, int *y, int w, int h)
+void i_get_window_position(int *x, int *y, int w, int h)
 {
 #if 0
     // Check that video_display corresponds to a display that really exists,
@@ -1209,7 +1207,7 @@ void I_GetWindowPosition(int *x, int *y, int w, int h)
     if (video_display < 0 || video_display >= SDL_GetNumVideoDisplays())
     {
         fprintf(stderr,
-                "I_GetWindowPosition: We were configured to run on display #%d, "
+                "i_get_window_position: We were configured to run on display #%d, "
                 "but it no longer exists (max %d). Moving to display 0.\n",
                 video_display, SDL_GetNumVideoDisplays() - 1);
         video_display = 0;
@@ -1219,10 +1217,10 @@ void I_GetWindowPosition(int *x, int *y, int w, int h)
     // we use it to control which display we run fullscreen on.
 #endif
 
-    if (fullscreen)
+  if (fullscreen)
     {
-        CenterWindow(x, y, w, h);
-        return;
+      CenterWindow(x, y, w, h);
+      return;
     }
 
     // in windowed mode, the desired window position can be specified
@@ -1242,7 +1240,7 @@ void I_GetWindowPosition(int *x, int *y, int w, int h)
     else if (sscanf(window_position, "%i,%i", x, y) != 2)
     {
         // invalid format: revert to default
-        fprintf(stderr, "I_GetWindowPosition: invalid window_position setting\n");
+        fprintf(stderr, "i_get_window_position: invalid window_position setting\n");
         *x = *y = SDL_WINDOWPOS_UNDEFINED;
     }
 #endif
@@ -1288,12 +1286,12 @@ static void SetVideoMode(void)
     // playing in three window mode and want to line up three game windows
     // next to each other on a single desktop.
     // Deliberately not documented because I'm not sure how useful this is yet.
-    if (M_ParmExists("-borderless"))
+    if (m_parm_exists("-borderless"))
     {
         window_flags |= SDL_WINDOW_BORDERLESS;
     }
 
-    I_GetWindowPosition(&x, &y, w, h);
+    i_get_window_position(&x, &y, w, h);
 
     // Create window and renderer contexts. We set the window title
     // later anyway and leave the window position "undefined". If
@@ -1312,8 +1310,8 @@ static void SetVideoMode(void)
 
         SDL_SetWindowMinimumSize(screen, SCREENWIDTH, actualheight);
 
-        I_InitWindowTitle();
-        I_InitWindowIcon();
+        i_init_window_title();
+        i_init_window_icon();
     }
 
     // The SDL_RENDERER_TARGETTEXTURE flag is required to render the
@@ -1421,7 +1419,7 @@ static void SetVideoMode(void)
     if (argbbuffer == NULL)
     {
 	    // pixels and pitch will be filled with the texture's values
-	    // in I_FinishUpdate()
+	    // in i_finish_update()
 	    argbbuffer = SDL_CreateRGBSurfaceWithFormatFrom(
                      NULL, w, h, 0, 0, SDL_PIXELFORMAT_ARGB8888);
     }
@@ -1464,7 +1462,7 @@ static void SetVideoMode(void)
 #endif
 }
 
-void I_InitGraphics(void)
+void i_init_graphics(void)
 {
   uint8_t xscale;
   uint8_t yscale;
@@ -1538,78 +1536,79 @@ void I_InitGraphics(void)
       I_Error("Couldn't allocate screen buffer: %d\n", errno);
     }
 
-    // Create the game window; this may switch graphic modes depending
-    // on configuration.
-    // AdjustWindowSize();
-    SetVideoMode();
+  // Create the game window; this may switch graphic modes depending
+  // on configuration.
+  // AdjustWindowSize();
+  SetVideoMode();
 
-    // Start with a clear black screen
-    // (screen will be flipped after we set the palette)
+  // Start with a clear black screen
+  // (screen will be flipped after we set the palette)
 
-    memset(g_graphics_state.scrnbuf, 0, SCREENHEIGHT * SCREENWIDTH);
+  memset(g_graphics_state.scrnbuf, 0, SCREENHEIGHT * SCREENWIDTH);
 
-    // Set the palette
+  // Set the palette
 
-    doompal = W_CacheLumpName(DEH_String("PLAYPAL"), PU_CACHE);
-    I_SetPalette(doompal);
+  doompal = W_CacheLumpName(deh_string("PLAYPAL"), PU_CACHE);
+  i_set_palette(doompal);
 
-    UpdateGrab();
+  UpdateGrab();
 
-    // On some systems, it takes a second or so for the screen to settle
-    // after changing modes.  We include the option to add a delay when
-    // setting the screen mode, so that the game doesn't start immediately
-    // with the player unable to see anything.
+  // On some systems, it takes a second or so for the screen to settle
+  // after changing modes.  We include the option to add a delay when
+  // setting the screen mode, so that the game doesn't start immediately
+  // with the player unable to see anything.
 
-    if (fullscreen && !screensaver_mode)
+  if (fullscreen && !screensaver_mode)
     {
-        usleep(startup_delay * 1000);
+      usleep(startup_delay * 1000);
     }
 
-    // The actual 320x200 canvas that we draw to. This is the pixel buffer of
-    // the 8-bit paletted screen buffer that gets blit on an intermediate
-    // 32-bit RGBA screen buffer that gets loaded into a texture that gets
-    // finally rendered into our window or full screen in I_FinishUpdate().
+  // The actual 320x200 canvas that we draw to. This is the pixel buffer of
+  // the 8-bit paletted screen buffer that gets blit on an intermediate
+  // 32-bit RGBA screen buffer that gets loaded into a texture that gets
+  // finally rendered into our window or full screen in i_finish_update().
 
-    I_VideoBuffer = g_graphics_state.scrnbuf;
-    V_RestoreBuffer();
+  I_VideoBuffer = g_graphics_state.scrnbuf;
+  v_restore_buffer();
 
-    // Clear the screen to black.
+  // Clear the screen to black.
 
-    memset(I_VideoBuffer, 0, SCREENWIDTH * SCREENHEIGHT * sizeof(*I_VideoBuffer));
+  memset(I_VideoBuffer, 0,
+         SCREENWIDTH * SCREENHEIGHT * sizeof(*I_VideoBuffer));
 
-    // clear out any events waiting at the start and center the mouse
-  
+  // clear out any events waiting at the start and center the mouse
+
 #if 0
     while (SDL_PollEvent(&dummy));
 #endif
 
-    g_graphics_state.inited = true;
+  g_graphics_state.inited = true;
 
-    // Call I_ShutdownGraphics on quit
+  // Call i_shutdown_graphics on quit
 
-    I_AtExit(I_ShutdownGraphics, true);
+  I_AtExit(i_shutdown_graphics, true);
 }
 
 // Bind all variables controlling video options into the configuration
 // file system.
-void I_BindVideoVariables(void)
+void i_bind_video_variables(void)
 {
-    M_BindIntVariable("use_mouse",                 &usemouse);
-    M_BindIntVariable("fullscreen",                &fullscreen);
-    M_BindIntVariable("video_display",             &video_display);
-    M_BindIntVariable("integer_scaling",           &integer_scaling);
-    M_BindIntVariable("smooth_pixel_scaling",      &smooth_pixel_scaling);
-    M_BindIntVariable("vga_porch_flash",           &vga_porch_flash);
-    M_BindIntVariable("startup_delay",             &startup_delay);
-    M_BindIntVariable("fullscreen_width",          &fullscreen_width);
-    M_BindIntVariable("fullscreen_height",         &fullscreen_height);
-    M_BindIntVariable("force_software_renderer",   &force_software_renderer);
-    M_BindIntVariable("max_scaling_buffer_pixels", &max_scaling_buffer_pixels);
-    M_BindIntVariable("window_width",              &window_width);
-    M_BindIntVariable("window_height",             &window_height);
-    M_BindIntVariable("grabmouse",                 &grabmouse);
-    M_BindStringVariable("video_driver",           &video_driver);
-    M_BindStringVariable("window_position",        &window_position);
-    M_BindIntVariable("usegamma",                  &usegamma);
-    M_BindIntVariable("png_screenshots",           &png_screenshots);
+  m_bind_int_variable("use_mouse", &usemouse);
+  m_bind_int_variable("fullscreen", &fullscreen);
+  m_bind_int_variable("video_display", &video_display);
+  m_bind_int_variable("integer_scaling", &integer_scaling);
+  m_bind_int_variable("smooth_pixel_scaling", &smooth_pixel_scaling);
+  m_bind_int_variable("vga_porch_flash", &vga_porch_flash);
+  m_bind_int_variable("startup_delay", &startup_delay);
+  m_bind_int_variable("fullscreen_width", &fullscreen_width);
+  m_bind_int_variable("fullscreen_height", &fullscreen_height);
+  m_bind_int_variable("force_software_renderer", &force_software_renderer);
+  m_bind_int_variable("max_scaling_buffer_pixels", &max_scaling_buffer_pixels);
+  m_bind_int_variable("window_width", &window_width);
+  m_bind_int_variable("window_height", &window_height);
+  m_bind_int_variable("grabmouse", &grabmouse);
+  m_bind_string_variable("video_driver", &video_driver);
+  m_bind_string_variable("window_position", &window_position);
+  m_bind_int_variable("usegamma", &usegamma);
+  m_bind_int_variable("png_screenshots", &png_screenshots);
 }

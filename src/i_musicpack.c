@@ -604,7 +604,7 @@ static void ReadLoopPoints(const char *filename, file_metadata_t *metadata)
     metadata->start_time = 0;
     metadata->end_time = -1;
 
-    fs = M_fopen(filename, "rb");
+    fs = m_fopen(filename, "rb");
 
     if (fs == NULL)
     {
@@ -667,7 +667,7 @@ static const char *GetSubstituteMusicFile(void *data, size_t data_len)
     // Build a string representation of the hash.
     for (i = 0; i < sizeof(sha1_digest_t); ++i)
     {
-        M_snprintf(hash_str + i * 2, sizeof(hash_str) - i * 2,
+        m_snprintf(hash_str + i * 2, sizeof(hash_str) - i * 2,
                    "%02x", hash[i]);
     }
 
@@ -680,7 +680,7 @@ static const char *GetSubstituteMusicFile(void *data, size_t data_len)
 
     for (i = 0; i < subst_music_len; ++i)
     {
-        if (M_StringStartsWith(hash_str, subst_music[i].hash_prefix))
+        if (m_string_starts_with(hash_str, subst_music[i].hash_prefix))
         {
             filename = subst_music[i].filename;
 
@@ -688,7 +688,7 @@ static const char *GetSubstituteMusicFile(void *data, size_t data_len)
             // any fallbacks. But we always return a filename if it's
             // in the list, even if it's just so we can print an error
             // message to the user saying it doesn't exist.
-            if (M_FileExists(filename))
+            if (m_file_exists(filename))
             {
                 break;
             }
@@ -707,25 +707,25 @@ static char *GetFullPath(const char *musicdir, const char *path)
     // so just return it.
     if (path[0] == DIR_SEPARATOR)
     {
-        return M_StringDuplicate(path);
+        return m_string_duplicate(path);
     }
 
 #ifdef _WIN32
     // d:\path\...
     if (isalpha(path[0]) && path[1] == ':' && path[2] == DIR_SEPARATOR)
     {
-        return M_StringDuplicate(path);
+        return m_string_duplicate(path);
     }
 #endif
 
     // Paths in the substitute filenames can contain Unix-style /
     // path separators, but we should convert this to the separator
     // for the native platform.
-    systemized_path = M_StringReplace(path, "/", DIR_SEPARATOR_S);
+    systemized_path = m_string_replace(path, "/", DIR_SEPARATOR_S);
 
     // Copy config filename and cut off the filename to just get the
     // parent dir.
-    result = M_StringJoin(musicdir, systemized_path, NULL);
+    result = m_string_join(musicdir, systemized_path, NULL);
     free(systemized_path);
 
     return result;
@@ -741,17 +741,17 @@ static char *ExpandFileExtension(const char *musicdir, const char *filename)
     char *replaced, *result;
     int i;
 
-    if (!M_StringEndsWith(filename, ".{ext}"))
+    if (!m_string_ends_with(filename, ".{ext}"))
     {
         return GetFullPath(musicdir, filename);
     }
 
     for (i = 0; i < arrlen(extns); ++i)
     {
-        replaced = M_StringReplace(filename, ".{ext}", extns[i]);
+        replaced = m_string_replace(filename, ".{ext}", extns[i]);
         result = GetFullPath(musicdir, replaced);
         free(replaced);
-        if (M_FileExists(result))
+        if (m_file_exists(result))
         {
             return result;
         }
@@ -896,12 +896,12 @@ static boolean ReadSubstituteConfig(char *musicdir, const char *filename)
     int linenum = 1;
 
     // This unnecessarily opens the file twice...
-    if (!M_FileExists(filename))
+    if (!m_file_exists(filename))
     {
         return false;
     }
 
-    M_ReadFile(filename, (byte **) &buffer);
+    m_read_file(filename, (byte **) &buffer);
 
     line = buffer;
 
@@ -935,7 +935,7 @@ static boolean ReadSubstituteConfig(char *musicdir, const char *filename)
         line = next;
     }
 
-    Z_Free(buffer);
+    z_free(buffer);
 
     return true;
 }
@@ -955,15 +955,15 @@ static void LoadSubstituteConfigs(void)
     // $configdir/music to look for .cfg files.
     if (strcmp(music_pack_path, "") != 0)
     {
-        musicdir = M_StringJoin(music_pack_path, DIR_SEPARATOR_S, NULL);
+        musicdir = m_string_join(music_pack_path, DIR_SEPARATOR_S, NULL);
     }
     else if (!strcmp(configdir, exedir))
     {
-        musicdir = M_StringDuplicate("");
+        musicdir = m_string_duplicate("");
     }
     else
     {
-        musicdir = M_StringJoin(configdir, "music", DIR_SEPARATOR_S, NULL);
+        musicdir = m_string_join(configdir, "music", DIR_SEPARATOR_S, NULL);
     }
 
     // Load all music packs, by searching for .cfg files.
@@ -1042,7 +1042,7 @@ static void DumpSubstituteConfig(const char *filename)
     unsigned int lumpnum;
     size_t h;
 
-    fs = M_fopen(filename, "w");
+    fs = m_fopen(filename, "w");
 
     if (fs == NULL)
     {
@@ -1133,7 +1133,7 @@ static boolean I_MP_InitMusic(void)
     // Read all MIDI files from loaded WAD files, dump an example
     // substitution music config file to the specified file, and quit.
     //
-    i = M_CheckParmWithArgs("-dumpsubstconfig", 1);
+    i = m_check_parm_with_args("-dumpsubstconfig", 1);
 
     if (i > 0)
     {

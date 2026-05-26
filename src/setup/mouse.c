@@ -167,10 +167,10 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
 
 void BindMouseVariables(void)
 {
-    M_BindIntVariable("use_mouse",               &usemouse);
-    M_BindIntVariable("novert",                  &novert);
-    M_BindIntVariable("grabmouse",               &grabmouse);
-    M_BindIntVariable("mouse_sensitivity",       &mouseSensitivity);
-    M_BindIntVariable("mouse_threshold",         &mouse_threshold);
-    M_BindFloatVariable("mouse_acceleration",    &mouse_acceleration);
+    m_bind_int_variable("use_mouse",               &usemouse);
+    m_bind_int_variable("novert",                  &novert);
+    m_bind_int_variable("grabmouse",               &grabmouse);
+    m_bind_int_variable("mouse_sensitivity",       &mouseSensitivity);
+    m_bind_int_variable("mouse_threshold",         &mouse_threshold);
+    m_bind_float_variable("mouse_acceleration",    &mouse_acceleration);
 }

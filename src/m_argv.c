@@ -34,19 +34,19 @@ char**		myargv;
 
 
 //
-// M_CheckParm
+// m_check_parm
 // Checks for the given parameter
 // in the program's command line arguments.
 // Returns the argument number (1 to argc-1)
 // or 0 if not present
 //
 
-int M_CheckParmWithArgs(const char *check, int num_args)
+int m_check_parm_with_args(const char *check, int num_args)
 {
     int i;
 
     // Check if myargv[i] has been set to NULL in LoadResponseFile(),
-    // which may call I_Error(), which in turn calls M_ParmExists("-nogui").
+    // which may call I_Error(), which in turn calls m_parm_exists("-nogui").
 
     for (i = 1; i < myargc - num_args && myargv[i]; i++)
     {
@@ -58,20 +58,20 @@ int M_CheckParmWithArgs(const char *check, int num_args)
 }
 
 //
-// M_ParmExists
+// m_parm_exists
 //
 // Returns true if the given parameter exists in the program's command
 // line arguments, false if not.
 //
 
-boolean M_ParmExists(const char *check)
+boolean m_parm_exists(const char *check)
 {
-    return M_CheckParm(check) != 0;
+    return m_check_parm(check) != 0;
 }
 
-int M_CheckParm(const char *check)
+int m_check_parm(const char *check)
 {
-    return M_CheckParmWithArgs(check, 0);
+    return m_check_parm_with_args(check, 0);
 }
 
 #define MAXARGVS        100
@@ -87,7 +87,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
     int i, k;
 
     // Read the response file into memory
-    handle = M_fopen(filename, "rb");
+    handle = m_fopen(filename, "rb");
 
     if (handle == NULL)
     {
@@ -97,7 +97,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
     printf("Found response file %s!\n", filename);
 
-    size = M_FileLength(handle);
+    size = m_file_length(handle);
 
     // Read in the entire file
     // Allocate one byte extra - this is in case there is an argument
@@ -194,7 +194,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
                 I_Error("Too many arguments in the response file!");
             }
 
-            newargv[newargc++] = M_StringDuplicate(argstart);
+            newargv[newargc++] = m_string_duplicate(argstart);
         }
         else
         {
@@ -218,7 +218,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
                 I_Error("Too many arguments in the response file!");
             }
 
-            newargv[newargc++] = M_StringDuplicate(argstart);
+            newargv[newargc++] = m_string_duplicate(argstart);
         }
     }
 
@@ -269,7 +269,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 // Find a Response File
 //
 
-void M_FindResponseFile(void)
+void m_find_response_file(void)
 {
     int i;
 
@@ -291,7 +291,7 @@ void M_FindResponseFile(void)
         // command line, replacing this argument.  A response file can
         // also be loaded using the abbreviated syntax '@file.rsp'.
         //
-        i = M_CheckParmWithArgs("-response", 1);
+        i = m_check_parm_with_args("-response", 1);
         if (i <= 0)
         {
             break;
@@ -301,7 +301,7 @@ void M_FindResponseFile(void)
         // an argument beginning with a '-' is encountered, we keep something
         // that starts with a '-'.
         free(myargv[i]);
-        myargv[i] = M_StringDuplicate("-_");
+        myargv[i] = m_string_duplicate("-_");
         LoadResponseFile(i + 1, myargv[i + 1]);
     }
 }
@@ -322,7 +322,7 @@ static boolean FileIsDemoLump(const char *filename)
     int count, ver;
     byte buf[12], *p = buf;
 
-    handle = M_fopen(filename, "rb");
+    handle = m_fopen(filename, "rb");
 
     if (handle == NULL)
     {
@@ -384,9 +384,9 @@ static int GuessFileType(const char *name)
     char *lower;
     static boolean iwad_found = false, demo_found = false;
 
-    base = M_BaseName(name);
-    lower = M_StringDuplicate(base);
-    M_ForceLowercase(lower);
+    base = m_base_name(name);
+    lower = m_string_duplicate(base);
+    m_force_lowercase(lower);
 
     // only ever add one argument to the -iwad parameter
 
@@ -395,11 +395,11 @@ static int GuessFileType(const char *name)
         ret = FILETYPE_IWAD;
         iwad_found = true;
     }
-    else if (M_StringEndsWith(lower, ".wad"))
+    else if (m_string_ends_with(lower, ".wad"))
     {
         ret = FILETYPE_PWAD;
     }
-    else if (M_StringEndsWith(lower, ".lmp"))
+    else if (m_string_ends_with(lower, ".lmp"))
     {
         // only ever add one argument to the -playdemo parameter
 
@@ -413,10 +413,10 @@ static int GuessFileType(const char *name)
             ret = FILETYPE_PWAD;
         }
     }
-    else if (M_StringEndsWith(lower, ".deh") ||
-//           M_StringEndsWith(lower, ".bex") ||
-             M_StringEndsWith(lower, ".hhe") ||
-             M_StringEndsWith(lower, ".seh"))
+    else if (m_string_ends_with(lower, ".deh") ||
+//           m_string_ends_with(lower, ".bex") ||
+             m_string_ends_with(lower, ".hhe") ||
+             m_string_ends_with(lower, ".seh"))
     {
         ret = FILETYPE_DEH;
     }
@@ -442,7 +442,7 @@ static int CompareByFileType(const void *a, const void *b)
     return ret ? ret : (arg_a->stable - arg_b->stable);
 }
 
-void M_AddLooseFiles(void)
+void m_add_loose_files(void)
 {
     int i, types = 0;
     char **newargv;
@@ -491,25 +491,25 @@ void M_AddLooseFiles(void)
 
     if (types & FILETYPE_IWAD)
     {
-        arguments[myargc].str = M_StringDuplicate("-iwad");
+        arguments[myargc].str = m_string_duplicate("-iwad");
         arguments[myargc].type = FILETYPE_IWAD - 1;
         myargc++;
     }
     if (types & FILETYPE_PWAD)
     {
-        arguments[myargc].str = M_StringDuplicate("-merge");
+        arguments[myargc].str = m_string_duplicate("-merge");
         arguments[myargc].type = FILETYPE_PWAD - 1;
         myargc++;
     }
     if (types & FILETYPE_DEH)
     {
-        arguments[myargc].str = M_StringDuplicate("-deh");
+        arguments[myargc].str = m_string_duplicate("-deh");
         arguments[myargc].type = FILETYPE_DEH - 1;
         myargc++;
     }
     if (types & FILETYPE_DEMO)
     {
-        arguments[myargc].str = M_StringDuplicate("-playdemo");
+        arguments[myargc].str = m_string_duplicate("-playdemo");
         arguments[myargc].type = FILETYPE_DEMO - 1;
         myargc++;
     }
@@ -537,18 +537,18 @@ void M_AddLooseFiles(void)
 
 // Return the name of the executable used to start the program:
 
-const char *M_GetExecutableName(void)
+const char *m_get_executable_name(void)
 {
-    return M_BaseName(myargv[0]);
+    return m_base_name(myargv[0]);
 }
 
 char *exedir = NULL;
 
-void M_SetExeDir(void)
+void m_set_exe_dir(void)
 {
     char *dirname;
 
-    dirname = M_DirName(myargv[0]);
-    exedir = M_StringJoin(dirname, DIR_SEPARATOR_S, NULL);
+    dirname = m_dir_name(myargv[0]);
+    exedir = m_string_join(dirname, DIR_SEPARATOR_S, NULL);
     free(dirname);
 }

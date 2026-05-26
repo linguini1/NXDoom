@@ -284,7 +284,7 @@ static void StartGame(int multiplayer)
 
     TXT_Shutdown();
  
-    M_SaveDefaults();
+    m_save_defaults();
     PassThroughArguments(exec);
 
     ExecuteDoom(exec);
@@ -308,11 +308,11 @@ static void UpdateWarpButton(void)
 
     if (warptype == WARP_ExMy)
     {
-        M_snprintf(buf, sizeof(buf), "E%iM%i", warpepisode, warpmap);
+        m_snprintf(buf, sizeof(buf), "E%iM%i", warpepisode, warpmap);
     }
     else if (warptype == WARP_MAPxy)
     {
-        M_snprintf(buf, sizeof(buf), "MAP%02i", warpmap);
+        m_snprintf(buf, sizeof(buf), "MAP%02i", warpmap);
     }
 
     TXT_SetButtonLabel(warpbutton, buf);
@@ -424,7 +424,7 @@ static void LevelSelectDialog(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(user_data))
                     continue;
                 }
 
-                M_snprintf(buf, sizeof(buf),
+                m_snprintf(buf, sizeof(buf),
                            " E%dM%d ", x, y);
                 button = TXT_NewButton(buf);
                 TXT_SignalConnect(button, "pressed",
@@ -457,7 +457,7 @@ static void LevelSelectDialog(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(user_data))
                 continue;
             }
 
-            M_snprintf(buf, sizeof(buf), " MAP%02d ", l);
+            m_snprintf(buf, sizeof(buf), " MAP%02d ", l);
             button = TXT_NewButton(buf);
             TXT_SignalConnect(button, "pressed", 
                               SetMAPxyWarp, (void *) (intptr_t) l);
@@ -556,7 +556,7 @@ static txt_widget_t *IWADSelector(void)
 
     // Find out what WADs are installed
 
-    found_iwads = GetIwads();
+    found_iwads = get_iwads();
 
     // Build a list of the descriptions for all installed IWADs
 
@@ -840,7 +840,7 @@ static void DoJoinGame(void *unused1, void *unused2)
 
     TXT_Shutdown();
     
-    M_SaveDefaults();
+    m_save_defaults();
 
     PassThroughArguments(exec);
 
@@ -877,7 +877,7 @@ static void SelectQueryAddress(TXT_UNCAST_ARG(button),
     // Set address to connect to:
 
     free(connect_address);
-    connect_address = M_StringDuplicate(button->label);
+    connect_address = m_string_duplicate(button->label);
 
     // Auto-choose IWAD if there is already a player connected.
 
@@ -936,22 +936,22 @@ static void QueryResponseCallback(net_addr_t *addr,
         return;
     }
 
-    M_snprintf(ping_time_str, sizeof(ping_time_str), "%ims", ping_time);
+    m_snprintf(ping_time_str, sizeof(ping_time_str), "%ims", ping_time);
 
     // Build description from server name field. Because there is limited
     // space, we only include the player count if there are already players
     // connected to the server.
     if (querydata->num_players > 0)
     {
-        M_snprintf(description, sizeof(description), "(%d/%d) ",
+        m_snprintf(description, sizeof(description), "(%d/%d) ",
                    querydata->num_players, querydata->max_players);
     }
     else
     {
-        M_StringCopy(description, "", sizeof(description));
+        m_str_copy(description, "", sizeof(description));
     }
 
-    M_StringConcat(description, querydata->description, sizeof(description));
+    m_string_concat(description, querydata->description, sizeof(description));
 
     TXT_AddWidgets(results_table,
                    TXT_NewLabel(ping_time_str),
@@ -1090,7 +1090,7 @@ void SetChatMacroDefaults(void)
     {
         if (chat_macros[i] == NULL)
         {
-            chat_macros[i] = M_StringDuplicate(defaults[i]);
+            chat_macros[i] = m_string_duplicate(defaults[i]);
         }
     }
 }
@@ -1127,7 +1127,7 @@ void MultiplayerConfig(TXT_UNCAST_ARG(widget), void *user_data)
 
     for (i=0; i<10; ++i)
     {
-        M_snprintf(buf, sizeof(buf), "#%i ", i + 1);
+        m_snprintf(buf, sizeof(buf), "#%i ", i + 1);
 
         label = TXT_NewLabel(buf);
         TXT_SetFGColor(label, TXT_COLOR_BRIGHT_CYAN);
@@ -1146,12 +1146,12 @@ void BindMultiplayerVariables(void)
     char buf[15];
     int i;
 
-    M_BindStringVariable("player_name", &net_player_name);
+    m_bind_string_variable("player_name", &net_player_name);
 
     for (i=0; i<10; ++i)
     {
-        M_snprintf(buf, sizeof(buf), "chatmacro%i", i);
-        M_BindStringVariable(buf, &chat_macros[i]);
+        m_snprintf(buf, sizeof(buf), "chatmacro%i", i);
+        m_bind_string_variable(buf, &chat_macros[i]);
     }
 
     switch (gamemission)

@@ -59,14 +59,14 @@ static boolean WriteWrapperTimidityConfig(char *write_path)
         return false;
     }
 
-    fstream = M_fopen(write_path, "w");
+    fstream = m_fopen(write_path, "w");
 
     if (fstream == NULL)
     {
         return false;
     }
 
-    path = M_DirName(timidity_cfg_path);
+    path = m_dir_name(timidity_cfg_path);
     fprintf(fstream, "dir %s\n", path);
     free(path);
 
@@ -87,11 +87,11 @@ void I_InitTimidityConfig(void)
     char *env_string;
     boolean success;
 
-    temp_timidity_cfg = M_TempFile("timidity.cfg");
+    temp_timidity_cfg = m_temp_file("timidity.cfg");
 
     if (snd_musicdevice == SNDDEVICE_GUS)
     {
-        success = GUS_WriteConfig(temp_timidity_cfg);
+        success = gus_write_config(temp_timidity_cfg);
     }
     else
     {
@@ -102,7 +102,7 @@ void I_InitTimidityConfig(void)
     // config file.
     if (success)
     {
-        env_string = M_StringJoin("TIMIDITY_CFG=", temp_timidity_cfg, NULL);
+        env_string = m_string_join("TIMIDITY_CFG=", temp_timidity_cfg, NULL);
         putenv(env_string);
         // env_string deliberately not freed; see putenv manpage
 
@@ -144,7 +144,7 @@ static void RemoveTimidityConfig(void)
 {
     if (temp_timidity_cfg != NULL)
     {
-        M_remove(temp_timidity_cfg);
+        m_remove(temp_timidity_cfg);
         free(temp_timidity_cfg);
     }
 }
@@ -368,7 +368,7 @@ static boolean ConvertMus(byte *musdata, int len, const char *filename)
     {
         mem_get_buf(outstream, &outbuf, &outbuf_len);
 
-        M_WriteFile(filename, outbuf, outbuf_len);
+        m_write_file(filename, outbuf, outbuf_len);
     }
 
     mem_fclose(instream);
@@ -390,11 +390,11 @@ static void *I_SDL_RegisterSong(void *data, int len)
     // MUS files begin with "MUS"
     // Reject anything which doesnt have this signature
 
-    filename = M_TempFile("doom.mid");
+    filename = m_temp_file("doom.mid");
 
     if (IsMid(data, len) && len < MAXMIDLENGTH)
     {
-        M_WriteFile(filename, data, len);
+        m_write_file(filename, data, len);
     }
     else
     {
@@ -421,7 +421,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
 
     if (strlen(snd_musiccmd) == 0)
     {
-        M_remove(filename);
+        m_remove(filename);
     }
 
     free(filename);

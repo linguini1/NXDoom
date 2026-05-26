@@ -203,7 +203,7 @@ void I_InitSound(GameMission_t mission)
     // Disable all sound output.
     //
 
-    nosound = M_CheckParm("-nosound") > 0;
+    nosound = m_check_parm("-nosound") > 0;
 
     //!
     // @vanilla
@@ -211,7 +211,7 @@ void I_InitSound(GameMission_t mission)
     // Disable sound effects. 
     //
 
-    nosfx = M_CheckParm("-nosfx") > 0;
+    nosfx = m_check_parm("-nosfx") > 0;
 
     //!
     // @vanilla
@@ -219,17 +219,17 @@ void I_InitSound(GameMission_t mission)
     // Disable music.
     //
 
-    nomusic = M_CheckParm("-nomusic") > 0;
+    nomusic = m_check_parm("-nomusic") > 0;
 
     //!
     //
     // Disable substitution music packs.
     //
 
-    nomusicpacks = M_ParmExists("-nomusicpacks");
+    nomusicpacks = m_parm_exists("-nomusicpacks");
 
     // Auto configure the music pack directory.
-    M_SetMusicPackDir();
+    m_set_music_pack_dir();
 
     // Initialize the sound and music subsystems.
 
@@ -485,49 +485,49 @@ boolean I_MusicIsPlaying(void)
 
 void I_BindSoundVariables(void)
 {
-    M_BindIntVariable("snd_musicdevice",         &snd_musicdevice);
-    M_BindIntVariable("snd_sfxdevice",           &snd_sfxdevice);
-    M_BindIntVariable("snd_sbport",              &snd_sbport);
-    M_BindIntVariable("snd_sbirq",               &snd_sbirq);
-    M_BindIntVariable("snd_sbdma",               &snd_sbdma);
-    M_BindIntVariable("snd_mport",               &snd_mport);
-    M_BindIntVariable("snd_maxslicetime_ms",     &snd_maxslicetime_ms);
-    M_BindStringVariable("snd_musiccmd",         &snd_musiccmd);
-    M_BindStringVariable("snd_dmxoption",        &snd_dmxoption);
-    M_BindIntVariable("snd_samplerate",          &snd_samplerate);
-    M_BindIntVariable("snd_cachesize",           &snd_cachesize);
-    M_BindIntVariable("opl_io_port",             &opl_io_port);
-    M_BindIntVariable("snd_pitchshift",          &snd_pitchshift);
+    m_bind_int_variable("snd_musicdevice",         &snd_musicdevice);
+    m_bind_int_variable("snd_sfxdevice",           &snd_sfxdevice);
+    m_bind_int_variable("snd_sbport",              &snd_sbport);
+    m_bind_int_variable("snd_sbirq",               &snd_sbirq);
+    m_bind_int_variable("snd_sbdma",               &snd_sbdma);
+    m_bind_int_variable("snd_mport",               &snd_mport);
+    m_bind_int_variable("snd_maxslicetime_ms",     &snd_maxslicetime_ms);
+    m_bind_string_variable("snd_musiccmd",         &snd_musiccmd);
+    m_bind_string_variable("snd_dmxoption",        &snd_dmxoption);
+    m_bind_int_variable("snd_samplerate",          &snd_samplerate);
+    m_bind_int_variable("snd_cachesize",           &snd_cachesize);
+    m_bind_int_variable("opl_io_port",             &opl_io_port);
+    m_bind_int_variable("snd_pitchshift",          &snd_pitchshift);
 
-    M_BindStringVariable("music_pack_path",      &music_pack_path);
-    M_BindStringVariable("timidity_cfg_path",    &timidity_cfg_path);
-    M_BindStringVariable("gus_patch_path",       &gus_patch_path);
-    M_BindIntVariable("gus_ram_kb",              &gus_ram_kb);
+    m_bind_string_variable("music_pack_path",      &music_pack_path);
+    m_bind_string_variable("timidity_cfg_path",    &timidity_cfg_path);
+    m_bind_string_variable("gus_patch_path",       &gus_patch_path);
+    m_bind_int_variable("gus_ram_kb",              &gus_ram_kb);
 #ifdef _WIN32
-    M_BindStringVariable("winmm_midi_device",    &winmm_midi_device);
-    M_BindIntVariable("winmm_complevel",         &winmm_complevel);
-    M_BindIntVariable("winmm_reset_type",        &winmm_reset_type);
-    M_BindIntVariable("winmm_reset_delay",       &winmm_reset_delay);
+    m_bind_string_variable("winmm_midi_device",    &winmm_midi_device);
+    m_bind_int_variable("winmm_complevel",         &winmm_complevel);
+    m_bind_int_variable("winmm_reset_type",        &winmm_reset_type);
+    m_bind_int_variable("winmm_reset_delay",       &winmm_reset_delay);
 #endif
 
 #ifdef HAVE_FLUIDSYNTH
-    M_BindIntVariable("fsynth_chorus_active",       &fsynth_chorus_active);
-    M_BindFloatVariable("fsynth_chorus_depth",      &fsynth_chorus_depth);
-    M_BindFloatVariable("fsynth_chorus_level",      &fsynth_chorus_level);
-    M_BindIntVariable("fsynth_chorus_nr",           &fsynth_chorus_nr);
-    M_BindFloatVariable("fsynth_chorus_speed",      &fsynth_chorus_speed);
-    M_BindStringVariable("fsynth_midibankselect",   &fsynth_midibankselect);
-    M_BindIntVariable("fsynth_polyphony",           &fsynth_polyphony);
-    M_BindIntVariable("fsynth_reverb_active",       &fsynth_reverb_active);
-    M_BindFloatVariable("fsynth_reverb_damp",       &fsynth_reverb_damp);
-    M_BindFloatVariable("fsynth_reverb_level",      &fsynth_reverb_level);
-    M_BindFloatVariable("fsynth_reverb_roomsize",   &fsynth_reverb_roomsize);
-    M_BindFloatVariable("fsynth_reverb_width",      &fsynth_reverb_width);
-    M_BindFloatVariable("fsynth_gain",              &fsynth_gain);
-    M_BindStringVariable("fsynth_sf_path",          &fsynth_sf_path);
+    m_bind_int_variable("fsynth_chorus_active",       &fsynth_chorus_active);
+    m_bind_float_variable("fsynth_chorus_depth",      &fsynth_chorus_depth);
+    m_bind_float_variable("fsynth_chorus_level",      &fsynth_chorus_level);
+    m_bind_int_variable("fsynth_chorus_nr",           &fsynth_chorus_nr);
+    m_bind_float_variable("fsynth_chorus_speed",      &fsynth_chorus_speed);
+    m_bind_string_variable("fsynth_midibankselect",   &fsynth_midibankselect);
+    m_bind_int_variable("fsynth_polyphony",           &fsynth_polyphony);
+    m_bind_int_variable("fsynth_reverb_active",       &fsynth_reverb_active);
+    m_bind_float_variable("fsynth_reverb_damp",       &fsynth_reverb_damp);
+    m_bind_float_variable("fsynth_reverb_level",      &fsynth_reverb_level);
+    m_bind_float_variable("fsynth_reverb_roomsize",   &fsynth_reverb_roomsize);
+    m_bind_float_variable("fsynth_reverb_width",      &fsynth_reverb_width);
+    m_bind_float_variable("fsynth_gain",              &fsynth_gain);
+    m_bind_string_variable("fsynth_sf_path",          &fsynth_sf_path);
 #endif // HAVE_FLUIDSYNTH
 
-    M_BindIntVariable("use_libsamplerate",       &use_libsamplerate);
-    M_BindFloatVariable("libsamplerate_scale",   &libsamplerate_scale);
+    m_bind_int_variable("use_libsamplerate",       &use_libsamplerate);
+    m_bind_float_variable("libsamplerate_scale",   &libsamplerate_scale);
 }
 

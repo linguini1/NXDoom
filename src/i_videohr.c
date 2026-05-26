@@ -45,7 +45,7 @@ boolean I_SetVideoModeHR(void)
         return false;
     }
 
-    I_GetWindowPosition(&x, &y, HR_SCREENWIDTH, HR_SCREENHEIGHT);
+    i_get_window_position(&x, &y, HR_SCREENWIDTH, HR_SCREENHEIGHT);
 
     // Create screen surface at the native desktop pixel depth (bpp=0),
     // as we cannot trust true 8-bit to reliably work nowadays.
@@ -175,7 +175,7 @@ void I_InitPaletteHR(void)
     // ...
 }
 
-void I_SetPaletteHR(const byte *palette)
+void i_set_paletteHR(const byte *palette)
 {
 #if 0
     SDL_Rect screen_rect = {0, 0, HR_SCREENWIDTH, HR_SCREENHEIGHT};
@@ -223,7 +223,7 @@ void I_FadeToPaletteHR(const byte *palette)
             tmppal[i] = (palette[i] * elapsed) / FADE_TIME;
         }
 
-        I_SetPaletteHR(tmppal);
+        i_set_paletteHR(tmppal);
         SDL_UpdateWindowSurface(hr_screen);
 
         // Sleep a bit
@@ -233,7 +233,7 @@ void I_FadeToPaletteHR(const byte *palette)
 
     // Set the final palette
 
-    I_SetPaletteHR(palette);
+    i_set_paletteHR(palette);
 #endif
 }
 
@@ -243,7 +243,7 @@ void I_BlackPaletteHR(void)
 
     memset(blackpal, 0, sizeof(blackpal));
 
-    I_SetPaletteHR(blackpal);
+    i_set_paletteHR(blackpal);
 }
 
 // Check if the user has hit the escape key to abort startup.

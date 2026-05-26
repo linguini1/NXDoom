@@ -176,7 +176,7 @@ static void AddSectionLabel(TXT_UNCAST_ARG(table), const char *title,
                        NULL);
     }
 
-    M_snprintf(buf, sizeof(buf), " - %s - ", title);
+    m_snprintf(buf, sizeof(buf), " - %s - ", title);
 
     TXT_AddWidgets(table,
                    TXT_NewLabel(buf),
@@ -444,5 +444,5 @@ void ConfigKeyboard(TXT_UNCAST_ARG(widget), void *user_data)
 
 void BindKeyboardVariables(void)
 {
-    M_BindIntVariable("vanilla_keyboard_mapping", &vanilla_keyboard_mapping);
+    m_bind_int_variable("vanilla_keyboard_mapping", &vanilla_keyboard_mapping);
 }

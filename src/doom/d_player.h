@@ -163,7 +163,7 @@ typedef struct player_s
 
 //
 // INTERMISSION
-// Structure passed e.g. to WI_Start(wb)
+// Structure passed e.g. to wi_start(wb)
 //
 typedef struct
 {

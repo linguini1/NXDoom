@@ -89,10 +89,10 @@ static wad_file_t *W_POSIX_OpenFile(const char *path)
 
     // Create a new posix_wad_file_t to hold the file handle.
 
-    result = Z_Malloc(sizeof(posix_wad_file_t), PU_STATIC, 0);
+    result = z_malloc(sizeof(posix_wad_file_t), PU_STATIC, 0);
     result->wad.file_class = &posix_wad_file;
     result->wad.length = GetFileLength(handle);
-    result->wad.path = M_StringDuplicate(path);
+    result->wad.path = m_string_duplicate(path);
     result->wad.mapped = NULL;
     result->handle = handle;
 
@@ -118,7 +118,7 @@ static void W_POSIX_CloseFile(wad_file_t *wad)
         munmap(posix_wad->wad.mapped, posix_wad->wad.length);
     }
     close(posix_wad->handle);
-    Z_Free(posix_wad);
+    z_free(posix_wad);
 }
 
 // Read data from the specified position in the file into the 

@@ -88,7 +88,7 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
     }
     to_text[tolen] = '\0';
 
-    DEH_AddStringReplacement(from_text, to_text);
+    deh_add_string_replacement(from_text, to_text);
 
     free(from_text);
     free(to_text);

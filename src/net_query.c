@@ -955,7 +955,7 @@ boolean NET_StartSecureDemo(prng_seed_t seed)
 
             if (signature != NULL)
             {
-                securedemo_start_message = M_StringDuplicate(signature);
+                securedemo_start_message = m_string_duplicate(signature);
                 result = true;
             }
         }

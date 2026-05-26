@@ -347,20 +347,20 @@ void ST_refreshBackground(void)
 
     if (st_statusbaron)
     {
-        V_UseBuffer(st_backing_screen);
+        v_use_buffer(st_backing_screen);
 
-	V_DrawPatch(ST_X, 0, sbar);
+	v_draw_patch(ST_X, 0, sbar);
 
 	// draw right side of bar if needed (Doom 1.0)
 	if (sbarr)
-	    V_DrawPatch(ST_ARMSBGX, 0, sbarr);
+	    v_draw_patch(ST_ARMSBGX, 0, sbarr);
 
 	if (netgame)
-	    V_DrawPatch(ST_FX, 0, faceback);
+	    v_draw_patch(ST_FX, 0, faceback);
 
-        V_RestoreBuffer();
+        v_restore_buffer();
 
-	V_CopyRect(ST_X, 0, st_backing_screen, ST_WIDTH, ST_HEIGHT, ST_X, ST_Y);
+	v_copy_rect(ST_X, 0, st_backing_screen, ST_WIDTH, ST_HEIGHT, ST_X, ST_Y);
     }
 
 }
@@ -404,10 +404,10 @@ ST_Responder (event_t* ev)
 	    plyr->mo->health = deh_god_mode_health;
 	  
 	  plyr->health = deh_god_mode_health;
-	  plyr->message = DEH_String(STSTR_DQDON);
+	  plyr->message = deh_string(STSTR_DQDON);
 	}
 	else 
-	  plyr->message = DEH_String(STSTR_DQDOFF);
+	  plyr->message = deh_string(STSTR_DQDOFF);
       }
       // 'fa' cheat for killer fucking arsenal
       else if (cht_CheckCheat(&cheat_ammonokey, ev->data2))
@@ -421,7 +421,7 @@ ST_Responder (event_t* ev)
 	for (i=0;i<NUMAMMO;i++)
 	  plyr->ammo[i] = plyr->maxammo[i];
 	
-	plyr->message = DEH_String(STSTR_FAADDED);
+	plyr->message = deh_string(STSTR_FAADDED);
       }
       // 'kfa' cheat for key full ammo
       else if (cht_CheckCheat(&cheat_ammo, ev->data2))
@@ -438,7 +438,7 @@ ST_Responder (event_t* ev)
 	for (i=0;i<NUMCARDS;i++)
 	  plyr->cards[i] = true;
 	
-	plyr->message = DEH_String(STSTR_KFAADDED);
+	plyr->message = deh_string(STSTR_KFAADDED);
       }
       // 'mus' cheat for changing music
       else if (cht_CheckCheat(&cheat_mus, ev->data2))
@@ -449,7 +449,7 @@ ST_Responder (event_t* ev)
 	int		musnum;
 #endif
 	
-	plyr->message = DEH_String(STSTR_MUS);
+	plyr->message = deh_string(STSTR_MUS);
 	cht_GetParam(&cheat_mus, buf);
 
         // Note: The original v1.9 had a bug that tried to play back
@@ -465,7 +465,7 @@ ST_Responder (event_t* ev)
 	  
 	  if (((buf[0]-'0')*10 + buf[1]-'0') > 35
        && gameversion >= exe_doom_1_8)
-	    plyr->message = DEH_String(STSTR_NOMUS);
+	    plyr->message = deh_string(STSTR_NOMUS);
 	  else {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           S_ChangeMusic(musnum, 1);
@@ -479,7 +479,7 @@ ST_Responder (event_t* ev)
 #endif
 	  
 	  if (((buf[0]-'1')*9 + buf[1]-'1') > 31)
-	    plyr->message = DEH_String(STSTR_NOMUS);
+	    plyr->message = deh_string(STSTR_NOMUS);
 	  else {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           S_ChangeMusic(musnum, 1);
@@ -499,9 +499,9 @@ ST_Responder (event_t* ev)
 	plyr->cheats ^= CF_NOCLIP;
 	
 	if (plyr->cheats & CF_NOCLIP)
-	  plyr->message = DEH_String(STSTR_NCON);
+	  plyr->message = deh_string(STSTR_NCON);
 	else
-	  plyr->message = DEH_String(STSTR_NCOFF);
+	  plyr->message = deh_string(STSTR_NCOFF);
       }
       // 'behold?' power-up cheats
       for (i=0;i<6;i++)
@@ -515,27 +515,27 @@ ST_Responder (event_t* ev)
 	  else
 	    plyr->powers[i] = 0;
 	  
-	  plyr->message = DEH_String(STSTR_BEHOLDX);
+	  plyr->message = deh_string(STSTR_BEHOLDX);
 	}
       }
       
       // 'behold' power-up menu
       if (cht_CheckCheat(&cheat_powerup[6], ev->data2))
       {
-	plyr->message = DEH_String(STSTR_BEHOLD);
+	plyr->message = deh_string(STSTR_BEHOLD);
       }
       // 'choppers' invulnerability & chainsaw
       else if (cht_CheckCheat(&cheat_choppers, ev->data2))
       {
 	plyr->weaponowned[wp_chainsaw] = true;
 	plyr->powers[pw_invulnerability] = true;
-	plyr->message = DEH_String(STSTR_CHOPPERS);
+	plyr->message = deh_string(STSTR_CHOPPERS);
       }
       // 'mypos' for player position
       else if (cht_CheckCheat(&cheat_mypos, ev->data2))
       {
         static char buf[ST_MSGWIDTH];
-        M_snprintf(buf, sizeof(buf), "ang=0x%x;x,y=(0x%x,0x%x)",
+        m_snprintf(buf, sizeof(buf), "ang=0x%x;x,y=(0x%x,0x%x)",
                    players[consoleplayer].mo->angle,
                    players[consoleplayer].mo->x,
                    players[consoleplayer].mo->y);
@@ -614,7 +614,7 @@ ST_Responder (event_t* ev)
       }
 
       // So be it.
-      plyr->message = DEH_String(STSTR_CLEV);
+      plyr->message = deh_string(STSTR_CLEV);
       G_DeferedInitNew(gameskill, epsd, map);
     }
   }
@@ -953,7 +953,7 @@ void ST_doPaletteStuff(void)
     {
 	st_palette = palette;
 	pal = (byte *) W_CacheLumpNum (lu_palette, PU_CACHE)+palette*768;
-	I_SetPalette (pal);
+	i_set_palette (pal);
     }
 
 }
@@ -1045,32 +1045,32 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     // Load the numbers, tall and short
     for (i=0;i<10;i++)
     {
-	DEH_snprintf(namebuf, 9, "STTNUM%d", i);
+	deh_snprintf(namebuf, 9, "STTNUM%d", i);
         callback(namebuf, &tallnum[i]);
 
-	DEH_snprintf(namebuf, 9, "STYSNUM%d", i);
+	deh_snprintf(namebuf, 9, "STYSNUM%d", i);
         callback(namebuf, &shortnum[i]);
     }
 
     // Load percent key.
     //Note: why not load STMINUS here, too?
 
-    callback(DEH_String("STTPRCNT"), &tallpercent);
+    callback(deh_string("STTPRCNT"), &tallpercent);
 
     // key cards
     for (i=0;i<NUMCARDS;i++)
     {
-	DEH_snprintf(namebuf, 9, "STKEYS%d", i);
+	deh_snprintf(namebuf, 9, "STKEYS%d", i);
         callback(namebuf, &keys[i]);
     }
 
     // arms background
-    callback(DEH_String("STARMS"), &armsbg);
+    callback(deh_string("STARMS"), &armsbg);
 
     // arms ownership widgets
     for (i=0; i<6; i++)
     {
-	DEH_snprintf(namebuf, 9, "STGNUM%d", i+2);
+	deh_snprintf(namebuf, 9, "STGNUM%d", i+2);
 
 	// gray #
         callback(namebuf, &arms[i][0]);
@@ -1080,19 +1080,19 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     }
 
     // face backgrounds for different color players
-    DEH_snprintf(namebuf, 9, "STFB%d", consoleplayer);
+    deh_snprintf(namebuf, 9, "STFB%d", consoleplayer);
     callback(namebuf, &faceback);
 
     // status bar background bits
     if (W_CheckNumForName("STBAR") >= 0)
     {
-        callback(DEH_String("STBAR"), &sbar);
+        callback(deh_string("STBAR"), &sbar);
         sbarr = NULL;
     }
     else
     {
-        callback(DEH_String("STMBARL"), &sbar);
-        callback(DEH_String("STMBARR"), &sbarr);
+        callback(deh_string("STMBARL"), &sbar);
+        callback(deh_string("STMBARR"), &sbarr);
     }
 
     // face states
@@ -1101,30 +1101,30 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     {
 	for (j=0; j<ST_NUMSTRAIGHTFACES; j++)
 	{
-	    DEH_snprintf(namebuf, 9, "STFST%d%d", i, j);
+	    deh_snprintf(namebuf, 9, "STFST%d%d", i, j);
             callback(namebuf, &faces[facenum]);
             ++facenum;
 	}
-	DEH_snprintf(namebuf, 9, "STFTR%d0", i);	// turn right
+	deh_snprintf(namebuf, 9, "STFTR%d0", i);	// turn right
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	DEH_snprintf(namebuf, 9, "STFTL%d0", i);	// turn left
+	deh_snprintf(namebuf, 9, "STFTL%d0", i);	// turn left
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	DEH_snprintf(namebuf, 9, "STFOUCH%d", i);	// ouch!
+	deh_snprintf(namebuf, 9, "STFOUCH%d", i);	// ouch!
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	DEH_snprintf(namebuf, 9, "STFEVL%d", i);	// evil grin ;)
+	deh_snprintf(namebuf, 9, "STFEVL%d", i);	// evil grin ;)
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	DEH_snprintf(namebuf, 9, "STFKILL%d", i);	// pissed off
+	deh_snprintf(namebuf, 9, "STFKILL%d", i);	// pissed off
         callback(namebuf, &faces[facenum]);
         ++facenum;
     }
 
-    callback(DEH_String("STFGOD0"), &faces[facenum]);
+    callback(deh_string("STFGOD0"), &faces[facenum]);
     ++facenum;
-    callback(DEH_String("STFDEAD0"), &faces[facenum]);
+    callback(deh_string("STFDEAD0"), &faces[facenum]);
     ++facenum;
 }
 
@@ -1140,7 +1140,7 @@ void ST_loadGraphics(void)
 
 void ST_loadData(void)
 {
-    lu_palette = W_GetNumForName (DEH_String("PLAYPAL"));
+    lu_palette = W_GetNumForName (deh_string("PLAYPAL"));
     ST_loadGraphics();
 }
 
@@ -1368,7 +1368,7 @@ void ST_Stop (void)
     if (st_stopped)
 	return;
 
-    I_SetPalette (W_CacheLumpNum (lu_palette, PU_CACHE));
+    i_set_palette (W_CacheLumpNum (lu_palette, PU_CACHE));
 
     st_stopped = true;
 }
@@ -1376,6 +1376,6 @@ void ST_Stop (void)
 void ST_Init (void)
 {
     ST_loadData();
-    st_backing_screen = (pixel_t *) Z_Malloc(ST_WIDTH * ST_HEIGHT * sizeof(*st_backing_screen), PU_STATIC, 0);
+    st_backing_screen = (pixel_t *) z_malloc(ST_WIDTH * ST_HEIGHT * sizeof(*st_backing_screen), PU_STATIC, 0);
 }
 

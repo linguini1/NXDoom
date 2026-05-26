@@ -45,7 +45,7 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
 
 void BindCompatibilityVariables(void)
 {
-    M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
-    M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
+    m_bind_int_variable("vanilla_savegame_limit", &vanilla_savegame_limit);
+    m_bind_int_variable("vanilla_demo_limit",     &vanilla_demo_limit);
 }
 

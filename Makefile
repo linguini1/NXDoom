@@ -43,7 +43,6 @@ BASESRCS =        \
   i_timer.c       \
   i_video.c       \
   i_videohr.c     \
-  i_winmusic.c    \
   m_bbox.c        \
   m_cheat.c       \
   m_config.c      \

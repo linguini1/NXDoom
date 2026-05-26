@@ -102,7 +102,7 @@ static void BuildWindow(void)
 
     for (i = 0; i < net_client_wait_data.max_players; ++i)
     {
-        M_snprintf(buf, sizeof(buf), " %i. ", i + 1);
+        m_snprintf(buf, sizeof(buf), " %i. ", i + 1);
         TXT_AddWidget(table, TXT_NewLabel(buf));
         player_labels[i] = TXT_NewLabel("");
         ip_labels[i] = TXT_NewLabel("");
@@ -165,7 +165,7 @@ static void UpdateGUI(void)
 
     if (net_client_wait_data.num_drones > 0)
     {
-        M_snprintf(buf, sizeof(buf), " (+%i observer clients)",
+        m_snprintf(buf, sizeof(buf), " (+%i observer clients)",
                    net_client_wait_data.num_drones);
         TXT_SetLabel(drone_label, buf);
     }
@@ -367,7 +367,7 @@ static void ParseCommandLineArgs(void)
     // Autostart the netgame when n nodes (clients) have joined the server.
     //
 
-    i = M_CheckParmWithArgs("-nodes", 1);
+    i = m_check_parm_with_args("-nodes", 1);
     if (i > 0)
     {
         expected_nodes = atoi(myargv[i + 1]);
@@ -403,7 +403,7 @@ void NET_WaitForLaunch(void)
 
     TXT_SetColor(TXT_COLOR_BLUE, 0x04, 0x14, 0x40); // Romero's "funky blue" color
     
-    I_InitWindowIcon();
+    i_init_window_icon();
 
     ParseCommandLineArgs();
     OpenWaitDialog();

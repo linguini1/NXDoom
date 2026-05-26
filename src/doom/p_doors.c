@@ -225,7 +225,7 @@ EV_DoLockedDoor
       case 133:
 	if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
 	{
-	    p->message = DEH_String(PD_BLUEO);
+	    p->message = deh_string(PD_BLUEO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -237,7 +237,7 @@ EV_DoLockedDoor
       case 135:
 	if (!p->cards[it_redcard] && !p->cards[it_redskull])
 	{
-	    p->message = DEH_String(PD_REDO);
+	    p->message = deh_string(PD_REDO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -250,7 +250,7 @@ EV_DoLockedDoor
 	if (!p->cards[it_yellowcard] &&
 	    !p->cards[it_yellowskull])
 	{
-	    p->message = DEH_String(PD_YELLOWO);
+	    p->message = deh_string(PD_YELLOWO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -284,7 +284,7 @@ EV_DoDoor
 	
 	// new door thinker
 	rtn = 1;
-	door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
+	door = z_malloc (sizeof(*door), PU_LEVSPEC, 0);
 	P_AddThinker (&door->thinker);
 	sec->specialdata = door;
 
@@ -382,7 +382,7 @@ EV_VerticalDoor
 	
 	if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
 	{
-	    player->message = DEH_String(PD_BLUEK);
+	    player->message = deh_string(PD_BLUEK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -398,7 +398,7 @@ EV_VerticalDoor
 	if (!player->cards[it_yellowcard] &&
 	    !player->cards[it_yellowskull])
 	{
-	    player->message = DEH_String(PD_YELLOWK);
+	    player->message = deh_string(PD_YELLOWK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -413,7 +413,7 @@ EV_VerticalDoor
 	
 	if (!player->cards[it_redcard] && !player->cards[it_redskull])
 	{
-	    player->message = DEH_String(PD_REDK);
+	    player->message = deh_string(PD_REDK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -509,7 +509,7 @@ EV_VerticalDoor
 	
     
     // new door thinker
-    door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
+    door = z_malloc (sizeof(*door), PU_LEVSPEC, 0);
     P_AddThinker (&door->thinker);
     sec->specialdata = door;
     door->thinker.function.acp1 = (actionf_p1) T_VerticalDoor;
@@ -559,7 +559,7 @@ void P_SpawnDoorCloseIn30 (sector_t* sec)
 {
     vldoor_t*	door;
 	
-    door = Z_Malloc ( sizeof(*door), PU_LEVSPEC, 0);
+    door = z_malloc ( sizeof(*door), PU_LEVSPEC, 0);
 
     P_AddThinker (&door->thinker);
 
@@ -584,7 +584,7 @@ P_SpawnDoorRaiseIn5Mins
 {
     vldoor_t*	door;
 	
-    door = Z_Malloc ( sizeof(*door), PU_LEVSPEC, 0);
+    door = z_malloc ( sizeof(*door), PU_LEVSPEC, 0);
     
     P_AddThinker (&door->thinker);
 
@@ -795,7 +795,7 @@ EV_SlidingDoor
     // Init sliding door vars
     if (!door)
     {
-	door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
+	door = z_malloc (sizeof(*door), PU_LEVSPEC, 0);
 	P_AddThinker (&door->thinker);
 	sec->specialdata = door;
 		
