@@ -36,12 +36,12 @@ void NET_CL_Run(void)
     // In a standalone dedicated server, we don't have a client.
 }
 
-void D_DoomMain(void)
+void d_doom_main(void)
 {
     printf(PACKAGE_NAME " standalone dedicated server\n");
 
     z_init();
 
-    NET_DedicatedServer();
+    net_dedicated_server();
 }
 

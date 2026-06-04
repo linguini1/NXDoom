@@ -234,16 +234,16 @@ static char *read_dmx_config(void)
 
   /* TODO: This should be chosen based on gamemode == commercial: */
 
-  lumpnum = W_CheckNumForName("DMXGUS");
+  lumpnum = w_check_num_for_name("DMXGUS");
 
   if (lumpnum < 0)
     {
-      lumpnum = W_GetNumForName("DMXGUSC");
+      lumpnum = w_get_num_for_name("DMXGUSC");
     }
 
-  len = W_LumpLength(lumpnum);
+  len = w_lump_length(lumpnum);
   data = z_malloc(len + 1, PU_STATIC, NULL);
-  W_ReadLump(lumpnum, data);
+  w_read_lump(lumpnum, data);
 
   data[len] = '\0';
   return data;

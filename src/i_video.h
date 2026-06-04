@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/v_video.c
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -14,7 +18,8 @@
  *
  * DESCRIPTION:
  *	System specific interface stuff.
- */
+ *
+ ****************************************************************************/
 
 #ifndef __I_VIDEO__
 #define __I_VIDEO__
@@ -54,7 +59,7 @@ extern boolean screenvisible;
 extern int vanilla_keyboard_mapping;
 extern boolean screensaver_mode;
 extern int usegamma;
-extern pixel_t *I_VideoBuffer;
+extern pixel_t *i_video_buffer;
 
 extern int screen_width;
 extern int screen_height;
@@ -83,7 +88,7 @@ extern int usemouse;
  * Name: i_init_graphics
  *
  * Description:
- *  Called by D_DoomMain, determines the hardware configuration and sets up
+ *  Called by d_doom_main, determines the hardware configuration and sets up
  *  the video mode.
  *
  ****************************************************************************/

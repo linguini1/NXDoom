@@ -206,7 +206,7 @@ static void GenerateTextureHashTable(void)
        * of the hash chain, so that earlier entries win.
        */
 
-      key = W_LumpNameHash(textures[i]->name) % numtextures;
+      key = w_lump_name_hash(textures[i]->name) % numtextures;
 
       rover = &textures_hashtable[key];
 
@@ -303,7 +303,7 @@ void R_GenerateComposite(int texnum)
 
   for (i = 0, patch = texture->patches; i < texture->patchcount; i++, patch++)
     {
-      realpatch = W_CacheLumpNum(patch->patch, PU_CACHE);
+      realpatch = w_cache_lump_num(patch->patch, PU_CACHE);
       x1 = patch->originx;
       x2 = x1 + SHORT(realpatch->width);
 
@@ -372,7 +372,7 @@ void R_GenerateLookup(int texnum)
 
   for (i = 0, patch = texture->patches; i < texture->patchcount; i++, patch++)
     {
-      realpatch = W_CacheLumpNum(patch->patch, PU_CACHE);
+      realpatch = w_cache_lump_num(patch->patch, PU_CACHE);
       x1 = patch->originx;
       x2 = x1 + SHORT(realpatch->width);
 
@@ -433,7 +433,7 @@ byte *R_GetColumn(int tex, int col)
   lump = texturecolumnlump[tex][col];
   ofs = texturecolumnofs[tex][col];
 
-  if (lump > 0) return (byte *)W_CacheLumpNum(lump, PU_CACHE) + ofs;
+  if (lump > 0) return (byte *)w_cache_lump_num(lump, PU_CACHE) + ofs;
 
   if (!texturecomposite[tex]) R_GenerateComposite(tex);
 
@@ -485,7 +485,7 @@ void R_InitTextures(void)
   /* Load the patch names from pnames.lmp. */
 
   name[8] = 0;
-  names = W_CacheLumpName(deh_string("PNAMES"), PU_STATIC);
+  names = w_cache_lump_name(deh_string("PNAMES"), PU_STATIC);
   nummappatches = LONG(*((int *)names));
   name_p = names + 4;
   patchlookup =
@@ -494,25 +494,25 @@ void R_InitTextures(void)
   for (i = 0; i < nummappatches; i++)
     {
       m_str_copy(name, name_p + i * 8, sizeof(name));
-      patchlookup[i] = W_CheckNumForName(name);
+      patchlookup[i] = w_check_num_for_name(name);
     }
-  W_ReleaseLumpName(deh_string("PNAMES"));
+  w_release_lump_name(deh_string("PNAMES"));
 
   /* Load the map texture definitions from textures.lmp.
    * The data is contained in one or two lumps,
    *  TEXTURE1 for shareware, plus TEXTURE2 for commercial.
    */
 
-  maptex = maptex1 = W_CacheLumpName(deh_string("TEXTURE1"), PU_STATIC);
+  maptex = maptex1 = w_cache_lump_name(deh_string("TEXTURE1"), PU_STATIC);
   numtextures1 = LONG(*maptex);
-  maxoff = W_LumpLength(W_GetNumForName(deh_string("TEXTURE1")));
+  maxoff = w_lump_length(w_get_num_for_name(deh_string("TEXTURE1")));
   directory = maptex + 1;
 
-  if (W_CheckNumForName(deh_string("TEXTURE2")) != -1)
+  if (w_check_num_for_name(deh_string("TEXTURE2")) != -1)
     {
-      maptex2 = W_CacheLumpName(deh_string("TEXTURE2"), PU_STATIC);
+      maptex2 = w_cache_lump_name(deh_string("TEXTURE2"), PU_STATIC);
       numtextures2 = LONG(*maptex2);
-      maxoff2 = W_LumpLength(W_GetNumForName(deh_string("TEXTURE2")));
+      maxoff2 = w_lump_length(w_get_num_for_name(deh_string("TEXTURE2")));
     }
   else
     {
@@ -538,8 +538,8 @@ void R_InitTextures(void)
 
   /*	Really complex printing shit... */
 
-  temp1 = W_GetNumForName(deh_string("S_START")); /* P_??????? */
-  temp2 = W_GetNumForName(deh_string("S_END")) - 1;
+  temp1 = w_get_num_for_name(deh_string("S_START")); /* P_??????? */
+  temp2 = w_get_num_for_name(deh_string("S_END")) - 1;
   temp3 = ((temp2 - temp1 + 63) / 64) + ((numtextures + 63) / 64);
 
   /* If stdout is a real console, use the classic vanilla "filling
@@ -614,8 +614,8 @@ void R_InitTextures(void)
 
   z_free(patchlookup);
 
-  W_ReleaseLumpName(deh_string("TEXTURE1"));
-  if (maptex2) W_ReleaseLumpName(deh_string("TEXTURE2"));
+  w_release_lump_name(deh_string("TEXTURE1"));
+  if (maptex2) w_release_lump_name(deh_string("TEXTURE2"));
 
   /* Precalculate whatever possible. */
 
@@ -641,8 +641,8 @@ void R_InitFlats(void)
 {
   int i;
 
-  firstflat = W_GetNumForName(deh_string("F_START")) + 1;
-  lastflat = W_GetNumForName(deh_string("F_END")) - 1;
+  firstflat = w_get_num_for_name(deh_string("F_START")) + 1;
+  lastflat = w_get_num_for_name(deh_string("F_END")) - 1;
   numflats = lastflat - firstflat + 1;
 
   /* Create translation table for global animation. */
@@ -669,8 +669,8 @@ void R_InitSpriteLumps(void)
   int i;
   patch_t *patch;
 
-  firstspritelump = W_GetNumForName(deh_string("S_START")) + 1;
-  lastspritelump = W_GetNumForName(deh_string("S_END")) - 1;
+  firstspritelump = w_get_num_for_name(deh_string("S_START")) + 1;
+  lastspritelump = w_get_num_for_name(deh_string("S_END")) - 1;
 
   numspritelumps = lastspritelump - firstspritelump + 1;
   spritewidth = z_malloc(numspritelumps * sizeof(*spritewidth), PU_STATIC, 0);
@@ -683,7 +683,7 @@ void R_InitSpriteLumps(void)
     {
       if (!(i & 63)) printf(".");
 
-      patch = W_CacheLumpNum(firstspritelump + i, PU_CACHE);
+      patch = w_cache_lump_num(firstspritelump + i, PU_CACHE);
       spritewidth[i] = SHORT(patch->width) << FRACBITS;
       spriteoffset[i] = SHORT(patch->leftoffset) << FRACBITS;
       spritetopoffset[i] = SHORT(patch->topoffset) << FRACBITS;
@@ -700,8 +700,8 @@ void R_InitColormaps(void)
 
   /* Load in the light tables, 256 byte align tables. */
 
-  lump = W_GetNumForName(deh_string("COLORMAP"));
-  colormaps = W_CacheLumpNum(lump, PU_STATIC);
+  lump = w_get_num_for_name(deh_string("COLORMAP"));
+  colormaps = w_cache_lump_num(lump, PU_STATIC);
 }
 
 /****************************************************************************
@@ -737,7 +737,7 @@ int R_FlatNumForName(const char *name)
   int i;
   char namet[9];
 
-  i = W_CheckNumForName(name);
+  i = w_check_num_for_name(name);
 
   if (i == -1)
     {
@@ -766,7 +766,7 @@ int R_CheckTextureNumForName(const char *name)
 
   if (name[0] == '-') return 0;
 
-  key = W_LumpNameHash(name) % numtextures;
+  key = w_lump_name_hash(name) % numtextures;
 
   texture = textures_hashtable[key];
 
@@ -845,7 +845,7 @@ void R_PrecacheLevel(void)
         {
           lump = firstflat + i;
           flatmemory += lumpinfo[lump]->size;
-          W_CacheLumpNum(lump, PU_CACHE);
+          w_cache_lump_num(lump, PU_CACHE);
         }
     }
 
@@ -884,7 +884,7 @@ void R_PrecacheLevel(void)
         {
           lump = texture->patches[j].patch;
           texturememory += lumpinfo[lump]->size;
-          W_CacheLumpNum(lump, PU_CACHE);
+          w_cache_lump_num(lump, PU_CACHE);
         }
     }
 
@@ -913,7 +913,7 @@ void R_PrecacheLevel(void)
             {
               lump = firstspritelump + sf->lump[k];
               spritememory += lumpinfo[lump]->size;
-              W_CacheLumpNum(lump, PU_CACHE);
+              w_cache_lump_num(lump, PU_CACHE);
             }
         }
     }

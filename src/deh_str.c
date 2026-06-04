@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/deh_str.c
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
  * Copyright(C) 2005-2014 Simon Howard
  *
  * This program is free software; you can redistribute it and/or
@@ -14,7 +18,7 @@
  *
  * Parses Text substitution sections in dehacked files
  *
- */
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files

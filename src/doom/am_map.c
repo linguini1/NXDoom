@@ -492,7 +492,7 @@ void AM_initVariables(void)
   static event_t st_notify = {ev_keyup, AM_MSGENTERED, 0, 0};
 
   automapactive = true;
-  fb = I_VideoBuffer;
+  fb = i_video_buffer;
 
   f_oldloc.x = INT_MAX;
   amclock = 0;
@@ -553,7 +553,7 @@ void AM_loadPics(void)
   for (i = 0; i < 10; i++)
     {
       deh_snprintf(namebuf, 9, "AMMNUM%d", i);
-      marknums[i] = W_CacheLumpName(namebuf, PU_STATIC);
+      marknums[i] = w_cache_lump_name(namebuf, PU_STATIC);
     }
 }
 
@@ -569,7 +569,7 @@ void AM_unloadPics(void)
   for (i = 0; i < 10; i++)
     {
       deh_snprintf(namebuf, 9, "AMMNUM%d", i);
-      W_ReleaseLumpName(namebuf);
+      w_release_lump_name(namebuf);
     }
 }
 

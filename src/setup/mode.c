@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/setup/mode.c
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
  * Copyright(C) 2005-2014 Simon Howard
  *
  * This program is free software; you can redistribute it and/or
@@ -11,7 +15,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- */
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -73,15 +77,45 @@ typedef struct
 
 static const iwad_t **iwads;
 
-static mission_config_t mission_configs[] = {
-    {"Doom", doom, IWAD_MASK_DOOM, "doom", "default.cfg",
-     PROGRAM_PREFIX "doom.cfg", PROGRAM_PREFIX "doom"},
-    {"Heretic", heretic, IWAD_MASK_HERETIC, "heretic", "heretic.cfg",
-     PROGRAM_PREFIX "heretic.cfg", PROGRAM_PREFIX "heretic"},
-    {"Hexen", hexen, IWAD_MASK_HEXEN, "hexen", "hexen.cfg",
-     PROGRAM_PREFIX "hexen.cfg", PROGRAM_PREFIX "hexen"},
-    {"Strife", strife, IWAD_MASK_STRIFE, "strife", "strife.cfg",
-     PROGRAM_PREFIX "strife.cfg", PROGRAM_PREFIX "strife"}};
+static mission_config_t mission_configs[] =
+{
+  {
+    "Doom",
+    doom,
+    IWAD_MASK_DOOM,
+    "doom",
+    "default.cfg",
+    PROGRAM_PREFIX "doom.cfg",
+    PROGRAM_PREFIX "doom",
+  },
+  {
+    "Heretic",
+    heretic,
+    IWAD_MASK_HERETIC,
+    "heretic",
+    "heretic.cfg",
+    PROGRAM_PREFIX "heretic.cfg",
+    PROGRAM_PREFIX "heretic",
+  },
+  {
+    "Hexen",
+    hexen,
+    IWAD_MASK_HEXEN,
+    "hexen",
+    "hexen.cfg",
+    PROGRAM_PREFIX "hexen.cfg",
+    PROGRAM_PREFIX "hexen",
+  },
+  {
+    "Strife",
+    strife,
+    IWAD_MASK_STRIFE,
+    "strife",
+    "strife.cfg",
+    PROGRAM_PREFIX "strife.cfg",
+    PROGRAM_PREFIX "strife",
+  },
+};
 
 static GameSelectCallback game_selected_callback;
 
@@ -250,7 +284,9 @@ static void open_game_select_dialog(GameSelectCallback callback)
 
   for (i = 0; i < arrlen(mission_configs); ++i)
     {
-      /* Do we have any IWADs for this game installed? If so, add a button. */
+      /* Do we have any IWADs for this game installed?
+       * If so, add a button.
+       */
 
       iwads = D_FindAllIWADs(mission_configs[i].mask);
 
@@ -258,8 +294,8 @@ static void open_game_select_dialog(GameSelectCallback callback)
         {
           mission = &mission_configs[i];
           TXT_AddWidget(window,
-                        TXT_NewButton2(mission_configs[i].label, GameSelected,
-                                       &mission_configs[i]));
+                        TXT_NewButton2(mission_configs[i].label,
+                            GameSelected, &mission_configs[i]));
           ++num_games;
         }
 
@@ -338,7 +374,7 @@ void init_bindings(void)
   BindMouseVariables();
   BindSoundVariables();
   bind_misc_variables();
-  BindMultiplayerVariables();
+  bind_multiple_variables();
 }
 
 void setup_mission(GameSelectCallback callback)
@@ -347,8 +383,8 @@ void setup_mission(GameSelectCallback callback)
   const char *mission_name;
   int p;
 
-  /* Specify the game to configure the settings for.  Valid values are 'doom',
-   * 'heretic', 'hexen' and 'strife'.
+  /* Specify the game to configure the settings for. Valid values are
+   * 'doom', 'heretic', 'hexen' and 'strife'.
    */
 
   p = m_check_parm("-game");
@@ -373,8 +409,17 @@ void setup_mission(GameSelectCallback callback)
     }
 }
 
-const char *get_executable_name(void) { return executable; }
+const char *get_executable_name(void)
+{
+  return executable;
+}
 
-const char *get_game_title(void) { return game_title; }
+const char *get_game_title(void)
+{
+  return game_title;
+}
 
-const iwad_t **get_iwads(void) { return iwads; }
+const iwad_t **get_iwads(void)
+{
+  return iwads;
+}

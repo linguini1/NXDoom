@@ -861,7 +861,7 @@ char *D_FindWADByName(const char *name)
 // if not found.
 //
 
-char *D_TryFindWADByName(const char *filename)
+char *d_try_find_wad_by_name(const char *filename)
 {
     char *result;
 
@@ -1029,7 +1029,7 @@ const char *D_SuggestIWADName(GameMission_t mission, GameMode_t mode)
     return "unknown.wad";
 }
 
-const char *D_SuggestGameName(GameMission_t mission, GameMode_t mode)
+const char *d_suggest_game_name(GameMission_t mission, GameMode_t mode)
 {
     int i;
 

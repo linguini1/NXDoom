@@ -166,7 +166,7 @@ void P_InitPicAnims (void)
 	}
 	else
 	{
-	    if (W_CheckNumForName(startname) == -1)
+	    if (w_check_num_for_name(startname) == -1)
 		continue;
 
 	    lastanim->picnum = R_FlatNumForName(endname);

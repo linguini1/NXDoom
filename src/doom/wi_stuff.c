@@ -503,7 +503,7 @@ static void WI_loadUnloadData(load_callback_t callback)
 
   /* More hacks on minus sign. */
 
-  if (W_CheckNumForName(deh_string("WIMINUS")) > 0)
+  if (w_check_num_for_name(deh_string("WIMINUS")) > 0)
     callback(deh_string("WIMINUS"), &wiminus);
   else
     wiminus = NULL;
@@ -542,7 +542,7 @@ static void WI_loadUnloadData(load_callback_t callback)
 
   /* french wad uses WIOBJ (?) */
 
-  if (W_CheckNumForName(deh_string("WIOBJ")) >= 0)
+  if (w_check_num_for_name(deh_string("WIOBJ")) >= 0)
     {
       /* "items" */
 
@@ -623,12 +623,12 @@ static void WI_loadUnloadData(load_callback_t callback)
 
 static void WI_loadCallback(const char *name, patch_t **variable)
 {
-  *variable = W_CacheLumpName(name, PU_STATIC);
+  *variable = w_cache_lump_name(name, PU_STATIC);
 }
 
 static void WI_unloadCallback(const char *name, patch_t **variable)
 {
-  W_ReleaseLumpName(name);
+  w_release_lump_name(name);
   *variable = NULL;
 }
 
@@ -1764,11 +1764,11 @@ void WI_loadData(void)
 
   /* your face */
 
-  star = W_CacheLumpName(deh_string("STFST01"), PU_STATIC);
+  star = w_cache_lump_name(deh_string("STFST01"), PU_STATIC);
 
   /* dead face */
 
-  bstar = W_CacheLumpName(deh_string("STFDEAD0"), PU_STATIC);
+  bstar = w_cache_lump_name(deh_string("STFDEAD0"), PU_STATIC);
 }
 
 void WI_unloadData(void)
@@ -1779,8 +1779,8 @@ void WI_unloadData(void)
    * bar code.
    */
 
-  /* W_ReleaseLumpName("STFST01");
-   * W_ReleaseLumpName("STFDEAD0");
+  /* w_release_lump_name("STFST01");
+   * w_release_lump_name("STFDEAD0");
    */
 }
 
