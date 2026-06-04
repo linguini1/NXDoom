@@ -61,7 +61,7 @@ static char *TempFile(const char *s)
 #ifdef _WIN32
     // Check the TEMP environment variable to find the location.
 
-    tempdir = M_getenv("TEMP");
+    tempdir = m_getenv("TEMP");
 
     if (tempdir == NULL)
     {
@@ -78,7 +78,7 @@ static char *TempFile(const char *s)
     }
 #endif
 
-    return M_StringJoin(tempdir, DIR_SEPARATOR_S, s, NULL);
+    return m_string_join(tempdir, DIR_SEPARATOR_S, s, NULL);
 }
 
 static int ArgumentNeedsEscape(const char *arg)
@@ -124,7 +124,7 @@ execute_context_t *NewExecuteContext(void)
     result = malloc(sizeof(execute_context_t));
     
     result->response_file = TempFile("chocolat.rsp");
-    result->stream = M_fopen(result->response_file, "w");
+    result->stream = m_fopen(result->response_file, "w");
 
     if (result->stream == NULL)
     {
@@ -275,9 +275,9 @@ boolean OpenFolder(const char *path)
     int result;
 
 #if defined(__MACOSX__)
-    cmd = M_StringJoin("open \"", path, "\"", NULL);
+    cmd = m_string_join("open \"", path, "\"", NULL);
 #else
-    cmd = M_StringJoin("xdg-open \"", path, "\"", NULL);
+    cmd = m_string_join("xdg-open \"", path, "\"", NULL);
 #endif
     result = system(cmd);
     free(cmd);
@@ -301,7 +301,7 @@ static char *GetFullExePath(const char *program)
 
     if (sep == NULL)
     {
-        result = M_StringDuplicate(program);
+        result = m_string_duplicate(program);
     }
     else
     {
@@ -309,10 +309,10 @@ static char *GetFullExePath(const char *program)
         result_len = strlen(program) + path_len + 1;
         result = malloc(result_len);
 
-        M_StringCopy(result, myargv[0], result_len);
+        m_str_copy(result, myargv[0], result_len);
         result[path_len] = '\0';
 
-        M_StringConcat(result, program, result_len);
+        m_string_concat(result, program, result_len);
     }
 
     return result;
@@ -367,16 +367,16 @@ int ExecuteDoom(execute_context_t *context)
 
     // Build the command line
 
-    response_file_arg = M_StringJoin("@", context->response_file, NULL);
+    response_file_arg = m_string_join("@", context->response_file, NULL);
 
     // Run Doom
 
-    result = ExecuteCommand(GetExecutableName(), response_file_arg);
+    result = ExecuteCommand(get_executable_name(), response_file_arg);
 
     free(response_file_arg);
 
     // Destroy context
-    M_remove(context->response_file);
+    m_remove(context->response_file);
     free(context->response_file);
     free(context);
 
@@ -400,7 +400,7 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
     main_cfg = TempFile("tmp.cfg");
     extra_cfg = TempFile("extratmp.cfg");
 
-    M_SaveDefaultsAlternate(main_cfg, extra_cfg);
+    m_save_defaultsAlternate(main_cfg, extra_cfg);
 
     // Run with the -testcontrols parameter
 
@@ -414,8 +414,8 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 
     // Delete the temporary config files
 
-    M_remove(main_cfg);
-    M_remove(extra_cfg);
+    m_remove(main_cfg);
+    m_remove(extra_cfg);
     free(main_cfg);
     free(extra_cfg);
 }

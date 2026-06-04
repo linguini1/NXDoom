@@ -114,5 +114,5 @@ char *NET_GetRandomPetName()
     a = adjectives[rand() % arrlen(adjectives)];
     n = nouns[rand() % arrlen(nouns)];
 
-    return M_StringJoin(a, " ", n, NULL);
+    return m_string_join(a, " ", n, NULL);
 }

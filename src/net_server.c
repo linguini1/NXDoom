@@ -192,7 +192,7 @@ static void NET_SV_SendConsoleMessage(net_client_t *client, const char *s, ...)
     net_packet_t *packet;
 
     va_start(args, s);
-    M_vsnprintf(buf, sizeof(buf), s, args);
+    m_vsprintf(buf, sizeof(buf), s, args);
     va_end(args);
     
     packet = NET_Conn_NewReliable(&client->connection, 
@@ -211,7 +211,7 @@ static void NET_SV_BroadcastMessage(const char *s, ...)
     int i;
 
     va_start(args, s);
-    M_vsnprintf(buf, sizeof(buf), s, args);
+    m_vsprintf(buf, sizeof(buf), s, args);
     va_end(args);
 
     for (i=0; i<MAXNETNODES; ++i)
@@ -393,12 +393,12 @@ typedef enum
 static ip_range_t ClientAddressRange(const char *addr)
 {
     if (!strcmp(addr, "local client")
-     || M_StringStartsWith(addr, "127."))
+     || m_string_starts_with(addr, "127."))
     {
         return RANGE_LOCALHOST;
     }
-    if (M_StringStartsWith(addr, "10.")
-     || M_StringStartsWith(addr, "192.168."))
+    if (m_string_starts_with(addr, "10.")
+     || m_string_starts_with(addr, "192.168."))
     {
         return RANGE_PRIVATE;
     }
@@ -449,7 +449,7 @@ static void NET_SV_SendWaitingData(net_client_t *client)
 
     for (i = 0; i < wait_data.num_players; ++i)
     {
-        M_StringCopy(wait_data.player_names[i],
+        m_str_copy(wait_data.player_names[i],
                      sv_players[i]->name,
                      MAXPLAYERNAME);
 
@@ -462,16 +462,16 @@ static void NET_SV_SendWaitingData(net_client_t *client)
         if (client_range == RANGE_LOCALHOST || client_range == RANGE_PRIVATE
          || i == wait_data.consoleplayer || player_range == RANGE_LOCALHOST)
         {
-            M_StringCopy(wait_data.player_addrs[i], addr, MAXPLAYERNAME);
+            m_str_copy(wait_data.player_addrs[i], addr, MAXPLAYERNAME);
         }
         else if (player_range == RANGE_PRIVATE)
         {
-            M_snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
+            m_snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
                        "[LAN player]");
         }
         else
         {
-            M_snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
+            m_snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
                        "[address hidden]");
         }
     }
@@ -686,7 +686,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     {
         char reject_msg[256];
 
-        M_snprintf(reject_msg, sizeof(reject_msg),
+        m_snprintf(reject_msg, sizeof(reject_msg),
             "Version mismatch: server version is: " PACKAGE_STRING "; "
             "client is: %s. No common compatible protocol could be "
             "negotiated.", client_version);
@@ -765,7 +765,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
         char msg[128];
         NET_Log("server: wrong mode/mission, %d != %d || %d != %d",
                 data.gamemode, sv_gamemode, data.gamemission, sv_gamemission);
-        M_snprintf(msg, sizeof(msg),
+        m_snprintf(msg, sizeof(msg),
                    "Game mismatch: server is %s (%s), client is %s (%s)",
                    D_GameMissionString(sv_gamemission),
                    D_GameModeString(sv_gamemode),
@@ -821,7 +821,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     memcpy(client->deh_sha1sum, data.deh_sha1sum, sizeof(sha1_digest_t));
     client->is_freedoom = data.is_freedoom;
     client->max_players = data.max_players;
-    client->name = M_StringDuplicate(player_name);
+    client->name = m_string_duplicate(player_name);
     client->recording_lowres = data.lowres_turn;
     client->drone = data.drone;
     client->player_class = data.player_class;
@@ -1450,7 +1450,7 @@ void NET_SV_SendQueryResponse(net_addr_t *addr)
     // When starting a network server, specify a name for the server.
     //
 
-    p = M_CheckParmWithArgs("-servername", 1);
+    p = m_check_parm_with_args("-servername", 1);
 
     if (p > 0)
     {
@@ -1956,7 +1956,7 @@ void NET_SV_RegisterWithMaster(void)
     // Implies -server.
     //
 
-    if (!M_CheckParm("-privateserver"))
+    if (!m_check_parm("-privateserver"))
     {
         master_server = NET_Query_ResolveMaster(server_context);
     }

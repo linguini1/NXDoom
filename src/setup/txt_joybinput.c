@@ -549,7 +549,7 @@ static void TXT_JoystickInputSizeCalc(TXT_UNCAST_ARG(joystick_input))
 static void GetJoystickButtonDescription(int vbutton, char *buf,
                                          size_t buf_len)
 {
-    M_snprintf(buf, buf_len, "BUTTON #%i",
+    m_snprintf(buf, buf_len, "BUTTON #%i",
                PhysicalForVirtualButton(vbutton) + 1);
 }
 
@@ -561,7 +561,7 @@ static void TXT_JoystickInputDrawer(TXT_UNCAST_ARG(joystick_input))
 
     if (*joystick_input->variable < 0)
     {
-        M_StringCopy(buf, "(none)", sizeof(buf));
+        m_str_copy(buf, "(none)", sizeof(buf));
     }
     else
     {
@@ -603,38 +603,38 @@ static void GetGamepadButtonDescription(int vbutton, char *buf, size_t buf_len)
 
     if (index < 0)
     {
-        M_StringCopy(buf, "(unknown)", buf_len);
+        m_str_copy(buf, "(unknown)", buf_len);
         return;
     }
 
     switch (gamepad_type)
     {
         case SDL_CONTROLLER_TYPE_XBOX360:
-            M_snprintf(buf, buf_len, "%s", xbox360_buttons[index]);
+            m_snprintf(buf, buf_len, "%s", xbox360_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_XBOXONE:
-            M_snprintf(buf, buf_len, "%s", xboxone_buttons[index]);
+            m_snprintf(buf, buf_len, "%s", xboxone_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_PS3:
-            M_snprintf(buf, buf_len, "%s", ps3_buttons[index]);
+            m_snprintf(buf, buf_len, "%s", ps3_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_PS4:
-            M_snprintf(buf, buf_len, "%s", ps4_buttons[index]);
+            m_snprintf(buf, buf_len, "%s", ps4_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_PS5:
-            M_snprintf(buf, buf_len, "%s", ps5_buttons[index]);
+            m_snprintf(buf, buf_len, "%s", ps5_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
-            M_snprintf(buf, buf_len, "%s", switchpro_buttons[index]);
+            m_snprintf(buf, buf_len, "%s", switchpro_buttons[index]);
             break;
 
         default:
-            M_snprintf(buf, buf_len, "BUTTON #%i",
+            m_snprintf(buf, buf_len, "BUTTON #%i",
                        PhysicalForVirtualButton(vbutton) + 1);
             break;
     }
@@ -648,7 +648,7 @@ static void TXT_GamepadInputDrawer(TXT_UNCAST_ARG(joystick_input))
 
     if (*joystick_input->variable < 0)
     {
-        M_StringCopy(buf, "(none)", sizeof(buf));
+        m_str_copy(buf, "(none)", sizeof(buf));
     }
     else
     {

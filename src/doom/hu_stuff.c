@@ -346,7 +346,7 @@ void HU_Init(void)
     j = HU_FONTSTART;
     for (i=0;i<HU_FONTSIZE;i++)
     {
-	DEH_snprintf(buffer, 9, "STCFN%.3d", j++);
+	deh_snprintf(buffer, 9, "STCFN%.3d", j++);
 	hu_font[i] = (patch_t *) W_CacheLumpName(buffer, PU_STATIC);
     }
 
@@ -415,7 +415,7 @@ void HU_Start(void)
 
     // dehacked substitution to get modified level name
 
-    s = DEH_String(s);
+    s = deh_string(s);
     
     while (*s)
 	HUlib_addCharToTextLine(&w_title, *(s++));
@@ -505,7 +505,7 @@ void HU_Ticker(void)
 				|| chat_dest[i] == HU_BROADCAST))
 			{
 			    HUlib_addMessageToSText(&w_message,
-						    DEH_String(player_names[i]),
+						    deh_string(player_names[i]),
 						    w_inputbuffer[i].l.l);
 			    
 			    message_nottobefuckedwith = true;
@@ -539,7 +539,7 @@ void HU_queueChatChar(char c)
 {
     if (((head + 1) & (QUEUESIZE-1)) == tail)
     {
-	plr->message = DEH_String(HUSTR_MSGU);
+	plr->message = deh_string(HUSTR_MSGU);
     }
     else
     {
@@ -571,13 +571,13 @@ static void StartChatInput(int dest)
     HUlib_resetIText(&w_chat);
     HU_queueChatChar(HU_BROADCAST);
 
-    I_StartTextInput(0, 8, SCREENWIDTH, 16);
+    i_start_text_input(0, 8, SCREENWIDTH, 16);
 }
 
 static void StopChatInput(void)
 {
     chat_on = false;
-    I_StopTextInput();
+    i_stop_text_input();
 }
 
 boolean HU_Responder(event_t *ev)
@@ -639,15 +639,15 @@ boolean HU_Responder(event_t *ev)
 		    {
 			num_nobrainers++;
 			if (num_nobrainers < 3)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF1);
+			    plr->message = deh_string(HUSTR_TALKTOSELF1);
 			else if (num_nobrainers < 6)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF2);
+			    plr->message = deh_string(HUSTR_TALKTOSELF2);
 			else if (num_nobrainers < 9)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF3);
+			    plr->message = deh_string(HUSTR_TALKTOSELF3);
 			else if (num_nobrainers < 32)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF4);
+			    plr->message = deh_string(HUSTR_TALKTOSELF4);
 			else
-			    plr->message = DEH_String(HUSTR_TALKTOSELF5);
+			    plr->message = deh_string(HUSTR_TALKTOSELF5);
 		    }
 		}
 	    }
@@ -674,7 +674,7 @@ boolean HU_Responder(event_t *ev)
 
             // leave chat mode and notify that it was sent
             StopChatInput();
-            M_StringCopy(lastmessage, chat_macros[c], sizeof(lastmessage));
+            m_str_copy(lastmessage, chat_macros[c], sizeof(lastmessage));
             plr->message = lastmessage;
             eatkey = true;
 	}
@@ -688,7 +688,7 @@ boolean HU_Responder(event_t *ev)
 		// static unsigned char buf[20]; // DEBUG
 		HU_queueChatChar(c);
 
-		// M_snprintf(buf, sizeof(buf), "KEY: %d => %d", ev->data1, c);
+		// m_snprintf(buf, sizeof(buf), "KEY: %d => %d", ev->data1, c);
 		//        plr->message = buf;
 	    }
 	    if (c == KEY_ENTER)
@@ -696,7 +696,7 @@ boolean HU_Responder(event_t *ev)
 		StopChatInput();
                 if (w_chat.l.len)
                 {
-                    M_StringCopy(lastmessage, w_chat.l.l, sizeof(lastmessage));
+                    m_str_copy(lastmessage, w_chat.l.l, sizeof(lastmessage));
                     plr->message = lastmessage;
                 }
 	    }

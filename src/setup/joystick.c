@@ -702,7 +702,7 @@ static const known_joystick_t *GetJoystickType(int index)
     {
         // Check for a name match. If the name ends in '*', this means
         // ignore the rest.
-        if (M_StringEndsWith(known_joysticks[i].name, "*"))
+        if (m_string_ends_with(known_joysticks[i].name, "*"))
         {
             if (strncmp(known_joysticks[i].name, name,
                         strlen(known_joysticks[i].name) - 1) != 0)
@@ -761,17 +761,17 @@ static void LoadConfigurationSet(const joystick_config_t *configs)
         }
 
         // For buttons, set the virtual button mapping as well.
-        if (M_StringStartsWith(config->name, "joyb_") && config->value >= 0)
+        if (m_string_starts_with(config->name, "joyb_") && config->value >= 0)
         {
             joystick_physical_buttons[button] = config->value;
-            M_snprintf(buf, sizeof(buf), "%i", button);
-            M_SetVariable(config->name, buf);
+            m_snprintf(buf, sizeof(buf), "%i", button);
+            m_set_variable(config->name, buf);
             ++button;
         }
         else
         {
-            M_snprintf(buf, sizeof(buf), "%i", config->value);
-            M_SetVariable(config->name, buf);
+            m_snprintf(buf, sizeof(buf), "%i", config->value);
+            m_set_variable(config->name, buf);
         }
     }
 }
@@ -1333,33 +1333,33 @@ void BindJoystickVariables(void)
 {
     int i;
 
-    M_BindIntVariable("use_joystick",           &usejoystick);
-    M_BindIntVariable("use_gamepad",            &use_gamepad);
-    M_BindIntVariable("gamepad_type",           &gamepad_type);
-    M_BindStringVariable("joystick_guid",       &joystick_guid);
-    M_BindIntVariable("joystick_index",         &joystick_index);
-    M_BindIntVariable("joystick_x_axis",        &joystick_x_axis);
-    M_BindIntVariable("joystick_y_axis",        &joystick_y_axis);
-    M_BindIntVariable("joystick_strafe_axis",   &joystick_strafe_axis);
-    M_BindIntVariable("joystick_x_invert",      &joystick_x_invert);
-    M_BindIntVariable("joystick_y_invert",      &joystick_y_invert);
-    M_BindIntVariable("joystick_strafe_invert", &joystick_strafe_invert);
-    M_BindIntVariable("joystick_look_axis",   &joystick_look_axis);
-    M_BindIntVariable("joystick_look_invert", &joystick_look_invert);
-    M_BindIntVariable("joystick_x_dead_zone", &joystick_x_dead_zone);
-    M_BindIntVariable("joystick_y_dead_zone", &joystick_y_dead_zone);
-    M_BindIntVariable("joystick_strafe_dead_zone", &joystick_strafe_dead_zone);
-    M_BindIntVariable("joystick_look_dead_zone", &joystick_look_dead_zone);
-    M_BindIntVariable("use_analog", &use_analog);
-    M_BindIntVariable("joystick_turn_sensitivity", &joystick_turn_sensitivity);
-    M_BindIntVariable("joystick_move_sensitivity", &joystick_move_sensitivity);
-    M_BindIntVariable("joystick_look_sensitivity", &joystick_look_sensitivity);
+    m_bind_int_variable("use_joystick",           &usejoystick);
+    m_bind_int_variable("use_gamepad",            &use_gamepad);
+    m_bind_int_variable("gamepad_type",           &gamepad_type);
+    m_bind_string_variable("joystick_guid",       &joystick_guid);
+    m_bind_int_variable("joystick_index",         &joystick_index);
+    m_bind_int_variable("joystick_x_axis",        &joystick_x_axis);
+    m_bind_int_variable("joystick_y_axis",        &joystick_y_axis);
+    m_bind_int_variable("joystick_strafe_axis",   &joystick_strafe_axis);
+    m_bind_int_variable("joystick_x_invert",      &joystick_x_invert);
+    m_bind_int_variable("joystick_y_invert",      &joystick_y_invert);
+    m_bind_int_variable("joystick_strafe_invert", &joystick_strafe_invert);
+    m_bind_int_variable("joystick_look_axis",   &joystick_look_axis);
+    m_bind_int_variable("joystick_look_invert", &joystick_look_invert);
+    m_bind_int_variable("joystick_x_dead_zone", &joystick_x_dead_zone);
+    m_bind_int_variable("joystick_y_dead_zone", &joystick_y_dead_zone);
+    m_bind_int_variable("joystick_strafe_dead_zone", &joystick_strafe_dead_zone);
+    m_bind_int_variable("joystick_look_dead_zone", &joystick_look_dead_zone);
+    m_bind_int_variable("use_analog", &use_analog);
+    m_bind_int_variable("joystick_turn_sensitivity", &joystick_turn_sensitivity);
+    m_bind_int_variable("joystick_move_sensitivity", &joystick_move_sensitivity);
+    m_bind_int_variable("joystick_look_sensitivity", &joystick_look_sensitivity);
 
     for (i = 0; i < NUM_VIRTUAL_BUTTONS; ++i)
     {
         char name[32];
-        M_snprintf(name, sizeof(name), "joystick_physical_button%i", i);
-        M_BindIntVariable(name, &joystick_physical_buttons[i]);
+        m_snprintf(name, sizeof(name), "joystick_physical_button%i", i);
+        m_bind_int_variable(name, &joystick_physical_buttons[i]);
     }
 }
 

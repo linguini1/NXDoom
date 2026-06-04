@@ -66,12 +66,12 @@ static deh_context_t *DEH_NewContext(void)
 {
     deh_context_t *context;
 
-    context = Z_Malloc(sizeof(*context), PU_STATIC, NULL);
+    context = z_malloc(sizeof(*context), PU_STATIC, NULL);
 
     // Initial read buffer size of 128 bytes
 
     context->readbuffer_size = 128;
-    context->readbuffer = Z_Malloc(context->readbuffer_size, PU_STATIC, NULL);
+    context->readbuffer = z_malloc(context->readbuffer_size, PU_STATIC, NULL);
     context->linenum = 0;
     context->last_was_newline = true;
 
@@ -88,7 +88,7 @@ deh_context_t *DEH_OpenFile(const char *filename)
     FILE *fstream;
     deh_context_t *context;
 
-    fstream = M_fopen(filename, "r");
+    fstream = m_fopen(filename, "r");
 
     if (fstream == NULL)
         return NULL;
@@ -97,7 +97,7 @@ deh_context_t *DEH_OpenFile(const char *filename)
 
     context->type = DEH_INPUT_FILE;
     context->stream = fstream;
-    context->filename = M_StringDuplicate(filename);
+    context->filename = m_string_duplicate(filename);
 
     return context;
 }
@@ -120,7 +120,7 @@ deh_context_t *DEH_OpenLump(int lumpnum)
     context->input_buffer_pos = 0;
 
     context->filename = malloc(9);
-    M_StringCopy(context->filename, lumpinfo[lumpnum]->name, 9);
+    m_str_copy(context->filename, lumpinfo[lumpnum]->name, 9);
 
     return context;
 }
@@ -139,8 +139,8 @@ void DEH_CloseFile(deh_context_t *context)
     }
 
     free(context->filename);
-    Z_Free(context->readbuffer);
-    Z_Free(context);
+    z_free(context->readbuffer);
+    z_free(context);
 }
 
 int DEH_GetCharFile(deh_context_t *context)
@@ -233,11 +233,11 @@ static void IncreaseReadBuffer(deh_context_t *context)
     int newbuffer_size;
 
     newbuffer_size = context->readbuffer_size * 2;
-    newbuffer = Z_Malloc(newbuffer_size, PU_STATIC, NULL);
+    newbuffer = z_malloc(newbuffer_size, PU_STATIC, NULL);
 
     memcpy(newbuffer, context->readbuffer, context->readbuffer_size);
 
-    Z_Free(context->readbuffer);
+    z_free(context->readbuffer);
 
     context->readbuffer = newbuffer;
     context->readbuffer_size = newbuffer_size;

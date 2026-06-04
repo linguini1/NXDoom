@@ -398,7 +398,7 @@ static void CheckInstallRootPaths(void)
 
         for (j=0; j<arrlen(root_path_subdirs); ++j)
         {
-            subpath = M_StringJoin(install_path, DIR_SEPARATOR_S,
+            subpath = m_string_join(install_path, DIR_SEPARATOR_S,
                                    root_path_subdirs[j], NULL);
             AddIWADDir(subpath);
         }
@@ -425,7 +425,7 @@ static void CheckSteamEdition(void)
 
     for (i=0; i<arrlen(steam_install_subdirs); ++i)
     {
-        subpath = M_StringJoin(install_path, DIR_SEPARATOR_S,
+        subpath = m_string_join(install_path, DIR_SEPARATOR_S,
                                steam_install_subdirs[i], NULL);
 
         AddIWADDir(subpath);
@@ -444,7 +444,7 @@ static void CheckSteamGUSPatches(void)
     char *test_patch_path, *patch_path;
 
     // Already configured? Don't stomp on the user's choices.
-    current_path = M_GetStringVariable("gus_patch_path");
+    current_path = m_get_string_variable("gus_patch_path");
     if (current_path != NULL && strlen(current_path) > 0)
     {
         return;
@@ -457,14 +457,14 @@ static void CheckSteamGUSPatches(void)
         return;
     }
 
-    patch_path = M_StringJoin(install_path, "\\", STEAM_BFG_GUS_PATCHES,
+    patch_path = m_string_join(install_path, "\\", STEAM_BFG_GUS_PATCHES,
                               NULL);
-    test_patch_path = M_StringJoin(patch_path, "\\ACBASS.PAT", NULL);
+    test_patch_path = m_string_join(patch_path, "\\ACBASS.PAT", NULL);
 
     // Does acbass.pat exist? If so, then set gus_patch_path.
-    if (M_FileExists(test_patch_path))
+    if (m_file_exists(test_patch_path))
     {
-        M_SetVariable("gus_patch_path", patch_path);
+        m_set_variable("gus_patch_path", patch_path);
     }
 
     free(test_patch_path);
@@ -504,7 +504,7 @@ static void CheckDOSDefaults(void)
 static boolean DirIsFile(const char *path, const char *filename)
 {
     return strchr(path, DIR_SEPARATOR) != NULL
-        && !strcasecmp(M_BaseName(path), filename);
+        && !strcasecmp(m_base_name(path), filename);
 }
 
 // Check if the specified directory contains the specified IWAD
@@ -519,7 +519,7 @@ static char *CheckDirectoryHasIWAD(const char *dir, const char *iwadname)
     // As a special case, the "directory" may refer directly to an
     // IWAD file if the path comes from DOOMWADDIR or DOOMWADPATH.
 
-    probe = M_FileCaseExists(dir);
+    probe = m_file_case_exists(dir);
     if (DirIsFile(dir, iwadname) && probe != NULL)
     {
         return probe;
@@ -530,15 +530,15 @@ static char *CheckDirectoryHasIWAD(const char *dir, const char *iwadname)
 
     if (!strcmp(dir, "."))
     {
-        filename = M_StringDuplicate(iwadname);
+        filename = m_string_duplicate(iwadname);
     }
     else
     {
-        filename = M_StringJoin(dir, DIR_SEPARATOR_S, iwadname, NULL);
+        filename = m_string_join(dir, DIR_SEPARATOR_S, iwadname, NULL);
     }
 
     free(probe);
-    probe = M_FileCaseExists(filename);
+    probe = m_file_case_exists(filename);
     free(filename);
     if (probe != NULL)
     {
@@ -563,7 +563,7 @@ static char *SearchDirectoryForIWAD(const char *dir, int mask, GameMission_t *mi
             continue;
         }
 
-        filename = CheckDirectoryHasIWAD(dir, DEH_String(iwads[i].name));
+        filename = CheckDirectoryHasIWAD(dir, deh_string(iwads[i].name));
 
         if (filename != NULL)
         {
@@ -584,7 +584,7 @@ static GameMission_t IdentifyIWADByName(const char *name, int mask)
     size_t i;
     GameMission_t mission;
 
-    name = M_BaseName(name);
+    name = m_base_name(name);
     mission = none;
 
     for (i=0; i<arrlen(iwads); ++i)
@@ -615,7 +615,7 @@ static void AddIWADPath(const char *path, const char *suffix)
 {
     char *left, *p, *dup_path;
 
-    dup_path = M_StringDuplicate(path);
+    dup_path = m_string_duplicate(path);
 
     // Split into individual dirs within the list.
     left = dup_path;
@@ -629,7 +629,7 @@ static void AddIWADPath(const char *path, const char *suffix)
             // as another iwad dir
             *p = '\0';
 
-            AddIWADDir(M_StringJoin(left, suffix, NULL));
+            AddIWADDir(m_string_join(left, suffix, NULL));
             left = p + 1;
         }
         else
@@ -638,7 +638,7 @@ static void AddIWADPath(const char *path, const char *suffix)
         }
     }
 
-    AddIWADDir(M_StringJoin(left, suffix, NULL));
+    AddIWADDir(m_string_join(left, suffix, NULL));
 
     free(dup_path);
 }
@@ -670,14 +670,14 @@ static void AddXdgDirs(void)
             homedir = "/";
         }
 
-        tmp_env = M_StringJoin(homedir, "/.local/share", NULL);
+        tmp_env = m_string_join(homedir, "/.local/share", NULL);
         env = tmp_env;
     }
 
     // We support $XDG_DATA_HOME/games/doom (which will usually be
     // ~/.local/share/games/doom) as a user-writeable extension to
     // the usual /usr/share/games/doom location.
-    AddIWADDir(M_StringJoin(env, "/games/doom", NULL));
+    AddIWADDir(m_string_join(env, "/games/doom", NULL));
     free(tmp_env);
 
     // Quote:
@@ -723,7 +723,7 @@ static void AddSteamDirs(void)
     {
         homedir = "/";
     }
-    steampath = M_StringJoin(homedir, "/.steam/root/steamapps/common", NULL);
+    steampath = m_string_join(homedir, "/.steam/root/steamapps/common", NULL);
 
     AddIWADPath(steampath, "/Doom 2/base");
     AddIWADPath(steampath, "/Doom 2/finaldoombase");
@@ -760,17 +760,17 @@ static void BuildIWADDirList(void)
 
     // Next check the directory where the executable is located. This might
     // be different from the current directory.
-    AddIWADDir(M_DirName(myargv[0]));
+    AddIWADDir(m_dir_name(myargv[0]));
 
     // Add DOOMWADDIR if it is in the environment
-    env = M_getenv("DOOMWADDIR");
+    env = m_getenv("DOOMWADDIR");
     if (env != NULL)
     {
         AddIWADDir(env);
     }
 
     // Add dirs from DOOMWADPATH:
-    env = M_getenv("DOOMWADPATH");
+    env = m_getenv("DOOMWADPATH");
     if (env != NULL)
     {
         AddIWADPath(env, "");
@@ -813,7 +813,7 @@ char *D_FindWADByName(const char *name)
     
     // Absolute path?
 
-    probe = M_FileCaseExists(name);
+    probe = m_file_case_exists(name);
     if (probe != NULL)
     {
         return probe;
@@ -829,7 +829,7 @@ char *D_FindWADByName(const char *name)
         // the "directory" may actually refer directly to an IWAD
         // file.
 
-        probe = M_FileCaseExists(iwad_dirs[i]);
+        probe = m_file_case_exists(iwad_dirs[i]);
         if (DirIsFile(iwad_dirs[i], name) && probe != NULL)
         {
             return probe;
@@ -838,9 +838,9 @@ char *D_FindWADByName(const char *name)
 
         // Construct a string for the full path
 
-        path = M_StringJoin(iwad_dirs[i], DIR_SEPARATOR_S, name, NULL);
+        path = m_string_join(iwad_dirs[i], DIR_SEPARATOR_S, name, NULL);
 
-        probe = M_FileCaseExists(path);
+        probe = m_file_case_exists(path);
         if (probe != NULL)
         {
             return probe;
@@ -873,7 +873,7 @@ char *D_TryFindWADByName(const char *filename)
     }
     else
     {
-        return M_StringDuplicate(filename);
+        return m_string_duplicate(filename);
     }
 }
 
@@ -899,7 +899,7 @@ char *D_FindIWAD(int mask, GameMission_t *mission)
     // @arg <file>
     //
 
-    iwadparm = M_CheckParmWithArgs("-iwad", 1);
+    iwadparm = m_check_parm_with_args("-iwad", 1);
 
     if (iwadparm)
     {

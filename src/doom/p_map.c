@@ -1,21 +1,25 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard, Andrey Budko
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Movement, collision handling.
-//	Shooting and aiming.
-//
+/*
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard, Andrey Budko
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *	Movement, collision handling.
+ *	Shooting and aiming.
+ */
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,31 +40,38 @@
 #include "sounds.h"
 #endif
 
-// State.
 #include "doomstat.h"
 #include "r_state.h"
-// Data.
 
-// Spechit overrun magic value.
-//
-// This is the value used by PrBoom-plus.  I think the value below is 
-// actually better and works with more demos.  However, I think
-// it's better for the spechits emulation to be compatible with
-// PrBoom-plus, at least so that the big spechits emulation list
-// on Doomworld can also be used with Chocolate Doom.
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* Spechit overrun magic value.
+ *
+ * This is the value used by PrBoom-plus.  I think the value below is 
+ * actually better and works with more demos.  However, I think
+ * it's better for the spechits emulation to be compatible with
+ * PrBoom-plus, at least so that the big spechits emulation list
+ * on Doomworld can also be used with Chocolate Doom.
+ */
 
 #define DEFAULT_SPECHIT_MAGIC 0x01C09C98
 
-// This is from a post by myk on the Doomworld forums, 
-// outputted from entryway's spechit_magic generator for
-// s205n546.lmp.  The _exact_ value of this isn't too
-// important; as long as it is in the right general
-// range, it will usually work.  Otherwise, we can use
-// the generator (hacked doom2.exe) and provide it 
-// with -spechit.
+/* This is from a post by myk on the Doomworld forums, 
+ * outputted from entryway's spechit_magic generator for
+ * s205n546.lmp.  The _exact_ value of this isn't too
+ * important; as long as it is in the right general
+ * range, it will usually work.  Otherwise, we can use
+ * the generator (hacked doom2.exe) and provide it 
+ * with -spechit.
+ */
 
-//#define DEFAULT_SPECHIT_MAGIC 0x84f968e8
+/* #define DEFAULT_SPECHIT_MAGIC 0x84f968e8 */
 
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
 
 fixed_t		tmbbox[4];
 mobj_t*		tmthing;
@@ -1409,11 +1420,11 @@ static void SpechitOverrun(line_t *ld)
         // Use the specified magic value when emulating spechit overruns.
         //
 
-        p = M_CheckParmWithArgs("-spechit", 1);
+        p = m_check_parm_with_args("-spechit", 1);
         
         if (p > 0)
         {
-            M_StrToInt(myargv[p+1], (int *) &baseaddr);
+            m_str_to_int(myargv[p+1], (int *) &baseaddr);
         }
         else
         {

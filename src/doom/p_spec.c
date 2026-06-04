@@ -152,8 +152,8 @@ void P_InitPicAnims (void)
     {
         const char *startname, *endname;
 
-        startname = DEH_String(animdefs[i].startname);
-        endname = DEH_String(animdefs[i].endname);
+        startname = deh_string(animdefs[i].startname);
+        endname = deh_string(animdefs[i].endname);
 
 	if (animdefs[i].istexture)
 	{
@@ -1218,7 +1218,7 @@ static void DonutOverrun(fixed_t *s3_floorheight, short *s3_floorpic,
         // system.  The default (if this option is not specified) is to
         // emulate the behavior when running under Windows 98.
 
-        p = M_CheckParmWithArgs("-donut", 2);
+        p = m_check_parm_with_args("-donut", 2);
 
         if (p > 0)
         {
@@ -1236,8 +1236,8 @@ static void DonutOverrun(fixed_t *s3_floorheight, short *s3_floorpic,
             // DOSBox under XP:
             // 0000:0000    (00 00 00 F1) ?? ?? ?? 00-(07 00)
 
-            M_StrToInt(myargv[p + 1], &tmp_s3_floorheight);
-            M_StrToInt(myargv[p + 2], &tmp_s3_floorpic);
+            m_str_to_int(myargv[p + 1], &tmp_s3_floorheight);
+            m_str_to_int(myargv[p + 2], &tmp_s3_floorpic);
 
             if (tmp_s3_floorpic >= numflats)
             {
@@ -1338,7 +1338,7 @@ int EV_DoDonut(line_t*	line)
             }
 
 	    //	Spawn rising slime
-	    floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	    floor = z_malloc (sizeof(*floor), PU_LEVSPEC, 0);
 	    P_AddThinker (&floor->thinker);
 	    s2->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -1352,7 +1352,7 @@ int EV_DoDonut(line_t*	line)
 	    floor->floordestheight = s3_floorheight;
 	    
 	    //	Spawn lowering donut-hole
-	    floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	    floor = z_malloc (sizeof(*floor), PU_LEVSPEC, 0);
 	    P_AddThinker (&floor->thinker);
 	    s1->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;

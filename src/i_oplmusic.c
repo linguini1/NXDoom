@@ -364,7 +364,7 @@ static boolean LoadInstrumentTable(void)
 {
     byte *lump;
 
-    lump = W_CacheLumpName(DEH_String("genmidi"), PU_STATIC);
+    lump = W_CacheLumpName(deh_string("genmidi"), PU_STATIC);
 
     // DMX does not check header
 
@@ -1629,7 +1629,7 @@ static boolean ConvertMus(byte *musdata, int len, char *filename)
     {
         mem_get_buf(outstream, &outbuf, &outbuf_len);
 
-        M_WriteFile(filename, outbuf, outbuf_len);
+        m_write_file(filename, outbuf, outbuf_len);
     }
 
     mem_fclose(instream);
@@ -1651,11 +1651,11 @@ static void *I_OPL_RegisterSong(void *data, int len)
     // MUS files begin with "MUS"
     // Reject anything which doesnt have this signature
 
-    filename = M_TempFile("doom.mid");
+    filename = m_temp_file("doom.mid");
 
     if (IsMid(data, len) && len < MAXMIDLENGTH)
     {
-        M_WriteFile(filename, data, len);
+        m_write_file(filename, data, len);
     }
     else
     {
@@ -1673,7 +1673,7 @@ static void *I_OPL_RegisterSong(void *data, int len)
 
     // remove file now
 
-    M_remove(filename);
+    m_remove(filename);
     free(filename);
 
     return result;
@@ -1705,7 +1705,7 @@ static void I_OPL_ShutdownMusic(void)
 
         // Release GENMIDI lump
 
-        W_ReleaseLumpName(DEH_String("genmidi"));
+        W_ReleaseLumpName(deh_string("genmidi"));
 
         music_initialized = false;
     }
@@ -1845,11 +1845,11 @@ void I_OPL_DevMessages(char *result, size_t result_len)
 
     if (num_tracks == 0)
     {
-        M_snprintf(result, result_len, "No OPL track!");
+        m_snprintf(result, result_len, "No OPL track!");
         return;
     }
 
-    M_snprintf(result, result_len, "Tracks:\n");
+    m_snprintf(result, result_len, "Tracks:\n");
     lines = 1;
 
     for (i = 0; i < NumActiveChannels(); ++i)
@@ -1861,19 +1861,19 @@ void I_OPL_DevMessages(char *result, size_t result_len)
 
         instr_num = channels[i].instrument - main_instrs;
 
-        M_snprintf(tmp, sizeof(tmp),
+        m_snprintf(tmp, sizeof(tmp),
                    "chan %i: %c i#%i (%s)\n",
                    i,
                    ChannelInUse(&channels[i]) ? '\'' : ' ',
                    instr_num + 1,
                    main_instr_names[instr_num]);
-        M_StringConcat(result, tmp, result_len);
+        m_string_concat(result, tmp, result_len);
 
         ++lines;
     }
 
-    M_snprintf(tmp, sizeof(tmp), "\nLast percussion:\n");
-    M_StringConcat(result, tmp, result_len);
+    m_snprintf(tmp, sizeof(tmp), "\nLast percussion:\n");
+    m_string_concat(result, tmp, result_len);
     lines += 2;
 
     i = (last_perc_count + PERCUSSION_LOG_LEN - 1) % PERCUSSION_LOG_LEN;
@@ -1884,12 +1884,12 @@ void I_OPL_DevMessages(char *result, size_t result_len)
             break;
         }
 
-        M_snprintf(tmp, sizeof(tmp),
+        m_snprintf(tmp, sizeof(tmp),
                    "%cp#%i (%s)\n",
                    i == 0 ? '\'' : ' ',
                    last_perc[i],
                    percussion_names[last_perc[i] - 35]);
-        M_StringConcat(result, tmp, result_len);
+        m_string_concat(result, tmp, result_len);
         ++lines;
 
         i = (i + PERCUSSION_LOG_LEN - 1) % PERCUSSION_LOG_LEN;

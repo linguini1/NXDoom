@@ -61,7 +61,7 @@ static void NET_SDL_InitAddrTable(void)
 {
     addr_table_size = 16;
 
-    addr_table = Z_Malloc(sizeof(addrpair_t *) * addr_table_size,
+    addr_table = z_malloc(sizeof(addrpair_t *) * addr_table_size,
                           PU_STATIC, 0);
     memset(addr_table, 0, sizeof(addrpair_t *) * addr_table_size);
 }
@@ -116,19 +116,19 @@ static net_addr_t *NET_SDL_FindAddress(IPaddress *addr)
         // the existing table in.  replace the old table.
 
         new_addr_table_size = addr_table_size * 2;
-        new_addr_table = Z_Malloc(sizeof(addrpair_t *) * new_addr_table_size,
+        new_addr_table = z_malloc(sizeof(addrpair_t *) * new_addr_table_size,
                                   PU_STATIC, 0);
         memset(new_addr_table, 0, sizeof(addrpair_t *) * new_addr_table_size);
         memcpy(new_addr_table, addr_table, 
                sizeof(addrpair_t *) * addr_table_size);
-        Z_Free(addr_table);
+        z_free(addr_table);
         addr_table = new_addr_table;
         addr_table_size = new_addr_table_size;
     }
 
     // Add a new entry
     
-    new_entry = Z_Malloc(sizeof(addrpair_t), PU_STATIC, 0);
+    new_entry = z_malloc(sizeof(addrpair_t), PU_STATIC, 0);
 
     new_entry->sdl_addr = *addr;
     new_entry->net_addr.refcount = 0;
@@ -148,7 +148,7 @@ static void NET_SDL_FreeAddress(net_addr_t *addr)
     {
         if (addr == &addr_table[i]->net_addr)
         {
-            Z_Free(addr_table[i]);
+            z_free(addr_table[i]);
             addr_table[i] = NULL;
             return;
         }
@@ -172,7 +172,7 @@ static boolean NET_SDL_InitClient(void)
     // the default (2342).
     //
 
-    p = M_CheckParmWithArgs("-port", 1);
+    p = m_check_parm_with_args("-port", 1);
     if (p > 0)
         port = atoi(myargv[p+1]);
 
@@ -203,7 +203,7 @@ static boolean NET_SDL_InitServer(void)
     if (initted)
         return true;
 
-    p = M_CheckParmWithArgs("-port", 1);
+    p = m_check_parm_with_args("-port", 1);
     if (p > 0)
         port = atoi(myargv[p+1]);
 
@@ -314,7 +314,7 @@ void NET_SDL_AddrToString(net_addr_t *addr, char *buffer, int buffer_len)
     host = SDLNet_Read32(&ip->host);
     port = SDLNet_Read16(&ip->port);
 
-    M_snprintf(buffer, buffer_len, "%i.%i.%i.%i",
+    m_snprintf(buffer, buffer_len, "%i.%i.%i.%i",
                (host >> 24) & 0xff, (host >> 16) & 0xff,
                (host >> 8) & 0xff, host & 0xff);
 
@@ -325,8 +325,8 @@ void NET_SDL_AddrToString(net_addr_t *addr, char *buffer, int buffer_len)
     if (port != DEFAULT_PORT)
     {
         char portbuf[10];
-        M_snprintf(portbuf, sizeof(portbuf), ":%i", port);
-        M_StringConcat(buffer, portbuf, buffer_len);
+        m_snprintf(portbuf, sizeof(portbuf), ":%i", port);
+        m_string_concat(buffer, portbuf, buffer_len);
     }
 }
 
@@ -340,7 +340,7 @@ net_addr_t *NET_SDL_ResolveAddress(const char *address)
 
     colon = strchr(address, ':');
 
-    addr_hostname = M_StringDuplicate(address);
+    addr_hostname = m_string_duplicate(address);
     if (colon != NULL)
     {
 	addr_hostname[colon - address] = '\0';

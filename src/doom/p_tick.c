@@ -28,7 +28,7 @@ int	leveltime;
 
 //
 // THINKERS
-// All thinkers should be allocated by Z_Malloc
+// All thinkers should be allocated by z_malloc
 // so they can be operated on uniformly.
 // The actual structures will vary in size,
 // but the first element must be thinker_t.
@@ -104,7 +104,7 @@ void P_RunThinkers (void)
             nextthinker = currentthinker->next;
 	    currentthinker->next->prev = currentthinker->prev;
 	    currentthinker->prev->next = currentthinker->next;
-	    Z_Free(currentthinker);
+	    z_free(currentthinker);
 	}
 	else
 	{

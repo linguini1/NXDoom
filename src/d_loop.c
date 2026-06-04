@@ -144,7 +144,7 @@ static boolean BuildNewTic(void)
 
     gameticdiv = gametic/ticdup;
 
-    I_StartTic ();
+    i_start_tic ();
     loop_interface->ProcessEvents();
 
     // Always run the menu
@@ -349,7 +349,7 @@ void D_StartNetGame(net_gamesettings_t *settings,
     // Use original network client sync code rather than the improved
     // sync code.
     //
-    settings->new_sync = !M_ParmExists("-oldsync");
+    settings->new_sync = !m_parm_exists("-oldsync");
 
     //!
     // @category net
@@ -359,7 +359,7 @@ void D_StartNetGame(net_gamesettings_t *settings,
     // packets.
     //
 
-    i = M_CheckParmWithArgs("-extratics", 1);
+    i = m_check_parm_with_args("-extratics", 1);
 
     if (i > 0)
         settings->extratics = atoi(myargv[i+1]);
@@ -374,7 +374,7 @@ void D_StartNetGame(net_gamesettings_t *settings,
     // the amount of network bandwidth needed.
     //
 
-    i = M_CheckParmWithArgs("-dup", 1);
+    i = m_check_parm_with_args("-dup", 1);
 
     if (i > 0)
         settings->ticdup = atoi(myargv[i+1]);
@@ -443,8 +443,8 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
     // Start a multiplayer server, listening for connections.
     //
 
-    if (M_CheckParm("-server") > 0
-     || M_CheckParm("-privateserver") > 0)
+    if (m_check_parm("-server") > 0
+     || m_check_parm("-privateserver") > 0)
     {
         NET_SV_Init();
         NET_SV_AddModule(&net_loop_server_module);
@@ -464,7 +464,7 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
         // server and join it.
         //
 
-        i = M_CheckParm("-autojoin");
+        i = m_check_parm("-autojoin");
 
         if (i > 0)
         {
@@ -484,7 +484,7 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
         // address.
         //
 
-        i = M_CheckParmWithArgs("-connect", 1);
+        i = m_check_parm_with_args("-connect", 1);
 
         if (i > 0)
         {
@@ -501,7 +501,7 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
 
     if (addr != NULL)
     {
-        if (M_CheckParm("-drone") > 0)
+        if (m_check_parm("-drone") > 0)
         {
             connect_data->drone = true;
         }
@@ -811,7 +811,7 @@ static boolean StrictDemos(void)
     // of the vanilla demo format - record demos as vanilla would do,
     // and play back demos as vanilla would do.
     //
-    return M_ParmExists("-strictdemos");
+    return m_parm_exists("-strictdemos");
 }
 
 // If the provided conditional value is true, we're trying to record
@@ -841,9 +841,9 @@ static boolean IsDemoFile(int lumpnum)
     char *lower;
     boolean result;
 
-    lower = M_StringDuplicate(lumpinfo[lumpnum]->wad_file->path);
-    M_ForceLowercase(lower);
-    result = M_StringEndsWith(lower, ".lmp");
+    lower = m_string_duplicate(lumpinfo[lumpnum]->wad_file->path);
+    m_force_lowercase(lower);
+    result = m_string_ends_with(lower, ".lmp");
     free(lower);
 
     return result;

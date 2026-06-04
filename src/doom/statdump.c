@@ -299,7 +299,7 @@ static void PrintStats(FILE *stream, const wbstartstruct_t *stats)
 
 void StatCopy(const wbstartstruct_t *stats)
 {
-    if (M_ParmExists("-statdump") && num_captured_stats < MAX_CAPTURES)
+    if (m_parm_exists("-statdump") && num_captured_stats < MAX_CAPTURES)
     {
         memcpy(&captured_stats[num_captured_stats], stats,
                sizeof(wbstartstruct_t));
@@ -321,7 +321,7 @@ void StatDump(void)
     // from statdump.exe (see ctrlapi.zip in the /idgames archive).
     //
 
-    i = M_CheckParmWithArgs("-statdump", 1);
+    i = m_check_parm_with_args("-statdump", 1);
 
     if (i > 0)
     {
@@ -336,7 +336,7 @@ void StatDump(void)
 
         if (strcmp(myargv[i + 1], "-") != 0)
         {
-            dumpfile = M_fopen(myargv[i + 1], "w");
+            dumpfile = m_fopen(myargv[i + 1], "w");
         }
         else
         {

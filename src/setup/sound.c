@@ -168,7 +168,7 @@ static void OpenMusicPackDir(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 static void UpdateMidiDevice(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 {
     free(winmm_midi_device);
-    winmm_midi_device = M_StringDuplicate(midi_names[midi_index]);
+    winmm_midi_device = m_string_duplicate(midi_names[midi_index]);
 }
 
 static txt_dropdown_list_t *MidiDeviceSelector(void)
@@ -180,7 +180,7 @@ static txt_dropdown_list_t *MidiDeviceSelector(void)
 
     midi_index = 0;
     free(midi_names[0]);
-    midi_names[0] = M_StringDuplicate("Microsoft MIDI Mapper");
+    midi_names[0] = m_string_duplicate("Microsoft MIDI Mapper");
 
     if (all_devices > MAX_MIDI_DEVICES - num_devices)
     {
@@ -194,7 +194,7 @@ static txt_dropdown_list_t *MidiDeviceSelector(void)
         if (midiOutGetDevCaps(i, &caps, sizeof(caps)) == MMSYSERR_NOERROR)
         {
             free(midi_names[num_devices]);
-            midi_names[num_devices] = M_StringDuplicate(caps.szPname);
+            midi_names[num_devices] = m_string_duplicate(caps.szPname);
 
             if (!strncasecmp(winmm_midi_device, midi_names[num_devices],
                              MAXPNAMELEN))
@@ -208,7 +208,7 @@ static txt_dropdown_list_t *MidiDeviceSelector(void)
     }
 
     free(winmm_midi_device);
-    winmm_midi_device = M_StringDuplicate(midi_names[midi_index]);
+    winmm_midi_device = m_string_duplicate(midi_names[midi_index]);
 
     result = TXT_NewDropdownList(&midi_index, (const char **) midi_names,
                                  num_devices);
@@ -317,73 +317,73 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
 
 void BindSoundVariables(void)
 {
-    M_BindIntVariable("snd_sfxdevice",            &snd_sfxdevice);
-    M_BindIntVariable("snd_musicdevice",          &snd_musicdevice);
-    M_BindIntVariable("snd_channels",             &numChannels);
-    M_BindIntVariable("snd_samplerate",           &snd_samplerate);
-    M_BindIntVariable("sfx_volume",               &sfxVolume);
-    M_BindIntVariable("music_volume",             &musicVolume);
+    m_bind_int_variable("snd_sfxdevice",            &snd_sfxdevice);
+    m_bind_int_variable("snd_musicdevice",          &snd_musicdevice);
+    m_bind_int_variable("snd_channels",             &numChannels);
+    m_bind_int_variable("snd_samplerate",           &snd_samplerate);
+    m_bind_int_variable("sfx_volume",               &sfxVolume);
+    m_bind_int_variable("music_volume",             &musicVolume);
 
-    M_BindIntVariable("use_libsamplerate",        &use_libsamplerate);
-    M_BindFloatVariable("libsamplerate_scale",    &libsamplerate_scale);
+    m_bind_int_variable("use_libsamplerate",        &use_libsamplerate);
+    m_bind_float_variable("libsamplerate_scale",    &libsamplerate_scale);
 
-    M_BindIntVariable("gus_ram_kb",               &gus_ram_kb);
-    M_BindStringVariable("gus_patch_path",        &gus_patch_path);
-    M_BindStringVariable("music_pack_path",     &music_pack_path);
-    M_BindStringVariable("timidity_cfg_path",     &timidity_cfg_path);
+    m_bind_int_variable("gus_ram_kb",               &gus_ram_kb);
+    m_bind_string_variable("gus_patch_path",        &gus_patch_path);
+    m_bind_string_variable("music_pack_path",     &music_pack_path);
+    m_bind_string_variable("timidity_cfg_path",     &timidity_cfg_path);
 #ifdef _WIN32
-    M_BindStringVariable("winmm_midi_device",     &winmm_midi_device);
-    M_BindIntVariable("winmm_complevel",          &winmm_complevel);
-    M_BindIntVariable("winmm_reset_type",         &winmm_reset_type);
-    M_BindIntVariable("winmm_reset_delay",        &winmm_reset_delay);
+    m_bind_string_variable("winmm_midi_device",     &winmm_midi_device);
+    m_bind_int_variable("winmm_complevel",          &winmm_complevel);
+    m_bind_int_variable("winmm_reset_type",         &winmm_reset_type);
+    m_bind_int_variable("winmm_reset_delay",        &winmm_reset_delay);
 #endif
 
 #ifdef HAVE_FLUIDSYNTH
-    M_BindIntVariable("fsynth_chorus_active",     &fsynth_chorus_active);
-    M_BindFloatVariable("fsynth_chorus_depth",    &fsynth_chorus_depth);
-    M_BindFloatVariable("fsynth_chorus_level",    &fsynth_chorus_level);
-    M_BindIntVariable("fsynth_chorus_nr",         &fsynth_chorus_nr);
-    M_BindFloatVariable("fsynth_chorus_speed",    &fsynth_chorus_speed);
-    M_BindStringVariable("fsynth_midibankselect", &fsynth_midibankselect);
-    M_BindIntVariable("fsynth_polyphony",         &fsynth_polyphony);
-    M_BindIntVariable("fsynth_reverb_active",     &fsynth_reverb_active);
-    M_BindFloatVariable("fsynth_reverb_damp",     &fsynth_reverb_damp);
-    M_BindFloatVariable("fsynth_reverb_level",    &fsynth_reverb_level);
-    M_BindFloatVariable("fsynth_reverb_roomsize", &fsynth_reverb_roomsize);
-    M_BindFloatVariable("fsynth_reverb_width",    &fsynth_reverb_width);
-    M_BindFloatVariable("fsynth_gain",            &fsynth_gain);
-    M_BindStringVariable("fsynth_sf_path",        &fsynth_sf_path);
+    m_bind_int_variable("fsynth_chorus_active",     &fsynth_chorus_active);
+    m_bind_float_variable("fsynth_chorus_depth",    &fsynth_chorus_depth);
+    m_bind_float_variable("fsynth_chorus_level",    &fsynth_chorus_level);
+    m_bind_int_variable("fsynth_chorus_nr",         &fsynth_chorus_nr);
+    m_bind_float_variable("fsynth_chorus_speed",    &fsynth_chorus_speed);
+    m_bind_string_variable("fsynth_midibankselect", &fsynth_midibankselect);
+    m_bind_int_variable("fsynth_polyphony",         &fsynth_polyphony);
+    m_bind_int_variable("fsynth_reverb_active",     &fsynth_reverb_active);
+    m_bind_float_variable("fsynth_reverb_damp",     &fsynth_reverb_damp);
+    m_bind_float_variable("fsynth_reverb_level",    &fsynth_reverb_level);
+    m_bind_float_variable("fsynth_reverb_roomsize", &fsynth_reverb_roomsize);
+    m_bind_float_variable("fsynth_reverb_width",    &fsynth_reverb_width);
+    m_bind_float_variable("fsynth_gain",            &fsynth_gain);
+    m_bind_string_variable("fsynth_sf_path",        &fsynth_sf_path);
 #endif // HAVE_FLUIDSYNTH
 
-    M_BindIntVariable("snd_sbport",               &snd_sbport);
-    M_BindIntVariable("snd_sbirq",                &snd_sbirq);
-    M_BindIntVariable("snd_sbdma",                &snd_sbdma);
-    M_BindIntVariable("snd_mport",                &snd_mport);
-    M_BindIntVariable("snd_maxslicetime_ms",      &snd_maxslicetime_ms);
-    M_BindStringVariable("snd_musiccmd",          &snd_musiccmd);
-    M_BindStringVariable("snd_dmxoption",         &snd_dmxoption);
+    m_bind_int_variable("snd_sbport",               &snd_sbport);
+    m_bind_int_variable("snd_sbirq",                &snd_sbirq);
+    m_bind_int_variable("snd_sbdma",                &snd_sbdma);
+    m_bind_int_variable("snd_mport",                &snd_mport);
+    m_bind_int_variable("snd_maxslicetime_ms",      &snd_maxslicetime_ms);
+    m_bind_string_variable("snd_musiccmd",          &snd_musiccmd);
+    m_bind_string_variable("snd_dmxoption",         &snd_dmxoption);
 
-    M_BindIntVariable("snd_cachesize",            &snd_cachesize);
-    M_BindIntVariable("opl_io_port",              &opl_io_port);
+    m_bind_int_variable("snd_cachesize",            &snd_cachesize);
+    m_bind_int_variable("opl_io_port",              &opl_io_port);
 
-    M_BindIntVariable("snd_pitchshift",           &snd_pitchshift);
+    m_bind_int_variable("snd_pitchshift",           &snd_pitchshift);
 
     if (gamemission == strife)
     {
-        M_BindIntVariable("voice_volume",         &voiceVolume);
-        M_BindIntVariable("show_talk",            &show_talk);
+        m_bind_int_variable("voice_volume",         &voiceVolume);
+        m_bind_int_variable("show_talk",            &show_talk);
     }
 
-    music_pack_path = M_StringDuplicate("");
-    timidity_cfg_path = M_StringDuplicate("");
-    gus_patch_path = M_StringDuplicate("");
+    music_pack_path = m_string_duplicate("");
+    timidity_cfg_path = m_string_duplicate("");
+    gus_patch_path = m_string_duplicate("");
 
 #ifdef _WIN32
-    winmm_midi_device = M_StringDuplicate("");
+    winmm_midi_device = m_string_duplicate("");
 #endif
 
 #ifdef HAVE_FLUIDSYNTH
-    fsynth_sf_path = M_StringDuplicate("");
+    fsynth_sf_path = m_string_duplicate("");
 #endif
 
     // All versions of Heretic and Hexen did pitch-shifting.

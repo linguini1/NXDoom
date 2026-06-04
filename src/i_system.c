@@ -128,7 +128,7 @@ byte *I_ZoneBase (int *size)
     // Specify the heap size, in MiB.
     //
 
-    p = M_CheckParmWithArgs("-mb", 1);
+    p = m_check_parm_with_args("-mb", 1);
 
     if (p > 0)
     {
@@ -218,13 +218,13 @@ boolean I_ConsoleStdout(void)
 /*
 void I_Init (void)
 {
-    I_CheckIsScreensaver();
+    i_check_is_screensaver();
     I_InitTimer();
     I_InitJoystick();
 }
 void I_BindVariables(void)
 {
-    I_BindVideoVariables();
+    i_bind_video_variables();
     I_BindJoystickVariables();
     I_BindSoundVariables();
 }
@@ -291,7 +291,7 @@ void I_Error (const char *error, ...)
     // Write a copy of the message into buffer.
     va_start(argptr, error);
     memset(msgbuf, 0, sizeof(msgbuf));
-    M_vsnprintf(msgbuf, sizeof(msgbuf), error, argptr);
+    m_vsprintf(msgbuf, sizeof(msgbuf), error, argptr);
     va_end(argptr);
 
     // Shutdown. Here might be other errors.
@@ -314,7 +314,7 @@ void I_Error (const char *error, ...)
     // If specified, don't show a GUI window for error messages when the
     // game exits with an error.
     //
-    exit_gui_popup = !M_ParmExists("-nogui");
+    exit_gui_popup = !m_parm_exists("-nogui");
 
     // Pop up a GUI dialog box to show the error message, if the
     // game was not run from the console (and the user will
@@ -404,7 +404,7 @@ boolean I_GetMemoryValue(unsigned int offset, void *value, int size)
         // The default is to emulate DOS 7.1 (Windows 98).
         //
 
-        p = M_CheckParmWithArgs("-setmem", 1);
+        p = m_check_parm_with_args("-setmem", 1);
 
         if (p > 0)
         {
@@ -431,7 +431,7 @@ boolean I_GetMemoryValue(unsigned int offset, void *value, int size)
                         break;
                     }
 
-                    M_StrToInt(myargv[p], &val);
+                    m_str_to_int(myargv[p], &val);
                     mem_dump_custom[i++] = (unsigned char) val;
                 }
 

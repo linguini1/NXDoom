@@ -110,7 +110,7 @@ void SetDisplayDriver(void)
     {
         char *env_string;
 
-        env_string = M_StringJoin("SDL_VIDEODRIVER=", video_driver, NULL);
+        env_string = m_string_join("SDL_VIDEODRIVER=", video_driver, NULL);
         putenv(env_string);
         free(env_string);
     }
@@ -129,7 +129,7 @@ static txt_radiobutton_t *SizeSelectButton(window_size_t *size)
     char buf[15];
     txt_radiobutton_t *result;
 
-    M_snprintf(buf, sizeof(buf), "%ix%i", size->w, size->h);
+    m_snprintf(buf, sizeof(buf), "%ix%i", size->w, size->h);
     result = TXT_NewRadioButton(buf, &window_width, size->w);
     TXT_SignalConnect(result, "selected", WindowSizeSelected, size);
 
@@ -253,37 +253,37 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
 
 void BindDisplayVariables(void)
 {
-    M_BindIntVariable("video_display",             &video_display);
-    M_BindIntVariable("aspect_ratio_correct",      &aspect_ratio_correct);
-    M_BindIntVariable("integer_scaling",           &integer_scaling);
-    M_BindIntVariable("smooth_pixel_scaling",      &smooth_pixel_scaling);
-    M_BindIntVariable("fullscreen",                &fullscreen);
-    M_BindIntVariable("fullscreen_width",          &fullscreen_width);
-    M_BindIntVariable("fullscreen_height",         &fullscreen_height);
-    M_BindIntVariable("window_width",              &window_width);
-    M_BindIntVariable("window_height",             &window_height);
-    M_BindIntVariable("startup_delay",             &startup_delay);
-    M_BindStringVariable("video_driver",           &video_driver);
-    M_BindStringVariable("window_position",        &window_position);
-    M_BindIntVariable("usegamma",                  &usegamma);
-    M_BindIntVariable("png_screenshots",           &png_screenshots);
-    M_BindIntVariable("vga_porch_flash",           &vga_porch_flash);
-    M_BindIntVariable("force_software_renderer",   &force_software_renderer);
-    M_BindIntVariable("max_scaling_buffer_pixels", &max_scaling_buffer_pixels);
+    m_bind_int_variable("video_display",             &video_display);
+    m_bind_int_variable("aspect_ratio_correct",      &aspect_ratio_correct);
+    m_bind_int_variable("integer_scaling",           &integer_scaling);
+    m_bind_int_variable("smooth_pixel_scaling",      &smooth_pixel_scaling);
+    m_bind_int_variable("fullscreen",                &fullscreen);
+    m_bind_int_variable("fullscreen_width",          &fullscreen_width);
+    m_bind_int_variable("fullscreen_height",         &fullscreen_height);
+    m_bind_int_variable("window_width",              &window_width);
+    m_bind_int_variable("window_height",             &window_height);
+    m_bind_int_variable("startup_delay",             &startup_delay);
+    m_bind_string_variable("video_driver",           &video_driver);
+    m_bind_string_variable("window_position",        &window_position);
+    m_bind_int_variable("usegamma",                  &usegamma);
+    m_bind_int_variable("png_screenshots",           &png_screenshots);
+    m_bind_int_variable("vga_porch_flash",           &vga_porch_flash);
+    m_bind_int_variable("force_software_renderer",   &force_software_renderer);
+    m_bind_int_variable("max_scaling_buffer_pixels", &max_scaling_buffer_pixels);
 
     if (gamemission == doom || gamemission == heretic
      || gamemission == strife)
     {
-        M_BindIntVariable("show_endoom",               &show_endoom);
+        m_bind_int_variable("show_endoom",               &show_endoom);
     }
 
     if (gamemission == doom || gamemission == strife)
     {
-        M_BindIntVariable("show_diskicon",             &show_diskicon);
+        m_bind_int_variable("show_diskicon",             &show_diskicon);
     }
 
     if (gamemission == heretic || gamemission == hexen || gamemission == strife)
     {
-        M_BindIntVariable("graphical_startup",        &graphical_startup);
+        m_bind_int_variable("graphical_startup",        &graphical_startup);
     }
 }

@@ -455,7 +455,7 @@ static void TXT_JoystickAxisDrawer(TXT_UNCAST_ARG(joystick_axis))
 
     if (*joystick_axis->axis < 0)
     {
-        M_StringCopy(buf, "(none)", sizeof(buf));
+        m_str_copy(buf, "(none)", sizeof(buf));
     }
     else if (IS_BUTTON_AXIS(*joystick_axis->axis))
     {
@@ -463,7 +463,7 @@ static void TXT_JoystickAxisDrawer(TXT_UNCAST_ARG(joystick_axis))
 
         neg = BUTTON_AXIS_NEG(*joystick_axis->axis);
         pos = BUTTON_AXIS_POS(*joystick_axis->axis);
-        M_snprintf(buf, sizeof(buf), "BUTTONS #%i+#%i", neg, pos);
+        m_snprintf(buf, sizeof(buf), "BUTTONS #%i+#%i", neg, pos);
     }
     else if (IS_HAT_AXIS(*joystick_axis->axis))
     {
@@ -472,12 +472,12 @@ static void TXT_JoystickAxisDrawer(TXT_UNCAST_ARG(joystick_axis))
         hat = HAT_AXIS_HAT(*joystick_axis->axis);
         dir = HAT_AXIS_DIRECTION(*joystick_axis->axis);
 
-        M_snprintf(buf, sizeof(buf), "HAT #%i (%s)", hat,
+        m_snprintf(buf, sizeof(buf), "HAT #%i (%s)", hat,
                    dir == HAT_AXIS_HORIZONTAL ? "horizontal" : "vertical");
     }
     else
     {
-        M_snprintf(buf, sizeof(buf), "AXIS #%i", *joystick_axis->axis);
+        m_snprintf(buf, sizeof(buf), "AXIS #%i", *joystick_axis->axis);
     }
 
     TXT_SetWidgetBG(joystick_axis);
@@ -496,27 +496,27 @@ static void GetAxisDescription(int axis, char *buf, size_t buf_len)
     switch (axis)
     {
         case SDL_CONTROLLER_AXIS_INVALID:
-            M_StringCopy(buf, "(none)", sizeof(buf));
+            m_str_copy(buf, "(none)", sizeof(buf));
             break;
 
         case SDL_CONTROLLER_AXIS_LEFTX:
-            M_StringCopy(buf, "Left X", sizeof(buf));
+            m_str_copy(buf, "Left X", sizeof(buf));
             break;
 
         case SDL_CONTROLLER_AXIS_LEFTY:
-            M_StringCopy(buf, "Left Y", sizeof(buf));
+            m_str_copy(buf, "Left Y", sizeof(buf));
             break;
 
         case SDL_CONTROLLER_AXIS_RIGHTX:
-            M_StringCopy(buf, "Right X", sizeof(buf));
+            m_str_copy(buf, "Right X", sizeof(buf));
             break;
 
         case SDL_CONTROLLER_AXIS_RIGHTY:
-            M_StringCopy(buf, "Right Y", sizeof(buf));
+            m_str_copy(buf, "Right Y", sizeof(buf));
             break;
 
         default:
-            M_StringCopy(buf, "(unknown)", sizeof(buf));
+            m_str_copy(buf, "(unknown)", sizeof(buf));
             break;
     }
 }

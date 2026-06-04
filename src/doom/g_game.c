@@ -667,7 +667,7 @@ void G_DoLoadLevel (void)
     //  we look for an actual index, instead of simply
     //  setting one.
 
-    skyflatnum = R_FlatNumForName(DEH_String(SKYFLATNAME));
+    skyflatnum = R_FlatNumForName(deh_string(SKYFLATNAME));
 
     // The "Sky never changes in Doom II" bug was fixed in
     // the id Anthology version of doom2.exe for Final Doom.
@@ -689,7 +689,7 @@ void G_DoLoadLevel (void)
             skytexturename = "SKY3";
         }
 
-        skytexturename = DEH_String(skytexturename);
+        skytexturename = deh_string(skytexturename);
 
         skytexture = R_TextureNumForName(skytexturename);
     }
@@ -712,7 +712,7 @@ void G_DoLoadLevel (void)
     P_SetupLevel (gameepisode, gamemap, 0, gameskill);    
     displayplayer = consoleplayer;		// view the guy you are playing    
     gameaction = ga_nothing; 
-    Z_CheckHeap ();
+    z_check_heap ();
     
     // clear cmd building stuff
 
@@ -832,7 +832,7 @@ boolean G_Responder (event_t* ev)
 	    return true;	// chat ate the event 
 	if (ST_Responder (ev)) 
 	    return true;	// status window ate it 
-	if (AM_Responder (ev)) 
+	if (am_responder (ev)) 
 	    return true;	// automap ate it 
     } 
 	 
@@ -950,8 +950,8 @@ void G_Ticker (void)
 	    G_DoWorldDone (); 
 	    break; 
 	  case ga_screenshot: 
-	    V_ScreenShot("DOOM%02i.%s"); 
-            players[consoleplayer].message = DEH_String("screen shot");
+	    v_screenshot("DOOM%02i.%s"); 
+            players[consoleplayer].message = deh_string("screen shot");
 	    gameaction = ga_nothing; 
 	    break; 
 	  case ga_nothing: 
@@ -994,7 +994,7 @@ void G_Ticker (void)
              && turbodetected[i])
             {
                 static char turbomessage[80];
-                M_snprintf(turbomessage, sizeof(turbomessage),
+                m_snprintf(turbomessage, sizeof(turbomessage),
                            "%s is turbo!", player_names[i]);
                 players[consoleplayer].message = turbomessage;
                 turbodetected[i] = false;
@@ -1038,7 +1038,7 @@ void G_Ticker (void)
 		  case BTS_SAVEGAME: 
 		    if (!savedescription[0]) 
                     {
-                        M_StringCopy(savedescription, "NET GAME",
+                        m_str_copy(savedescription, "NET GAME",
                                      sizeof(savedescription));
                     }
 
@@ -1055,7 +1055,7 @@ void G_Ticker (void)
 
     if (oldgamestate == GS_INTERMISSION && gamestate != GS_INTERMISSION)
     {
-        WI_End();
+        wi_end();
     }
 
     oldgamestate = gamestate;
@@ -1066,12 +1066,12 @@ void G_Ticker (void)
       case GS_LEVEL: 
 	P_Ticker (); 
 	ST_Ticker (); 
-	AM_Ticker (); 
+	am_ticker (); 
 	HU_Ticker ();            
 	break; 
 	 
       case GS_INTERMISSION: 
-	WI_Ticker (); 
+	wi_ticker (); 
 	break; 
 			 
       case GS_FINALE: 
@@ -1426,7 +1426,7 @@ void G_DoCompleted (void)
 	    G_PlayerFinishLevel (i);        // take away cards and stuff 
 	 
     if (automapactive) 
-	AM_Stop (); 
+	am_stop (); 
 	
     if (gamemode != commercial)
     {
@@ -1536,7 +1536,7 @@ void G_DoCompleted (void)
         {
             int cpars32;
 
-            memcpy(&cpars32, DEH_String(GAMMALVL0), sizeof(int));
+            memcpy(&cpars32, deh_string(GAMMALVL0), sizeof(int));
             cpars32 = LONG(cpars32);
 
             wminfo.partime = TICRATE*cpars32;
@@ -1583,7 +1583,7 @@ void G_DoCompleted (void)
 
     StatCopy(&wminfo);
  
-    WI_Start (&wminfo); 
+    wi_start (&wminfo); 
 } 
 
 
@@ -1635,7 +1635,7 @@ char	savename[256];
 
 void G_LoadGame (char* name) 
 { 
-    M_StringCopy(savename, name, sizeof(savename));
+    m_str_copy(savename, name, sizeof(savename));
     gameaction = ga_loadgame; 
 } 
 
@@ -1645,7 +1645,7 @@ void G_DoLoadGame (void)
 	 
     gameaction = ga_nothing; 
 	 
-    save_stream = M_fopen(savename, "rb");
+    save_stream = m_fopen(savename, "rb");
 
     if (save_stream == NULL)
     {
@@ -1697,7 +1697,7 @@ G_SaveGame
   char*	description )
 {
     savegameslot = slot;
-    M_StringCopy(savedescription, description, sizeof(savedescription));
+    m_str_copy(savedescription, description, sizeof(savedescription));
     sendsave = true;
 }
 
@@ -1715,14 +1715,14 @@ void G_DoSaveGame (void)
     // and then rename it at the end if it was successfully written.
     // This prevents an existing savegame from being overwritten by
     // a corrupted one, or if a savegame buffer overrun occurs.
-    save_stream = M_fopen(temp_savegame_file, "wb");
+    save_stream = m_fopen(temp_savegame_file, "wb");
 
     if (save_stream == NULL)
     {
         // Failed to save the game, so we're going to have to abort. But
         // to be nice, save to somewhere else before we call I_Error().
-        recovery_savegame_file = M_TempFile("recovery.dsg");
-        save_stream = M_fopen(recovery_savegame_file, "wb");
+        recovery_savegame_file = m_temp_file("recovery.dsg");
+        save_stream = m_fopen(recovery_savegame_file, "wb");
         if (save_stream == NULL)
         {
             I_Error("Failed to open either '%s' or '%s' to write savegame.",
@@ -1766,13 +1766,13 @@ void G_DoSaveGame (void)
     // Now rename the temporary savegame file to the actual savegame
     // file, overwriting the old savegame if there was one there.
 
-    M_remove(savegame_file);
-    M_rename(temp_savegame_file, savegame_file);
+    m_remove(savegame_file);
+    m_rename(temp_savegame_file, savegame_file);
 
     gameaction = ga_nothing;
-    M_StringCopy(savedescription, "", sizeof(savedescription));
+    m_str_copy(savedescription, "", sizeof(savedescription));
 
-    players[consoleplayer].message = DEH_String(GGSAVED);
+    players[consoleplayer].message = deh_string(GGSAVED);
 
     // draw the pattern into the back screen
     R_FillBackScreen ();
@@ -1947,11 +1947,11 @@ G_InitNew
 
     if (gamemode == commercial)
     {
-        skytexturename = DEH_String("SKY3");
+        skytexturename = deh_string("SKY3");
         skytexture = R_TextureNumForName(skytexturename);
         if (gamemap < 21)
         {
-            skytexturename = DEH_String(gamemap < 12 ? "SKY1" : "SKY2");
+            skytexturename = deh_string(gamemap < 12 ? "SKY1" : "SKY2");
             skytexture = R_TextureNumForName(skytexturename);
         }
     }
@@ -1973,7 +1973,7 @@ G_InitNew
             skytexturename = "SKY4";
             break;
         }
-        skytexturename = DEH_String(skytexturename);
+        skytexturename = deh_string(skytexturename);
         skytexture = R_TextureNumForName(skytexturename);
     }
 
@@ -2029,7 +2029,7 @@ static void IncreaseDemoBuffer(void)
     // Generate a new buffer twice the size
     new_length = current_length * 2;
     
-    new_demobuffer = Z_Malloc(new_length, PU_STATIC, 0);
+    new_demobuffer = z_malloc(new_length, PU_STATIC, 0);
     new_demop = new_demobuffer + (demo_p - demobuffer);
 
     // Copy over the old data
@@ -2038,7 +2038,7 @@ static void IncreaseDemoBuffer(void)
 
     // Free the old buffer and point the demo pointers at the new buffer.
 
-    Z_Free(demobuffer);
+    z_free(demobuffer);
 
     demobuffer = new_demobuffer;
     demo_p = new_demop;
@@ -2107,8 +2107,8 @@ void G_RecordDemo (const char *name)
 
     usergame = false;
     demoname_size = strlen(name) + 5;
-    demoname = Z_Malloc(demoname_size, PU_STATIC, NULL);
-    M_snprintf(demoname, demoname_size, "%s.lmp", name);
+    demoname = z_malloc(demoname_size, PU_STATIC, NULL);
+    m_snprintf(demoname, demoname_size, "%s.lmp", name);
     maxsize = 0x20000;
 
     //!
@@ -2119,10 +2119,10 @@ void G_RecordDemo (const char *name)
     // Specify the demo buffer size (KiB)
     //
 
-    i = M_CheckParmWithArgs("-maxdemo", 1);
+    i = m_check_parm_with_args("-maxdemo", 1);
     if (i)
 	maxsize = atoi(myargv[i+1])*1024;
-    demobuffer = Z_Malloc (maxsize,PU_STATIC,NULL); 
+    demobuffer = z_malloc (maxsize,PU_STATIC,NULL); 
     demoend = demobuffer + maxsize;
 	
     demorecording = true; 
@@ -2157,7 +2157,7 @@ void G_BeginRecording (void)
     // Record a high resolution "Doom 1.91" demo.
     //
 
-    longtics = D_NonVanillaRecord(M_ParmExists("-longtics"),
+    longtics = D_NonVanillaRecord(m_parm_exists("-longtics"),
                                   "Doom 1.91 demo format");
 
     // If not recording a longtics demo, record in low res
@@ -2236,7 +2236,7 @@ static const char *DemoVersionDescription(int version)
     }
     else
     {
-        M_snprintf(resultbuf, sizeof(resultbuf),
+        m_snprintf(resultbuf, sizeof(resultbuf),
                    "%i.%i (unknown)", version / 100, version % 100);
         return resultbuf;
     }
@@ -2311,8 +2311,8 @@ void G_DoPlayDemo (void)
     for (i=0 ; i<MAXPLAYERS ; i++) 
 	playeringame[i] = *demo_p++; 
 
-    if (playeringame[1] || M_CheckParm("-solo-net") > 0
-                        || M_CheckParm("-netdemo") > 0)
+    if (playeringame[1] || m_check_parm("-solo-net") > 0
+                        || m_check_parm("-netdemo") > 0)
     {
 	netgame = true;
 	netdemo = true;
@@ -2340,7 +2340,7 @@ void G_TimeDemo (char* name)
     // Disable rendering the screen entirely.
     //
 
-    nodrawers = M_CheckParm ("-nodraw");
+    nodrawers = m_check_parm ("-nodraw");
 
     timingdemo = true; 
     singletics = true; 
@@ -2405,8 +2405,8 @@ boolean G_CheckDemoStatus (void)
     if (demorecording) 
     { 
 	*demo_p++ = DEMOMARKER; 
-	M_WriteFile (demoname, demobuffer, demo_p - demobuffer); 
-	Z_Free (demobuffer); 
+	m_write_file (demoname, demobuffer, demo_p - demobuffer); 
+	z_free (demobuffer); 
 	demorecording = false; 
 	I_Error ("Demo %s recorded",demoname); 
     } 

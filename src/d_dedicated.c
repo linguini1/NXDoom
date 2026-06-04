@@ -40,7 +40,7 @@ void D_DoomMain(void)
 {
     printf(PACKAGE_NAME " standalone dedicated server\n");
 
-    Z_Init();
+    z_init();
 
     NET_DedicatedServer();
 }

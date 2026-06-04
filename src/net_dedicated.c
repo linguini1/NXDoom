@@ -50,7 +50,7 @@ static void CheckForClientOptions(void)
 
     for (i=0; not_dedicated_options[i] != NULL; ++i)
     {
-        if (M_CheckParm(not_dedicated_options[i]) > 0)
+        if (m_check_parm(not_dedicated_options[i]) > 0)
         {
             I_Error("The command line parameter '%s' was specified to a "
                     "dedicated server.\nGame parameters should be specified "

@@ -1,19 +1,23 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//    Exit text-mode ENDOOM screen.
-//
+/*
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *    Exit text-mode ENDOOM screen.
+ */
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <string.h>
@@ -24,12 +28,24 @@
 
 #include "txt_main.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
 #define ENDOOM_W 80
 #define ENDOOM_H 25
 
-// 
-// Displays the text mode ending screen after the game quits
-//
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/****************************************************************************
+ * Name: I_Endoom
+ *
+ * Description:
+ *  Displays the text mode ending screen after the game quits
+ *
+ ****************************************************************************/
 
 void I_Endoom(byte *endoom_data)
 {
@@ -37,15 +53,15 @@ void I_Endoom(byte *endoom_data)
     int y;
     int indent;
 
-    // Set up text mode screen
+    /* Set up text mode screen */
 
     TXT_Init();
 
     TXT_SetWindowTitle(PACKAGE_STRING);
-    // SDL2-TODO I_InitWindowTitle();
-    // SDL2-TODO I_InitWindowIcon();
+    // SDL2-TODO i_init_window_title();
+    // SDL2-TODO i_init_window_icon();
 
-    // Write the data to the screen memory
+    /* Write the data to the screen memory */
 
     screendata = TXT_GetScreenData();
 
@@ -58,7 +74,7 @@ void I_Endoom(byte *endoom_data)
                TXT_SCREEN_W * 2);
     }
 
-    // Wait for a keypress
+    /* Wait for a keypress */
 
     while (true)
     {
@@ -72,8 +88,7 @@ void I_Endoom(byte *endoom_data)
         TXT_Sleep(0);
     }
 
-    // Shut down text mode screen
+    /* Shut down text mode screen */
 
     TXT_Shutdown();
 }
-

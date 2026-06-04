@@ -43,7 +43,7 @@ typedef enum
     //           Not affected by modifier keys.
     //    data3: ASCII input, fully modified according to keyboard
     //           layout and any modifier keys that are held down.
-    //           Only set if I_StartTextInput() has been called.
+    //           Only set if i_start_text_input() has been called.
     ev_keydown,
     ev_keyup,
 

@@ -600,7 +600,7 @@ midi_file_t *MIDI_LoadFile(char *filename)
 
     // Open file
 
-    stream = M_fopen(filename, "rb");
+    stream = m_fopen(filename, "rb");
 
     if (stream == NULL)
     {

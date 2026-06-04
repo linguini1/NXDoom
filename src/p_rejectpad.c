@@ -67,7 +67,7 @@ void PadRejectArray(byte *array, unsigned int len, int totallines)
 
         // Pad remaining space with 0 (or 0xff, if specified on command line).
 
-        if (M_CheckParm("-reject_pad_with_ff"))
+        if (m_check_parm("-reject_pad_with_ff"))
         {
             padvalue = 0xff;
         }

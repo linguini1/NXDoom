@@ -360,7 +360,7 @@ static void DEH_BEXStrParseLine(deh_context_t *context, char *line, void *tag)
     {
 	if (!strcmp(bex_stringtable[i].macro, variable_name))
 	{
-	    DEH_AddStringReplacement(bex_stringtable[i].string, value);
+	    deh_add_string_replacement(bex_stringtable[i].string, value);
 	}
     }
 }

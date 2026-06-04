@@ -91,7 +91,7 @@ static void DEH_Init(void)
     // Ignore cheats in dehacked files.
     //
 
-    if (M_CheckParm("-nocheats") > 0) 
+    if (m_check_parm("-nocheats") > 0) 
     {
 	deh_apply_cheats = false;
     }
@@ -501,7 +501,7 @@ void DEH_ParseCommandLine(void)
     // Load the given dehacked patch(es)
     //
 
-    p = M_CheckParm("-deh");
+    p = m_check_parm("-deh");
 
     if (p > 0)
     {

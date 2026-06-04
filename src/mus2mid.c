@@ -710,9 +710,9 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    Z_Init();
+    z_init();
 
-    infile_len = M_ReadFile(argv[1], &infile);
+    infile_len = m_read_file(argv[1], &infile);
 
     src = mem_fopen_read(infile, infile_len);
     dst = mem_fopen_write();
@@ -727,7 +727,7 @@ int main(int argc, char *argv[])
 
     mem_get_buf(dst, &outfile, &outfile_len);
 
-    M_WriteFile(argv[2], outfile, outfile_len);
+    m_write_file(argv[2], outfile, outfile_len);
 
     return 0;
 }
