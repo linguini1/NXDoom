@@ -219,7 +219,7 @@ boolean I_ConsoleStdout(void)
 void I_Init (void)
 {
     i_check_is_screensaver();
-    I_InitTimer();
+    i_init_timer();
     I_InitJoystick();
 }
 void I_BindVariables(void)
@@ -291,7 +291,7 @@ void I_Error (const char *error, ...)
     // Write a copy of the message into buffer.
     va_start(argptr, error);
     memset(msgbuf, 0, sizeof(msgbuf));
-    m_vsprintf(msgbuf, sizeof(msgbuf), error, argptr);
+    vsnprintf(msgbuf, sizeof(msgbuf), error, argptr);
     va_end(argptr);
 
     // Shutdown. Here might be other errors.

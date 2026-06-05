@@ -69,7 +69,7 @@ static void PlayerQuitGame(player_t *player)
    * replacements of this message
    */
 
-  m_str_copy(exitmsg, deh_string("Player 1 left the game"),
+  m_str_copy(exitmsg, ("Player 1 left the game"),
                sizeof(exitmsg));
 
   exitmsg[7] += player_num;
@@ -286,11 +286,11 @@ void D_CheckNetGame(void)
   D_StartNetGame(&settings, NULL);
   LoadGameSettings(&settings);
 
-  deh_printf(
+  printf(
       "startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",
       startskill, deathmatch, startmap, startepisode);
 
-  deh_printf("player %i of %i (%i nodes)\n", consoleplayer + 1,
+  printf("player %i of %i (%i nodes)\n", consoleplayer + 1,
              settings.num_players, settings.num_players);
 
   /* Show players here; the server might have specified a time limit */
@@ -301,12 +301,12 @@ void D_CheckNetGame(void)
 
       if (timelimit == 20 && m_check_parm("-avg"))
         {
-          deh_printf("Austin Virtual Gaming: Levels will end "
+          printf("Austin Virtual Gaming: Levels will end "
                      "after 20 minutes\n");
         }
       else
         {
-          deh_printf("Levels will end after %d minute", timelimit);
+          printf("Levels will end after %d minute", timelimit);
           if (timelimit > 1) printf("s");
           printf(".\n");
         }

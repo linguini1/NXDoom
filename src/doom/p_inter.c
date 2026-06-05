@@ -370,13 +370,13 @@ P_TouchSpecialThing
       case SPR_ARM1:
 	if (!P_GiveArmor (player, deh_green_armor_class))
 	    return;
-	player->message = deh_string(GOTARMOR);
+	player->message = (GOTARMOR);
 	break;
 		
       case SPR_ARM2:
 	if (!P_GiveArmor (player, deh_blue_armor_class))
 	    return;
-	player->message = deh_string(GOTMEGA);
+	player->message = (GOTMEGA);
 	break;
 	
 	// bonus items
@@ -385,7 +385,7 @@ P_TouchSpecialThing
 	if (player->health > deh_max_health)
 	    player->health = deh_max_health;
 	player->mo->health = player->health;
-	player->message = deh_string(GOTHTHBONUS);
+	player->message = (GOTHTHBONUS);
 	break;
 	
       case SPR_BON2:
@@ -396,7 +396,7 @@ P_TouchSpecialThing
         // for the armor helmets, armortype 1 is always used.
 	if (!player->armortype)
 	    player->armortype = 1;
-	player->message = deh_string(GOTARMBONUS);
+	player->message = (GOTARMBONUS);
 	break;
 	
       case SPR_SOUL:
@@ -404,7 +404,7 @@ P_TouchSpecialThing
 	if (player->health > deh_max_soulsphere)
 	    player->health = deh_max_soulsphere;
 	player->mo->health = player->health;
-	player->message = deh_string(GOTSUPER);
+	player->message = (GOTSUPER);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
@@ -420,7 +420,7 @@ P_TouchSpecialThing
         // We always give armor type 2 for the megasphere; dehacked only 
         // affects the MegaArmor.
 	P_GiveArmor (player, 2);
-	player->message = deh_string(GOTMSPHERE);
+	player->message = (GOTMSPHERE);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
@@ -431,7 +431,7 @@ P_TouchSpecialThing
 	// leave cards for everyone
       case SPR_BKEY:
 	if (!player->cards[it_bluecard])
-	    player->message = deh_string(GOTBLUECARD);
+	    player->message = (GOTBLUECARD);
 	P_GiveCard (player, it_bluecard);
 	if (!netgame)
 	    break;
@@ -439,7 +439,7 @@ P_TouchSpecialThing
 	
       case SPR_YKEY:
 	if (!player->cards[it_yellowcard])
-	    player->message = deh_string(GOTYELWCARD);
+	    player->message = (GOTYELWCARD);
 	P_GiveCard (player, it_yellowcard);
 	if (!netgame)
 	    break;
@@ -447,7 +447,7 @@ P_TouchSpecialThing
 	
       case SPR_RKEY:
 	if (!player->cards[it_redcard])
-	    player->message = deh_string(GOTREDCARD);
+	    player->message = (GOTREDCARD);
 	P_GiveCard (player, it_redcard);
 	if (!netgame)
 	    break;
@@ -455,7 +455,7 @@ P_TouchSpecialThing
 	
       case SPR_BSKU:
 	if (!player->cards[it_blueskull])
-	    player->message = deh_string(GOTBLUESKUL);
+	    player->message = (GOTBLUESKUL);
 	P_GiveCard (player, it_blueskull);
 	if (!netgame)
 	    break;
@@ -463,7 +463,7 @@ P_TouchSpecialThing
 	
       case SPR_YSKU:
 	if (!player->cards[it_yellowskull])
-	    player->message = deh_string(GOTYELWSKUL);
+	    player->message = (GOTYELWSKUL);
 	P_GiveCard (player, it_yellowskull);
 	if (!netgame)
 	    break;
@@ -471,7 +471,7 @@ P_TouchSpecialThing
 	
       case SPR_RSKU:
 	if (!player->cards[it_redskull])
-	    player->message = deh_string(GOTREDSKULL);
+	    player->message = (GOTREDSKULL);
 	P_GiveCard (player, it_redskull);
 	if (!netgame)
 	    break;
@@ -481,7 +481,7 @@ P_TouchSpecialThing
       case SPR_STIM:
 	if (!P_GiveBody (player, 10))
 	    return;
-	player->message = deh_string(GOTSTIM);
+	player->message = (GOTSTIM);
 	break;
 	
       case SPR_MEDI:
@@ -489,9 +489,9 @@ P_TouchSpecialThing
 	    return;
 
 	if (player->health < 25)
-	    player->message = deh_string(GOTMEDINEED);
+	    player->message = (GOTMEDINEED);
 	else
-	    player->message = deh_string(GOTMEDIKIT);
+	    player->message = (GOTMEDIKIT);
 	break;
 
 	
@@ -499,7 +499,7 @@ P_TouchSpecialThing
       case SPR_PINV:
 	if (!P_GivePower (player, pw_invulnerability))
 	    return;
-	player->message = deh_string(GOTINVUL);
+	player->message = (GOTINVUL);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
@@ -509,7 +509,7 @@ P_TouchSpecialThing
       case SPR_PSTR:
 	if (!P_GivePower (player, pw_strength))
 	    return;
-	player->message = deh_string(GOTBERSERK);
+	player->message = (GOTBERSERK);
 	if (player->readyweapon != wp_fist)
 	    player->pendingweapon = wp_fist;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -521,7 +521,7 @@ P_TouchSpecialThing
       case SPR_PINS:
 	if (!P_GivePower (player, pw_invisibility))
 	    return;
-	player->message = deh_string(GOTINVIS);
+	player->message = (GOTINVIS);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
@@ -531,7 +531,7 @@ P_TouchSpecialThing
       case SPR_SUIT:
 	if (!P_GivePower (player, pw_ironfeet))
 	    return;
-	player->message = deh_string(GOTSUIT);
+	player->message = (GOTSUIT);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
@@ -541,7 +541,7 @@ P_TouchSpecialThing
       case SPR_PMAP:
 	if (!P_GivePower (player, pw_allmap))
 	    return;
-	player->message = deh_string(GOTMAP);
+	player->message = (GOTMAP);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
@@ -551,7 +551,7 @@ P_TouchSpecialThing
       case SPR_PVIS:
 	if (!P_GivePower (player, pw_infrared))
 	    return;
-	player->message = deh_string(GOTVISOR);
+	player->message = (GOTVISOR);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gameversion > exe_doom_1_2)
 	    sound = sfx_getpow;
@@ -570,49 +570,49 @@ P_TouchSpecialThing
 	    if (!P_GiveAmmo (player,am_clip,1))
 		return;
 	}
-	player->message = deh_string(GOTCLIP);
+	player->message = (GOTCLIP);
 	break;
 	
       case SPR_AMMO:
 	if (!P_GiveAmmo (player, am_clip,5))
 	    return;
-	player->message = deh_string(GOTCLIPBOX);
+	player->message = (GOTCLIPBOX);
 	break;
 	
       case SPR_ROCK:
 	if (!P_GiveAmmo (player, am_misl,1))
 	    return;
-	player->message = deh_string(GOTROCKET);
+	player->message = (GOTROCKET);
 	break;
 	
       case SPR_BROK:
 	if (!P_GiveAmmo (player, am_misl,5))
 	    return;
-	player->message = deh_string(GOTROCKBOX);
+	player->message = (GOTROCKBOX);
 	break;
 	
       case SPR_CELL:
 	if (!P_GiveAmmo (player, am_cell,1))
 	    return;
-	player->message = deh_string(GOTCELL);
+	player->message = (GOTCELL);
 	break;
 	
       case SPR_CELP:
 	if (!P_GiveAmmo (player, am_cell,5))
 	    return;
-	player->message = deh_string(GOTCELLBOX);
+	player->message = (GOTCELLBOX);
 	break;
 	
       case SPR_SHEL:
 	if (!P_GiveAmmo (player, am_shell,1))
 	    return;
-	player->message = deh_string(GOTSHELLS);
+	player->message = (GOTSHELLS);
 	break;
 	
       case SPR_SBOX:
 	if (!P_GiveAmmo (player, am_shell,5))
 	    return;
-	player->message = deh_string(GOTSHELLBOX);
+	player->message = (GOTSHELLBOX);
 	break;
 	
       case SPR_BPAK:
@@ -624,14 +624,14 @@ P_TouchSpecialThing
 	}
 	for (i=0 ; i<NUMAMMO ; i++)
 	    P_GiveAmmo (player, i, 1);
-	player->message = deh_string(GOTBACKPACK);
+	player->message = (GOTBACKPACK);
 	break;
 	
 	// weapons
       case SPR_BFUG:
 	if (!P_GiveWeapon (player, wp_bfg, false) )
 	    return;
-	player->message = deh_string(GOTBFG9000);
+	player->message = (GOTBFG9000);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
 #endif
@@ -641,7 +641,7 @@ P_TouchSpecialThing
         if (!P_GiveWeapon(player, wp_chaingun,
                           (special->flags & MF_DROPPED) != 0))
             return;
-	player->message = deh_string(GOTCHAINGUN);
+	player->message = (GOTCHAINGUN);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
 #endif
@@ -650,7 +650,7 @@ P_TouchSpecialThing
       case SPR_CSAW:
 	if (!P_GiveWeapon (player, wp_chainsaw, false) )
 	    return;
-	player->message = deh_string(GOTCHAINSAW);
+	player->message = (GOTCHAINSAW);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
 #endif
@@ -659,7 +659,7 @@ P_TouchSpecialThing
       case SPR_LAUN:
 	if (!P_GiveWeapon (player, wp_missile, false) )
 	    return;
-	player->message = deh_string(GOTLAUNCHER);
+	player->message = (GOTLAUNCHER);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
 #endif
@@ -668,7 +668,7 @@ P_TouchSpecialThing
       case SPR_PLAS:
 	if (!P_GiveWeapon (player, wp_plasma, false) )
 	    return;
-	player->message = deh_string(GOTPLASMA);
+	player->message = (GOTPLASMA);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
 #endif
@@ -678,7 +678,7 @@ P_TouchSpecialThing
         if (!P_GiveWeapon(player, wp_shotgun,
                           (special->flags & MF_DROPPED) != 0))
             return;
-	player->message = deh_string(GOTSHOTGUN);
+	player->message = (GOTSHOTGUN);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
 #endif
@@ -688,7 +688,7 @@ P_TouchSpecialThing
         if (!P_GiveWeapon(player, wp_supershotgun,
                           (special->flags & MF_DROPPED) != 0))
             return;
-	player->message = deh_string(GOTSHOTGUN2);
+	player->message = (GOTSHOTGUN2);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	sound = sfx_wpnup;	
 #endif

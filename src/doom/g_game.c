@@ -667,7 +667,7 @@ void G_DoLoadLevel (void)
     //  we look for an actual index, instead of simply
     //  setting one.
 
-    skyflatnum = R_FlatNumForName(deh_string(SKYFLATNAME));
+    skyflatnum = R_FlatNumForName((SKYFLATNAME));
 
     // The "Sky never changes in Doom II" bug was fixed in
     // the id Anthology version of doom2.exe for Final Doom.
@@ -689,7 +689,7 @@ void G_DoLoadLevel (void)
             skytexturename = "SKY3";
         }
 
-        skytexturename = deh_string(skytexturename);
+        skytexturename = (skytexturename);
 
         skytexture = R_TextureNumForName(skytexturename);
     }
@@ -813,7 +813,7 @@ boolean G_Responder (event_t* ev)
 	    (ev->type == ev_joystick && ev->data1) ) 
 	{ 
 	    M_StartControlPanel (); 
-	    joywait = I_GetTime() + 5;
+	    joywait = i_get_time() + 5;
 	    return true; 
 	} 
 	return false; 
@@ -951,7 +951,7 @@ void G_Ticker (void)
 	    break; 
 	  case ga_screenshot: 
 	    v_screenshot("DOOM%02i.%s"); 
-            players[consoleplayer].message = deh_string("screen shot");
+            players[consoleplayer].message = ("screen shot");
 	    gameaction = ga_nothing; 
 	    break; 
 	  case ga_nothing: 
@@ -994,7 +994,7 @@ void G_Ticker (void)
              && turbodetected[i])
             {
                 static char turbomessage[80];
-                m_snprintf(turbomessage, sizeof(turbomessage),
+                snprintf(turbomessage, sizeof(turbomessage),
                            "%s is turbo!", player_names[i]);
                 players[consoleplayer].message = turbomessage;
                 turbodetected[i] = false;
@@ -1536,7 +1536,7 @@ void G_DoCompleted (void)
         {
             int cpars32;
 
-            memcpy(&cpars32, deh_string(GAMMALVL0), sizeof(int));
+            memcpy(&cpars32, (GAMMALVL0), sizeof(int));
             cpars32 = LONG(cpars32);
 
             wminfo.partime = TICRATE*cpars32;
@@ -1645,7 +1645,7 @@ void G_DoLoadGame (void)
 	 
     gameaction = ga_nothing; 
 	 
-    save_stream = m_fopen(savename, "rb");
+    save_stream = fopen(savename, "rb");
 
     if (save_stream == NULL)
     {
@@ -1715,14 +1715,14 @@ void G_DoSaveGame (void)
     // and then rename it at the end if it was successfully written.
     // This prevents an existing savegame from being overwritten by
     // a corrupted one, or if a savegame buffer overrun occurs.
-    save_stream = m_fopen(temp_savegame_file, "wb");
+    save_stream = fopen(temp_savegame_file, "wb");
 
     if (save_stream == NULL)
     {
         // Failed to save the game, so we're going to have to abort. But
         // to be nice, save to somewhere else before we call I_Error().
         recovery_savegame_file = m_temp_file("recovery.dsg");
-        save_stream = m_fopen(recovery_savegame_file, "wb");
+        save_stream = fopen(recovery_savegame_file, "wb");
         if (save_stream == NULL)
         {
             I_Error("Failed to open either '%s' or '%s' to write savegame.",
@@ -1766,13 +1766,13 @@ void G_DoSaveGame (void)
     // Now rename the temporary savegame file to the actual savegame
     // file, overwriting the old savegame if there was one there.
 
-    m_remove(savegame_file);
-    m_rename(temp_savegame_file, savegame_file);
+    remove(savegame_file);
+    rename(temp_savegame_file, savegame_file);
 
     gameaction = ga_nothing;
     m_str_copy(savedescription, "", sizeof(savedescription));
 
-    players[consoleplayer].message = deh_string(GGSAVED);
+    players[consoleplayer].message = (GGSAVED);
 
     // draw the pattern into the back screen
     R_FillBackScreen ();
@@ -1947,11 +1947,11 @@ G_InitNew
 
     if (gamemode == commercial)
     {
-        skytexturename = deh_string("SKY3");
+        skytexturename = ("SKY3");
         skytexture = R_TextureNumForName(skytexturename);
         if (gamemap < 21)
         {
-            skytexturename = deh_string(gamemap < 12 ? "SKY1" : "SKY2");
+            skytexturename = (gamemap < 12 ? "SKY1" : "SKY2");
             skytexture = R_TextureNumForName(skytexturename);
         }
     }
@@ -1973,7 +1973,7 @@ G_InitNew
             skytexturename = "SKY4";
             break;
         }
-        skytexturename = deh_string(skytexturename);
+        skytexturename = (skytexturename);
         skytexture = R_TextureNumForName(skytexturename);
     }
 
@@ -2108,7 +2108,7 @@ void G_RecordDemo (const char *name)
     usergame = false;
     demoname_size = strlen(name) + 5;
     demoname = z_malloc(demoname_size, PU_STATIC, NULL);
-    m_snprintf(demoname, demoname_size, "%s.lmp", name);
+    snprintf(demoname, demoname_size, "%s.lmp", name);
     maxsize = 0x20000;
 
     //!
@@ -2236,7 +2236,7 @@ static const char *DemoVersionDescription(int version)
     }
     else
     {
-        m_snprintf(resultbuf, sizeof(resultbuf),
+        snprintf(resultbuf, sizeof(resultbuf),
                    "%i.%i (unknown)", version / 100, version % 100);
         return resultbuf;
     }
@@ -2322,7 +2322,7 @@ void G_DoPlayDemo (void)
     precache = false;
     G_InitNew (skill, episode, map); 
     precache = true; 
-    starttime = I_GetTime (); 
+    starttime = i_get_time (); 
 
     usergame = false; 
     demoplayback = true; 
@@ -2369,7 +2369,7 @@ boolean G_CheckDemoStatus (void)
         float fps;
         int realtics;
 
-	endtime = I_GetTime (); 
+	endtime = i_get_time (); 
         realtics = endtime - starttime;
         fps = ((float) gametic * TICRATE) / realtics;
 

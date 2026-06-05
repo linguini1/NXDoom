@@ -115,6 +115,7 @@ void S_Init(int sfxVolume, int musicVolume)
 {
     int i;
 
+#if 0
     if (gameversion == exe_doom_1_666)
     {
         if (logical_gamemission == doom)
@@ -130,6 +131,7 @@ void S_Init(int sfxVolume, int musicVolume)
     {
         I_SetOPLDriverVer(opl_doom_1_9);
     }
+#endif
 
     I_PrecacheSounds(S_sfx, NUMSFX);
 
@@ -687,7 +689,7 @@ void S_ChangeMusic(int musicnum, int looping)
     // get lumpnum if neccessary
     if (!music->lumpnum)
     {
-        m_snprintf(namebuf, sizeof(namebuf), "d_%s", deh_string(music->name));
+        snprintf(namebuf, sizeof(namebuf), "d_%s", (music->name));
         music->lumpnum = w_get_num_for_name(namebuf);
     }
 

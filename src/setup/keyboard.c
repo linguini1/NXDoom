@@ -176,7 +176,7 @@ static void AddSectionLabel(TXT_UNCAST_ARG(table), const char *title,
                        NULL);
     }
 
-    m_snprintf(buf, sizeof(buf), " - %s - ", title);
+    snprintf(buf, sizeof(buf), " - %s - ", title);
 
     TXT_AddWidgets(table,
                    TXT_NewLabel(buf),

@@ -442,7 +442,8 @@ static int sp_state;
 
 static void WI_loadUnloadData(load_callback_t callback)
 {
-  int i, j;
+  int8_t i;
+  int8_t j;
   char name[9];
   anim_t *a;
 
@@ -450,7 +451,7 @@ static void WI_loadUnloadData(load_callback_t callback)
     {
       for (i = 0; i < NUMCMAPS; i++)
         {
-          deh_snprintf(name, 9, "CWILV%2.2d", i);
+          snprintf(name, sizeof(name), "CWILV%2.2d", i);
           callback(name, &lnames[i]);
         }
     }
@@ -458,21 +459,21 @@ static void WI_loadUnloadData(load_callback_t callback)
     {
       for (i = 0; i < NUMMAPS; i++)
         {
-          deh_snprintf(name, 9, "WILV%d%d", wbs->epsd, i);
+          snprintf(name, sizeof(name), "WILV%d%d", wbs->epsd, i);
           callback(name, &lnames[i]);
         }
 
       /* you are here */
 
-      callback(deh_string("WIURH0"), &yah[0]);
+      callback(("WIURH0"), &yah[0]);
 
       /* you are here (alt.) */
 
-      callback(deh_string("WIURH1"), &yah[1]);
+      callback(("WIURH1"), &yah[1]);
 
       /* splat */
 
-      callback(deh_string("WISPLAT"), &splat[0]);
+      callback(("WISPLAT"), &splat[0]);
 
       if (wbs->epsd < 3)
         {
@@ -487,7 +488,8 @@ static void WI_loadUnloadData(load_callback_t callback)
                     {
                       /* animations */
 
-                      deh_snprintf(name, 9, "WIA%d%.2d%.2d", wbs->epsd, j, i);
+                      snprintf(name, sizeof(name), "WIA%d%.2d%.2d", wbs->epsd,
+                               j, i);
                       callback(name, &a->p[i]);
                     }
                   else
@@ -503,8 +505,8 @@ static void WI_loadUnloadData(load_callback_t callback)
 
   /* More hacks on minus sign. */
 
-  if (w_check_num_for_name(deh_string("WIMINUS")) > 0)
-    callback(deh_string("WIMINUS"), &wiminus);
+  if (w_check_num_for_name(("WIMINUS")) > 0)
+    callback(("WIMINUS"), &wiminus);
   else
     wiminus = NULL;
 
@@ -512,92 +514,92 @@ static void WI_loadUnloadData(load_callback_t callback)
     {
       /* numbers 0-9 */
 
-      deh_snprintf(name, 9, "WINUM%d", i);
+      snprintf(name, sizeof(name), "WINUM%d", i);
       callback(name, &num[i]);
     }
 
   /* percent sign */
 
-  callback(deh_string("WIPCNT"), &percent);
+  callback(("WIPCNT"), &percent);
 
   /* "finished" */
 
-  callback(deh_string("WIF"), &finished);
+  callback(("WIF"), &finished);
 
   /* "entering" */
 
-  callback(deh_string("WIENTER"), &entering);
+  callback(("WIENTER"), &entering);
 
   /* "kills" */
 
-  callback(deh_string("WIOSTK"), &kills);
+  callback(("WIOSTK"), &kills);
 
   /* "scrt" */
 
-  callback(deh_string("WIOSTS"), &secret);
+  callback(("WIOSTS"), &secret);
 
   /* "secret" */
 
-  callback(deh_string("WISCRT2"), &sp_secret);
+  callback(("WISCRT2"), &sp_secret);
 
   /* french wad uses WIOBJ (?) */
 
-  if (w_check_num_for_name(deh_string("WIOBJ")) >= 0)
+  if (w_check_num_for_name(("WIOBJ")) >= 0)
     {
       /* "items" */
 
       if (netgame && !deathmatch)
-        callback(deh_string("WIOBJ"), &items);
+        callback(("WIOBJ"), &items);
       else
-        callback(deh_string("WIOSTI"), &items);
+        callback(("WIOSTI"), &items);
     }
   else
     {
-      callback(deh_string("WIOSTI"), &items);
+      callback(("WIOSTI"), &items);
     }
 
   /* "frgs" */
 
-  callback(deh_string("WIFRGS"), &frags);
+  callback(("WIFRGS"), &frags);
 
   /* ":" */
 
-  callback(deh_string("WICOLON"), &colon);
+  callback(("WICOLON"), &colon);
 
   /* "time" */
 
-  callback(deh_string("WITIME"), &timepatch);
+  callback(("WITIME"), &timepatch);
 
   /* "sucks" */
 
-  callback(deh_string("WISUCKS"), &sucks);
+  callback(("WISUCKS"), &sucks);
 
   /* "par" */
 
-  callback(deh_string("WIPAR"), &par);
+  callback(("WIPAR"), &par);
 
   /* "killers" (vertical) */
 
-  callback(deh_string("WIKILRS"), &killers);
+  callback(("WIKILRS"), &killers);
 
   /* "victims" (horiz) */
 
-  callback(deh_string("WIVCTMS"), &victims);
+  callback(("WIVCTMS"), &victims);
 
   /* "total" */
 
-  callback(deh_string("WIMSTT"), &total);
+  callback(("WIMSTT"), &total);
 
   for (i = 0; i < MAXPLAYERS; i++)
     {
       /* "1,2,3,4" */
 
-      deh_snprintf(name, 9, "STPB%d", i);
+      snprintf(name, sizeof(name), "STPB%d", i);
       callback(name, &p[i]);
 
       /* "1,2,3,4" */
 
-      deh_snprintf(name, 9, "WIBP%d", i + 1);
+      snprintf(name, sizeof(name), "WIBP%d", i + 1);
       callback(name, &bp[i]);
     }
 
@@ -605,15 +607,15 @@ static void WI_loadUnloadData(load_callback_t callback)
 
   if (gamemode == commercial)
     {
-      m_str_copy(name, deh_string("INTERPIC"), sizeof(name));
+      m_str_copy(name, ("INTERPIC"), sizeof(name));
     }
   else if (gameversion >= exe_ultimate && wbs->epsd == 3)
     {
-      m_str_copy(name, deh_string("INTERPIC"), sizeof(name));
+      m_str_copy(name, ("INTERPIC"), sizeof(name));
     }
   else
     {
-      deh_snprintf(name, sizeof(name), "WIMAP%d", wbs->epsd);
+      snprintf(name, sizeof(name), "WIMAP%d", wbs->epsd);
     }
 
   /* Draw backdrop and save to a temporary buffer */
@@ -1764,11 +1766,11 @@ void WI_loadData(void)
 
   /* your face */
 
-  star = w_cache_lump_name(deh_string("STFST01"), PU_STATIC);
+  star = w_cache_lump_name(("STFST01"), PU_STATIC);
 
   /* dead face */
 
-  bstar = w_cache_lump_name(deh_string("STFDEAD0"), PU_STATIC);
+  bstar = w_cache_lump_name(("STFDEAD0"), PU_STATIC);
 }
 
 void WI_unloadData(void)

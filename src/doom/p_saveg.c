@@ -67,8 +67,8 @@ char *P_SaveGameFile(int slot)
         filename = malloc(filename_size);
     }
 
-    deh_snprintf(basename, 32, SAVEGAMENAME "%d.dsg", slot);
-    m_snprintf(filename, filename_size, "%s%s", savegamedir, basename);
+    snprintf(basename, 32, SAVEGAMENAME "%d.dsg", slot);
+    snprintf(filename, filename_size, "%s%s", savegamedir, basename);
 
     return filename;
 }
@@ -1352,7 +1352,7 @@ void P_WriteSaveGameHeader(char *description)
         saveg_write8(0);
 
     memset(name, 0, sizeof(name));
-    m_snprintf(name, sizeof(name), "version %i", G_VanillaVersionCode());
+    snprintf(name, sizeof(name), "version %i", G_VanillaVersionCode());
 
     for (i=0; i<VERSIONSIZE; ++i)
         saveg_write8(name[i]);
@@ -1389,7 +1389,7 @@ boolean P_ReadSaveGameHeader(void)
         read_vcheck[i] = saveg_read8();
 
     memset(vcheck, 0, sizeof(vcheck));
-    m_snprintf(vcheck, sizeof(vcheck), "version %i", G_VanillaVersionCode());
+    snprintf(vcheck, sizeof(vcheck), "version %i", G_VanillaVersionCode());
     if (strcmp(read_vcheck, vcheck) != 0)
 	return false;				// bad version 
 

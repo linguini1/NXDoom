@@ -802,10 +802,10 @@ void R_FillBackScreen (void)
     patch_t*	patch;
 
     // DOOM border patch.
-    const char *name1 = deh_string("FLOOR7_2");
+    const char *name1 = ("FLOOR7_2");
 
     // DOOM II border patch.
-    const char *name2 = deh_string("GRNROCK");
+    const char *name2 = ("GRNROCK");
 
     const char *name;
 
@@ -858,19 +858,19 @@ void R_FillBackScreen (void)
 
     v_use_buffer(background_buffer);
 
-    patch = w_cache_lump_name(deh_string("brdr_t"),PU_CACHE);
+    patch = w_cache_lump_name(("brdr_t"),PU_CACHE);
 
     for (x=0 ; x<scaledviewwidth ; x+=8)
 	v_draw_patch(viewwindowx+x, viewwindowy-8, patch);
-    patch = w_cache_lump_name(deh_string("brdr_b"),PU_CACHE);
+    patch = w_cache_lump_name(("brdr_b"),PU_CACHE);
 
     for (x=0 ; x<scaledviewwidth ; x+=8)
 	v_draw_patch(viewwindowx+x, viewwindowy+viewheight, patch);
-    patch = w_cache_lump_name(deh_string("brdr_l"),PU_CACHE);
+    patch = w_cache_lump_name(("brdr_l"),PU_CACHE);
 
     for (y=0 ; y<viewheight ; y+=8)
 	v_draw_patch(viewwindowx-8, viewwindowy+y, patch);
-    patch = w_cache_lump_name(deh_string("brdr_r"),PU_CACHE);
+    patch = w_cache_lump_name(("brdr_r"),PU_CACHE);
 
     for (y=0 ; y<viewheight ; y+=8)
 	v_draw_patch(viewwindowx+scaledviewwidth, viewwindowy+y, patch);
@@ -878,19 +878,19 @@ void R_FillBackScreen (void)
     // Draw beveled edge. 
     v_draw_patch(viewwindowx-8,
                 viewwindowy-8,
-                w_cache_lump_name(deh_string("brdr_tl"),PU_CACHE));
+                w_cache_lump_name(("brdr_tl"),PU_CACHE));
     
     v_draw_patch(viewwindowx+scaledviewwidth,
                 viewwindowy-8,
-                w_cache_lump_name(deh_string("brdr_tr"),PU_CACHE));
+                w_cache_lump_name(("brdr_tr"),PU_CACHE));
     
     v_draw_patch(viewwindowx-8,
                 viewwindowy+viewheight,
-                w_cache_lump_name(deh_string("brdr_bl"),PU_CACHE));
+                w_cache_lump_name(("brdr_bl"),PU_CACHE));
     
     v_draw_patch(viewwindowx+scaledviewwidth,
                 viewwindowy+viewheight,
-                w_cache_lump_name(deh_string("brdr_br"),PU_CACHE));
+                w_cache_lump_name(("brdr_br"),PU_CACHE));
 
     v_restore_buffer();
 } 

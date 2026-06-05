@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_timer.h
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -14,7 +18,8 @@
  *
  * DESCRIPTION:
  *      System-specific timer interface
- */
+ *
+ ****************************************************************************/
 
 #ifndef __I_TIMER__
 #define __I_TIMER__
@@ -30,7 +35,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Name: I_GetTime
+ * Name: i_get_time
  *
  * Description:
  *  Called by D_DoomLoop.
@@ -39,42 +44,33 @@
  *  The current time in tics.
  ****************************************************************************/
 
-int I_GetTime(void);
+int i_get_time(void);
 
 /****************************************************************************
- * Name: I_GetTimeMS
+ * Name: i_get_time_ms
  *
  * Returns:
  *  The current time in ms.
  ****************************************************************************/
 
-int I_GetTimeMS(void);
+int i_get_time_ms(void);
 
 /****************************************************************************
- * Name: I_Sleep
- *
- * Returns:
- *  Pause for a specified number of ms.
- ****************************************************************************/
-
-void I_Sleep(int ms);
-
-/****************************************************************************
- * Name: I_InitTimer
+ * Name: i_init_timer
  *
  * Description:
  *  Initialize timer.
  ****************************************************************************/
 
-void I_InitTimer(void);
+void i_init_timer(void);
 
 /****************************************************************************
- * Name: I_WaitVBL
+ * Name: i_wait_vbl
  *
  * Description:
  *   Wait for vertical retrace or pause a bit.
  ****************************************************************************/
 
-void I_WaitVBL(int count);
+void i_wait_vbl(int count);
 
 #endif /* __I_TIMER__ */

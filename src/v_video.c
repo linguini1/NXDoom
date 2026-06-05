@@ -852,7 +852,7 @@ void WritePNGfile(char *filename, pixel_t *data, int width, int height,
       h_factor = 1;
     }
 
-  handle = m_fopen(filename, "wb");
+  handle = fopen(filename, "wb");
   if (!handle)
     {
       return;
@@ -952,7 +952,7 @@ void v_screenshot(const char *format)
 
   for (i = 0; i <= 99; i++)
     {
-      m_snprintf(lbmname, sizeof(lbmname), format, i, ext);
+      snprintf(lbmname, sizeof(lbmname), format, i, ext);
 
       if (!m_file_exists(lbmname))
         {
@@ -978,7 +978,7 @@ void v_screenshot(const char *format)
   if (png_screenshots)
     {
       WritePNGfile(lbmname, i_video_buffer, SCREENWIDTH, SCREENHEIGHT,
-                   w_cache_lump_name(deh_string("PLAYPAL"), PU_CACHE));
+                   w_cache_lump_name(("PLAYPAL"), PU_CACHE));
     }
   else
 #endif
@@ -986,7 +986,7 @@ void v_screenshot(const char *format)
       /* save the pcx file */
 
       WritePCXfile(lbmname, i_video_buffer, SCREENWIDTH, SCREENHEIGHT,
-                   w_cache_lump_name(deh_string("PLAYPAL"), PU_CACHE));
+                   w_cache_lump_name(("PLAYPAL"), PU_CACHE));
     }
 }
 

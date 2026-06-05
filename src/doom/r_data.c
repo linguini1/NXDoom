@@ -485,7 +485,7 @@ void R_InitTextures(void)
   /* Load the patch names from pnames.lmp. */
 
   name[8] = 0;
-  names = w_cache_lump_name(deh_string("PNAMES"), PU_STATIC);
+  names = w_cache_lump_name(("PNAMES"), PU_STATIC);
   nummappatches = LONG(*((int *)names));
   name_p = names + 4;
   patchlookup =
@@ -496,23 +496,23 @@ void R_InitTextures(void)
       m_str_copy(name, name_p + i * 8, sizeof(name));
       patchlookup[i] = w_check_num_for_name(name);
     }
-  w_release_lump_name(deh_string("PNAMES"));
+  w_release_lump_name(("PNAMES"));
 
   /* Load the map texture definitions from textures.lmp.
    * The data is contained in one or two lumps,
    *  TEXTURE1 for shareware, plus TEXTURE2 for commercial.
    */
 
-  maptex = maptex1 = w_cache_lump_name(deh_string("TEXTURE1"), PU_STATIC);
+  maptex = maptex1 = w_cache_lump_name(("TEXTURE1"), PU_STATIC);
   numtextures1 = LONG(*maptex);
-  maxoff = w_lump_length(w_get_num_for_name(deh_string("TEXTURE1")));
+  maxoff = w_lump_length(w_get_num_for_name(("TEXTURE1")));
   directory = maptex + 1;
 
-  if (w_check_num_for_name(deh_string("TEXTURE2")) != -1)
+  if (w_check_num_for_name(("TEXTURE2")) != -1)
     {
-      maptex2 = w_cache_lump_name(deh_string("TEXTURE2"), PU_STATIC);
+      maptex2 = w_cache_lump_name(("TEXTURE2"), PU_STATIC);
       numtextures2 = LONG(*maptex2);
-      maxoff2 = w_lump_length(w_get_num_for_name(deh_string("TEXTURE2")));
+      maxoff2 = w_lump_length(w_get_num_for_name(("TEXTURE2")));
     }
   else
     {
@@ -538,8 +538,8 @@ void R_InitTextures(void)
 
   /*	Really complex printing shit... */
 
-  temp1 = w_get_num_for_name(deh_string("S_START")); /* P_??????? */
-  temp2 = w_get_num_for_name(deh_string("S_END")) - 1;
+  temp1 = w_get_num_for_name(("S_START")); /* P_??????? */
+  temp2 = w_get_num_for_name(("S_END")) - 1;
   temp3 = ((temp2 - temp1 + 63) / 64) + ((numtextures + 63) / 64);
 
   /* If stdout is a real console, use the classic vanilla "filling
@@ -614,8 +614,8 @@ void R_InitTextures(void)
 
   z_free(patchlookup);
 
-  w_release_lump_name(deh_string("TEXTURE1"));
-  if (maptex2) w_release_lump_name(deh_string("TEXTURE2"));
+  w_release_lump_name(("TEXTURE1"));
+  if (maptex2) w_release_lump_name(("TEXTURE2"));
 
   /* Precalculate whatever possible. */
 
@@ -641,8 +641,8 @@ void R_InitFlats(void)
 {
   int i;
 
-  firstflat = w_get_num_for_name(deh_string("F_START")) + 1;
-  lastflat = w_get_num_for_name(deh_string("F_END")) - 1;
+  firstflat = w_get_num_for_name(("F_START")) + 1;
+  lastflat = w_get_num_for_name(("F_END")) - 1;
   numflats = lastflat - firstflat + 1;
 
   /* Create translation table for global animation. */
@@ -669,8 +669,8 @@ void R_InitSpriteLumps(void)
   int i;
   patch_t *patch;
 
-  firstspritelump = w_get_num_for_name(deh_string("S_START")) + 1;
-  lastspritelump = w_get_num_for_name(deh_string("S_END")) - 1;
+  firstspritelump = w_get_num_for_name(("S_START")) + 1;
+  lastspritelump = w_get_num_for_name(("S_END")) - 1;
 
   numspritelumps = lastspritelump - firstspritelump + 1;
   spritewidth = z_malloc(numspritelumps * sizeof(*spritewidth), PU_STATIC, 0);
@@ -700,7 +700,7 @@ void R_InitColormaps(void)
 
   /* Load in the light tables, 256 byte align tables. */
 
-  lump = w_get_num_for_name(deh_string("COLORMAP"));
+  lump = w_get_num_for_name(("COLORMAP"));
   colormaps = w_cache_lump_num(lump, PU_STATIC);
 }
 

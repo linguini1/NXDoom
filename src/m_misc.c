@@ -39,29 +39,13 @@
  * Public Functions
  ****************************************************************************/
 
-FILE *m_fopen(const char *filename, const char *mode)
-{
-  return fopen(filename, mode);
-}
-
-int m_remove(const char *path) { return remove(path); }
-
-int m_rename(const char *oldname, const char *newname)
-{
-  return rename(oldname, newname);
-}
-
-int m_stat(const char *path, struct stat *buf) { return stat(path, buf); }
-
-char *m_getenv(const char *name) { return getenv(name); }
-
 void m_make_directory(const char *path) { mkdir(path, 0755); }
 
 boolean m_file_exists(const char *filename)
 {
   FILE *fstream;
 
-  fstream = m_fopen(filename, "r");
+  fstream = fopen(filename, "r");
 
   if (fstream != NULL)
     {
@@ -181,7 +165,7 @@ boolean m_write_file(const char *name, const void *source, int length)
   FILE *handle;
   int count;
 
-  handle = m_fopen(name, "wb");
+  handle = fopen(name, "wb");
 
   if (handle == NULL) return false;
 
@@ -199,7 +183,7 @@ int m_read_file(const char *name, byte **buffer)
   int count, length;
   byte *buf;
 
-  handle = m_fopen(name, "rb");
+  handle = fopen(name, "rb");
   if (handle == NULL) I_Error("Couldn't read file %s", name);
 
   /* find the size of the file by seeking to the end and
@@ -372,42 +356,6 @@ void m_force_lowercase(char *text)
     {
       *p = tolower(*p);
     }
-}
-
-/****************************************************************************
- * Name: m_str_case_str
- *
- * Description:
- *  Case-insensitive version of strstr()
- *
- ****************************************************************************/
-
-const char *m_str_case_str(const char *haystack, const char *needle)
-{
-  unsigned int haystack_len;
-  unsigned int needle_len;
-  unsigned int len;
-  unsigned int i;
-
-  haystack_len = strlen(haystack);
-  needle_len = strlen(needle);
-
-  if (haystack_len < needle_len)
-    {
-      return NULL;
-    }
-
-  len = haystack_len - needle_len;
-
-  for (i = 0; i <= len; ++i)
-    {
-      if (!strncasecmp(haystack + i, needle, needle_len))
-        {
-          return haystack + i;
-        }
-    }
-
-  return NULL;
 }
 
 /****************************************************************************
@@ -603,49 +551,6 @@ char *m_string_join(const char *s, ...)
   return result;
 }
 
-/* Safe, portable vsnprintf(). */
-
-int m_vsprintf(char *buf, size_t buf_len, const char *s, va_list args)
-{
-  int result;
-
-  if (buf_len < 1)
-    {
-      return 0;
-    }
-
-  /* Windows (and other OSes?) has a vsnprintf() that doesn't always
-   * append a trailing \0. So we must do it, and write into a buffer
-   * that is one byte shorter; otherwise this function is unsafe.
-   */
-
-  result = vsnprintf(buf, buf_len, s, args);
-
-  /* If truncated, change the final char in the buffer to a \0.
-   * A negative result indicates a truncated buffer on Windows.
-   */
-
-  if (result < 0 || result >= buf_len)
-    {
-      buf[buf_len - 1] = '\0';
-      result = buf_len - 1;
-    }
-
-  return result;
-}
-
-/* Safe, portable snprintf(). */
-
-int m_snprintf(char *buf, size_t buf_len, const char *s, ...)
-{
-  va_list args;
-  int result;
-  va_start(args, s);
-  result = m_vsprintf(buf, buf_len, s, args);
-  va_end(args);
-  return result;
-}
-
 /****************************************************************************
  * Name: m_normalize_slashes
  *
@@ -660,6 +565,7 @@ int m_snprintf(char *buf, size_t buf_len, const char *s, ...)
  *   originated in BOOM.
  *
  ****************************************************************************/
+
 void m_normalize_slashes(char *str)
 {
   char *p;

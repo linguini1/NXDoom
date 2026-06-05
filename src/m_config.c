@@ -770,19 +770,6 @@ static default_t extra_defaults_list[] = {
 
     CONFIG_VARIABLE_STRING(snd_musiccmd),
 
-    /* Value to set for the DMXOPTION environment variable. If this contains
-     * "-opl3", output for an OPL3 chip is generated when in OPL MIDI
-     * playback mode.
-     */
-
-    CONFIG_VARIABLE_STRING(snd_dmxoption),
-
-    /* The I/O port to use to access the OPL chip.  Only relevant when
-     * using native OPL music playback.
-     */
-
-    CONFIG_VARIABLE_INT_HEX(opl_io_port),
-
     /* Controls whether libsamplerate support is used for performing
      * sample rate conversions of sound effects.  Support for this
      * must be compiled into the program.
@@ -1882,7 +1869,7 @@ static void save_default_collection(default_collection_t *collection)
   int i, v;
   FILE *f;
 
-  f = m_fopen(collection->filename, "w");
+  f = fopen(collection->filename, "w");
   if (!f) return; /* can't write the file, but don't complain */
 
   defaults = collection->defaults;
@@ -2091,7 +2078,7 @@ static void load_default_collection(default_collection_t *collection)
   char strparm[100];
 
   /* read the file in, overriding any set defaults */
-  f = m_fopen(collection->filename, "r");
+  f = fopen(collection->filename, "r");
 
   if (f == NULL)
     {

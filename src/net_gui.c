@@ -121,7 +121,7 @@ static void build_window(void)
 
   for (i = 0; i < net_client_wait_data.max_players; ++i)
     {
-      m_snprintf(buf, sizeof(buf), " %i. ", i + 1);
+      snprintf(buf, sizeof(buf), " %i. ", i + 1);
       TXT_AddWidget(table, TXT_NewLabel(buf));
       player_labels[i] = TXT_NewLabel("");
       ip_labels[i] = TXT_NewLabel("");
@@ -184,7 +184,7 @@ static void update_gui(void)
 
   if (net_client_wait_data.num_drones > 0)
     {
-      m_snprintf(buf, sizeof(buf), " (+%i observer clients)",
+      snprintf(buf, sizeof(buf), " (+%i observer clients)",
                  net_client_wait_data.num_drones);
       TXT_SetLabel(drone_label, buf);
     }

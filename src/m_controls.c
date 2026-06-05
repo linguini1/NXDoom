@@ -440,7 +440,7 @@ void M_BindChatControls(unsigned int num_players)
 
     for (i=0; i<num_players; ++i)
     {
-        m_snprintf(name, sizeof(name), "key_multi_msgplayer%i", i + 1);
+        snprintf(name, sizeof(name), "key_multi_msgplayer%i", i + 1);
         m_bind_int_variable(name, &key_multi_msgplayer[i]);
     }
 }

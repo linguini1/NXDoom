@@ -34,7 +34,7 @@ static wad_file_t *W_StdC_OpenFile(const char *path)
     stdc_wad_file_t *result;
     FILE *fstream;
 
-    fstream = m_fopen(path, "rb");
+    fstream = fopen(path, "rb");
 
     if (fstream == NULL)
     {

@@ -12,11 +12,12 @@ PROGNAME  = nxdoom
 COMMONSRCDIR = src
 TEXTSCREENSRCDIR = textscreen
 DOOMSRCDIR = $(COMMONSRCDIR)/doom
+PCSOUNDSRCDIR = pcsound
 
 # Includes
 
 CFLAGS += -I$(COMMONSRCDIR) -I$(DOOMSRCDIR) -I$(TEXTSCREENSRCDIR)
-CFLAGS += -I$(OPLSRCDIR) -I$(PCSOUNDSRCDIR)
+CFLAGS += -I$(PCSOUNDSRCDIR)
 
 # Source files
 
@@ -164,7 +165,6 @@ CSRCS += $(patsubst %,$(DOOMSRCDIR)/%,$(DOOMSRCS))
 
 ifeq ($(CONFIG_GAMES_NXDOOM_SOUND),y)
 CSRCS += $(COMMONSRCDIR)/i_musicpack.c
-CSRCS += $(COMMONSRCDIR)/i_oplmusic.c
 CSRCS += $(COMMONSRCDIR)/i_pcsound.c
 CSRCS += $(COMMONSRCDIR)/i_sdlmusic.c
 CSRCS += $(COMMONSRCDIR)/i_sdlsound.c

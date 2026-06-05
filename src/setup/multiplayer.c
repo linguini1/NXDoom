@@ -357,11 +357,11 @@ static void update_warp_button(void)
 
   if (warptype == WARP_ExMy)
     {
-      m_snprintf(buf, sizeof(buf), "E%iM%i", warpepisode, warpmap);
+      snprintf(buf, sizeof(buf), "E%iM%i", warpepisode, warpmap);
     }
   else if (warptype == WARP_MAPxy)
     {
-      m_snprintf(buf, sizeof(buf), "MAP%02i", warpmap);
+      snprintf(buf, sizeof(buf), "MAP%02i", warpmap);
     }
 
   TXT_SetButtonLabel(warpbutton, buf);
@@ -477,7 +477,7 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
                   continue;
                 }
 
-              m_snprintf(buf, sizeof(buf), " E%dM%d ", x, y);
+              snprintf(buf, sizeof(buf), " E%dM%d ", x, y);
               button = TXT_NewButton(buf);
               TXT_SignalConnect(button, "pressed", SetExMyWarp,
                                 (void *)(intptr_t)(x * 10 + y));
@@ -509,7 +509,7 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
               continue;
             }
 
-          m_snprintf(buf, sizeof(buf), " MAP%02d ", l);
+          snprintf(buf, sizeof(buf), " MAP%02d ", l);
           button = TXT_NewButton(buf);
           TXT_SignalConnect(button, "pressed", SetMAPxyWarp,
                             (void *)(intptr_t)l);
@@ -977,7 +977,7 @@ static void query_response_callback(net_addr_t *addr,
       return;
     }
 
-  m_snprintf(ping_time_str, sizeof(ping_time_str), "%ims", ping_time);
+  snprintf(ping_time_str, sizeof(ping_time_str), "%ims", ping_time);
 
   /* Build description from server name field. Because there is limited
    * space, we only include the player count if there are already players
@@ -986,7 +986,7 @@ static void query_response_callback(net_addr_t *addr,
 
   if (querydata->num_players > 0)
     {
-      m_snprintf(description, sizeof(description), "(%d/%d) ",
+      snprintf(description, sizeof(description), "(%d/%d) ",
                  querydata->num_players, querydata->max_players);
     }
   else
@@ -1157,7 +1157,7 @@ void multiplayer_config(TXT_UNCAST_ARG(widget), void *user_data)
 
   for (i = 0; i < 10; ++i)
     {
-      m_snprintf(buf, sizeof(buf), "#%i ", i + 1);
+      snprintf(buf, sizeof(buf), "#%i ", i + 1);
 
       label = TXT_NewLabel(buf);
       TXT_SetFGColor(label, TXT_COLOR_BRIGHT_CYAN);
@@ -1178,7 +1178,7 @@ void bind_multiple_variables(void)
 
   for (i = 0; i < 10; ++i)
     {
-      m_snprintf(buf, sizeof(buf), "chatmacro%i", i);
+      snprintf(buf, sizeof(buf), "chatmacro%i", i);
       m_bind_string_variable(buf, &chat_macros[i]);
     }
 

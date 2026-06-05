@@ -59,7 +59,7 @@ static void NET_Conn_Init(net_connection_t *conn, net_addr_t *addr,
     conn->reliable_packets = NULL;
     conn->reliable_send_seq = 0;
     conn->reliable_recv_seq = 0;
-    conn->keepalive_recv_time = I_GetTimeMS();
+    conn->keepalive_recv_time = i_get_time_ms();
 }
 
 // Initialize as a client connection
@@ -86,7 +86,7 @@ void NET_Conn_InitServer(net_connection_t *conn, net_addr_t *addr,
 
 void NET_Conn_SendPacket(net_connection_t *conn, net_packet_t *packet)
 {
-    conn->keepalive_send_time = I_GetTimeMS();
+    conn->keepalive_send_time = i_get_time_ms();
     NET_SendPacket(conn->addr, packet);
 }
 
@@ -102,7 +102,7 @@ static void NET_Conn_ParseDisconnect(net_connection_t *conn, net_packet_t *packe
     NET_Conn_SendPacket(conn, reply);
     NET_FreePacket(reply);
 
-    conn->last_send_time = I_GetTimeMS();
+    conn->last_send_time = i_get_time_ms();
     
     conn->state = NET_CONN_STATE_DISCONNECTED_SLEEP;
     conn->disconnect_reason = NET_DISCONNECT_REMOTE;
@@ -217,7 +217,7 @@ static boolean NET_Conn_ReliablePacket(net_connection_t *conn,
 boolean NET_Conn_Packet(net_connection_t *conn, net_packet_t *packet, 
                         unsigned int *packet_type)
 {
-    conn->keepalive_recv_time = I_GetTimeMS();
+    conn->keepalive_recv_time = i_get_time_ms();
 
     // Is this a reliable packet?
 
@@ -278,7 +278,7 @@ void NET_Conn_Run(net_connection_t *conn)
     net_packet_t *packet;
     unsigned int nowtime;
 
-    nowtime = I_GetTimeMS();
+    nowtime = i_get_time_ms();
 
     if (conn->state == NET_CONN_STATE_CONNECTED)
     {

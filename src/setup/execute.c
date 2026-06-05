@@ -58,16 +58,6 @@ static char *TempFile(const char *s)
 {
     const char *tempdir;
 
-#ifdef _WIN32
-    // Check the TEMP environment variable to find the location.
-
-    tempdir = m_getenv("TEMP");
-
-    if (tempdir == NULL)
-    {
-        tempdir = ".";
-    }
-#else
     // Check the $TMPDIR environment variable to find the location.
 
     tempdir = getenv("TMPDIR");
@@ -76,7 +66,6 @@ static char *TempFile(const char *s)
     {
         tempdir = "/tmp";
     }
-#endif
 
     return m_string_join(tempdir, DIR_SEPARATOR_S, s, NULL);
 }
@@ -124,7 +113,7 @@ execute_context_t *NewExecuteContext(void)
     result = malloc(sizeof(execute_context_t));
     
     result->response_file = TempFile("chocolat.rsp");
-    result->stream = m_fopen(result->response_file, "w");
+    result->stream = fopen(result->response_file, "w");
 
     if (result->stream == NULL)
     {
@@ -376,7 +365,7 @@ int ExecuteDoom(execute_context_t *context)
     free(response_file_arg);
 
     // Destroy context
-    m_remove(context->response_file);
+    remove(context->response_file);
     free(context->response_file);
     free(context);
 
@@ -414,8 +403,8 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 
     // Delete the temporary config files
 
-    m_remove(main_cfg);
-    m_remove(extra_cfg);
+    remove(main_cfg);
+    remove(extra_cfg);
     free(main_cfg);
     free(extra_cfg);
 }

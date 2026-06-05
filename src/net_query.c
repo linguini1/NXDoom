@@ -335,7 +335,7 @@ static void NET_Query_ParseResponse(net_addr_t *addr, net_packet_t *packet,
 
         // Calculate RTT.
 
-        target->ping_time = I_GetTimeMS() - target->query_time;
+        target->ping_time = i_get_time_ms() - target->query_time;
 
         // Invoke callback to signal that we have a new address.
 
@@ -431,7 +431,7 @@ static void SendOneQuery(void)
     unsigned int now;
     unsigned int i;
 
-    now = I_GetTimeMS();
+    now = i_get_time_ms();
 
     // Rate limit - only send one query every 50ms.
 
@@ -491,7 +491,7 @@ static void CheckTargetTimeouts(void)
     unsigned int i;
     unsigned int now;
 
-    now = I_GetTimeMS();
+    now = i_get_time_ms();
 
     for (i = 0; i < num_targets; ++i)
     {
@@ -576,7 +576,7 @@ static void NET_Query_QueryLoop(net_query_callback_t callback, void *user_data)
     {
         // Don't thrash the CPU
 
-        I_Sleep(1);
+        usleep(1000);
     }
 }
 
@@ -891,13 +891,13 @@ static net_packet_t *BlockForPacket(net_addr_t *addr, unsigned int packet_type,
     unsigned int read_packet_type;
     unsigned int start_time;
 
-    start_time = I_GetTimeMS();
+    start_time = i_get_time_ms();
 
-    while (I_GetTimeMS() < start_time + timeout_ms)
+    while (i_get_time_ms() < start_time + timeout_ms)
     {
         if (!NET_RecvPacket(query_context, &packet_src, &packet))
         {
-            I_Sleep(20);
+            usleep(20000);
             continue;
         }
 

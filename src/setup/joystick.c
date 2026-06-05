@@ -764,13 +764,13 @@ static void LoadConfigurationSet(const joystick_config_t *configs)
         if (m_string_starts_with(config->name, "joyb_") && config->value >= 0)
         {
             joystick_physical_buttons[button] = config->value;
-            m_snprintf(buf, sizeof(buf), "%i", button);
+            snprintf(buf, sizeof(buf), "%i", button);
             m_set_variable(config->name, buf);
             ++button;
         }
         else
         {
-            m_snprintf(buf, sizeof(buf), "%i", config->value);
+            snprintf(buf, sizeof(buf), "%i", config->value);
             m_set_variable(config->name, buf);
         }
     }
@@ -1358,7 +1358,7 @@ void BindJoystickVariables(void)
     for (i = 0; i < NUM_VIRTUAL_BUTTONS; ++i)
     {
         char name[32];
-        m_snprintf(name, sizeof(name), "joystick_physical_button%i", i);
+        snprintf(name, sizeof(name), "joystick_physical_button%i", i);
         m_bind_int_variable(name, &joystick_physical_buttons[i]);
     }
 }

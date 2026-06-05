@@ -152,8 +152,8 @@ void P_InitPicAnims (void)
     {
         const char *startname, *endname;
 
-        startname = deh_string(animdefs[i].startname);
-        endname = deh_string(animdefs[i].endname);
+        startname = (animdefs[i].startname);
+        endname = (animdefs[i].endname);
 
 	if (animdefs[i].istexture)
 	{

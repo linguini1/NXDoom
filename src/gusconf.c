@@ -254,7 +254,7 @@ static boolean write_timidity_config(char *path, gus_config_t *config)
   FILE *fstream;
   unsigned int i;
 
-  fstream = m_fopen(path, "w");
+  fstream = fopen(path, "w");
 
   if (fstream == NULL)
     {

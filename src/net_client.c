@@ -226,7 +226,7 @@ static void update_clock_sync(unsigned int seq, unsigned int remote_latency)
 
   if (seq == send_queue[seq % BACKUPTICS].seq)
     {
-      latency = I_GetTimeMS() - send_queue[seq % BACKUPTICS].time;
+      latency = i_get_time_ms() - send_queue[seq % BACKUPTICS].time;
     }
   else if (seq > send_queue[seq % BACKUPTICS].seq)
     {
@@ -617,7 +617,7 @@ static void net_cl_send_resend_request(int start, int end)
   NET_Conn_SendPacket(&client_connection, packet);
   NET_FreePacket(packet);
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
 
   /* Save the time we sent the resend request */
 
@@ -643,7 +643,7 @@ static void net_cl_check_resends(void)
   unsigned int nowtime;
   boolean maybe_deadlocked;
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
   maybe_deadlocked = nowtime - gamedata_recv_time > 1000;
 
   resend_start = -1;
@@ -748,7 +748,7 @@ static void net_cl_parse_game_data(net_packet_t *packet)
       return;
     }
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
 
   /* Whatever happens, we now need to send an acknowledgement of our
    * current receive point.
@@ -1047,7 +1047,7 @@ void NET_CL_SendTiccmd(ticcmd_t *ticcmd, int maketic)
   sendobj = &send_queue[maketic % BACKUPTICS];
   sendobj->active = true;
   sendobj->seq = maketic;
-  sendobj->time = I_GetTimeMS();
+  sendobj->time = i_get_time_ms();
   sendobj->cmd = diff;
 
   last_ticcmd = *ticcmd;
@@ -1156,13 +1156,13 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
 
   /* try to connect */
 
-  start_time = I_GetTimeMS();
+  start_time = i_get_time_ms();
   last_send_time = -1;
   set_reject_reason("Unknown reason");
 
   while (client_connection.state == NET_CONN_STATE_CONNECTING)
     {
-      int nowtime = I_GetTimeMS();
+      int nowtime = i_get_time_ms();
 
       /* Send a SYN packet every second. */
 
@@ -1197,7 +1197,7 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
 
       /* Don't hog the CPU */
 
-      I_Sleep(1);
+      usleep(1000);
     }
 
   if (client_connection.state == NET_CONN_STATE_CONNECTED)
@@ -1250,12 +1250,12 @@ void NET_CL_Disconnect(void)
   net_log_info("client: beginning disconnect");
   NET_Conn_Disconnect(&client_connection);
 
-  start_time = I_GetTimeMS();
+  start_time = i_get_time_ms();
 
   while (client_connection.state != NET_CONN_STATE_DISCONNECTED &&
          client_connection.state != NET_CONN_STATE_DISCONNECTED_SLEEP)
     {
-      if (I_GetTimeMS() - start_time > 5000)
+      if (i_get_time_ms() - start_time > 5000)
         {
           /* time out after 5 seconds */
 
@@ -1270,7 +1270,7 @@ void NET_CL_Disconnect(void)
       NET_CL_Run();
       net_sv_run();
 
-      I_Sleep(1);
+      usleep(1000);
     }
 
   /* Finished sending disconnect packets, etc. */
