@@ -17,6 +17,8 @@
 #ifndef NET_COMMON_H
 #define NET_COMMON_H
 
+#include <syslog.h>
+
 #include "d_mode.h"
 #include "net_defs.h"
 #include "net_packet.h"
@@ -98,9 +100,20 @@ unsigned int NET_ExpandTicNum(unsigned int relative, unsigned int b);
 boolean NET_ValidGameSettings(GameMode_t mode, GameMission_t mission,
                               net_gamesettings_t *settings);
 
-void NET_OpenLog(void);
-void NET_Log(const char *fmt, ...);
-void NET_LogPacket(net_packet_t *packet);
+/* Conditional logging */
 
-#endif /* #ifndef NET_COMMON_H */
+#ifdef CONFIG_GAMES_NXDOOM_NET_LOGS
+#define net_log_info(fmt, ...) syslog(LOG_USER | LOG_INFO, fmt, ##__VA_ARGS__)
+#define net_log_warn(fmt, ...) syslog(LOG_USER | LOG_WARNING, fmt, ##__VA_ARGS__)
+#define net_log_err(fmt, ...)  syslog(LOG_USER | LOG_ERR, fmt, ##__VA_ARGS__)
 
+void net_log_packet(net_packet_t *packet);
+#else
+#define net_log_info(fmt, ...)
+#define net_log_warn(fmt, ...)
+#define net_log_err(fmt, ...)
+
+#define net_log_packet(pkt)
+#endif /* CONFIG_GAMES_NXDOOM_NET_LOGS */
+
+#endif /* NET_COMMON_H */

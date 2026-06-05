@@ -199,7 +199,7 @@ static void M_ReadSaveStrings(void);
 static void M_QuickSave(void);
 static void M_QuickLoad(void);
 
-static void M_DrawMainMenu(void);
+static void M_Drawmain_menu(void);
 static void M_DrawReadThis1(void);
 static void M_DrawReadThis2(void);
 static void M_DrawNewGame(void);
@@ -235,7 +235,7 @@ enum
     main_end
 } main_e;
 
-menuitem_t MainMenu[]=
+menuitem_t main_menu[]=
 {
     {1,"M_NGAME",M_NewGame,'n'},
     {1,"M_OPTION",M_Options,'o'},
@@ -250,8 +250,8 @@ menu_t  MainDef =
 {
     main_end,
     NULL,
-    MainMenu,
-    M_DrawMainMenu,
+    main_menu,
+    M_Drawmain_menu,
     97,64,
     0
 };
@@ -529,7 +529,7 @@ void M_DrawLoad(void)
     int             i;
 	
     v_draw_patch_direct(72, 28, 
-                      W_CacheLumpName(deh_string("M_LOADG"), PU_CACHE));
+                      w_cache_lump_name(deh_string("M_LOADG"), PU_CACHE));
 
     for (i = 0;i < load_end; i++)
     {
@@ -548,17 +548,17 @@ void M_DrawSaveLoadBorder(int x,int y)
     int             i;
 	
     v_draw_patch_direct(x - 8, y + 7,
-                      W_CacheLumpName(deh_string("M_LSLEFT"), PU_CACHE));
+                      w_cache_lump_name(deh_string("M_LSLEFT"), PU_CACHE));
 	
     for (i = 0;i < 24;i++)
     {
 	v_draw_patch_direct(x, y + 7,
-                          W_CacheLumpName(deh_string("M_LSCNTR"), PU_CACHE));
+                          w_cache_lump_name(deh_string("M_LSCNTR"), PU_CACHE));
 	x += 8;
     }
 
     v_draw_patch_direct(x, y + 7, 
-                      W_CacheLumpName(deh_string("M_LSRGHT"), PU_CACHE));
+                      w_cache_lump_name(deh_string("M_LSRGHT"), PU_CACHE));
 }
 
 
@@ -599,7 +599,7 @@ void M_DrawSave(void)
 {
     int             i;
 	
-    v_draw_patch_direct(72, 28, W_CacheLumpName(deh_string("M_SAVEG"), PU_CACHE));
+    v_draw_patch_direct(72, 28, w_cache_lump_name(deh_string("M_SAVEG"), PU_CACHE));
     for (i = 0;i < load_end; i++)
     {
 	M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
@@ -633,14 +633,14 @@ void M_DoSave(int slot)
 static void SetDefaultSaveName(int slot)
 {
     // map from IWAD or PWAD?
-    if (W_IsIWADLump(maplumpinfo) && strcmp(savegamedir, ""))
+    if (w_is_iwad_lump(maplumpinfo) && strcmp(savegamedir, ""))
     {
         m_snprintf(savegamestrings[itemOn], SAVESTRINGSIZE,
                    "%s", maplumpinfo->name);
     }
     else
     {
-        char *wadname = m_string_duplicate(W_WadNameForLump(maplumpinfo));
+        char *wadname = m_string_duplicate(w_wad_name_for_lump(maplumpinfo));
         char *ext = strrchr(wadname, '.');
 
         if (ext != NULL)
@@ -794,7 +794,7 @@ void M_DrawReadThis1(void)
 {
     inhelpscreens = true;
 
-    v_draw_patch_direct(0, 0, W_CacheLumpName(deh_string("HELP2"), PU_CACHE));
+    v_draw_patch_direct(0, 0, w_cache_lump_name(deh_string("HELP2"), PU_CACHE));
 }
 
 
@@ -809,14 +809,14 @@ void M_DrawReadThis2(void)
     // We only ever draw the second page if this is 
     // gameversion == exe_doom_1_9 and gamemode == registered
 
-    v_draw_patch_direct(0, 0, W_CacheLumpName(deh_string("HELP1"), PU_CACHE));
+    v_draw_patch_direct(0, 0, w_cache_lump_name(deh_string("HELP1"), PU_CACHE));
 }
 
 void M_DrawReadThisCommercial(void)
 {
     inhelpscreens = true;
 
-    v_draw_patch_direct(0, 0, W_CacheLumpName(deh_string("HELP"), PU_CACHE));
+    v_draw_patch_direct(0, 0, w_cache_lump_name(deh_string("HELP"), PU_CACHE));
 }
 
 
@@ -825,7 +825,7 @@ void M_DrawReadThisCommercial(void)
 //
 void M_DrawSound(void)
 {
-    v_draw_patch_direct (60, 38, W_CacheLumpName(deh_string("M_SVOL"), PU_CACHE));
+    v_draw_patch_direct (60, 38, w_cache_lump_name(deh_string("M_SVOL"), PU_CACHE));
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
@@ -889,12 +889,12 @@ void M_MusicVol(int choice)
 
 
 //
-// M_DrawMainMenu
+// M_Drawmain_menu
 //
-void M_DrawMainMenu(void)
+void M_Drawmain_menu(void)
 {
     v_draw_patch_direct(94, 2,
-                      W_CacheLumpName(deh_string("M_DOOM"), PU_CACHE));
+                      w_cache_lump_name(deh_string("M_DOOM"), PU_CACHE));
 }
 
 
@@ -905,8 +905,8 @@ void M_DrawMainMenu(void)
 //
 void M_DrawNewGame(void)
 {
-    v_draw_patch_direct(96, 14, W_CacheLumpName(deh_string("M_NEWG"), PU_CACHE));
-    v_draw_patch_direct(54, 38, W_CacheLumpName(deh_string("M_SKILL"), PU_CACHE));
+    v_draw_patch_direct(96, 14, w_cache_lump_name(deh_string("M_NEWG"), PU_CACHE));
+    v_draw_patch_direct(54, 38, w_cache_lump_name(deh_string("M_SKILL"), PU_CACHE));
 }
 
 void M_NewGame(int choice)
@@ -933,7 +933,7 @@ int     epi;
 
 void M_DrawEpisode(void)
 {
-    v_draw_patch_direct(54, 38, W_CacheLumpName(deh_string("M_EPISOD"), PU_CACHE));
+    v_draw_patch_direct(54, 38, w_cache_lump_name(deh_string("M_EPISOD"), PU_CACHE));
 }
 
 void M_VerifyNightmare(int key)
@@ -981,15 +981,15 @@ static const char *msgNames[2] = {"M_MSGOFF","M_MSGON"};
 
 void M_DrawOptions(void)
 {
-    v_draw_patch_direct(108, 15, W_CacheLumpName(deh_string("M_OPTTTL"),
+    v_draw_patch_direct(108, 15, w_cache_lump_name(deh_string("M_OPTTTL"),
                                                PU_CACHE));
 	
     v_draw_patch_direct(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * detail,
-		      W_CacheLumpName(deh_string(detailNames[detailLevel]),
+		      w_cache_lump_name(deh_string(detailNames[detailLevel]),
 			              PU_CACHE));
 
     v_draw_patch_direct(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * messages,
-                      W_CacheLumpName(deh_string(msgNames[showMessages]),
+                      w_cache_lump_name(deh_string(msgNames[showMessages]),
                                       PU_CACHE));
 
     M_DrawThermo(OptionsDef.x, OptionsDef.y + LINEHEIGHT * (mousesens + 1),
@@ -1239,17 +1239,17 @@ M_DrawThermo
     int		i;
 
     xx = x;
-    v_draw_patch_direct(xx, y, W_CacheLumpName(deh_string("M_THERML"), PU_CACHE));
+    v_draw_patch_direct(xx, y, w_cache_lump_name(deh_string("M_THERML"), PU_CACHE));
     xx += 8;
     for (i=0;i<thermWidth;i++)
     {
-	v_draw_patch_direct(xx, y, W_CacheLumpName(deh_string("M_THERMM"), PU_CACHE));
+	v_draw_patch_direct(xx, y, w_cache_lump_name(deh_string("M_THERMM"), PU_CACHE));
 	xx += 8;
     }
-    v_draw_patch_direct(xx, y, W_CacheLumpName(deh_string("M_THERMR"), PU_CACHE));
+    v_draw_patch_direct(xx, y, w_cache_lump_name(deh_string("M_THERMR"), PU_CACHE));
 
     v_draw_patch_direct((x + 8) + thermDot * 8, y,
-		      W_CacheLumpName(deh_string("M_THERMO"), PU_CACHE));
+		      w_cache_lump_name(deh_string("M_THERMO"), PU_CACHE));
 }
 
 
@@ -1796,7 +1796,7 @@ boolean M_Responder (event_t* ev)
 	    if (usegamma > 4)
 		usegamma = 0;
 	    players[consoleplayer].message = deh_string(gammamsg[usegamma]);
-            i_set_palette (W_CacheLumpName (deh_string("PLAYPAL"),PU_CACHE));
+            i_set_palette (w_cache_lump_name (deh_string("PLAYPAL"),PU_CACHE));
 	    return true;
 	}
     }
@@ -2091,9 +2091,9 @@ void M_Drawer (void)
     {
         name = deh_string(currentMenu->menuitems[i].name);
 
-	if (name[0] && W_CheckNumForName(name) > 0)
+	if (name[0] && w_check_num_for_name(name) > 0)
 	{
-	    v_draw_patch_direct (x, y, W_CacheLumpName(name, PU_CACHE));
+	    v_draw_patch_direct (x, y, w_cache_lump_name(name, PU_CACHE));
 	}
 	y += LINEHEIGHT;
     }
@@ -2101,7 +2101,7 @@ void M_Drawer (void)
     
     // DRAW SKULL
     v_draw_patch_direct(x + SKULLXOFF, currentMenu->y - 5 + itemOn*LINEHEIGHT,
-		      W_CacheLumpName(deh_string(skullName[whichSkull]),
+		      w_cache_lump_name(deh_string(skullName[whichSkull]),
 				      PU_CACHE));
 }
 
@@ -2165,7 +2165,7 @@ void M_Init (void)
 
     if (gameversion >= exe_ultimate)
     {
-        MainMenu[readthis].routine = M_ReadThis2;
+        main_menu[readthis].routine = M_ReadThis2;
         ReadDef2.prevMenu = NULL;
     }
 
@@ -2176,7 +2176,7 @@ void M_Init (void)
 
     if (gamemode == commercial)
     {
-        MainMenu[readthis] = MainMenu[quitdoom];
+        main_menu[readthis] = main_menu[quitdoom];
         MainDef.numitems--;
         MainDef.y += 8;
         NewDef.prevMenu = &MainDef;

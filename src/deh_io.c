@@ -109,14 +109,14 @@ deh_context_t *DEH_OpenLump(int lumpnum)
     deh_context_t *context;
     void *lump;
 
-    lump = W_CacheLumpNum(lumpnum, PU_STATIC);
+    lump = w_cache_lump_num(lumpnum, PU_STATIC);
 
     context = DEH_NewContext();
 
     context->type = DEH_INPUT_LUMP;
     context->lumpnum = lumpnum;
     context->input_buffer = lump;
-    context->input_buffer_len = W_LumpLength(lumpnum);
+    context->input_buffer_len = w_lump_length(lumpnum);
     context->input_buffer_pos = 0;
 
     context->filename = malloc(9);
@@ -135,7 +135,7 @@ void DEH_CloseFile(deh_context_t *context)
     }
     else if (context->type == DEH_INPUT_LUMP)
     {
-        W_ReleaseLumpNum(context->lumpnum);
+        w_release_lump_num(context->lumpnum);
     }
 
     free(context->filename);

@@ -115,14 +115,14 @@ static boolean CachePCSLump(sfxinfo_t *sfxinfo)
  
     if (current_sound_lump != NULL)
     {
-        W_ReleaseLumpNum(current_sound_lump_num);
+        w_release_lump_num(current_sound_lump_num);
         current_sound_lump = NULL;
     }
 
     // Load from WAD
 
-    current_sound_lump = W_CacheLumpNum(sfxinfo->lumpnum, PU_STATIC);
-    lumplen = W_LumpLength(sfxinfo->lumpnum);
+    current_sound_lump = w_cache_lump_num(sfxinfo->lumpnum, PU_STATIC);
+    lumplen = w_lump_length(sfxinfo->lumpnum);
 
     // Read header
   
@@ -255,7 +255,7 @@ static int I_PCS_GetSfxLumpNum(sfxinfo_t* sfx)
     {
         m_snprintf(namebuf, sizeof(namebuf), "dp%s", deh_string(sfx->name));
 
-        if (gamemission == strife && W_CheckNumForName(namebuf) == -1)
+        if (gamemission == strife && w_check_num_for_name(namebuf) == -1)
         {
             // Missing sounds replaced with DPRIFLE.
             m_snprintf(namebuf, sizeof(namebuf), "dp%s", deh_string("rifle"));
@@ -266,7 +266,7 @@ static int I_PCS_GetSfxLumpNum(sfxinfo_t* sfx)
         m_str_copy(namebuf, deh_string(sfx->name), sizeof(namebuf));
     }
 
-    return W_GetNumForName(namebuf);
+    return w_get_num_for_name(namebuf);
 }
 
 

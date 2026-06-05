@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/deh_str.h
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
  * Copyright(C) 2005-2014 Simon Howard
  *
  * This program is free software; you can redistribute it and/or
@@ -11,9 +15,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- *
  * Dehacked string replacements
- */
+ *
+ ****************************************************************************/
 
 #ifndef DEH_STR_H
 #define DEH_STR_H

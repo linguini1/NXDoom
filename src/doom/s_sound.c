@@ -662,7 +662,7 @@ void S_ChangeMusic(int musicnum, int looping)
 
     if (musicnum == mus_intro && (snd_musicdevice == SNDDEVICE_ADLIB
                                || snd_musicdevice == SNDDEVICE_SB)
-        && W_CheckNumForName("D_INTROA") >= 0)
+        && w_check_num_for_name("D_INTROA") >= 0)
     {
         musicnum = mus_introa;
     }
@@ -688,12 +688,12 @@ void S_ChangeMusic(int musicnum, int looping)
     if (!music->lumpnum)
     {
         m_snprintf(namebuf, sizeof(namebuf), "d_%s", deh_string(music->name));
-        music->lumpnum = W_GetNumForName(namebuf);
+        music->lumpnum = w_get_num_for_name(namebuf);
     }
 
-    music->data = W_CacheLumpNum(music->lumpnum, PU_STATIC);
+    music->data = w_cache_lump_num(music->lumpnum, PU_STATIC);
 
-    handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
+    handle = I_RegisterSong(music->data, w_lump_length(music->lumpnum));
     music->handle = handle;
     I_PlaySong(handle, looping);
 
@@ -716,7 +716,7 @@ void S_StopMusic(void)
 
         I_StopSong();
         I_UnRegisterSong(mus_playing->handle);
-        W_ReleaseLumpNum(mus_playing->lumpnum);
+        w_release_lump_num(mus_playing->lumpnum);
         mus_playing->data = NULL;
         mus_playing = NULL;
     }

@@ -216,7 +216,7 @@ void NetUpdate (void)
     // Run network subsystems
 
     NET_CL_Run();
-    NET_SV_Run();
+    net_sv_run();
 
     // check time
     nowtime = GetAdjustedTime() / ticdup;
@@ -314,7 +314,7 @@ static void BlockUntilStart(net_gamesettings_t *settings,
     while (!NET_CL_GetSettings(settings))
     {
         NET_CL_Run();
-        NET_SV_Run();
+        net_sv_run();
 
         if (!net_client_connected)
         {
@@ -446,10 +446,10 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
     if (m_check_parm("-server") > 0
      || m_check_parm("-privateserver") > 0)
     {
-        NET_SV_Init();
-        NET_SV_AddModule(&net_loop_server_module);
-        NET_SV_AddModule(&net_sdl_module);
-        NET_SV_RegisterWithMaster();
+        net_sv_init();
+        net_sv_add_module(&net_loop_server_module);
+        net_sv_add_module(&net_sdl_module);
+        net_sv_register_with_master();
 
         net_loop_client_module.InitClient();
         addr = net_loop_client_module.ResolveAddress(NULL);
@@ -533,7 +533,7 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
 //
 void D_QuitNetGame (void)
 {
-    NET_SV_Shutdown();
+    net_sv_shutdown();
     NET_CL_Disconnect();
 }
 

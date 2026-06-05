@@ -1408,7 +1408,7 @@ void G_SecretExitLevel (void)
 { 
     // IF NO WOLF3D LEVELS, NO SECRET EXIT!
     if ( (gamemode == commercial)
-      && (W_CheckNumForName("map31")<0))
+      && (w_check_num_for_name("map31")<0))
 	secretexit = false;
     else
 	secretexit = true; 
@@ -2249,9 +2249,9 @@ void G_DoPlayDemo (void)
     int demoversion;
     boolean olddemo = false;
 
-    lumpnum = W_GetNumForName(defdemoname);
+    lumpnum = w_get_num_for_name(defdemoname);
     gameaction = ga_nothing;
-    demobuffer = W_CacheLumpNum(lumpnum, PU_STATIC);
+    demobuffer = w_cache_lump_num(lumpnum, PU_STATIC);
     demo_p = demobuffer;
 
     demoversion = *demo_p++;
@@ -2383,7 +2383,7 @@ boolean G_CheckDemoStatus (void)
 	 
     if (demoplayback) 
     { 
-        W_ReleaseLumpName(defdemoname);
+        w_release_lump_name(defdemoname);
 	demoplayback = false; 
 	netdemo = false;
 	netgame = false;

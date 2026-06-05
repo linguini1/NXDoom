@@ -244,8 +244,8 @@ void F_TextWrite (void)
     int		cy;
     
     // erase the entire screen to a tiled background
-    src = W_CacheLumpName ( finaleflat , PU_CACHE);
-    dest = I_VideoBuffer;
+    src = w_cache_lump_name ( finaleflat , PU_CACHE);
+    dest = i_video_buffer;
 	
     for (y=0 ; y<SCREENHEIGHT ; y++)
     {
@@ -567,7 +567,7 @@ void F_CastDrawer (void)
     patch_t*		patch;
     
     // erase the entire screen to a background
-    v_draw_patch (0, 0, W_CacheLumpName (deh_string("BOSSBACK"), PU_CACHE));
+    v_draw_patch (0, 0, w_cache_lump_name (deh_string("BOSSBACK"), PU_CACHE));
 
     F_CastPrint (deh_string(castorder[castnum].name));
     
@@ -577,7 +577,7 @@ void F_CastDrawer (void)
     lump = sprframe->lump[0];
     flip = (boolean)sprframe->flip[0];
 			
-    patch = W_CacheLumpNum (lump+firstspritelump, PU_CACHE);
+    patch = w_cache_lump_num (lump+firstspritelump, PU_CACHE);
     if (flip)
 	v_draw_patch_flipped(SCREENWIDTH/2, 170, patch);
     else
@@ -601,7 +601,7 @@ F_DrawPatchCol
     int		count;
 	
     column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
-    desttop = I_VideoBuffer + x;
+    desttop = i_video_buffer + x;
 
     // step through the posts in a column
     while (column->topdelta != 0xff )
@@ -633,8 +633,8 @@ void F_BunnyScroll (void)
     int		stage;
     static int	laststage;
 		
-    p1 = W_CacheLumpName (deh_string("PFUB2"), PU_LEVEL);
-    p2 = W_CacheLumpName (deh_string("PFUB1"), PU_LEVEL);
+    p1 = w_cache_lump_name (deh_string("PFUB2"), PU_LEVEL);
+    p2 = w_cache_lump_name (deh_string("PFUB1"), PU_LEVEL);
 
     v_mark_rect (0, 0, SCREENWIDTH, SCREENHEIGHT);
 	
@@ -658,7 +658,7 @@ void F_BunnyScroll (void)
     {
         v_draw_patch((SCREENWIDTH - 13 * 8) / 2,
                     (SCREENHEIGHT - 8 * 8) / 2, 
-                    W_CacheLumpName(deh_string("END0"), PU_CACHE));
+                    w_cache_lump_name(deh_string("END0"), PU_CACHE));
 	laststage = 0;
 	return;
     }
@@ -677,7 +677,7 @@ void F_BunnyScroll (void)
     deh_snprintf(name, 10, "END%i", stage);
     v_draw_patch((SCREENWIDTH - 13 * 8) / 2, 
                 (SCREENHEIGHT - 8 * 8) / 2, 
-                W_CacheLumpName (name,PU_CACHE));
+                w_cache_lump_name (name,PU_CACHE));
 }
 
 static void F_ArtScreenDrawer(void)
@@ -714,7 +714,7 @@ static void F_ArtScreenDrawer(void)
 
         lumpname = deh_string(lumpname);
 
-        v_draw_patch (0, 0, W_CacheLumpName(lumpname, PU_CACHE));
+        v_draw_patch (0, 0, w_cache_lump_name(lumpname, PU_CACHE));
     }
 }
 

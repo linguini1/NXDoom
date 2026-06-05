@@ -236,7 +236,7 @@ static void InitConnectData(net_connect_data_t *connect_data)
 
   /* Are we playing with the Freedoom IWAD? */
 
-  connect_data->is_freedoom = W_CheckNumForName("FREEDOOM") >= 0;
+  connect_data->is_freedoom = w_check_num_for_name("FREEDOOM") >= 0;
 }
 
 /****************************************************************************

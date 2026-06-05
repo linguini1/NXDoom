@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/v_video.h
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -16,7 +20,8 @@
  *	Gamma correction LUT.
  *	Functions to draw patches (by post) directly to screen.
  *	Functions to blit a block to the screen.
- */
+ *
+ ****************************************************************************/
 
 #ifndef __V_VIDEO__
 #define __V_VIDEO__

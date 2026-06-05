@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Main program, simply calls D_DoomMain high level loop.
+ *	Main program, simply calls d_doom_main high level loop.
  */
 
 /****************************************************************************
@@ -36,7 +36,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Name: D_DoomMain()
+ * Name: d_doom_main()
  *
  * Description:
  *  Not a globally visible function, just included for source reference,
@@ -44,7 +44,7 @@
  *
  ****************************************************************************/
 
-void D_DoomMain(void);
+void d_doom_main(void);
 
 /****************************************************************************
  * Public Functions
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 
   /* start doom */
 
-  D_DoomMain();
+  d_doom_main();
 
   return 0;
 }

@@ -185,7 +185,7 @@ boolean D_IsEpisodeMap(GameMission_t mission)
     }
 }
 
-const char *D_GameMissionString(GameMission_t mission)
+const char *d_game_mission_string(GameMission_t mission)
 {
     switch (mission)
     {

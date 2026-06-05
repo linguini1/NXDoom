@@ -952,7 +952,7 @@ void ST_doPaletteStuff(void)
     if (palette != st_palette)
     {
 	st_palette = palette;
-	pal = (byte *) W_CacheLumpNum (lu_palette, PU_CACHE)+palette*768;
+	pal = (byte *) w_cache_lump_num (lu_palette, PU_CACHE)+palette*768;
 	i_set_palette (pal);
     }
 
@@ -1084,7 +1084,7 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     callback(namebuf, &faceback);
 
     // status bar background bits
-    if (W_CheckNumForName("STBAR") >= 0)
+    if (w_check_num_for_name("STBAR") >= 0)
     {
         callback(deh_string("STBAR"), &sbar);
         sbarr = NULL;
@@ -1130,7 +1130,7 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
 
 static void ST_loadCallback(const char *lumpname, patch_t **variable)
 {
-    *variable = W_CacheLumpName(lumpname, PU_STATIC);
+    *variable = w_cache_lump_name(lumpname, PU_STATIC);
 }
 
 void ST_loadGraphics(void)
@@ -1140,13 +1140,13 @@ void ST_loadGraphics(void)
 
 void ST_loadData(void)
 {
-    lu_palette = W_GetNumForName (deh_string("PLAYPAL"));
+    lu_palette = w_get_num_for_name (deh_string("PLAYPAL"));
     ST_loadGraphics();
 }
 
 static void ST_unloadCallback(const char *lumpname, patch_t **variable)
 {
-    W_ReleaseLumpName(lumpname);
+    w_release_lump_name(lumpname);
     *variable = NULL;
 }
 
@@ -1368,7 +1368,7 @@ void ST_Stop (void)
     if (st_stopped)
 	return;
 
-    i_set_palette (W_CacheLumpNum (lu_palette, PU_CACHE));
+    i_set_palette (w_cache_lump_num (lu_palette, PU_CACHE));
 
     st_stopped = true;
 }

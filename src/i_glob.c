@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_glob.c
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
  * Copyright(C) 2018 Simon Howard
  *
  * This program is free software; you can redistribute it and/or
@@ -14,7 +18,8 @@
  *
  * File globbing API. This allows the contents of the filesystem
  * to be interrogated.
- */
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -28,10 +33,6 @@
 #include "i_glob.h"
 #include "m_misc.h"
 
-/****************************************************************************
- * Preprocessor Definitions
- ****************************************************************************/
-
 #if defined(HAVE_DIRENT_H)
 #include <dirent.h>
 #include <sys/stat.h>
@@ -41,6 +42,10 @@
 #else
 #define NO_DIRENT_IMPLEMENTATION
 #endif
+
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
 /****************************************************************************
  * Private Types
@@ -55,7 +60,8 @@ struct glob_s
   char *directory;
   char *last_filename;
 
-  /* These fields are only used when the GLOB_FLAG_SORTED flag is set: */
+  /* These fields are only used when the GLOB_FLAG_SORTED flag is set:
+   */
 
   char **filenames;
   int filenames_len;
@@ -74,7 +80,7 @@ struct glob_s
  * not all systems.
  */
 
-static boolean IsDirectory(char *dir, struct dirent *de)
+static boolean is_directory(char *dir, struct dirent *de)
 {
 #if defined(_DIRENT_HAVE_D_TYPE)
   if (de->d_type != DT_UNKNOWN && de->d_type != DT_LNK)
@@ -101,19 +107,21 @@ static boolean IsDirectory(char *dir, struct dirent *de)
     }
 }
 
-static void FreeStringList(char **globs, int num_globs)
+static void free_string_list(char **globs, int num_globs)
 {
   int i;
   for (i = 0; i < num_globs; ++i)
     {
       free(globs[i]);
     }
+
   free(globs);
 }
 
-static boolean MatchesGlob(const char *name, const char *glob, int flags)
+static boolean matches_glob(const char *name, const char *glob, int flags)
 {
-  int n, g;
+  int n;
+  int g;
 
   while (*glob != '\0')
     {
@@ -135,12 +143,14 @@ static boolean MatchesGlob(const char *name, const char *glob, int flags)
 
           while (*name != '\0')
             {
-              if (MatchesGlob(name, glob + 1, flags))
+              if (matches_glob(name, glob + 1, flags))
                 {
                   return true;
                 }
+
               ++name;
             }
+
           return glob[1] == '\0';
         }
       else if (g != '?' && n != g)
@@ -157,24 +167,26 @@ static boolean MatchesGlob(const char *name, const char *glob, int flags)
     }
 
   /* Match successful when glob and name end at the same time. */
+
   return *name == '\0';
 }
 
-static boolean MatchesAnyGlob(const char *name, glob_t *glob)
+static boolean matches_any_glob(const char *name, glob_t *glob)
 {
   int i;
 
   for (i = 0; i < glob->num_globs; ++i)
     {
-      if (MatchesGlob(name, glob->globs[i], glob->flags))
+      if (matches_glob(name, glob->globs[i], glob->flags))
         {
           return true;
         }
     }
+
   return false;
 }
 
-static char *NextGlob(glob_t *glob)
+static char *next_glob(glob_t *glob)
 {
   struct dirent *de;
 
@@ -186,15 +198,15 @@ static char *NextGlob(glob_t *glob)
           return NULL;
         }
     }
-  while (IsDirectory(glob->directory, de) ||
-         !MatchesAnyGlob(de->d_name, glob));
+  while (is_directory(glob->directory, de) ||
+         !matches_any_glob(de->d_name, glob));
 
   /* Return the fully-qualified path, not just the bare filename. */
 
   return m_string_join(glob->directory, DIR_SEPARATOR_S, de->d_name, NULL);
 }
 
-static void ReadAllFilenames(glob_t *glob)
+static void read_all_filenames(glob_t *glob)
 {
   char *name;
 
@@ -202,13 +214,14 @@ static void ReadAllFilenames(glob_t *glob)
   glob->filenames_len = 0;
   glob->next_index = 0;
 
-  for (;;)
+  for (; ; )
     {
-      name = NextGlob(glob);
+      name = next_glob(glob);
       if (name == NULL)
         {
           break;
         }
+
       glob->filenames = realloc(glob->filenames,
                                 (glob->filenames_len + 1) * sizeof(char *));
       glob->filenames[glob->filenames_len] = name;
@@ -216,15 +229,19 @@ static void ReadAllFilenames(glob_t *glob)
     }
 }
 
-static void SortFilenames(char **filenames, int len, int flags)
+static void sort_filenames(char **filenames, int len, int flags)
 {
-  char *pivot, *tmp;
-  int i, left_len, cmp;
+  char *pivot;
+  char *tmp;
+  int i;
+  int left_len;
+  int cmp;
 
   if (len <= 1)
     {
       return;
     }
+
   pivot = filenames[len - 1];
   left_len = 0;
   for (i = 0; i < len - 1; ++i)
@@ -246,19 +263,20 @@ static void SortFilenames(char **filenames, int len, int flags)
           ++left_len;
         }
     }
+
   filenames[len - 1] = filenames[left_len];
   filenames[left_len] = pivot;
 
-  SortFilenames(filenames, left_len, flags);
-  SortFilenames(&filenames[left_len + 1], len - left_len - 1, flags);
+  sort_filenames(filenames, left_len, flags);
+  sort_filenames(&filenames[left_len + 1], len - left_len - 1, flags);
 }
 
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
 
-glob_t *I_StartMultiGlob(const char *directory, int flags, const char *glob,
-                         ...)
+glob_t *i_start_multi_glob(const char *directory, int flags,
+        const char *glob, ...)
 {
   char **globs;
   int num_globs;
@@ -270,11 +288,12 @@ glob_t *I_StartMultiGlob(const char *directory, int flags, const char *glob,
     {
       return NULL;
     }
+
   globs[0] = m_string_duplicate(glob);
   num_globs = 1;
 
   va_start(args, glob);
-  for (;;)
+  for (; ; )
     {
       const char *arg = va_arg(args, const char *);
       char **new_globs;
@@ -287,25 +306,27 @@ glob_t *I_StartMultiGlob(const char *directory, int flags, const char *glob,
       new_globs = realloc(globs, sizeof(char *) * (num_globs + 1));
       if (new_globs == NULL)
         {
-          FreeStringList(globs, num_globs);
+          free_string_list(globs, num_globs);
         }
+
       globs = new_globs;
       globs[num_globs] = m_string_duplicate(arg);
       ++num_globs;
     }
+
   va_end(args);
 
   result = malloc(sizeof(glob_t));
   if (result == NULL)
     {
-      FreeStringList(globs, num_globs);
+      free_string_list(globs, num_globs);
       return NULL;
     }
 
   result->dir = opendir(directory);
   if (result->dir == NULL)
     {
-      FreeStringList(globs, num_globs);
+      free_string_list(globs, num_globs);
       free(result);
       return NULL;
     }
@@ -321,20 +342,20 @@ glob_t *I_StartMultiGlob(const char *directory, int flags, const char *glob,
   return result;
 }
 
-glob_t *I_StartGlob(const char *directory, const char *glob, int flags)
+glob_t *i_start_glob(const char *directory, const char *glob, int flags)
 {
-  return I_StartMultiGlob(directory, flags, glob, NULL);
+  return i_start_multi_glob(directory, flags, glob, NULL);
 }
 
-void I_EndGlob(glob_t *glob)
+void i_end_glob(glob_t *glob)
 {
   if (glob == NULL)
     {
       return;
     }
 
-  FreeStringList(glob->globs, glob->num_globs);
-  FreeStringList(glob->filenames, glob->filenames_len);
+  free_string_list(glob->globs, glob->num_globs);
+  free_string_list(glob->filenames, glob->filenames_len);
 
   free(glob->directory);
   free(glob->last_filename);
@@ -342,7 +363,7 @@ void I_EndGlob(glob_t *glob)
   free(glob);
 }
 
-const char *I_NextGlob(glob_t *glob)
+const char *i_next_glob(glob_t *glob)
 {
   const char *result;
 
@@ -358,7 +379,7 @@ const char *I_NextGlob(glob_t *glob)
   if ((glob->flags & GLOB_FLAG_SORTED) == 0)
     {
       free(glob->last_filename);
-      glob->last_filename = NextGlob(glob);
+      glob->last_filename = next_glob(glob);
       return glob->last_filename;
     }
 
@@ -368,13 +389,15 @@ const char *I_NextGlob(glob_t *glob)
 
   if (glob->next_index < 0)
     {
-      ReadAllFilenames(glob);
-      SortFilenames(glob->filenames, glob->filenames_len, glob->flags);
+      read_all_filenames(glob);
+      sort_filenames(glob->filenames, glob->filenames_len, glob->flags);
     }
+
   if (glob->next_index >= glob->filenames_len)
     {
       return NULL;
     }
+
   result = glob->filenames[glob->next_index];
   ++glob->next_index;
   return result;
@@ -384,17 +407,23 @@ const char *I_NextGlob(glob_t *glob)
 
 #warning "No native implementation of file globbing."
 
-glob_t *I_StartGlob(const char *directory, const char *glob, int flags)
+glob_t *i_start_glob(const char *directory, const char *glob, int flags)
 {
   return NULL;
 }
 
-void I_EndGlob(glob_t *glob) {}
+void i_end_glob(glob_t *glob)
+{
+  return;
+}
 
-const char *I_NextGlob(glob_t *glob) { return ""; }
+const char *i_next_glob(glob_t *glob)
+{
+  return "";
+}
 
-glob_t *I_StartMultiGlob(const char *directory, int flags, const char *glob,
-                         ...)
+glob_t *i_start_multi_glob(const char *directory, int flags,
+        const char *glob, ...)
 {
   return NULL;
 }

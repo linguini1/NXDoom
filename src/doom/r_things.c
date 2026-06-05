@@ -214,7 +214,7 @@ void R_InitSpriteDefs(const char **namelist)
 		rotation = lumpinfo[l]->name[5] - '0';
 
 		if (modifiedgame)
-		    patched = W_GetNumForName (lumpinfo[l]->name);
+		    patched = w_get_num_for_name (lumpinfo[l]->name);
 		else
 		    patched = l;
 
@@ -397,7 +397,7 @@ R_DrawVisSprite
     patch_t*		patch;
 	
 	
-    patch = W_CacheLumpNum (vis->patch+firstspritelump, PU_CACHE);
+    patch = w_cache_lump_num (vis->patch+firstspritelump, PU_CACHE);
 
     dc_colormap = vis->colormap;
     

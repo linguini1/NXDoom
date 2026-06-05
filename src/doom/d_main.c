@@ -13,7 +13,7 @@
 // GNU General Public License for more details.
 //
 // DESCRIPTION:
-//	DOOM main program (D_DoomMain) and game loop (D_DoomLoop),
+//	DOOM main program (d_doom_main) and game loop (D_DoomLoop),
 //	plus functions to determine game mode (shareware, registered),
 //	parse command line parameters, configure game parameters (turbo),
 //	and call the startup functions.
@@ -84,7 +84,7 @@
 // D-DoomLoop()
 // Not a globally visible function,
 //  just included for source reference,
-//  called by D_DoomMain, never exits.
+//  called by d_doom_main, never exits.
 // Manages timing and IO,
 //  calls all ?_Responder, ?_Ticker, and ?_Drawer,
 //  calls I_GetTime, i_start_frame, and i_start_tic
@@ -250,7 +250,7 @@ boolean D_Display (void)
     
     // clean up border stuff
     if (gamestate != oldgamestate && gamestate != GS_LEVEL)
-	i_set_palette (W_CacheLumpName (deh_string("PLAYPAL"),PU_CACHE));
+	i_set_palette (w_cache_lump_name (deh_string("PLAYPAL"),PU_CACHE));
 
     // see if the border needs to be initially drawn
     if (gamestate == GS_LEVEL && oldgamestate != GS_LEVEL)
@@ -292,7 +292,7 @@ boolean D_Display (void)
 	else
 	    y = viewwindowy+4;
 	v_draw_patch_direct(viewwindowx + (scaledviewwidth - 68) / 2, y,
-                          W_CacheLumpName (deh_string("M_PAUSE"), PU_CACHE));
+                          w_cache_lump_name (deh_string("M_PAUSE"), PU_CACHE));
     }
 
 
@@ -318,7 +318,7 @@ static void EnableLoadingDisk(void)
             disk_lump_name = deh_string("STDISK");
         }
 
-        V_EnableLoadingDisk(disk_lump_name,
+        v_enable_loading_disk(disk_lump_name,
                             SCREENWIDTH - LOADING_DISK_W,
                             SCREENHEIGHT - LOADING_DISK_H);
     }
@@ -544,7 +544,7 @@ void D_PageTicker (void)
 //
 void D_PageDrawer (void)
 {
-    v_draw_patch (0, 0, W_CacheLumpName(pagename, PU_CACHE));
+    v_draw_patch (0, 0, w_cache_lump_name(pagename, PU_CACHE));
 }
 
 
@@ -647,7 +647,7 @@ void D_DoAdvanceDemo (void)
     // The Doom 3: BFG Edition version of doom2.wad does not have a
     // TITLETPIC lump. Use INTERPIC instead as a workaround.
     if (gamevariant == bfgedition && !strcasecmp(pagename, "TITLEPIC")
-        && W_CheckNumForName("titlepic") < 0)
+        && w_check_num_for_name("titlepic") < 0)
     {
         pagename = deh_string("INTERPIC");
     }
@@ -839,13 +839,13 @@ void D_IdentifyVersion(void)
     {
         // Doom 1.  But which version?
 
-        if (W_CheckNumForName("E4M1") > 0)
+        if (w_check_num_for_name("E4M1") > 0)
         {
             // Ultimate Doom
 
             gamemode = retail;
         } 
-        else if (W_CheckNumForName("E3M1") > 0)
+        else if (w_check_num_for_name("E3M1") > 0)
         {
             gamemode = registered;
         }
@@ -948,7 +948,7 @@ static boolean D_AddFile(char *filename)
     wad_file_t *handle;
 
     printf(" adding %s\n", filename);
-    handle = W_AddFile(filename);
+    handle = w_add_file(filename);
 
     return handle != NULL;
 }
@@ -1095,11 +1095,11 @@ static void InitGameVersion(void)
             for (i = 1; i <= 3; ++i)
             {
                 m_snprintf(demolumpname, 6, "demo%i", i);
-                if (W_CheckNumForName(demolumpname) > 0)
+                if (w_check_num_for_name(demolumpname) > 0)
                 {
-                    demolump = W_CacheLumpName(demolumpname, PU_STATIC);
+                    demolump = w_cache_lump_name(demolumpname, PU_STATIC);
                     demoversion = demolump[0];
-                    W_ReleaseLumpName(demolumpname);
+                    w_release_lump_name(demolumpname);
                     status = true;
                     switch (demoversion)
                     {
@@ -1202,17 +1202,17 @@ static void D_Endoom(void)
         return;
     }
 
-    endoom = W_CacheLumpName(deh_string("ENDOOM"), PU_STATIC);
+    endoom = w_cache_lump_name(deh_string("ENDOOM"), PU_STATIC);
 
     I_Endoom(endoom);
 }
 
 boolean IsFrenchIWAD(void)
 {
-    return (gamemission == doom2 && W_CheckNumForName("M_RDTHIS") < 0
-          && W_CheckNumForName("M_EPISOD") < 0 && W_CheckNumForName("M_EPI1") < 0
-          && W_CheckNumForName("M_EPI2") < 0 && W_CheckNumForName("M_EPI3") < 0
-          && W_CheckNumForName("WIOSTF") < 0 && W_CheckNumForName("WIOBJ") >= 0);
+    return (gamemission == doom2 && w_check_num_for_name("M_RDTHIS") < 0
+          && w_check_num_for_name("M_EPISOD") < 0 && w_check_num_for_name("M_EPI1") < 0
+          && w_check_num_for_name("M_EPI2") < 0 && w_check_num_for_name("M_EPI3") < 0
+          && w_check_num_for_name("WIOSTF") < 0 && w_check_num_for_name("WIOBJ") >= 0);
 }
 
 // Load dehacked patches needed for certain IWADs.
@@ -1316,9 +1316,9 @@ static void G_CheckDemoStatusAtExit (void)
 }
 
 //
-// D_DoomMain
+// d_doom_main
 //
-void D_DoomMain (void)
+void d_doom_main (void)
 {
     int p;
     char file[256];
@@ -1343,7 +1343,7 @@ void D_DoomMain (void)
     if (m_check_parm("-dedicated") > 0)
     {
         printf("Dedicated server mode.\n");
-        NET_DedicatedServer();
+        net_dedicated_server();
 
         // Never returns
     }
@@ -1533,7 +1533,7 @@ void D_DoomMain (void)
     deh_printf("W_Init: Init WADfiles.\n");
     D_AddFile(iwadfile);
 
-    W_CheckCorrectIWAD(doom);
+    w_check_correct_iwad(doom);
 
     // Now that we've loaded the IWAD, we can figure out what gamemission
     // we're playing and which version of Vanilla Doom we need to emulate.
@@ -1542,9 +1542,9 @@ void D_DoomMain (void)
 
     // Check which IWAD variant we are using.
 
-    if (W_CheckNumForName("FREEDOOM") >= 0)
+    if (w_check_num_for_name("FREEDOOM") >= 0)
     {
-        if (W_CheckNumForName("FREEDM") >= 0)
+        if (w_check_num_for_name("FREEDM") >= 0)
         {
             gamevariant = freedm;
         }
@@ -1553,7 +1553,7 @@ void D_DoomMain (void)
             gamevariant = freedoom;
         }
     }
-    else if (W_CheckNumForName("DMENUPIC") >= 0)
+    else if (w_check_num_for_name("DMENUPIC") >= 0)
     {
         gamevariant = bfgedition;
     }
@@ -1628,7 +1628,7 @@ void D_DoomMain (void)
             if (autoload_dir != NULL)
             {
                 DEH_AutoLoadPatches(autoload_dir);
-                W_AutoLoadWADs(autoload_dir);
+                w_auto_load_wads(autoload_dir);
                 free(autoload_dir);
             }
         }
@@ -1638,7 +1638,7 @@ void D_DoomMain (void)
         if (autoload_dir != NULL)
         {
             DEH_AutoLoadPatches(autoload_dir);
-            W_AutoLoadWADs(autoload_dir);
+            w_auto_load_wads(autoload_dir);
             free(autoload_dir);
         }
     }
@@ -1652,10 +1652,10 @@ void D_DoomMain (void)
     DEH_ParseCommandLine();
 
     // Load PWAD files.
-    modifiedgame = W_ParseCommandLine();
+    modifiedgame = w_parse_command_line();
 
     // Debug:
-//    W_PrintDirectory();
+    //    w_print_directory();
 
     //!
     // @arg <demo>
@@ -1719,7 +1719,7 @@ void D_DoomMain (void)
     I_AtExit(G_CheckDemoStatusAtExit, true);
 
     // Generate the WAD hash table.  Speed things up a bit.
-    W_GenerateHashTable();
+    w_generate_hash_table();
 
     // Load DEHACKED lumps from WAD files - but only if we give the right
     // command line parameter.
@@ -1735,7 +1735,7 @@ void D_DoomMain (void)
         int i, loaded = 0;
         int numiwadlumps = numlumps;
 
-        while (!W_IsIWADLump(lumpinfo[numiwadlumps - 1]))
+        while (!w_is_iwad_lump(lumpinfo[numiwadlumps - 1]))
         {
             numiwadlumps--;
         }
@@ -1779,12 +1779,12 @@ void D_DoomMain (void)
 	// but w/o all the lumps of the registered version. 
 	if (gamemode == registered)
 	    for (i = 0;i < 23; i++)
-		if (W_CheckNumForName(name[i])<0)
+		if (w_check_num_for_name(name[i])<0)
 		    I_Error(deh_string("\nThis is not the registered version."));
     }
 
-    if (W_CheckNumForName("SS_START") >= 0
-     || W_CheckNumForName("FF_END") >= 0)
+    if (w_check_num_for_name("SS_START") >= 0
+     || w_check_num_for_name("FF_END") >= 0)
     {
         I_PrintDivider();
         printf(" WARNING: The loaded WAD file contains modified sprites or\n"
@@ -1978,7 +1978,7 @@ void D_DoomMain (void)
     // Moved this here so that MAP01 isn't constantly looked up
     // in the main loop.
 
-    if (gamemode == commercial && W_CheckNumForName("map01") < 0)
+    if (gamemode == commercial && w_check_num_for_name("map01") < 0)
         storedemo = true;
 
     if (m_check_parm_with_args("-statdump", 1))
