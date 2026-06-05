@@ -248,10 +248,10 @@ static void NET_SDL_SendPacket(net_addr_t *addr, net_packet_t *packet)
 
         this_second_sent += packet->len + 64;
 
-        if (I_GetTime() - lasttime > TICRATE)
+        if (i_get_time() - lasttime > TICRATE)
         {
             printf("%i bytes sent in the last second\n", this_second_sent);
-            lasttime = I_GetTime();
+            lasttime = i_get_time();
             this_second_sent = 0;
         }
     }

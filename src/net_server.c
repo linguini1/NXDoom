@@ -654,7 +654,7 @@ static void net_sv_init_new_client(net_client_t *client, net_addr_t *addr,
                                    net_protocol_t protocol)
 {
   client->active = true;
-  client->connect_time = I_GetTimeMS();
+  client->connect_time = i_get_time_ms();
   NET_Conn_InitServer(&client->connection, addr, protocol);
   client->addr = addr;
   NET_ReferenceAddress(addr);
@@ -995,7 +995,7 @@ static void start_game(void)
         }
     }
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
 
   /* Send start packets to each connected node */
 
@@ -1146,7 +1146,7 @@ static void net_sv_send_resend_request(net_client_t *client, int start,
 
   /* Store the time we send the resend request */
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
 
   for (i = start; i <= end; ++i)
     {
@@ -1175,7 +1175,7 @@ static void net_sv_check_resends(net_client_t *client)
   int resend_end;
   unsigned int nowtime;
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
 
   player = client->player_number;
   resend_start = -1;
@@ -1281,7 +1281,7 @@ static void net_sv_parse_game_data(net_packet_t *packet,
 
   /* Get the current time */
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
 
   /* Expand 8-bit values to the full sequence number */
 
@@ -1846,7 +1846,7 @@ static void net_sv_check_deadlock(net_client_t *client)
       return;
     }
 
-  nowtime = I_GetTimeMS();
+  nowtime = i_get_time_ms();
 
   /* If we haven't received anything for a long time, it may be a deadlock. */
 
@@ -1958,10 +1958,10 @@ static void net_sv_run_client(net_client_t *client)
       /* Send information once every second */
 
       if (client->last_send_time < 0 ||
-          I_GetTimeMS() - client->last_send_time > 1000)
+          i_get_time_ms() - client->last_send_time > 1000)
         {
           net_sv_send_waiting_data(client);
-          client->last_send_time = I_GetTimeMS();
+          client->last_send_time = i_get_time_ms();
         }
     }
 
@@ -1976,7 +1976,7 @@ static void update_master_server(void)
 {
   unsigned int now;
 
-  now = I_GetTimeMS();
+  now = i_get_time_ms();
 
   /* The address of the master server can change. Periodically
    * re-resolve the master server to update.
@@ -2060,7 +2060,7 @@ void net_sv_register_with_master(void)
   if (master_server != NULL)
     {
       NET_Query_AddToMaster(master_server);
-      master_refresh_time = I_GetTimeMS();
+      master_refresh_time = i_get_time_ms();
       master_resolve_time = master_refresh_time;
     }
 }
@@ -2152,7 +2152,7 @@ void net_sv_shutdown(void)
 
   /* Wait for all clients to finish disconnecting */
 
-  start_time = I_GetTimeMS();
+  start_time = i_get_time_ms();
   running = true;
 
   while (running)
@@ -2171,7 +2171,7 @@ void net_sv_shutdown(void)
 
       /* Timed out? */
 
-      if (I_GetTimeMS() - start_time > 5000)
+      if (i_get_time_ms() - start_time > 5000)
         {
           running = false;
           fprintf(stderr,
@@ -2185,6 +2185,6 @@ void net_sv_shutdown(void)
 
       /* Don't hog the CPU */
 
-      I_Sleep(1);
+      usleep(1000);
     }
 }

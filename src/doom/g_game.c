@@ -813,7 +813,7 @@ boolean G_Responder (event_t* ev)
 	    (ev->type == ev_joystick && ev->data1) ) 
 	{ 
 	    M_StartControlPanel (); 
-	    joywait = I_GetTime() + 5;
+	    joywait = i_get_time() + 5;
 	    return true; 
 	} 
 	return false; 
@@ -2322,7 +2322,7 @@ void G_DoPlayDemo (void)
     precache = false;
     G_InitNew (skill, episode, map); 
     precache = true; 
-    starttime = I_GetTime (); 
+    starttime = i_get_time (); 
 
     usergame = false; 
     demoplayback = true; 
@@ -2369,7 +2369,7 @@ boolean G_CheckDemoStatus (void)
         float fps;
         int realtics;
 
-	endtime = I_GetTime (); 
+	endtime = i_get_time (); 
         realtics = endtime - starttime;
         fps = ((float) gametic * TICRATE) / realtics;
 

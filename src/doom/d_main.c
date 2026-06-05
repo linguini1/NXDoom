@@ -87,7 +87,7 @@
 //  called by d_doom_main, never exits.
 // Manages timing and IO,
 //  calls all ?_Responder, ?_Ticker, and ?_Drawer,
-//  calls I_GetTime, i_start_frame, and i_start_tic
+//  calls i_get_time, i_start_frame, and i_start_tic
 //
 void D_DoomLoop (void);
 
@@ -433,9 +433,9 @@ void D_RunFrame()
     {
         do
         {
-            nowtime = I_GetTime ();
+            nowtime = i_get_time ();
             tics = nowtime - wipestart;
-            I_Sleep(1);
+            usleep(1000);
         } while (tics <= 0);
 
         wipestart = nowtime;
@@ -464,7 +464,7 @@ void D_RunFrame()
             // start wipe on this frame
             wipe_EndScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
 
-            wipestart = I_GetTime () - 1;
+            wipestart = i_get_time () - 1;
         } else {
             // normal update
             i_finish_update ();              // page flip or blit buffer
@@ -1797,7 +1797,7 @@ void d_doom_main (void)
 
     printf("I_Init: Setting up machine state.\n");
     i_check_is_screensaver();
-    I_InitTimer();
+    i_init_timer();
     I_InitJoystick();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     I_InitSound(doom);

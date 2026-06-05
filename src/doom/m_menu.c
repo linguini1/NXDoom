@@ -1126,7 +1126,7 @@ void M_QuitResponse(int key)
 	else
 	    S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
 #endif
-	I_WaitVBL(105);
+	i_wait_vbl(105);
     }
     I_Quit ();
 }
@@ -1449,22 +1449,22 @@ boolean M_Responder (event_t* ev)
             if (dir & JOY_DIR_UP)
             {
                 key = key_menu_up;
-                joywait = I_GetTime() + 5;
+                joywait = i_get_time() + 5;
             }
             else if (dir & JOY_DIR_DOWN)
             {
                 key = key_menu_down;
-                joywait = I_GetTime() + 5;
+                joywait = i_get_time() + 5;
             }
             if (dir & JOY_DIR_LEFT)
             {
                 key = key_menu_left;
-                joywait = I_GetTime() + 5;
+                joywait = i_get_time() + 5;
             }
             else if (dir & JOY_DIR_RIGHT)
             {
                 key = key_menu_right;
-                joywait = I_GetTime() + 5;
+                joywait = i_get_time() + 5;
             }
 
 #define JOY_BUTTON_MAPPED(x) ((x) >= 0)
@@ -1491,7 +1491,7 @@ boolean M_Responder (event_t* ev)
                     }
                     key = key_menu_forward;
                 }
-                joywait = I_GetTime() + 5;
+                joywait = i_get_time() + 5;
             }
             if (JOY_BUTTON_PRESSED(joybuse))
             {
@@ -1509,30 +1509,30 @@ boolean M_Responder (event_t* ev)
                 {
                     key = key_menu_back;
                 }
-                joywait = I_GetTime() + 5;
+                joywait = i_get_time() + 5;
             }
         }
         if (JOY_BUTTON_PRESSED(joybmenu))
         {
             key = key_menu_activate;
-            joywait = I_GetTime() + 5;
+            joywait = i_get_time() + 5;
         }
     }
     else
     {
-	if (ev->type == ev_mouse && mousewait < I_GetTime() && menuactive)
+	if (ev->type == ev_mouse && mousewait < i_get_time() && menuactive)
 	{
 	    mousey += ev->data3;
 	    if (mousey < lasty-30)
 	    {
 		key = key_menu_down;
-		mousewait = I_GetTime() + 5;
+		mousewait = i_get_time() + 5;
 		mousey = lasty -= 30;
 	    }
 	    else if (mousey > lasty+30)
 	    {
 		key = key_menu_up;
-		mousewait = I_GetTime() + 5;
+		mousewait = i_get_time() + 5;
 		mousey = lasty += 30;
 	    }
 		
@@ -1540,26 +1540,26 @@ boolean M_Responder (event_t* ev)
 	    if (mousex < lastx-30)
 	    {
 		key = key_menu_left;
-		mousewait = I_GetTime() + 5;
+		mousewait = i_get_time() + 5;
 		mousex = lastx -= 30;
 	    }
 	    else if (mousex > lastx+30)
 	    {
 		key = key_menu_right;
-		mousewait = I_GetTime() + 5;
+		mousewait = i_get_time() + 5;
 		mousex = lastx += 30;
 	    }
 		
 	    if (ev->data1&1)
 	    {
 		key = key_menu_forward;
-		mousewait = I_GetTime() + 15;
+		mousewait = i_get_time() + 15;
 	    }
 			
 	    if (ev->data1&2)
 	    {
 		key = key_menu_back;
-		mousewait = I_GetTime() + 15;
+		mousewait = i_get_time() + 15;
 	    }
 	}
 	else

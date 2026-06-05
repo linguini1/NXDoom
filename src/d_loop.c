@@ -124,7 +124,7 @@ static int GetAdjustedTime(void)
 {
     int time_ms;
 
-    time_ms = I_GetTimeMS();
+    time_ms = i_get_time_ms();
 
     if (new_sync)
     {
@@ -327,7 +327,7 @@ static void BlockUntilStart(net_gamesettings_t *settings,
             I_Error("Netgame startup aborted.");
         }
 
-        I_Sleep(100);
+        usleep(100000);
     }
 }
 
@@ -684,7 +684,7 @@ void TryRunTics (void)
     int	counts;
 
     // get real tics
-    entertic = I_GetTime() / ticdup;
+    entertic = i_get_time() / ticdup;
     realtics = entertic - oldentertics;
     oldentertics = entertic;
 
@@ -748,12 +748,12 @@ void TryRunTics (void)
             // If we're in a netgame, we might spin forever waiting for
             // new network data to be received. So don't stay in here
             // forever - give the menu a chance to work.
-            if (I_GetTime() / ticdup - entertic >= MAX_NETGAME_STALL_TICS)
+            if (i_get_time() / ticdup - entertic >= MAX_NETGAME_STALL_TICS)
             {
                 return;
             }
 
-            I_Sleep(1);
+            usleep(1000);
         }
     }
 

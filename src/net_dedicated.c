@@ -96,6 +96,6 @@ void net_dedicated_server(void)
 
       /* TODO: Block on socket instead of polling. */
 
-      I_Sleep(1);
+      usleep(1000);
     }
 }

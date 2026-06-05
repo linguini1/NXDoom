@@ -205,11 +205,11 @@ void I_FadeToPaletteHR(const byte *palette)
     int elapsed;
     int i;
 
-    starttime = I_GetTimeMS();
+    starttime = i_get_time_ms();
 
     for (;;)
     {
-        elapsed = I_GetTimeMS() - starttime;
+        elapsed = i_get_time_ms() - starttime;
 
         if (elapsed >= FADE_TIME)
         {
@@ -228,7 +228,7 @@ void I_FadeToPaletteHR(const byte *palette)
 
         // Sleep a bit
 
-        I_Sleep(10);
+        usleep(10000);
     }
 
     // Set the final palette

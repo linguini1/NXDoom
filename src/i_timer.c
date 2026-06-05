@@ -39,7 +39,7 @@ static struct timespec basetime = {.tv_nsec = 0, .tv_sec = 0};
  ****************************************************************************/
 
 /****************************************************************************
- * Name: I_GetTime
+ * Name: i_get_time
  *
  * Description:
  *  Called by D_DoomLoop.
@@ -48,19 +48,19 @@ static struct timespec basetime = {.tv_nsec = 0, .tv_sec = 0};
  *  The current time in 1/35th second tics.
  ****************************************************************************/
 
-int I_GetTime(void)
+int i_get_time(void)
 {
-  return (I_GetTimeMS() * TICRATE) / 1000;
+  return (i_get_time_ms() * TICRATE) / 1000;
 }
 
 /****************************************************************************
- * Name: I_GetTimeMS
+ * Name: i_get_time_ms
  *
  * Returns:
  *  The current time in ms.
  ****************************************************************************/
 
-int I_GetTimeMS(void)
+int i_get_time_ms(void)
 {
   struct timespec curtime;
 
@@ -76,25 +76,13 @@ int I_GetTimeMS(void)
 }
 
 /****************************************************************************
- * Name: I_Sleep
- *
- * Returns:
- *  Pause for a specified number of ms.
- ****************************************************************************/
-
-void I_Sleep(int ms)
-{
-  usleep(ms / 1000);
-}
-
-/****************************************************************************
- * Name: I_InitTimer
+ * Name: i_init_timer
  *
  * Description:
  *  Initialize timer.
  ****************************************************************************/
 
-void I_InitTimer(void)
+void i_init_timer(void)
 {
 #if 0
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
@@ -104,13 +92,13 @@ void I_InitTimer(void)
 }
 
 /****************************************************************************
- * Name: I_WaitVBL
+ * Name: i_wait_vbl
  *
  * Description:
  *   Wait for vertical retrace or pause a bit.
  ****************************************************************************/
 
-void I_WaitVBL(int count)
+void i_wait_vbl(int count)
 {
-  I_Sleep((count * 1000) / 70);
+  usleep((count * 1000000) / 70);
 }

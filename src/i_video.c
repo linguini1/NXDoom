@@ -1025,7 +1025,7 @@ void i_start_tic(void)
       i_read_mouse();
     }
 
-  if (joywait < I_GetTime())
+  if (joywait < i_get_time())
     {
       I_UpdateJoystick();
     }
@@ -1101,7 +1101,7 @@ void i_finish_update(void)
 
   if (display_fps_dots)
     {
-      i = I_GetTime();
+      i = i_get_time();
       tics = i - lasttic;
       lasttic = i;
       if (tics > 20) tics = 20;

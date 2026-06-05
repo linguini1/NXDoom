@@ -219,7 +219,7 @@ boolean I_ConsoleStdout(void)
 void I_Init (void)
 {
     i_check_is_screensaver();
-    I_InitTimer();
+    i_init_timer();
     I_InitJoystick();
 }
 void I_BindVariables(void)
