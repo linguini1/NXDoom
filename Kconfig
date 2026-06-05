@@ -29,6 +29,16 @@ config GAMES_NXDOOM_STACKSIZE
 
 comment "General game options"
 
+choice # Language
+	prompt "Game language"
+	default GAMES_NXDOOM_LANG_EN
+
+	config GAMES_NXDOOM_LANG_EN
+		bool "English"
+		---help---
+			English language support (default)
+endchoice # Language
+
 config GAMES_NXDOOM_PREFDIR
 	string "DOOM data directory"
 	default "/data"
