@@ -86,7 +86,6 @@ void net_dedicated_server(void)
 {
   check_for_client_options();
 
-  NET_OpenLog();
   net_sv_init();
   net_sv_add_module(&net_sdl_module);
   net_sv_register_with_master();

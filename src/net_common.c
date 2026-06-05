@@ -49,8 +49,6 @@ struct net_reliable_packet_s
     net_reliable_packet_t *next;
 };
 
-static FILE *net_debug = NULL;
-
 static void NET_Conn_Init(net_connection_t *conn, net_addr_t *addr,
                           net_protocol_t protocol)
 {
@@ -454,74 +452,34 @@ boolean NET_ValidGameSettings(GameMode_t mode, GameMission_t mission,
     return true;
 }
 
-static void CloseLog(void)
+#ifdef CONFIG_GAMES_NXDOOM_NET_LOGS
+void net_log_packet(net_packet_t *packet)
 {
-    if (net_debug != NULL)
+  int i;
+  int bytes;
+
+  bytes = packet->len - packet->pos;
+  if (bytes == 0)
     {
-        fclose(net_debug);
-        net_debug = NULL;
+      return;
     }
-}
 
-void NET_OpenLog(void)
-{
-    int p;
+  fprintf(stderr, "\t%02x", packet->data[packet->pos]);
 
-    p = m_check_parm_with_args("-netlog", 1);
-    if (p > 0)
+  for (i = 1; i < bytes; ++i)
     {
-        net_debug = m_fopen(myargv[p + 1], "w");
-        if (net_debug == NULL)
+      if ((i % 16) == 0)
         {
-            I_Error("Failed to open %s to write debug log.", myargv[p + 1]);
+          fprintf(stderr, "\n\t");
         }
-        I_AtExit(CloseLog, true);
-    }
-}
-
-void NET_Log(const char *fmt, ...)
-{
-    va_list args;
-
-    if (net_debug == NULL)
-    {
-        return;
-    }
-
-    fprintf(net_debug, "%8d: ", I_GetTimeMS());
-    va_start(args, fmt);
-    vfprintf(net_debug, fmt, args);
-    va_end(args);
-    fprintf(net_debug, "\n");
-}
-
-void NET_LogPacket(net_packet_t *packet)
-{
-    int i, bytes;
-
-    if (net_debug == NULL)
-    {
-        return;
-    }
-
-    bytes = packet->len - packet->pos;
-    if (bytes == 0)
-    {
-        return;
-    }
-    fprintf(net_debug, "\t%02x", packet->data[packet->pos]);
-    for (i = 1; i < bytes; ++i)
-    {
-        if ((i % 16) == 0)
+      else
         {
-            fprintf(net_debug, "\n\t");
+          fprintf(stderr, " ");
         }
-        else
-        {
-            fprintf(net_debug, " ");
-        }
-        fprintf(net_debug, "%02x", packet->data[packet->pos + i]);
-    }
-    fprintf(net_debug, "\n");
-}
 
+      fprintf(stderr, "%02x", packet->data[packet->pos + i]);
+    }
+
+  fprintf(stderr, "\n");
+}
+#endif /* CONFIG_GAMES_NXDOOM_NET_LOGS */

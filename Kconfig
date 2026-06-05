@@ -41,6 +41,16 @@ config GAMES_NXDOOM_NET
 	---help---
 		Not ported! Will not work.
 
+if GAMES_NXDOOM_NET
+
+config GAMES_NXDOOM_NET_LOGS
+	bool "Enable network logging"
+	default n
+	---help---
+		Enables log information from the network features.
+
+endif # GAMES_NXDOOM_NET
+
 config GAMES_NXDOOM_SOUND
 	bool "Enable sound features"
 	default n
