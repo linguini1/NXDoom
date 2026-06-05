@@ -524,9 +524,6 @@ void TXT_OpenURL(const char *url)
     cmd_len = strlen(url) + 30;
     cmd = malloc(cmd_len);
 
-#if defined(__MACOSX__)
-    TXT_snprintf(cmd, cmd_len, "open \"%s\"", url);
-#else
     // The Unix situation sucks as usual, but the closest thing to a
     // standard that exists is the xdg-utils package.
     if (system("xdg-open --version 2>/dev/null") != 0)
@@ -538,7 +535,6 @@ void TXT_OpenURL(const char *url)
     }
 
     TXT_snprintf(cmd, cmd_len, "xdg-open \"%s\"", url);
-#endif
 
     retval = system(cmd);
     if (retval != 0)

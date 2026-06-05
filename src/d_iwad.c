@@ -360,9 +360,7 @@ static void BuildIWADDirList(void)
     }
 
     AddXdgDirs();
-#ifndef __MACOSX__
     AddSteamDirs();
-#endif
 
     // Don't run this function again.
 

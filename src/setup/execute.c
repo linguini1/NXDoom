@@ -131,11 +131,7 @@ boolean OpenFolder(const char *path)
     char *cmd;
     int result;
 
-#if defined(__MACOSX__)
-    cmd = m_string_join("open \"", path, "\"", NULL);
-#else
     cmd = m_string_join("xdg-open \"", path, "\"", NULL);
-#endif
     result = system(cmd);
     free(cmd);
 
