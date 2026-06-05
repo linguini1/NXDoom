@@ -36,7 +36,12 @@ choice # Language
 	config GAMES_NXDOOM_LANG_EN
 		bool "English"
 		---help---
-			English language support (default)
+			English language support (original).
+
+	config GAMES_NXDOOM_LANG_FR
+		bool "French"
+		---help---
+			French language support.
 endchoice # Language
 
 config GAMES_NXDOOM_PREFDIR

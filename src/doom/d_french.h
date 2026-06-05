@@ -1,5 +1,5 @@
 /****************************************************************************
- * apps/games/NXDoom/src/doom/d_englsh.h
+ * apps/games/NXDoom/src/doom/d_french.h
  *
  * SPDX-License-Identifier: GPLv2
  *
@@ -18,12 +18,14 @@
  *
  * DESCRIPTION:
  *  Printed strings for translation.
- *  English language support (default).
+ *  French language support.
+ *  TODO: finish implementation
+ *  WARN: Non-ascii text does not render properly. Find a solution or cope.
  *
  ****************************************************************************/
 
-#ifndef __D_ENGLSH__
-#define __D_ENGLSH__
+#ifndef __D_FRENCH__
+#define __D_FRENCH__
 
 /* Printed strings for translation */
 
@@ -33,93 +35,94 @@
 
 /* D_Main.C */
 
-#define D_DEVSTR "Development mode ON.\n"
-#define D_CDROM "CD-ROM Version: default.cfg from c:\\doomdata\n"
+#define D_DEVSTR "Mode développement activé.\n"
+#define D_CDROM "Version CD-ROM: default.cfg de c:\\doomdata\n"
 
 /* M_Menu.C */
 
-#define PRESSKEY "press a key."
-#define PRESSYN "press y or n."
-#define QUITMSG "are you sure you want to\nquit this great game?"
-#define LOADNET "you can't do load while in a net game!\n\n" PRESSKEY
-#define QLOADNET "you can't quickload during a netgame!\n\n" PRESSKEY
-#define QSAVESPOT "you haven't picked a quicksave slot yet!\n\n" PRESSKEY
-#define SAVEDEAD "you can't save if you aren't playing!\n\n" PRESSKEY
-#define QSPROMPT "quicksave over your game named\n\n'%s'?\n\n" PRESSYN
+#define PRESSKEY "appuie une touche."
+#define PRESSYN "appuie y ou n."
+#define QUITMSG "es-tu certain que tu veux quitter ce super jeu ?"
+#define LOADNET "tu ne peux pas charger pendant un jeu en ligne!\n\n" PRESSKEY
+#define QLOADNET                                                             \
+  "tu ne peux pas charger rapidement pendant un jeu en ligne!\n\n" PRESSKEY
+#define QSAVESPOT "tu n'as pas choisi un slot sauvegarde rapide\n\n" PRESSKEY
+#define SAVEDEAD "tu ne peux pas sauvegarder si tu ne joue pas\n\n" PRESSKEY
+#define QSPROMPT "sauvegarde ton jeu nommé\n\n'%s'?\n\n" PRESSYN
 #define QLPROMPT                                                             \
-  "do you want to quickload the game named\n\n'%s'?\n\n" PRESSYN
+  "tu veux charger rapidement le jeu nommé\n\n'%s'?\n\n" PRESSYN
 
 #define NEWGAME                                                              \
-  "you can't start a new game\n"                                             \
-  "while in a network game.\n\n" PRESSKEY
+  "tu ne peux pas commencer un nouveau jeu\n"                                             \
+  "durant un jeu en ligne.\n\n" PRESSKEY
 
 #define NIGHTMARE                                                            \
-  "are you sure? this skill level\n"                                         \
-  "isn't even remotely fair.\n\n" PRESSYN
+  "es-tu sure? ce niveau\n"                                                  \
+  "n'est absolument pas juste.\n\n" PRESSYN
 
 #define SWSTRING                                                             \
-  "this is the shareware version of doom.\n\n"                               \
-  "you need to order the entire trilogy.\n\n" PRESSKEY
+  "ceci est le version shareware de doom.\n\n"                               \
+  "tu besoin de commander la trilogie entiere.\n\n" PRESSKEY
 
-#define MSGOFF "Messages OFF"
-#define MSGON "Messages ON"
-#define NETEND "you can't end a netgame!\n\n" PRESSKEY
-#define ENDGAME "are you sure you want to end the game?\n\n" PRESSYN
+#define MSGOFF "Messages DÉSACTIVÉS"
+#define MSGON "Messages ACTIVÉS"
+#define NETEND "tu ne peux pas quitter un jeu en ligne!\n\n" PRESSKEY
+#define ENDGAME "es-tu sure que tu veux quitter le jeu?\n\n" PRESSYN
 
-#define DOSY "(press y to quit to dos.)"
+#define DOSY "(appuie y pour quitter vers dos.)"
 
-#define DETAILHI "High detail"
-#define DETAILLO "Low detail"
-#define GAMMALVL0 "Gamma correction OFF"
-#define GAMMALVL1 "Gamma correction level 1"
-#define GAMMALVL2 "Gamma correction level 2"
-#define GAMMALVL3 "Gamma correction level 3"
-#define GAMMALVL4 "Gamma correction level 4"
-#define EMPTYSTRING "empty slot"
+#define DETAILHI "Haute définition"
+#define DETAILLO "Faible définition"
+#define GAMMALVL0 "Correction gamma DÉSACTIVÉ"
+#define GAMMALVL1 "Correction gamma niveau 1"
+#define GAMMALVL2 "Correction gamma niveau 2"
+#define GAMMALVL3 "Correction gamma niveau 3"
+#define GAMMALVL4 "Correction gamma niveau 4"
+#define EMPTYSTRING "slot vide"
 
 /* P_inter.C */
 
-#define GOTARMOR "Picked up the armor."
-#define GOTMEGA "Picked up the MegaArmor!"
-#define GOTHTHBONUS "Picked up a health bonus."
-#define GOTARMBONUS "Picked up an armor bonus."
-#define GOTSTIM "Picked up a stimpack."
-#define GOTMEDINEED "Picked up a medikit that you REALLY need!"
-#define GOTMEDIKIT "Picked up a medikit."
-#define GOTSUPER "Supercharge!"
+#define GOTARMOR "Ramassé l'armure."
+#define GOTMEGA "Ramassé le Mega Armure!"
+#define GOTHTHBONUS "Ramassé un bonus de santé."
+#define GOTARMBONUS "Ramassé un bonus d'armure."
+#define GOTSTIM "Ramassé un stimpack."
+#define GOTMEDINEED "Ramassé un medikit que tu as VRAIMENT besoin!"
+#define GOTMEDIKIT "Ramassé un medikit."
+#define GOTSUPER "Superchargé!"
 
-#define GOTBLUECARD "Picked up a blue keycard."
-#define GOTYELWCARD "Picked up a yellow keycard."
-#define GOTREDCARD "Picked up a red keycard."
-#define GOTBLUESKUL "Picked up a blue skull key."
-#define GOTYELWSKUL "Picked up a yellow skull key."
-#define GOTREDSKULL "Picked up a red skull key."
+#define GOTBLUECARD "Ramassé une carte d'accès bleue."
+#define GOTYELWCARD "Ramassé une carte d'accès jaune."
+#define GOTREDCARD "Ramassé une carte d'accès rouge."
+#define GOTBLUESKUL "Ramassé une clé crâne bleue."
+#define GOTYELWSKUL "Ramassé une clé crâne jaune."
+#define GOTREDSKULL "Ramassé une clé crâne rouge."
 
-#define GOTINVUL "Invulnerability!"
+#define GOTINVUL "Invulnérabilité!"
 #define GOTBERSERK "Berserk!"
-#define GOTINVIS "Partial Invisibility"
-#define GOTSUIT "Radiation Shielding Suit"
-#define GOTMAP "Computer Area Map"
-#define GOTVISOR "Light Amplification Visor"
+#define GOTINVIS "Invisibilité Partielle"
+#define GOTSUIT "Radiation Shielding Suit" // TODO?
+#define GOTMAP "Carte de la Zone Informatique"
+#define GOTVISOR "Light Amplification Visor" // TODO?
 #define GOTMSPHERE "MegaSphere!"
 
-#define GOTCLIP "Picked up a clip."
-#define GOTCLIPBOX "Picked up a box of bullets."
-#define GOTROCKET "Picked up a rocket."
-#define GOTROCKBOX "Picked up a box of rockets."
-#define GOTCELL "Picked up an energy cell."
-#define GOTCELLBOX "Picked up an energy cell pack."
-#define GOTSHELLS "Picked up 4 shotgun shells."
-#define GOTSHELLBOX "Picked up a box of shotgun shells."
-#define GOTBACKPACK "Picked up a backpack full of ammo!"
+#define GOTCLIP "Ramassé un clip."
+#define GOTCLIPBOX "Ramassé une boîte de balles."
+#define GOTROCKET "Ramassé une fusée."
+#define GOTROCKBOX "Ramassé une boîte de fusées."
+#define GOTCELL "Ramassé une cellule énergétique."
+#define GOTCELLBOX "Ramassé un paquet de cellules énergétiques."
+#define GOTSHELLS "Ramassé 4 cartouches de fusil de chasse."
+#define GOTSHELLBOX "Ramassé une boîte de cartouches de fusil de chasse."
+#define GOTBACKPACK "Ramassé une sac à dos plein d'ammo!"
 
-#define GOTBFG9000 "You got the BFG9000!  Oh, yes."
-#define GOTCHAINGUN "You got the chaingun!"
-#define GOTCHAINSAW "A chainsaw!  Find some meat!"
-#define GOTLAUNCHER "You got the rocket launcher!"
-#define GOTPLASMA "You got the plasma gun!"
-#define GOTSHOTGUN "You got the shotgun!"
-#define GOTSHOTGUN2 "You got the super shotgun!"
+#define GOTBFG9000 "Tu as eu le BFG9000! Hohoho, oui!"
+#define GOTCHAINGUN "Tu as eu le chaingun!"
+#define GOTCHAINSAW "Un scie à chaîne! Trouve de la viande!"
+#define GOTLAUNCHER "Tu as eu la lance-roquettes!"
+#define GOTPLASMA "Tu as eu le pistolet à plasma!"
+#define GOTSHOTGUN "Tu as eu le fusil de chasse!"
+#define GOTSHOTGUN2 "Tu as eu le super fusil de chasse!"
 
 /* P_Doors.C */
 
@@ -178,113 +181,113 @@
 #define HUSTR_E4M8 "E4M8: Unto The Cruel"
 #define HUSTR_E4M9 "E4M9: Fear"
 
-#define HUSTR_1 "level 1: entryway"
-#define HUSTR_2 "level 2: underhalls"
-#define HUSTR_3 "level 3: the gantlet"
-#define HUSTR_4 "level 4: the focus"
-#define HUSTR_5 "level 5: the waste tunnels"
-#define HUSTR_6 "level 6: the crusher"
-#define HUSTR_7 "level 7: dead simple"
-#define HUSTR_8 "level 8: tricks and traps"
-#define HUSTR_9 "level 9: the pit"
-#define HUSTR_10 "level 10: refueling base"
-#define HUSTR_11 "level 11: 'o' of destruction!"
+#define HUSTR_1 "niveau 1: entryway"
+#define HUSTR_2 "niveau 2: underhalls"
+#define HUSTR_3 "niveau 3: the gantlet"
+#define HUSTR_4 "niveau 4: the focus"
+#define HUSTR_5 "niveau 5: the waste tunnels"
+#define HUSTR_6 "niveau 6: the crusher"
+#define HUSTR_7 "niveau 7: dead simple"
+#define HUSTR_8 "niveau 8: tricks and traps"
+#define HUSTR_9 "niveau 9: the pit"
+#define HUSTR_10 "niveau 10: refueling base"
+#define HUSTR_11 "niveau 11: 'o' of destruction!"
 
-#define HUSTR_12 "level 12: the factory"
-#define HUSTR_13 "level 13: downtown"
-#define HUSTR_14 "level 14: the inmost dens"
-#define HUSTR_15 "level 15: industrial zone"
-#define HUSTR_16 "level 16: suburbs"
-#define HUSTR_17 "level 17: tenements"
-#define HUSTR_18 "level 18: the courtyard"
-#define HUSTR_19 "level 19: the citadel"
-#define HUSTR_20 "level 20: gotcha!"
+#define HUSTR_12 "niveau 12: the factory"
+#define HUSTR_13 "niveau 13: downtown"
+#define HUSTR_14 "niveau 14: the inmost dens"
+#define HUSTR_15 "niveau 15: industrial zone"
+#define HUSTR_16 "niveau 16: suburbs"
+#define HUSTR_17 "niveau 17: tenements"
+#define HUSTR_18 "niveau 18: the courtyard"
+#define HUSTR_19 "niveau 19: the citadel"
+#define HUSTR_20 "niveau 20: gotcha!"
 
-#define HUSTR_21 "level 21: nirvana"
-#define HUSTR_22 "level 22: the catacombs"
-#define HUSTR_23 "level 23: barrels o' fun"
-#define HUSTR_24 "level 24: the chasm"
-#define HUSTR_25 "level 25: bloodfalls"
-#define HUSTR_26 "level 26: the abandoned mines"
-#define HUSTR_27 "level 27: monster condo"
-#define HUSTR_28 "level 28: the spirit world"
-#define HUSTR_29 "level 29: the living end"
-#define HUSTR_30 "level 30: icon of sin"
+#define HUSTR_21 "niveau 21: nirvana"
+#define HUSTR_22 "niveau 22: the catacombs"
+#define HUSTR_23 "niveau 23: barrels o' fun"
+#define HUSTR_24 "niveau 24: the chasm"
+#define HUSTR_25 "niveau 25: bloodfalls"
+#define HUSTR_26 "niveau 26: the abandoned mines"
+#define HUSTR_27 "niveau 27: monster condo"
+#define HUSTR_28 "niveau 28: the spirit world"
+#define HUSTR_29 "niveau 29: the living end"
+#define HUSTR_30 "niveau 30: icon of sin"
 
-#define HUSTR_31 "level 31: wolfenstein"
-#define HUSTR_32 "level 32: grosse"
+#define HUSTR_31 "niveau 31: wolfenstein"
+#define HUSTR_32 "niveau 32: grosse"
 
-#define PHUSTR_1 "level 1: congo"
-#define PHUSTR_2 "level 2: well of souls"
-#define PHUSTR_3 "level 3: aztec"
-#define PHUSTR_4 "level 4: caged"
-#define PHUSTR_5 "level 5: ghost town"
-#define PHUSTR_6 "level 6: baron's lair"
-#define PHUSTR_7 "level 7: caughtyard"
-#define PHUSTR_8 "level 8: realm"
-#define PHUSTR_9 "level 9: abattoire"
-#define PHUSTR_10 "level 10: onslaught"
-#define PHUSTR_11 "level 11: hunted"
+#define PHUSTR_1 "niveau 1: congo"
+#define PHUSTR_2 "niveau 2: well of souls"
+#define PHUSTR_3 "niveau 3: aztec"
+#define PHUSTR_4 "niveau 4: caged"
+#define PHUSTR_5 "niveau 5: ghost town"
+#define PHUSTR_6 "niveau 6: baron's lair"
+#define PHUSTR_7 "niveau 7: caughtyard"
+#define PHUSTR_8 "niveau 8: realm"
+#define PHUSTR_9 "niveau 9: abattoire"
+#define PHUSTR_10 "niveau 10: onslaught"
+#define PHUSTR_11 "niveau 11: hunted"
 
-#define PHUSTR_12 "level 12: speed"
-#define PHUSTR_13 "level 13: the crypt"
-#define PHUSTR_14 "level 14: genesis"
-#define PHUSTR_15 "level 15: the twilight"
-#define PHUSTR_16 "level 16: the omen"
-#define PHUSTR_17 "level 17: compound"
-#define PHUSTR_18 "level 18: neurosphere"
-#define PHUSTR_19 "level 19: nme"
-#define PHUSTR_20 "level 20: the death domain"
+#define PHUSTR_12 "niveau 12: speed"
+#define PHUSTR_13 "niveau 13: the crypt"
+#define PHUSTR_14 "niveau 14: genesis"
+#define PHUSTR_15 "niveau 15: the twilight"
+#define PHUSTR_16 "niveau 16: the omen"
+#define PHUSTR_17 "niveau 17: compound"
+#define PHUSTR_18 "niveau 18: neurosphere"
+#define PHUSTR_19 "niveau 19: nme"
+#define PHUSTR_20 "niveau 20: the death domain"
 
-#define PHUSTR_21 "level 21: slayer"
-#define PHUSTR_22 "level 22: impossible mission"
-#define PHUSTR_23 "level 23: tombstone"
-#define PHUSTR_24 "level 24: the final frontier"
-#define PHUSTR_25 "level 25: the temple of darkness"
-#define PHUSTR_26 "level 26: bunker"
-#define PHUSTR_27 "level 27: anti-christ"
-#define PHUSTR_28 "level 28: the sewers"
-#define PHUSTR_29 "level 29: odyssey of noises"
-#define PHUSTR_30 "level 30: the gateway of hell"
+#define PHUSTR_21 "niveau 21: slayer"
+#define PHUSTR_22 "niveau 22: impossible mission"
+#define PHUSTR_23 "niveau 23: tombstone"
+#define PHUSTR_24 "niveau 24: the final frontier"
+#define PHUSTR_25 "niveau 25: the temple of darkness"
+#define PHUSTR_26 "niveau 26: bunker"
+#define PHUSTR_27 "niveau 27: anti-christ"
+#define PHUSTR_28 "niveau 28: the sewers"
+#define PHUSTR_29 "niveau 29: odyssey of noises"
+#define PHUSTR_30 "niveau 30: the gateway of hell"
 
-#define PHUSTR_31 "level 31: cyberden"
-#define PHUSTR_32 "level 32: go 2 it"
+#define PHUSTR_31 "niveau 31: cyberden"
+#define PHUSTR_32 "niveau 32: go 2 it"
 
-#define THUSTR_1 "level 1: system control"
-#define THUSTR_2 "level 2: human bbq"
-#define THUSTR_3 "level 3: power control"
-#define THUSTR_4 "level 4: wormhole"
-#define THUSTR_5 "level 5: hanger"
-#define THUSTR_6 "level 6: open season"
-#define THUSTR_7 "level 7: prison"
-#define THUSTR_8 "level 8: metal"
-#define THUSTR_9 "level 9: stronghold"
-#define THUSTR_10 "level 10: redemption"
-#define THUSTR_11 "level 11: storage facility"
+#define THUSTR_1 "niveau 1: system control"
+#define THUSTR_2 "niveau 2: human bbq"
+#define THUSTR_3 "niveau 3: power control"
+#define THUSTR_4 "niveau 4: wormhole"
+#define THUSTR_5 "niveau 5: hanger"
+#define THUSTR_6 "niveau 6: open season"
+#define THUSTR_7 "niveau 7: prison"
+#define THUSTR_8 "niveau 8: metal"
+#define THUSTR_9 "niveau 9: stronghold"
+#define THUSTR_10 "niveau 10: redemption"
+#define THUSTR_11 "niveau 11: storage facility"
 
-#define THUSTR_12 "level 12: crater"
-#define THUSTR_13 "level 13: nukage processing"
-#define THUSTR_14 "level 14: steel works"
-#define THUSTR_15 "level 15: dead zone"
-#define THUSTR_16 "level 16: deepest reaches"
-#define THUSTR_17 "level 17: processing area"
-#define THUSTR_18 "level 18: mill"
-#define THUSTR_19 "level 19: shipping/respawning"
-#define THUSTR_20 "level 20: central processing"
+#define THUSTR_12 "niveau 12: crater"
+#define THUSTR_13 "niveau 13: nukage processing"
+#define THUSTR_14 "niveau 14: steel works"
+#define THUSTR_15 "niveau 15: dead zone"
+#define THUSTR_16 "niveau 16: deepest reaches"
+#define THUSTR_17 "niveau 17: processing area"
+#define THUSTR_18 "niveau 18: mill"
+#define THUSTR_19 "niveau 19: shipping/respawning"
+#define THUSTR_20 "niveau 20: central processing"
 
-#define THUSTR_21 "level 21: administration center"
-#define THUSTR_22 "level 22: habitat"
-#define THUSTR_23 "level 23: lunar mining project"
-#define THUSTR_24 "level 24: quarry"
-#define THUSTR_25 "level 25: baron's den"
-#define THUSTR_26 "level 26: ballistyx"
-#define THUSTR_27 "level 27: mount pain"
-#define THUSTR_28 "level 28: heck"
-#define THUSTR_29 "level 29: river styx"
-#define THUSTR_30 "level 30: last call"
+#define THUSTR_21 "niveau 21: administration center"
+#define THUSTR_22 "niveau 22: habitat"
+#define THUSTR_23 "niveau 23: lunar mining project"
+#define THUSTR_24 "niveau 24: quarry"
+#define THUSTR_25 "niveau 25: baron's den"
+#define THUSTR_26 "niveau 26: ballistyx"
+#define THUSTR_27 "niveau 27: mount pain"
+#define THUSTR_28 "niveau 28: heck"
+#define THUSTR_29 "niveau 29: river styx"
+#define THUSTR_30 "niveau 30: last call"
 
-#define THUSTR_31 "level 31: pharaoh"
-#define THUSTR_32 "level 32: caribbean"
+#define THUSTR_31 "niveau 31: pharaoh"
+#define THUSTR_32 "niveau 32: caribbean"
 
 #define HUSTR_CHATMACRO1 "I'm ready to kick butt!"
 #define HUSTR_CHATMACRO2 "I'm OK."
@@ -294,8 +297,8 @@
 #define HUSTR_CHATMACRO6 "Next time, scumbag..."
 #define HUSTR_CHATMACRO7 "Come here!"
 #define HUSTR_CHATMACRO8 "I'll take care of it."
-#define HUSTR_CHATMACRO9 "Yes"
-#define HUSTR_CHATMACRO0 "No"
+#define HUSTR_CHATMACRO9 "Oui"
+#define HUSTR_CHATMACRO0 "Non"
 
 #define HUSTR_TALKTOSELF1 "You mumble to yourself"
 #define HUSTR_TALKTOSELF2 "Who's there?"
@@ -309,10 +312,10 @@
  * necessary
  */
 
-#define HUSTR_PLRGREEN "Green: "
+#define HUSTR_PLRGREEN "Vert: "
 #define HUSTR_PLRINDIGO "Indigo: "
-#define HUSTR_PLRBROWN "Brown: "
-#define HUSTR_PLRRED "Red: "
+#define HUSTR_PLRBROWN "Brun: "
+#define HUSTR_PLRRED "Rouge: "
 
 #define HUSTR_KEYGREEN 'g'
 #define HUSTR_KEYINDIGO 'i'
@@ -424,7 +427,7 @@
   "\n"                                                                       \
   "next stop, hell on earth!"
 
-/* after level 6, put this: */
+/* after niveau 6, put this: */
 
 #define C1TEXT                                                               \
   "YOU HAVE ENTERED DEEPLY INTO THE INFESTED\n"                              \
@@ -440,7 +443,7 @@
   "SWITCH WHICH HOLDS EARTH'S POPULATION\n"                                  \
   "HOSTAGE."
 
-/* After level 11, put this: */
+/* After niveau 11, put this: */
 
 #define C2TEXT                                                               \
   "YOU HAVE WON! YOUR VICTORY HAS ENABLED\n"                                 \
@@ -461,7 +464,7 @@
   "STARPORT.\" SLOWLY AND PAINFULLY YOU GET\n"                               \
   "UP AND RETURN TO THE FRAY."
 
-/* After level 20, put this: */
+/* After niveau 20, put this: */
 
 #define C3TEXT                                                               \
   "YOU ARE AT THE CORRUPT HEART OF THE CITY,\n"                              \
@@ -474,7 +477,7 @@
   "OTHER SIDE. WHAT DO YOU CARE IF YOU'VE\n"                                 \
   "GOT TO GO THROUGH HELL TO GET TO IT?"
 
-/* After level 29, put this: */
+/* After niveau 29, put this: */
 
 #define C4TEXT                                                               \
   "THE HORRENDOUS VISAGE OF THE BIGGEST\n"                                   \
@@ -493,7 +496,7 @@
   "HOME. REBUILDING EARTH OUGHT TO BE A\n"                                   \
   "LOT MORE FUN THAN RUINING IT WAS.\n"
 
-/* Before level 31, put this: */
+/* Before niveau 31, put this: */
 
 #define C5TEXT                                                               \
   "CONGRATULATIONS, YOU'VE FOUND THE SECRET\n"                               \
@@ -502,7 +505,7 @@
   "WHO THE INMATES OF THIS CORNER OF HELL\n"                                 \
   "WILL BE."
 
-/* Before level 32, put this: */
+/* Before niveau 32, put this: */
 
 #define C6TEXT                                                               \
   "CONGRATULATIONS, YOU'VE FOUND THE\n"                                      \
@@ -568,8 +571,8 @@
 /* before map 31 */
 
 #define P5TEXT                                                               \
-  "You've found the second-hardest level we\n"                               \
-  "got. Hope you have a saved game a level or\n"                             \
+  "You've found the second-hardest niveau we\n"                               \
+  "got. Hope you have a saved game a niveau or\n"                             \
   "two previous.  If not, be prepared to die\n"                              \
   "aplenty. For master marines only."
 
@@ -577,7 +580,7 @@
 
 #define P6TEXT                                                               \
   "Betcha wondered just what WAS the hardest\n"                              \
-  "level we had ready for ya?  Now you know.\n"                              \
+  "niveau we had ready for ya?  Now you know.\n"                              \
   "No one gets out alive."
 
 #define T1TEXT                                                               \
@@ -691,4 +694,4 @@
   "just leave. when you come\nback, i'll be waiting with a bat.",              \
   "you're lucky i don't smack\nyou for thinking about leaving.",
 
-#endif /* __D_ENGLSH__ */
+#endif /* __D_FRENCH__ */

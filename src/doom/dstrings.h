@@ -32,10 +32,12 @@
 
 /* All important printed strings. */
 
-#ifdef CONFIG_GAMES_NXDOOM_LANG_EN
+#if defined(CONFIG_GAMES_NXDOOM_LANG_EN)
 #include "d_englsh.h"
+#elif defined(CONFIG_GAMES_NXDOOM_LANG_FR)
+#include "d_french.h"
 #else
-#error "Only English is supported at this time."
+#error "Unsupported language choice."
 #endif
 
 /****************************************************************************
