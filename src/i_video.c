@@ -1617,7 +1617,7 @@ void i_init_graphics(void)
 
   /* Set the palette */
 
-  doompal = w_cache_lump_name(deh_string("PLAYPAL"), PU_CACHE);
+  doompal = w_cache_lump_name(("PLAYPAL"), PU_CACHE);
   i_set_palette(doompal);
 
   UpdateGrab();

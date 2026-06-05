@@ -552,7 +552,7 @@ void AM_loadPics(void)
 
   for (i = 0; i < 10; i++)
     {
-      deh_snprintf(namebuf, 9, "AMMNUM%d", i);
+      snprintf(namebuf, 9, "AMMNUM%d", i);
       marknums[i] = w_cache_lump_name(namebuf, PU_STATIC);
     }
 }
@@ -568,7 +568,7 @@ void AM_unloadPics(void)
 
   for (i = 0; i < 10; i++)
     {
-      deh_snprintf(namebuf, 9, "AMMNUM%d", i);
+      snprintf(namebuf, 9, "AMMNUM%d", i);
       w_release_lump_name(namebuf);
     }
 }
@@ -785,29 +785,29 @@ boolean am_responder(event_t *ev)
           followplayer = !followplayer;
           f_oldloc.x = INT_MAX;
           if (followplayer)
-            plr->message = deh_string(AMSTR_FOLLOWON);
+            plr->message = (AMSTR_FOLLOWON);
           else
-            plr->message = deh_string(AMSTR_FOLLOWOFF);
+            plr->message = (AMSTR_FOLLOWOFF);
         }
       else if (key == key_map_grid)
         {
           grid = !grid;
           if (grid)
-            plr->message = deh_string(AMSTR_GRIDON);
+            plr->message = (AMSTR_GRIDON);
           else
-            plr->message = deh_string(AMSTR_GRIDOFF);
+            plr->message = (AMSTR_GRIDOFF);
         }
       else if (key == key_map_mark)
         {
           m_snprintf(buffer, sizeof(buffer), "%s %d",
-                     deh_string(AMSTR_MARKEDSPOT), markpointnum);
+                     (AMSTR_MARKEDSPOT), markpointnum);
           plr->message = buffer;
           AM_addMark();
         }
       else if (key == key_map_clearmark)
         {
           AM_clearMarks();
-          plr->message = deh_string(AMSTR_MARKSCLEARED);
+          plr->message = (AMSTR_MARKSCLEARED);
         }
       else
         {
@@ -1129,7 +1129,7 @@ void AM_drawFline(fline_t *fl, int color)
   if (fl->a.x < 0 || fl->a.x >= f_w || fl->a.y < 0 || fl->a.y >= f_h ||
       fl->b.x < 0 || fl->b.x >= f_w || fl->b.y < 0 || fl->b.y >= f_h)
     {
-      deh_fprintf(stderr, "fuck %d \r", fuck++);
+      fprintf(stderr, "fuck %d \r", fuck++);
       return;
     }
 

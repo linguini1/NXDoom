@@ -978,7 +978,7 @@ void v_screenshot(const char *format)
   if (png_screenshots)
     {
       WritePNGfile(lbmname, i_video_buffer, SCREENWIDTH, SCREENHEIGHT,
-                   w_cache_lump_name(deh_string("PLAYPAL"), PU_CACHE));
+                   w_cache_lump_name(("PLAYPAL"), PU_CACHE));
     }
   else
 #endif
@@ -986,7 +986,7 @@ void v_screenshot(const char *format)
       /* save the pcx file */
 
       WritePCXfile(lbmname, i_video_buffer, SCREENWIDTH, SCREENHEIGHT,
-                   w_cache_lump_name(deh_string("PLAYPAL"), PU_CACHE));
+                   w_cache_lump_name(("PLAYPAL"), PU_CACHE));
     }
 }
 

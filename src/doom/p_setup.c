@@ -754,10 +754,10 @@ P_SetupLevel
     // find map name
     if ( gamemode == commercial)
     {
-	if (map<10)
-	    deh_snprintf(lumpname, 9, "map0%i", map);
+	if (map < 10)
+	    snprintf(lumpname, 9, "map0%d", (int8_t)map);
 	else
-	    deh_snprintf(lumpname, 9, "map%i", map);
+	    snprintf(lumpname, 9, "map%d", (int8_t)map);
     }
     else
     {

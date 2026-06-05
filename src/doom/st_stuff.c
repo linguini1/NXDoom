@@ -404,10 +404,10 @@ ST_Responder (event_t* ev)
 	    plyr->mo->health = deh_god_mode_health;
 	  
 	  plyr->health = deh_god_mode_health;
-	  plyr->message = deh_string(STSTR_DQDON);
+	  plyr->message = (STSTR_DQDON);
 	}
 	else 
-	  plyr->message = deh_string(STSTR_DQDOFF);
+	  plyr->message = (STSTR_DQDOFF);
       }
       // 'fa' cheat for killer fucking arsenal
       else if (cht_CheckCheat(&cheat_ammonokey, ev->data2))
@@ -421,7 +421,7 @@ ST_Responder (event_t* ev)
 	for (i=0;i<NUMAMMO;i++)
 	  plyr->ammo[i] = plyr->maxammo[i];
 	
-	plyr->message = deh_string(STSTR_FAADDED);
+	plyr->message = (STSTR_FAADDED);
       }
       // 'kfa' cheat for key full ammo
       else if (cht_CheckCheat(&cheat_ammo, ev->data2))
@@ -438,7 +438,7 @@ ST_Responder (event_t* ev)
 	for (i=0;i<NUMCARDS;i++)
 	  plyr->cards[i] = true;
 	
-	plyr->message = deh_string(STSTR_KFAADDED);
+	plyr->message = (STSTR_KFAADDED);
       }
       // 'mus' cheat for changing music
       else if (cht_CheckCheat(&cheat_mus, ev->data2))
@@ -449,7 +449,7 @@ ST_Responder (event_t* ev)
 	int		musnum;
 #endif
 	
-	plyr->message = deh_string(STSTR_MUS);
+	plyr->message = (STSTR_MUS);
 	cht_GetParam(&cheat_mus, buf);
 
         // Note: The original v1.9 had a bug that tried to play back
@@ -465,7 +465,7 @@ ST_Responder (event_t* ev)
 	  
 	  if (((buf[0]-'0')*10 + buf[1]-'0') > 35
        && gameversion >= exe_doom_1_8)
-	    plyr->message = deh_string(STSTR_NOMUS);
+	    plyr->message = (STSTR_NOMUS);
 	  else {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           S_ChangeMusic(musnum, 1);
@@ -479,7 +479,7 @@ ST_Responder (event_t* ev)
 #endif
 	  
 	  if (((buf[0]-'1')*9 + buf[1]-'1') > 31)
-	    plyr->message = deh_string(STSTR_NOMUS);
+	    plyr->message = (STSTR_NOMUS);
 	  else {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           S_ChangeMusic(musnum, 1);
@@ -499,9 +499,9 @@ ST_Responder (event_t* ev)
 	plyr->cheats ^= CF_NOCLIP;
 	
 	if (plyr->cheats & CF_NOCLIP)
-	  plyr->message = deh_string(STSTR_NCON);
+	  plyr->message = (STSTR_NCON);
 	else
-	  plyr->message = deh_string(STSTR_NCOFF);
+	  plyr->message = (STSTR_NCOFF);
       }
       // 'behold?' power-up cheats
       for (i=0;i<6;i++)
@@ -515,21 +515,21 @@ ST_Responder (event_t* ev)
 	  else
 	    plyr->powers[i] = 0;
 	  
-	  plyr->message = deh_string(STSTR_BEHOLDX);
+	  plyr->message = (STSTR_BEHOLDX);
 	}
       }
       
       // 'behold' power-up menu
       if (cht_CheckCheat(&cheat_powerup[6], ev->data2))
       {
-	plyr->message = deh_string(STSTR_BEHOLD);
+	plyr->message = (STSTR_BEHOLD);
       }
       // 'choppers' invulnerability & chainsaw
       else if (cht_CheckCheat(&cheat_choppers, ev->data2))
       {
 	plyr->weaponowned[wp_chainsaw] = true;
 	plyr->powers[pw_invulnerability] = true;
-	plyr->message = deh_string(STSTR_CHOPPERS);
+	plyr->message = (STSTR_CHOPPERS);
       }
       // 'mypos' for player position
       else if (cht_CheckCheat(&cheat_mypos, ev->data2))
@@ -614,7 +614,7 @@ ST_Responder (event_t* ev)
       }
 
       // So be it.
-      plyr->message = deh_string(STSTR_CLEV);
+      plyr->message = (STSTR_CLEV);
       G_DeferedInitNew(gameskill, epsd, map);
     }
   }
@@ -1045,32 +1045,32 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     // Load the numbers, tall and short
     for (i=0;i<10;i++)
     {
-	deh_snprintf(namebuf, 9, "STTNUM%d", i);
+	snprintf(namebuf, 9, "STTNUM%d", i);
         callback(namebuf, &tallnum[i]);
 
-	deh_snprintf(namebuf, 9, "STYSNUM%d", i);
+	snprintf(namebuf, 9, "STYSNUM%d", i);
         callback(namebuf, &shortnum[i]);
     }
 
     // Load percent key.
     //Note: why not load STMINUS here, too?
 
-    callback(deh_string("STTPRCNT"), &tallpercent);
+    callback(("STTPRCNT"), &tallpercent);
 
     // key cards
     for (i=0;i<NUMCARDS;i++)
     {
-	deh_snprintf(namebuf, 9, "STKEYS%d", i);
+	snprintf(namebuf, 9, "STKEYS%d", i);
         callback(namebuf, &keys[i]);
     }
 
     // arms background
-    callback(deh_string("STARMS"), &armsbg);
+    callback(("STARMS"), &armsbg);
 
     // arms ownership widgets
     for (i=0; i<6; i++)
     {
-	deh_snprintf(namebuf, 9, "STGNUM%d", i+2);
+	snprintf(namebuf, 9, "STGNUM%d", i+2);
 
 	// gray #
         callback(namebuf, &arms[i][0]);
@@ -1080,19 +1080,19 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     }
 
     // face backgrounds for different color players
-    deh_snprintf(namebuf, 9, "STFB%d", consoleplayer);
+    snprintf(namebuf, 9, "STFB%d", consoleplayer);
     callback(namebuf, &faceback);
 
     // status bar background bits
     if (w_check_num_for_name("STBAR") >= 0)
     {
-        callback(deh_string("STBAR"), &sbar);
+        callback(("STBAR"), &sbar);
         sbarr = NULL;
     }
     else
     {
-        callback(deh_string("STMBARL"), &sbar);
-        callback(deh_string("STMBARR"), &sbarr);
+        callback(("STMBARL"), &sbar);
+        callback(("STMBARR"), &sbarr);
     }
 
     // face states
@@ -1101,30 +1101,30 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     {
 	for (j=0; j<ST_NUMSTRAIGHTFACES; j++)
 	{
-	    deh_snprintf(namebuf, 9, "STFST%d%d", i, j);
+	    snprintf(namebuf, 9, "STFST%d%d", i, j);
             callback(namebuf, &faces[facenum]);
             ++facenum;
 	}
-	deh_snprintf(namebuf, 9, "STFTR%d0", i);	// turn right
+	snprintf(namebuf, 9, "STFTR%d0", i);	// turn right
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	deh_snprintf(namebuf, 9, "STFTL%d0", i);	// turn left
+	snprintf(namebuf, 9, "STFTL%d0", i);	// turn left
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	deh_snprintf(namebuf, 9, "STFOUCH%d", i);	// ouch!
+	snprintf(namebuf, 9, "STFOUCH%d", i);	// ouch!
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	deh_snprintf(namebuf, 9, "STFEVL%d", i);	// evil grin ;)
+	snprintf(namebuf, 9, "STFEVL%d", i);	// evil grin ;)
         callback(namebuf, &faces[facenum]);
         ++facenum;
-	deh_snprintf(namebuf, 9, "STFKILL%d", i);	// pissed off
+	snprintf(namebuf, 9, "STFKILL%d", i);	// pissed off
         callback(namebuf, &faces[facenum]);
         ++facenum;
     }
 
-    callback(deh_string("STFGOD0"), &faces[facenum]);
+    callback(("STFGOD0"), &faces[facenum]);
     ++facenum;
-    callback(deh_string("STFDEAD0"), &faces[facenum]);
+    callback(("STFDEAD0"), &faces[facenum]);
     ++facenum;
 }
 
@@ -1140,7 +1140,7 @@ void ST_loadGraphics(void)
 
 void ST_loadData(void)
 {
-    lu_palette = w_get_num_for_name (deh_string("PLAYPAL"));
+    lu_palette = w_get_num_for_name (("PLAYPAL"));
     ST_loadGraphics();
 }
 

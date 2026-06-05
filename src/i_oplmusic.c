@@ -364,7 +364,7 @@ static boolean LoadInstrumentTable(void)
 {
     byte *lump;
 
-    lump = w_cache_lump_name(deh_string("genmidi"), PU_STATIC);
+    lump = w_cache_lump_name(("genmidi"), PU_STATIC);
 
     // DMX does not check header
 
@@ -1705,7 +1705,7 @@ static void I_OPL_ShutdownMusic(void)
 
         // Release GENMIDI lump
 
-        w_release_lump_name(deh_string("genmidi"));
+        w_release_lump_name(("genmidi"));
 
         music_initialized = false;
     }

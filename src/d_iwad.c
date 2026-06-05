@@ -563,7 +563,7 @@ static char *SearchDirectoryForIWAD(const char *dir, int mask, GameMission_t *mi
             continue;
         }
 
-        filename = CheckDirectoryHasIWAD(dir, deh_string(iwads[i].name));
+        filename = CheckDirectoryHasIWAD(dir, (iwads[i].name));
 
         if (filename != NULL)
         {

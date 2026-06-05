@@ -225,7 +225,7 @@ EV_DoLockedDoor
       case 133:
 	if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
 	{
-	    p->message = deh_string(PD_BLUEO);
+	    p->message = (PD_BLUEO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -237,7 +237,7 @@ EV_DoLockedDoor
       case 135:
 	if (!p->cards[it_redcard] && !p->cards[it_redskull])
 	{
-	    p->message = deh_string(PD_REDO);
+	    p->message = (PD_REDO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -250,7 +250,7 @@ EV_DoLockedDoor
 	if (!p->cards[it_yellowcard] &&
 	    !p->cards[it_yellowskull])
 	{
-	    p->message = deh_string(PD_YELLOWO);
+	    p->message = (PD_YELLOWO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -382,7 +382,7 @@ EV_VerticalDoor
 	
 	if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
 	{
-	    player->message = deh_string(PD_BLUEK);
+	    player->message = (PD_BLUEK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -398,7 +398,7 @@ EV_VerticalDoor
 	if (!player->cards[it_yellowcard] &&
 	    !player->cards[it_yellowskull])
 	{
-	    player->message = deh_string(PD_YELLOWK);
+	    player->message = (PD_YELLOWK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif
@@ -413,7 +413,7 @@ EV_VerticalDoor
 	
 	if (!player->cards[it_redcard] && !player->cards[it_redskull])
 	{
-	    player->message = deh_string(PD_REDK);
+	    player->message = (PD_REDK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    S_StartSound(NULL,sfx_oof);
 #endif

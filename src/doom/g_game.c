@@ -667,7 +667,7 @@ void G_DoLoadLevel (void)
     //  we look for an actual index, instead of simply
     //  setting one.
 
-    skyflatnum = R_FlatNumForName(deh_string(SKYFLATNAME));
+    skyflatnum = R_FlatNumForName((SKYFLATNAME));
 
     // The "Sky never changes in Doom II" bug was fixed in
     // the id Anthology version of doom2.exe for Final Doom.
@@ -689,7 +689,7 @@ void G_DoLoadLevel (void)
             skytexturename = "SKY3";
         }
 
-        skytexturename = deh_string(skytexturename);
+        skytexturename = (skytexturename);
 
         skytexture = R_TextureNumForName(skytexturename);
     }
@@ -951,7 +951,7 @@ void G_Ticker (void)
 	    break; 
 	  case ga_screenshot: 
 	    v_screenshot("DOOM%02i.%s"); 
-            players[consoleplayer].message = deh_string("screen shot");
+            players[consoleplayer].message = ("screen shot");
 	    gameaction = ga_nothing; 
 	    break; 
 	  case ga_nothing: 
@@ -1536,7 +1536,7 @@ void G_DoCompleted (void)
         {
             int cpars32;
 
-            memcpy(&cpars32, deh_string(GAMMALVL0), sizeof(int));
+            memcpy(&cpars32, (GAMMALVL0), sizeof(int));
             cpars32 = LONG(cpars32);
 
             wminfo.partime = TICRATE*cpars32;
@@ -1772,7 +1772,7 @@ void G_DoSaveGame (void)
     gameaction = ga_nothing;
     m_str_copy(savedescription, "", sizeof(savedescription));
 
-    players[consoleplayer].message = deh_string(GGSAVED);
+    players[consoleplayer].message = (GGSAVED);
 
     // draw the pattern into the back screen
     R_FillBackScreen ();
@@ -1947,11 +1947,11 @@ G_InitNew
 
     if (gamemode == commercial)
     {
-        skytexturename = deh_string("SKY3");
+        skytexturename = ("SKY3");
         skytexture = R_TextureNumForName(skytexturename);
         if (gamemap < 21)
         {
-            skytexturename = deh_string(gamemap < 12 ? "SKY1" : "SKY2");
+            skytexturename = (gamemap < 12 ? "SKY1" : "SKY2");
             skytexture = R_TextureNumForName(skytexturename);
         }
     }
@@ -1973,7 +1973,7 @@ G_InitNew
             skytexturename = "SKY4";
             break;
         }
-        skytexturename = deh_string(skytexturename);
+        skytexturename = (skytexturename);
         skytexture = R_TextureNumForName(skytexturename);
     }
 

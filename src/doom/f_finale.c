@@ -153,8 +153,8 @@ void F_StartFinale (void)
 
     // Do dehacked substitutions of strings
   
-    finaletext = deh_string(finaletext);
-    finaleflat = deh_string(finaleflat);
+    finaletext = (finaletext);
+    finaleflat = (finaleflat);
     
     finalestage = F_STAGE_TEXT;
     finalecount = 0;
@@ -567,9 +567,9 @@ void F_CastDrawer (void)
     patch_t*		patch;
     
     // erase the entire screen to a background
-    v_draw_patch (0, 0, w_cache_lump_name (deh_string("BOSSBACK"), PU_CACHE));
+    v_draw_patch (0, 0, w_cache_lump_name (("BOSSBACK"), PU_CACHE));
 
-    F_CastPrint (deh_string(castorder[castnum].name));
+    F_CastPrint ((castorder[castnum].name));
     
     // draw the current frame in the middle of the screen
     sprdef = &sprites[caststate->sprite];
@@ -633,8 +633,8 @@ void F_BunnyScroll (void)
     int		stage;
     static int	laststage;
 		
-    p1 = w_cache_lump_name (deh_string("PFUB2"), PU_LEVEL);
-    p2 = w_cache_lump_name (deh_string("PFUB1"), PU_LEVEL);
+    p1 = w_cache_lump_name (("PFUB2"), PU_LEVEL);
+    p2 = w_cache_lump_name (("PFUB1"), PU_LEVEL);
 
     v_mark_rect (0, 0, SCREENWIDTH, SCREENHEIGHT);
 	
@@ -658,7 +658,7 @@ void F_BunnyScroll (void)
     {
         v_draw_patch((SCREENWIDTH - 13 * 8) / 2,
                     (SCREENHEIGHT - 8 * 8) / 2, 
-                    w_cache_lump_name(deh_string("END0"), PU_CACHE));
+                    w_cache_lump_name(("END0"), PU_CACHE));
 	laststage = 0;
 	return;
     }
@@ -674,7 +674,7 @@ void F_BunnyScroll (void)
 	laststage = stage;
     }
 	
-    deh_snprintf(name, 10, "END%i", stage);
+    snprintf(name, 10, "END%i", stage);
     v_draw_patch((SCREENWIDTH - 13 * 8) / 2, 
                 (SCREENHEIGHT - 8 * 8) / 2, 
                 w_cache_lump_name (name,PU_CACHE));
@@ -712,7 +712,7 @@ static void F_ArtScreenDrawer(void)
                 return;
         }
 
-        lumpname = deh_string(lumpname);
+        lumpname = (lumpname);
 
         v_draw_patch (0, 0, w_cache_lump_name(lumpname, PU_CACHE));
     }

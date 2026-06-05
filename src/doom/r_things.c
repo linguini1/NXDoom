@@ -199,7 +199,7 @@ void R_InitSpriteDefs(const char **namelist)
     // Just compare 4 characters as ints
     for (i=0 ; i<numsprites ; i++)
     {
-	spritename = deh_string(namelist[i]);
+	spritename = (namelist[i]);
 	memset (sprtemp,-1, sizeof(sprtemp));
 		
 	maxframe = -1;
