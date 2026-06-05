@@ -1,29 +1,39 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//       Key definitions
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doomkeys.h
+ *
+ * SPDX-License-Identifier: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *       Key definitions
+ *
+ *
+ ****************************************************************************/
 
 #ifndef __DOOMKEYS__
 #define __DOOMKEYS__
 
-//
-// DOOM keyboard definition.
-// This is the stuff configured by Setup.Exe.
-// Most key data are simple ascii (uppercased).
-//
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* DOOM keyboard definition.
+ * This is the stuff configured by Setup.Exe.
+ * Most key data are simple ascii (uppercased).
+ */
+
 #define KEY_RIGHTARROW	0xae
 #define KEY_LEFTARROW	0xac
 #define KEY_UPARROW	0xad
@@ -56,7 +66,7 @@
 
 #define KEY_LALT	KEY_RALT
 
-// new keys:
+/* new keys: */
 
 #define KEY_CAPSLOCK    (0x80+0x3a)
 #define KEY_NUMLOCK     (0x80+0x45)
@@ -116,7 +126,8 @@
     KEY_NONUSBACKSLASH, 0, 0, KEYP_EQUALS,                    /* 100-103 */ \
 }
 
-// Default names for keys, to use in English or as fallback.
+/* Default names for keys, to use in English or as fallback. */
+
 #define KEY_NAMES_ARRAY {                                            \
     { KEY_BACKSPACE,  "BACKSP" },   { KEY_TAB,        "TAB" },       \
     { KEY_INS,        "INS" },      { KEY_DEL,        "DEL" },       \
@@ -152,5 +163,4 @@
     { '\'', "\'" },                                                  \
 }
 
-#endif          // __DOOMKEYS__
-
+#endif /* __DOOMKEYS__ */

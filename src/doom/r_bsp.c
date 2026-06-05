@@ -1,4 +1,6 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/r_bsp.c
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -14,7 +16,8 @@
  *
  * DESCRIPTION:
  *	BSP traversal, handling of LineSegs for rendering.
- */
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -80,6 +83,13 @@ drawseg_t *ds_p;
 
 cliprange_t *newend;
 cliprange_t solidsegs[MAXSEGS];
+
+int checkcoord[12][4] =
+{
+  {3, 0, 2, 1}, {3, 0, 2, 0}, {3, 1, 2, 0}, {0},
+  {2, 0, 2, 1}, {0, 0, 0, 0}, {3, 1, 3, 0}, {0},
+  {2, 0, 3, 1}, {2, 1, 3, 1}, {2, 1, 3, 0},
+};
 
 /****************************************************************************
  * Public Function Prototypes
@@ -314,7 +324,8 @@ void R_AddLine(seg_t *line)
     {
       tspan -= 2 * clipangle;
 
-      // Totally off the left edge?
+      /* Totally off the left edge? */
+
       if (tspan >= span) return;
 
       angle1 = clipangle;
@@ -324,7 +335,8 @@ void R_AddLine(seg_t *line)
     {
       tspan -= 2 * clipangle;
 
-      // Totally off the left edge?
+      /* Totally off the left edge? */
+
       if (tspan >= span) return;
       angle2 = -clipangle;
     }
@@ -343,14 +355,17 @@ void R_AddLine(seg_t *line)
   backsector = line->backsector;
 
   /* Single sided line? */
+
   if (!backsector) goto clipsolid;
 
   /* Closed door. */
+
   if (backsector->ceilingheight <= frontsector->floorheight ||
       backsector->floorheight >= frontsector->ceilingheight)
     goto clipsolid;
 
   /* Window. */
+
   if (backsector->ceilingheight != frontsector->ceilingheight ||
       backsector->floorheight != frontsector->floorheight)
     goto clippass;
@@ -378,15 +393,10 @@ clipsolid:
   R_ClipSolidWallSegment(x1, x2 - 1);
 }
 
-//
-// R_CheckBBox
-// Checks BSP node/subtree bounding box.
-// Returns true
-//  if some part of the bbox might be visible.
-//
-int checkcoord[12][4] = {{3, 0, 2, 1}, {3, 0, 2, 0}, {3, 1, 2, 0}, {0},
-                         {2, 0, 2, 1}, {0, 0, 0, 0}, {3, 1, 3, 0}, {0},
-                         {2, 0, 3, 1}, {2, 1, 3, 1}, {2, 1, 3, 0}};
+/* R_CheckBBox
+ * Checks BSP node/subtree bounding box.
+ * Returns true if some part of the bbox might be visible.
+ */
 
 boolean R_CheckBBox(fixed_t *bspcoord)
 {
@@ -409,8 +419,10 @@ boolean R_CheckBBox(fixed_t *bspcoord)
   int sx1;
   int sx2;
 
-  // Find the corners of the box
-  // that define the edges from current viewpoint.
+  /* Find the corners of the box
+   * that define the edges from current viewpoint.
+   */
+
   if (viewx <= bspcoord[BOXLEFT])
     boxx = 0;
   else if (viewx < bspcoord[BOXRIGHT])
@@ -433,13 +445,15 @@ boolean R_CheckBBox(fixed_t *bspcoord)
   x2 = bspcoord[checkcoord[boxpos][2]];
   y2 = bspcoord[checkcoord[boxpos][3]];
 
-  // check clip list for an open space
+  /* check clip list for an open space */
+
   angle1 = R_PointToAngle(x1, y1) - viewangle;
   angle2 = R_PointToAngle(x2, y2) - viewangle;
 
   span = angle1 - angle2;
 
-  // Sitting on a line?
+  /* Sitting on a line? */
+
   if (span >= ANG180) return true;
 
   tspan = angle1 + clipangle;
@@ -448,7 +462,8 @@ boolean R_CheckBBox(fixed_t *bspcoord)
     {
       tspan -= 2 * clipangle;
 
-      // Totally off the left edge?
+      /* Totally off the left edge? */
+
       if (tspan >= span) return false;
 
       angle1 = clipangle;
@@ -458,21 +473,25 @@ boolean R_CheckBBox(fixed_t *bspcoord)
     {
       tspan -= 2 * clipangle;
 
-      // Totally off the left edge?
+      /* Totally off the left edge? */
+
       if (tspan >= span) return false;
 
       angle2 = -clipangle;
     }
 
-  // Find the first clippost
-  //  that touches the source post
-  //  (adjacent pixels are touching).
+  /* Find the first clippost
+   *  that touches the source post
+   *  (adjacent pixels are touching).
+   */
+
   angle1 = (angle1 + ANG90) >> ANGLETOFINESHIFT;
   angle2 = (angle2 + ANG90) >> ANGLETOFINESHIFT;
   sx1 = viewangletox[angle1];
   sx2 = viewangletox[angle2];
 
-  // Does not cross a pixel.
+  /* Does not cross a pixel. */
+
   if (sx1 == sx2) return false;
   sx2--;
 
@@ -482,19 +501,20 @@ boolean R_CheckBBox(fixed_t *bspcoord)
 
   if (sx1 >= start->first && sx2 <= start->last)
     {
-      // The clippost contains the new span.
+      /* The clippost contains the new span. */
+
       return false;
     }
 
   return true;
 }
 
-//
-// R_Subsector
-// Determine floor/ceiling planes.
-// Add sprites of things in sector.
-// Draw one or more line segments.
-//
+/* R_Subsector
+ * Determine floor/ceiling planes.
+ * Add sprites of things in sector.
+ * Draw one or more line segments.
+ */
+
 void R_Subsector(int num)
 {
   int count;
@@ -539,22 +559,24 @@ void R_Subsector(int num)
       line++;
     }
 
-  // check for solidsegs overflow - extremely unsatisfactory!
+  /* check for solidsegs overflow - extremely unsatisfactory! */
+
   if (newend > &solidsegs[32])
     I_Error("R_Subsector: solidsegs overflow (vanilla may crash here)\n");
 }
 
-//
-// RenderBSPNode
-// Renders all subsectors below a given node,
-//  traversing subtree recursively.
-// Just call with BSP root.
+/* RenderBSPNode
+ * Renders all subsectors below a given node, traversing subtree recursively.
+ * Just call with BSP root.
+ */
+
 void R_RenderBSPNode(int bspnum)
 {
   node_t *bsp;
   int side;
 
-  // Found a subsector?
+  /* Found a subsector? */
+
   if (bspnum & NF_SUBSECTOR)
     {
       if (bspnum == -1)
@@ -566,13 +588,16 @@ void R_RenderBSPNode(int bspnum)
 
   bsp = &nodes[bspnum];
 
-  // Decide which side the view point is on.
+  /* Decide which side the view point is on. */
+
   side = R_PointOnSide(viewx, viewy, bsp);
 
-  // Recursively divide front space.
+  /* Recursively divide front space. */
+
   R_RenderBSPNode(bsp->children[side]);
 
-  // Possibly divide back space.
+  /* Possibly divide back space. */
+
   if (R_CheckBBox(bsp->bbox[side ^ 1]))
     R_RenderBSPNode(bsp->children[side ^ 1]);
 }
