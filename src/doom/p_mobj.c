@@ -956,7 +956,7 @@ void P_CheckMissileSpawn(mobj_t *th)
 }
 
 /****************************************************************************
- * Name: R_ClipSolidWallSegment
+ * Name: r_clip_solid_wall_segment
  *
  * Description:
  *  Certain functions assume that a mobj_t pointer is non-NULL,
@@ -1001,7 +1001,7 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 #endif
 
   th->target = source; /* where it came from */
-  an = R_PointToAngle2(source->x, source->y, dest->x, dest->y);
+  an = r_point_to_angle2(source->x, source->y, dest->x, dest->y);
 
   /* fuzzy player */
 

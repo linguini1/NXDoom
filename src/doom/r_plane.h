@@ -60,7 +60,7 @@ R_MakeSpans
 void R_DrawPlanes (void);
 
 visplane_t*
-R_FindPlane
+r_find_plane
 ( fixed_t	height,
   int		picnum,
   int		lightlevel );

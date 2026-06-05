@@ -487,7 +487,7 @@ A_Punch
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	S_StartSound (player->mo, sfx_punch);
 #endif
-	player->mo->angle = R_PointToAngle2 (player->mo->x,
+	player->mo->angle = r_point_to_angle2 (player->mo->x,
 					     player->mo->y,
 					     linetarget->x,
 					     linetarget->y);
@@ -527,7 +527,7 @@ A_Saw
 #endif
 	
     // turn to face target
-    angle = R_PointToAngle2 (player->mo->x, player->mo->y,
+    angle = r_point_to_angle2 (player->mo->x, player->mo->y,
 			     linetarget->x, linetarget->y);
     if (angle - player->mo->angle > ANG180)
     {

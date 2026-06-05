@@ -102,7 +102,7 @@ extern void		(*spanfunc) (void);
 //
 // Utility functions.
 int
-R_PointOnSide
+r_point_on_side
 ( fixed_t	x,
   fixed_t	y,
   node_t*	node );
@@ -114,12 +114,12 @@ R_PointOnSegSide
   seg_t*	line );
 
 angle_t
-R_PointToAngle
+r_point_to_angle
 ( fixed_t	x,
   fixed_t	y );
 
 angle_t
-R_PointToAngle2
+r_point_to_angle2
 ( fixed_t	x1,
   fixed_t	y1,
   fixed_t	x2,

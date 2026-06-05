@@ -511,7 +511,7 @@ void R_ProjectSprite (mobj_t* thing)
     if (sprframe->rotate)
     {
 	// choose a different rotation based on player view
-	ang = R_PointToAngle (thing->x, thing->y);
+	ang = r_point_to_angle (thing->x, thing->y);
 	rot = (ang-thing->angle+(unsigned)(ANG45/2)*9)>>29;
 	lump = sprframe->lump[rot];
 	flip = (boolean)sprframe->flip[rot];
@@ -599,10 +599,10 @@ void R_ProjectSprite (mobj_t* thing)
 
 
 //
-// R_AddSprites
+// r_add_sprites
 // During BSP traversal, this adds sprites by sector.
 //
-void R_AddSprites (sector_t* sec)
+void r_add_sprites (sector_t* sec)
 {
     mobj_t*		thing;
     int			lightnum;

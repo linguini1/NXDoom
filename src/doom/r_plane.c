@@ -205,10 +205,10 @@ void R_ClearPlanes (void)
 
 
 //
-// R_FindPlane
+// r_find_plane
 //
 visplane_t*
-R_FindPlane
+r_find_plane
 ( fixed_t	height,
   int		picnum,
   int		lightlevel )
@@ -236,7 +236,7 @@ R_FindPlane
 	return check;
 		
     if (lastvisplane - visplanes == MAXVISPLANES)
-	I_Error ("R_FindPlane: no more visplanes");
+	I_Error ("r_find_plane: no more visplanes");
 		
     lastvisplane++;
 

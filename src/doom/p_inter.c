@@ -863,7 +863,7 @@ P_DamageMobj
 	    || !source->player
 	    || source->player->readyweapon != wp_chainsaw))
     {
-	ang = R_PointToAngle2 ( inflictor->x,
+	ang = r_point_to_angle2 ( inflictor->x,
 				inflictor->y,
 				target->x,
 				target->y);

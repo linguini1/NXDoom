@@ -143,7 +143,7 @@ void R_AddPointToBox(int x, int y, fixed_t *box)
 }
 
 /****************************************************************************
- * Name: R_PointOnSide
+ * Name: r_point_on_side
  *
  * Description:
  *  Traverse BSP (sub) tree, check point against partition plane.
@@ -152,7 +152,7 @@ void R_AddPointToBox(int x, int y, fixed_t *box)
  *   Side 0 (front) or 1 (back).
  ****************************************************************************/
 
-int R_PointOnSide(fixed_t x, fixed_t y, node_t *node)
+int r_point_on_side(fixed_t x, fixed_t y, node_t *node)
 {
   fixed_t dx;
   fixed_t dy;
@@ -257,7 +257,7 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
 }
 
 /****************************************************************************
- * Name: R_PointToAngle
+ * Name: r_point_to_angle
  *
  * Description:
  *  To get a global angle from cartesian coordinates, the coordinates are
@@ -267,7 +267,7 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
  *
  ****************************************************************************/
 
-angle_t R_PointToAngle(fixed_t x, fixed_t y)
+angle_t r_point_to_angle(fixed_t x, fixed_t y)
 {
   x -= viewx;
   y -= viewy;
@@ -341,15 +341,15 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
 }
 
 /****************************************************************************
- * Name: R_PointToAngle2
+ * Name: r_point_to_angle2
  ****************************************************************************/
 
-angle_t R_PointToAngle2(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2)
+angle_t r_point_to_angle2(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2)
 {
   viewx = x1;
   viewy = y1;
 
-  return R_PointToAngle(x2, y2);
+  return r_point_to_angle(x2, y2);
 }
 
 /****************************************************************************
@@ -784,7 +784,7 @@ subsector_t *R_PointInSubsector(fixed_t x, fixed_t y)
   while (!(nodenum & NF_SUBSECTOR))
     {
       node = &nodes[nodenum];
-      side = R_PointOnSide(x, y, node);
+      side = r_point_on_side(x, y, node);
       nodenum = node->children[side];
     }
 
@@ -838,8 +838,8 @@ void R_RenderPlayerView(player_t *player)
 
   /* Clear buffers. */
 
-  R_ClearClipSegs();
-  R_ClearDrawSegs();
+  r_clear_clip_segs();
+  r_clear_draw_segs();
   R_ClearPlanes();
   R_ClearSprites();
 
@@ -849,7 +849,7 @@ void R_RenderPlayerView(player_t *player)
 
   /* The head node is the last node output. */
 
-  R_RenderBSPNode(numnodes - 1);
+  r_render_bsp_node(numnodes - 1);
 
   /* Check for new console commands. */
 

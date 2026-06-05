@@ -18,7 +18,7 @@
  *
  * DESCRIPTION:
  *  Simple basic typedefs, isolated here to make it easier
- *	separating modules.
+ *  separating modules.
  *
  ****************************************************************************/
 

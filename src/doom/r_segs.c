@@ -364,12 +364,12 @@ void R_RenderSegLoop (void)
 
 
 //
-// R_StoreWallRange
+// r_store_wall_range
 // A wall segment will be drawn
 //  between start and stop pixels (inclusive).
 //
 void
-R_StoreWallRange
+r_store_wall_range
 ( int	start,
   int	stop )
 {
