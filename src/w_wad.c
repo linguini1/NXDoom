@@ -528,7 +528,7 @@ void w_profile(void)
 
   profilecount++;
 
-  f = m_fopen("waddump.txt", "w");
+  f = fopen("waddump.txt", "w");
   name[8] = 0;
 
   for (i = 0; i < numlumps; i++)

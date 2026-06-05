@@ -129,7 +129,7 @@ static txt_radiobutton_t *SizeSelectButton(window_size_t *size)
     char buf[15];
     txt_radiobutton_t *result;
 
-    m_snprintf(buf, sizeof(buf), "%ix%i", size->w, size->h);
+    snprintf(buf, sizeof(buf), "%ix%i", size->w, size->h);
     result = TXT_NewRadioButton(buf, &window_width, size->w);
     TXT_SignalConnect(result, "selected", WindowSizeSelected, size);
 

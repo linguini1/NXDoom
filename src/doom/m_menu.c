@@ -507,7 +507,7 @@ void M_ReadSaveStrings(void)
         int retval;
         m_str_copy(name, P_SaveGameFile(i), sizeof(name));
 
-	handle = m_fopen(name, "rb");
+        handle = fopen(name, "rb");
         if (handle == NULL)
         {
             m_str_copy(savegamestrings[i], EMPTYSTRING, SAVESTRINGSIZE);
@@ -635,7 +635,7 @@ static void SetDefaultSaveName(int slot)
     // map from IWAD or PWAD?
     if (w_is_iwad_lump(maplumpinfo) && strcmp(savegamedir, ""))
     {
-        m_snprintf(savegamestrings[itemOn], SAVESTRINGSIZE,
+        snprintf(savegamestrings[itemOn], SAVESTRINGSIZE,
                    "%s", maplumpinfo->name);
     }
     else
@@ -648,7 +648,7 @@ static void SetDefaultSaveName(int slot)
             *ext = '\0';
         }
 
-        m_snprintf(savegamestrings[itemOn], SAVESTRINGSIZE,
+        snprintf(savegamestrings[itemOn], SAVESTRINGSIZE,
                    "%s (%s)", maplumpinfo->name,
                    wadname);
         free(wadname);

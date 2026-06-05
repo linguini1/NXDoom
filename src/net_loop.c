@@ -187,7 +187,7 @@ static boolean net_cl_recv_packet(net_addr_t **addr, net_packet_t **packet)
 static void net_cl_addr_to_string(net_addr_t *addr, char *buffer,
                                 int buffer_len)
 {
-  m_snprintf(buffer, buffer_len, "local server");
+  snprintf(buffer, buffer_len, "local server");
 }
 
 static void net_cl_free_address(net_addr_t *addr)
@@ -251,7 +251,7 @@ static boolean net_sv_recv_packet(net_addr_t **addr, net_packet_t **packet)
 static void net_sv_addr_to_string(net_addr_t *addr, char *buffer,
                                 int buffer_len)
 {
-  m_snprintf(buffer, buffer_len, "local client");
+  snprintf(buffer, buffer_len, "local client");
 }
 
 static void net_sv_free_address(net_addr_t *addr)

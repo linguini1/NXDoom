@@ -336,7 +336,7 @@ void StatDump(void)
 
         if (strcmp(myargv[i + 1], "-") != 0)
         {
-            dumpfile = m_fopen(myargv[i + 1], "w");
+            dumpfile = fopen(myargv[i + 1], "w");
         }
         else
         {

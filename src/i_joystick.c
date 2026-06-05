@@ -858,7 +858,7 @@ void I_BindJoystickVariables(void)
     for (i = 0; i < NUM_VIRTUAL_BUTTONS; ++i)
     {
         char name[32];
-        m_snprintf(name, sizeof(name), "joystick_physical_button%i", i);
+        snprintf(name, sizeof(name), "joystick_physical_button%i", i);
         m_bind_int_variable(name, &joystick_physical_buttons[i]);
     }
 }

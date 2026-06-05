@@ -799,7 +799,7 @@ boolean am_responder(event_t *ev)
         }
       else if (key == key_map_mark)
         {
-          m_snprintf(buffer, sizeof(buffer), "%s %d",
+          snprintf(buffer, sizeof(buffer), "%s %d",
                      (AMSTR_MARKEDSPOT), markpointnum);
           plr->message = buffer;
           AM_addMark();

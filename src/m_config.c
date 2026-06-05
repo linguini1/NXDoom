@@ -1882,7 +1882,7 @@ static void save_default_collection(default_collection_t *collection)
   int i, v;
   FILE *f;
 
-  f = m_fopen(collection->filename, "w");
+  f = fopen(collection->filename, "w");
   if (!f) return; /* can't write the file, but don't complain */
 
   defaults = collection->defaults;
@@ -2091,7 +2091,7 @@ static void load_default_collection(default_collection_t *collection)
   char strparm[100];
 
   /* read the file in, overriding any set defaults */
-  f = m_fopen(collection->filename, "r");
+  f = fopen(collection->filename, "r");
 
   if (f == NULL)
     {

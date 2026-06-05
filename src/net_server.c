@@ -239,7 +239,7 @@ static void net_sv_send_console_message(net_client_t *client, const char *s,
   net_packet_t *packet;
 
   va_start(args, s);
-  m_vsprintf(buf, sizeof(buf), s, args);
+  vsnprintf(buf, sizeof(buf), s, args);
   va_end(args);
 
   packet = NET_Conn_NewReliable(&client->connection,
@@ -257,7 +257,7 @@ static void net_sv_broadcast_message(const char *s, ...)
   int i;
 
   va_start(args, s);
-  m_vsprintf(buf, sizeof(buf), s, args);
+  vsnprintf(buf, sizeof(buf), s, args);
   va_end(args);
 
   for (i = 0; i < MAXNETNODES; ++i)
@@ -509,12 +509,12 @@ static void net_sv_send_waiting_data(net_client_t *client)
         }
       else if (player_range == RANGE_PRIVATE)
         {
-          m_snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
+          snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
                      "[LAN player]");
         }
       else
         {
-          m_snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
+          snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
                      "[address hidden]");
         }
     }
@@ -738,7 +738,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
     {
       char reject_msg[256];
 
-      m_snprintf(reject_msg, sizeof(reject_msg),
+      snprintf(reject_msg, sizeof(reject_msg),
                  "Version mismatch: server version is: " PACKAGE_STRING "; "
                  "client is: %s. No common compatible protocol could be "
                  "negotiated.",
@@ -827,7 +827,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
       char msg[128];
       net_log_warn("server: wrong mode/mission, %d != %d || %d != %d",
               data.gamemode, sv_gamemode, data.gamemission, sv_gamemission);
-      m_snprintf(msg, sizeof(msg),
+      snprintf(msg, sizeof(msg),
                  "Game mismatch: server is %s (%s), client is %s (%s)",
                  d_game_mission_string(sv_gamemission),
                  D_GameModeString(sv_gamemode),

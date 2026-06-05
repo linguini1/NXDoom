@@ -87,7 +87,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
     int i, k;
 
     // Read the response file into memory
-    handle = m_fopen(filename, "rb");
+    handle = fopen(filename, "rb");
 
     if (handle == NULL)
     {
@@ -322,7 +322,7 @@ static boolean FileIsDemoLump(const char *filename)
     int count, ver;
     byte buf[12], *p = buf;
 
-    handle = m_fopen(filename, "rb");
+    handle = fopen(filename, "rb");
 
     if (handle == NULL)
     {

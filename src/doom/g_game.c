@@ -994,7 +994,7 @@ void G_Ticker (void)
              && turbodetected[i])
             {
                 static char turbomessage[80];
-                m_snprintf(turbomessage, sizeof(turbomessage),
+                snprintf(turbomessage, sizeof(turbomessage),
                            "%s is turbo!", player_names[i]);
                 players[consoleplayer].message = turbomessage;
                 turbodetected[i] = false;
@@ -1645,7 +1645,7 @@ void G_DoLoadGame (void)
 	 
     gameaction = ga_nothing; 
 	 
-    save_stream = m_fopen(savename, "rb");
+    save_stream = fopen(savename, "rb");
 
     if (save_stream == NULL)
     {
@@ -1715,14 +1715,14 @@ void G_DoSaveGame (void)
     // and then rename it at the end if it was successfully written.
     // This prevents an existing savegame from being overwritten by
     // a corrupted one, or if a savegame buffer overrun occurs.
-    save_stream = m_fopen(temp_savegame_file, "wb");
+    save_stream = fopen(temp_savegame_file, "wb");
 
     if (save_stream == NULL)
     {
         // Failed to save the game, so we're going to have to abort. But
         // to be nice, save to somewhere else before we call I_Error().
         recovery_savegame_file = m_temp_file("recovery.dsg");
-        save_stream = m_fopen(recovery_savegame_file, "wb");
+        save_stream = fopen(recovery_savegame_file, "wb");
         if (save_stream == NULL)
         {
             I_Error("Failed to open either '%s' or '%s' to write savegame.",
@@ -1766,8 +1766,8 @@ void G_DoSaveGame (void)
     // Now rename the temporary savegame file to the actual savegame
     // file, overwriting the old savegame if there was one there.
 
-    m_remove(savegame_file);
-    m_rename(temp_savegame_file, savegame_file);
+    remove(savegame_file);
+    rename(temp_savegame_file, savegame_file);
 
     gameaction = ga_nothing;
     m_str_copy(savedescription, "", sizeof(savedescription));
@@ -2108,7 +2108,7 @@ void G_RecordDemo (const char *name)
     usergame = false;
     demoname_size = strlen(name) + 5;
     demoname = z_malloc(demoname_size, PU_STATIC, NULL);
-    m_snprintf(demoname, demoname_size, "%s.lmp", name);
+    snprintf(demoname, demoname_size, "%s.lmp", name);
     maxsize = 0x20000;
 
     //!
@@ -2236,7 +2236,7 @@ static const char *DemoVersionDescription(int version)
     }
     else
     {
-        m_snprintf(resultbuf, sizeof(resultbuf),
+        snprintf(resultbuf, sizeof(resultbuf),
                    "%i.%i (unknown)", version / 100, version % 100);
         return resultbuf;
     }

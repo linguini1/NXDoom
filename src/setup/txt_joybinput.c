@@ -549,7 +549,7 @@ static void TXT_JoystickInputSizeCalc(TXT_UNCAST_ARG(joystick_input))
 static void GetJoystickButtonDescription(int vbutton, char *buf,
                                          size_t buf_len)
 {
-    m_snprintf(buf, buf_len, "BUTTON #%i",
+    snprintf(buf, buf_len, "BUTTON #%i",
                PhysicalForVirtualButton(vbutton) + 1);
 }
 
@@ -610,31 +610,31 @@ static void GetGamepadButtonDescription(int vbutton, char *buf, size_t buf_len)
     switch (gamepad_type)
     {
         case SDL_CONTROLLER_TYPE_XBOX360:
-            m_snprintf(buf, buf_len, "%s", xbox360_buttons[index]);
+            snprintf(buf, buf_len, "%s", xbox360_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_XBOXONE:
-            m_snprintf(buf, buf_len, "%s", xboxone_buttons[index]);
+            snprintf(buf, buf_len, "%s", xboxone_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_PS3:
-            m_snprintf(buf, buf_len, "%s", ps3_buttons[index]);
+            snprintf(buf, buf_len, "%s", ps3_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_PS4:
-            m_snprintf(buf, buf_len, "%s", ps4_buttons[index]);
+            snprintf(buf, buf_len, "%s", ps4_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_PS5:
-            m_snprintf(buf, buf_len, "%s", ps5_buttons[index]);
+            snprintf(buf, buf_len, "%s", ps5_buttons[index]);
             break;
 
         case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
-            m_snprintf(buf, buf_len, "%s", switchpro_buttons[index]);
+            snprintf(buf, buf_len, "%s", switchpro_buttons[index]);
             break;
 
         default:
-            m_snprintf(buf, buf_len, "BUTTON #%i",
+            snprintf(buf, buf_len, "BUTTON #%i",
                        PhysicalForVirtualButton(vbutton) + 1);
             break;
     }

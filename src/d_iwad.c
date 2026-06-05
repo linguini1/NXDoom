@@ -763,14 +763,14 @@ static void BuildIWADDirList(void)
     AddIWADDir(m_dir_name(myargv[0]));
 
     // Add DOOMWADDIR if it is in the environment
-    env = m_getenv("DOOMWADDIR");
+    env = getenv("DOOMWADDIR");
     if (env != NULL)
     {
         AddIWADDir(env);
     }
 
     // Add dirs from DOOMWADPATH:
-    env = m_getenv("DOOMWADPATH");
+    env = getenv("DOOMWADPATH");
     if (env != NULL)
     {
         AddIWADPath(env, "");

@@ -1673,7 +1673,7 @@ static void *I_OPL_RegisterSong(void *data, int len)
 
     // remove file now
 
-    m_remove(filename);
+    remove(filename);
     free(filename);
 
     return result;
@@ -1845,11 +1845,11 @@ void I_OPL_DevMessages(char *result, size_t result_len)
 
     if (num_tracks == 0)
     {
-        m_snprintf(result, result_len, "No OPL track!");
+        snprintf(result, result_len, "No OPL track!");
         return;
     }
 
-    m_snprintf(result, result_len, "Tracks:\n");
+    snprintf(result, result_len, "Tracks:\n");
     lines = 1;
 
     for (i = 0; i < NumActiveChannels(); ++i)
@@ -1861,7 +1861,7 @@ void I_OPL_DevMessages(char *result, size_t result_len)
 
         instr_num = channels[i].instrument - main_instrs;
 
-        m_snprintf(tmp, sizeof(tmp),
+        snprintf(tmp, sizeof(tmp),
                    "chan %i: %c i#%i (%s)\n",
                    i,
                    ChannelInUse(&channels[i]) ? '\'' : ' ',
@@ -1872,7 +1872,7 @@ void I_OPL_DevMessages(char *result, size_t result_len)
         ++lines;
     }
 
-    m_snprintf(tmp, sizeof(tmp), "\nLast percussion:\n");
+    snprintf(tmp, sizeof(tmp), "\nLast percussion:\n");
     m_string_concat(result, tmp, result_len);
     lines += 2;
 
@@ -1884,7 +1884,7 @@ void I_OPL_DevMessages(char *result, size_t result_len)
             break;
         }
 
-        m_snprintf(tmp, sizeof(tmp),
+        snprintf(tmp, sizeof(tmp),
                    "%cp#%i (%s)\n",
                    i == 0 ? '\'' : ' ',
                    last_perc[i],

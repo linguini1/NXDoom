@@ -59,7 +59,7 @@ static boolean WriteWrapperTimidityConfig(char *write_path)
         return false;
     }
 
-    fstream = m_fopen(write_path, "w");
+    fstream = fopen(write_path, "w");
 
     if (fstream == NULL)
     {
@@ -144,7 +144,7 @@ static void RemoveTimidityConfig(void)
 {
     if (temp_timidity_cfg != NULL)
     {
-        m_remove(temp_timidity_cfg);
+        remove(temp_timidity_cfg);
         free(temp_timidity_cfg);
     }
 }
@@ -421,7 +421,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
 
     if (strlen(snd_musiccmd) == 0)
     {
-        m_remove(filename);
+        remove(filename);
     }
 
     free(filename);

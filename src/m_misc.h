@@ -80,11 +80,6 @@
  * Public Function Prototypes
  ****************************************************************************/
 
-FILE *m_fopen(const char *filename, const char *mode);
-int m_remove(const char *path);
-int m_rename(const char *oldname, const char *newname);
-int m_stat(const char *path, struct stat *buf);
-char *m_getenv(const char *name);
 boolean m_write_file(const char *name, const void *source, int length);
 int m_read_file(const char *name, byte **buffer);
 void m_make_directory(const char *dir);
@@ -98,7 +93,6 @@ const char *m_base_name(const char *path);
 void m_extract_file_base(const char *path, char *dest);
 void m_force_uppercase(char *text);
 void m_force_lowercase(char *text);
-const char *m_str_case_str(const char *haystack, const char *needle);
 char *m_string_duplicate(const char *orig);
 boolean m_str_copy(char *dest, const char *src, size_t dest_size);
 boolean m_string_concat(char *dest, const char *src, size_t dest_size);
@@ -107,9 +101,6 @@ char *m_string_replace(const char *haystack, const char *needle,
 char *m_string_join(const char *s, ...);
 boolean m_string_starts_with(const char *s, const char *prefix);
 boolean m_string_ends_with(const char *s, const char *suffix);
-int m_vsprintf(char *buf, size_t buf_len, const char *s, va_list args);
-int m_snprintf(char *buf, size_t buf_len, const char *s, ...)
-    PRINTF_ATTR(3, 4);
 void m_normalize_slashes(char *str);
 
 #endif /* __M_MISC__ */

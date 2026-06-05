@@ -687,7 +687,7 @@ void S_ChangeMusic(int musicnum, int looping)
     // get lumpnum if neccessary
     if (!music->lumpnum)
     {
-        m_snprintf(namebuf, sizeof(namebuf), "d_%s", (music->name));
+        snprintf(namebuf, sizeof(namebuf), "d_%s", (music->name));
         music->lumpnum = w_get_num_for_name(namebuf);
     }
 

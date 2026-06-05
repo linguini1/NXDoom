@@ -804,7 +804,7 @@ static void get_sfx_lump_name(sfxinfo_t *sfx, char *buf, size_t buf_len)
 
   if (use_sfx_prefix)
     {
-      m_snprintf(buf, buf_len, "ds%s", (sfx->name));
+      snprintf(buf, buf_len, "ds%s", (sfx->name));
     }
   else
     {
