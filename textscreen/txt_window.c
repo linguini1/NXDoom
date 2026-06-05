@@ -27,12 +27,6 @@
 #include "txt_separator.h"
 #include "txt_window.h"
 
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <shellapi.h>
-#endif
-
 void TXT_SetWindowAction(txt_window_t *window,
                          txt_horiz_align_t position, 
                          TXT_UNCAST_ARG(action))
@@ -520,15 +514,6 @@ void TXT_SetWindowHelpURL(txt_window_t *window, const char *help_url)
     window->help_url = help_url;
 }
 
-#ifdef _WIN32
-
-void TXT_OpenURL(const char *url)
-{
-    ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
-}
-
-#else
-
 void TXT_OpenURL(const char *url)
 {
 #if 0
@@ -564,8 +549,6 @@ void TXT_OpenURL(const char *url)
     free(cmd);
 #endif
 }
-
-#endif /* #ifndef _WIN32 */
 
 void TXT_OpenWindowHelpURL(txt_window_t *window)
 {

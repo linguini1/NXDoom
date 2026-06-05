@@ -14,12 +14,6 @@
 
 // Sound control menu
 
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <mmsystem.h>
-#endif
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -81,15 +75,6 @@ char *music_pack_path = NULL;
 char *timidity_cfg_path = NULL;
 static char *gus_patch_path = NULL;
 static int gus_ram_kb = 1024;
-#ifdef _WIN32
-#define MAX_MIDI_DEVICES 20
-static char *midi_names[MAX_MIDI_DEVICES];
-static int midi_index;
-char *winmm_midi_device = NULL;
-int winmm_complevel = 0;
-int winmm_reset_type = 1;
-int winmm_reset_delay = 0;
-#endif
 
 #ifdef HAVE_FLUIDSYNTH
 char *fsynth_sf_path = NULL;
@@ -143,60 +128,6 @@ static void OpenMusicPackDir(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         TXT_MessageBox("Error", "Failed to open music pack directory.");
     }
 }
-
-#ifdef _WIN32
-static void UpdateMidiDevice(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
-{
-    free(winmm_midi_device);
-    winmm_midi_device = m_string_duplicate(midi_names[midi_index]);
-}
-
-static txt_dropdown_list_t *MidiDeviceSelector(void)
-{
-    txt_dropdown_list_t *result;
-    int num_devices = 1;
-    int all_devices = midiOutGetNumDevs();
-    int i;
-
-    midi_index = 0;
-    free(midi_names[0]);
-    midi_names[0] = m_string_duplicate("Microsoft MIDI Mapper");
-
-    if (all_devices > MAX_MIDI_DEVICES - num_devices)
-    {
-        all_devices = MAX_MIDI_DEVICES - num_devices;
-    }
-
-    for (i = 0; i < all_devices; i++)
-    {
-        MIDIOUTCAPS caps;
-
-        if (midiOutGetDevCaps(i, &caps, sizeof(caps)) == MMSYSERR_NOERROR)
-        {
-            free(midi_names[num_devices]);
-            midi_names[num_devices] = m_string_duplicate(caps.szPname);
-
-            if (!strncasecmp(winmm_midi_device, midi_names[num_devices],
-                             MAXPNAMELEN))
-            {
-                // Set the dropdown list index to the saved device.
-                midi_index = num_devices;
-            }
-
-            num_devices++;
-        }
-    }
-
-    free(winmm_midi_device);
-    winmm_midi_device = m_string_duplicate(midi_names[midi_index]);
-
-    result = TXT_NewDropdownList(&midi_index, (const char **) midi_names,
-                                 num_devices);
-    TXT_SignalConnect(result, "changed", UpdateMidiDevice, NULL);
-
-    return result;
-}
-#endif
 
 void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
 {
@@ -257,14 +188,6 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
                 NULL)),
 
         TXT_NewRadioButton("Native MIDI", &snd_musicdevice, SNDDEVICE_GENMIDI),
-#ifdef _WIN32
-        TXT_NewConditional(&snd_musicdevice, SNDDEVICE_GENMIDI,
-            TXT_NewHorizBox(
-                TXT_NewStrut(4, 0),
-                TXT_NewLabel("Device: "),
-                MidiDeviceSelector(),
-                NULL)),
-#endif
         TXT_NewConditional(&snd_musicdevice, SNDDEVICE_GENMIDI,
             TXT_MakeTable(2,
                 TXT_NewStrut(4, 0),
@@ -305,13 +228,6 @@ void BindSoundVariables(void)
     m_bind_string_variable("gus_patch_path",        &gus_patch_path);
     m_bind_string_variable("music_pack_path",     &music_pack_path);
     m_bind_string_variable("timidity_cfg_path",     &timidity_cfg_path);
-#ifdef _WIN32
-    m_bind_string_variable("winmm_midi_device",     &winmm_midi_device);
-    m_bind_int_variable("winmm_complevel",          &winmm_complevel);
-    m_bind_int_variable("winmm_reset_type",         &winmm_reset_type);
-    m_bind_int_variable("winmm_reset_delay",        &winmm_reset_delay);
-#endif
-
 #ifdef HAVE_FLUIDSYNTH
     m_bind_int_variable("fsynth_chorus_active",     &fsynth_chorus_active);
     m_bind_float_variable("fsynth_chorus_depth",    &fsynth_chorus_depth);
@@ -349,10 +265,6 @@ void BindSoundVariables(void)
     music_pack_path = m_string_duplicate("");
     timidity_cfg_path = m_string_duplicate("");
     gus_patch_path = m_string_duplicate("");
-
-#ifdef _WIN32
-    winmm_midi_device = m_string_duplicate("");
-#endif
 
 #ifdef HAVE_FLUIDSYNTH
     fsynth_sf_path = m_string_duplicate("");

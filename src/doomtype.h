@@ -59,11 +59,7 @@
 
 #ifdef __GNUC__
 
-#if defined(_WIN32) && !defined(__clang__)
-#define PACKEDATTR __attribute__((packed,gcc_struct))
-#else
 #define PACKEDATTR __attribute__((packed))
-#endif
 
 #define PRINTF_ATTR(fmt, first) __attribute__((format(printf, fmt, first)))
 #define PRINTF_ARG_ATTR(x) __attribute__((format_arg(x)))
@@ -125,21 +121,10 @@ typedef int16_t dpixel_t;
 
 #include <limits.h>
 
-#ifdef _WIN32
-
-#define DIR_SEPARATOR '\\'
-#define DIR_SEPARATOR_S "\\"
-#define PATH_SEPARATOR ';'
-
-#else
-
 #define DIR_SEPARATOR '/'
 #define DIR_SEPARATOR_S "/"
 #define PATH_SEPARATOR ':'
 
-#endif
-
 #define arrlen(array) (sizeof(array) / sizeof(*array))
 
 #endif
-

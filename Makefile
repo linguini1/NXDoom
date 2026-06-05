@@ -169,7 +169,6 @@ CSRCS += $(COMMONSRCDIR)/i_pcsound.c
 CSRCS += $(COMMONSRCDIR)/i_sdlmusic.c
 CSRCS += $(COMMONSRCDIR)/i_sdlsound.c
 CSRCS += $(COMMONSRCDIR)/i_sound.c
-CSRCS += $(COMMONSRCDIR)/midifallback.c
 CSRCS += $(COMMONSRCDIR)/midifile.c
 CSRCS += $(COMMONSRCDIR)/mus2mid.c
 

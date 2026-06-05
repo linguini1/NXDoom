@@ -109,121 +109,6 @@ static const SDL_Color ega_colors[] =
 };
 #endif
 
-#ifdef _WIN32
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-// Examine system DPI settings to determine whether to use the large font.
-
-static int Win32_UseLargeFont(void)
-{
-    HDC hdc = GetDC(NULL);
-    int dpix;
-
-    if (!hdc)
-    {
-        return 0;
-    }
-
-    dpix = GetDeviceCaps(hdc, LOGPIXELSX);
-    ReleaseDC(NULL, hdc);
-
-    // 144 is the DPI when using "150%" scaling. If the user has this set
-    // then consider this an appropriate threshold for using the large font.
-
-    return dpix >= 144;
-}
-
-
-static const txt_font_t *FontForName(const char *name)
-{
-    int i;
-    const txt_font_t *fonts[] =
-    {
-        &small_font,
-        &normal_font,
-        &large_font,
-        &highdpi_font,
-        NULL,
-    };
-
-    for (i = 0; fonts[i]->name != NULL; ++i)
-    {
-        if (!strcmp(fonts[i]->name, name))
-        {
-            return fonts[i];
-        }
-    }
-    return NULL;
-}
-
-//
-// Select the font to use, based on screen resolution
-//
-// If the highest screen resolution available is less than
-// 640x480, use the small font.
-//
-
-static void ChooseFont(void)
-{
-    SDL_DisplayMode desktop_info;
-    char *env;
-
-    // Allow normal selection to be overridden from an environment variable:
-    env = getenv("TEXTSCREEN_FONT");
-    if (env != NULL)
-    {
-        font = FontForName(env);
-
-        if (font != NULL)
-        {
-            return;
-        }
-    }
-
-    // Get desktop resolution.
-    // If in doubt and we can't get a list, always prefer to
-    // fall back to the normal font:
-    if (SDL_GetCurrentDisplayMode(0, &desktop_info))
-    {
-        font = &highdpi_font;
-        return;
-    }
-
-    // On tiny low-res screens (eg. palmtops) use the small font.
-    // If the screen resolution is at least 1920x1080, this is
-    // a modern high-resolution display, and we can use the
-    // large font.
-
-    if (desktop_info.w < 640 || desktop_info.h < 480)
-    {
-        font = &small_font;
-    }
-#ifdef _WIN32
-    // On Windows we can use the system DPI settings to make a
-    // more educated guess about whether to use the large font.
-
-    else if (Win32_UseLargeFont())
-    {
-        font = &large_font;
-    }
-#endif
-    // TODO: Detect high DPI on Linux by inquiring about Gtk+ scale
-    // settings. This looks like it should just be a case of shelling
-    // out to invoke the 'gsettings' command, eg.
-    //   gsettings get org.gnome.desktop.interface text-scaling-factor
-    // and using large_font if the result is >= 2.
-    else
-    {
-        // highdpi_font usually means normal_font (the normal resolution
-        // version), but actually means "set the HIGHDPI flag and try
-        // to use large_font if we initialize successfully".
-        font = &highdpi_font;
-    }
-}
-#endif
-
 //
 // Initialize text mode screen
 //
@@ -990,13 +875,6 @@ void TXT_StringConcat(char *dest, const char *src, size_t dest_len)
 
     TXT_StringCopy(dest + offset, src, dest_len - offset);
 }
-
-// On Windows, vsnprintf() is _vsnprintf().
-#ifdef _WIN32
-#if _MSC_VER < 1400 /* not needed for Visual Studio 2008 */
-#define vsnprintf _vsnprintf
-#endif
-#endif
 
 // Safe, portable vsnprintf().
 int TXT_vsnprintf(char *buf, size_t buf_len, const char *s, va_list args)

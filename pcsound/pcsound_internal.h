@@ -43,10 +43,6 @@ struct pcsound_driver_s
 extern int pcsound_sample_rate;
 
 
-#ifdef _WIN32
-extern pcsound_driver_t pcsound_win32_driver;
-#endif
-
 #ifdef HAVE_BSD_SPEAKER
 extern pcsound_driver_t pcsound_bsd_driver;
 #endif

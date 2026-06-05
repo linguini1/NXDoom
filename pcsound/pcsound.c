@@ -32,9 +32,6 @@ static pcsound_driver_t *drivers[] =
 #ifdef HAVE_BSD_SPEAKER
     &pcsound_bsd_driver,
 #endif
-#ifdef _WIN32
-    &pcsound_win32_driver,
-#endif
 #ifndef DISABLE_SDL2MIXER
     &pcsound_sdl_driver,
 #endif // DISABLE_SDL2MIXER
