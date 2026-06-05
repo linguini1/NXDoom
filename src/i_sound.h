@@ -236,12 +236,12 @@ extern int snd_cachesize;
 extern int snd_maxslicetime_ms;
 extern char *snd_musiccmd;
 extern int snd_pitchshift;
-extern char *snd_dmxoption;
 extern int use_libsamplerate;
 extern float libsamplerate_scale;
 
 void I_BindSoundVariables(void);
 
+#if 0
 // DMX version to emulate for OPL emulation:
 typedef enum {
     opl_doom1_1_666,    // Doom 1 v1.666
@@ -251,6 +251,7 @@ typedef enum {
 
 void I_SetOPLDriverVer(opl_driver_ver_t ver);
 void I_OPL_DevMessages(char *, size_t);
+#endif
 
 // Sound modules
 
@@ -258,25 +259,14 @@ void I_InitTimidityConfig(void);
 extern const sound_module_t sound_sdl_module;
 extern const sound_module_t sound_pcsound_module;
 extern const music_module_t music_sdl_module;
-extern const music_module_t music_opl_module;
 extern const music_module_t music_pack_module;
 extern const music_module_t music_win_module;
 extern const music_module_t music_fl_module;
-
-// For OPL module:
-
-extern int opl_io_port;
 
 // For native music module:
 
 extern char *music_pack_path;
 extern char *timidity_cfg_path;
-#ifdef _WIN32
-extern char *winmm_midi_device;
-extern int winmm_complevel;
-extern int winmm_reset_type;
-extern int winmm_reset_delay;
-#endif
 
 // For FluidSynth module:
 

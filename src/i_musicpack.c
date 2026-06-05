@@ -142,5 +142,3 @@ const music_module_t music_pack_module =
   I_NULL_MusicIsPlaying,
   I_NULL_PollMusic,
 };
-
-#endif // DISABLE_SDL2MIXER

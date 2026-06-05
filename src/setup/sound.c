@@ -64,12 +64,10 @@ static const char *sf_extension[] = { "sf2", "sf3", NULL };
 int snd_sfxdevice = SNDDEVICE_SB;
 int snd_musicdevice = SNDDEVICE_SB;
 int snd_samplerate = 44100;
-int opl_io_port = 0x388;
 int snd_cachesize = 64 * 1024 * 1024;
 int snd_maxslicetime_ms = 28;
 char *snd_musiccmd = "";
 int snd_pitchshift = 0;
-char *snd_dmxoption = "";
 
 static int numChannels = 8;
 static int sfxVolume = 8;
@@ -123,6 +121,7 @@ static int snd_oplmode;
 
 static void UpdateSndDevices(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 {
+#if 0
     switch (snd_oplmode)
     {
         default:
@@ -134,26 +133,7 @@ static void UpdateSndDevices(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
             snd_dmxoption = "-opl3";
             break;
     }
-}
-
-static txt_dropdown_list_t *OPLTypeSelector(void)
-{
-    txt_dropdown_list_t *result;
-
-    if (snd_dmxoption != NULL && strstr(snd_dmxoption, "-opl3") != NULL)
-    {
-        snd_oplmode = OPLMODE_OPL3;
-    }
-    else
-    {
-        snd_oplmode = OPLMODE_OPL2;
-    }
-
-    result = TXT_NewDropdownList(&snd_oplmode, opltype_strings, 2);
-
-    TXT_SignalConnect(result, "changed", UpdateSndDevices, NULL);
-
-    return result;
+#endif
 }
 
 static void OpenMusicPackDir(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
@@ -264,12 +244,6 @@ void ConfigSound(TXT_UNCAST_ARG(widget), void *user_data)
 
         TXT_NewRadioButton("OPL (Adlib/Soundblaster)", &snd_musicdevice,
                            SNDDEVICE_SB),
-        TXT_NewConditional(&snd_musicdevice, SNDDEVICE_SB,
-            TXT_NewHorizBox(
-                TXT_NewStrut(4, 0),
-                TXT_NewLabel("Chip type: "),
-                OPLTypeSelector(),
-                NULL)),
 
         TXT_NewRadioButton("GUS (emulated)", &snd_musicdevice, SNDDEVICE_GUS),
         TXT_NewConditional(&snd_musicdevice, SNDDEVICE_GUS,
@@ -361,10 +335,8 @@ void BindSoundVariables(void)
     m_bind_int_variable("snd_mport",                &snd_mport);
     m_bind_int_variable("snd_maxslicetime_ms",      &snd_maxslicetime_ms);
     m_bind_string_variable("snd_musiccmd",          &snd_musiccmd);
-    m_bind_string_variable("snd_dmxoption",         &snd_dmxoption);
 
     m_bind_int_variable("snd_cachesize",            &snd_cachesize);
-    m_bind_int_variable("opl_io_port",              &opl_io_port);
 
     m_bind_int_variable("snd_pitchshift",           &snd_pitchshift);
 

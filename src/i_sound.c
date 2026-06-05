@@ -89,16 +89,15 @@ static const sound_module_t *sound_modules[] =
 
 static const music_module_t *music_modules[] =
 {
-#ifdef _WIN32
-    &music_win_module,
-#endif
 #ifdef HAVE_FLUIDSYNTH
     &music_fl_module,
 #endif // HAVE_FLUIDSYNTH
 #ifndef DISABLE_SDL2MIXER
     &music_sdl_module,
 #endif // DISABLE_SDL2MIXER
+#if 0
     &music_opl_module,
+#endif
     NULL,
 };
 
@@ -166,16 +165,6 @@ static void InitMusicModule(void)
                             music_modules[i]->sound_devices,
                             music_modules[i]->num_sound_devices))
         {
-        #ifdef _WIN32
-            // Skip the native Windows MIDI module if using Timidity.
-
-            if (strcmp(timidity_cfg_path, "") &&
-                music_modules[i] == &music_win_module)
-            {
-                continue;
-            }
-        #endif
-
             // Initialize the module
 
             if (music_modules[i]->Init())
@@ -493,10 +482,8 @@ void I_BindSoundVariables(void)
     m_bind_int_variable("snd_mport",               &snd_mport);
     m_bind_int_variable("snd_maxslicetime_ms",     &snd_maxslicetime_ms);
     m_bind_string_variable("snd_musiccmd",         &snd_musiccmd);
-    m_bind_string_variable("snd_dmxoption",        &snd_dmxoption);
     m_bind_int_variable("snd_samplerate",          &snd_samplerate);
     m_bind_int_variable("snd_cachesize",           &snd_cachesize);
-    m_bind_int_variable("opl_io_port",             &opl_io_port);
     m_bind_int_variable("snd_pitchshift",          &snd_pitchshift);
 
     m_bind_string_variable("music_pack_path",      &music_pack_path);
