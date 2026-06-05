@@ -772,7 +772,7 @@ void P_SpawnPlayer(mapthing_t *mthing)
   if (mthing->type - 1 == consoleplayer)
     {
 
-      ST_Start(); /* wake up the status bar */
+      st_start(); /* wake up the status bar */
       HU_Start(); /* wake up the heads up text */
     }
 }

@@ -86,31 +86,31 @@ int deh_megasphere_health = DEH_DEFAULT_MEGASPHERE_HEALTH;
 
 // Dehacked: "God mode health"
 // This is what the health value is set to when cheating using
-// the IDDQD god mode cheat.  See ST_Responder in st_stuff.c
+// the IDDQD god mode cheat.  See st_responder in st_stuff.c
 
 int deh_god_mode_health = DEH_DEFAULT_GOD_MODE_HEALTH;
 
 // Dehacked: "IDFA Armor"
 // This is what the armor is set to when using the IDFA cheat.
-// See ST_Responder in st_stuff.c
+// See st_responder in st_stuff.c
 
 int deh_idfa_armor = DEH_DEFAULT_IDFA_ARMOR;
 
 // Dehacked: "IDFA Armor Class"
 // This is what the armor class is set to when using the IDFA cheat.
-// See ST_Responder in st_stuff.c
+// See st_responder in st_stuff.c
 
 int deh_idfa_armor_class = DEH_DEFAULT_IDFA_ARMOR_CLASS;
 
 // Dehacked: "IDKFA Armor"
 // This is what the armor is set to when using the IDKFA cheat.
-// See ST_Responder in st_stuff.c
+// See st_responder in st_stuff.c
 
 int deh_idkfa_armor = DEH_DEFAULT_IDKFA_ARMOR;
 
 // Dehacked: "IDKFA Armor Class"
 // This is what the armor class is set to when using the IDKFA cheat.
-// See ST_Responder in st_stuff.c
+// See st_responder in st_stuff.c
 
 int deh_idkfa_armor_class = DEH_DEFAULT_IDKFA_ARMOR_CLASS;
 

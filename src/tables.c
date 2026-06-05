@@ -38,7 +38,7 @@
 // which is looked up in the tantoangle[] table.  The +1 size is to handle
 // the case when x==y without additional checking.
 
-int SlopeDiv(unsigned int num, unsigned int den)
+int slope_div(unsigned int num, unsigned int den)
 {
     unsigned ans;
     

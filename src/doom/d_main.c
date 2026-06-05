@@ -219,7 +219,7 @@ boolean D_Display (void)
 	if (inhelpscreensstate && !inhelpscreens) {
         redrawsbar = true;              // just put away the help screen
     }
-	ST_Drawer (viewheight == SCREENHEIGHT, redrawsbar );
+	st_drawer (viewheight == SCREENHEIGHT, redrawsbar );
 	d_fullscreen = viewheight == SCREENHEIGHT;
 	break;
 
@@ -1952,8 +1952,8 @@ void d_doom_main (void)
     printf("HU_Init: Setting up heads up display.\n");
     HU_Init ();
 
-    printf("ST_Init: Init status bar.\n");
-    ST_Init ();
+    printf("st_init: Init status bar.\n");
+    st_init ();
 
     // If Doom II without a MAP01 lump, this is a store demo.
     // Moved this here so that MAP01 isn't constantly looked up

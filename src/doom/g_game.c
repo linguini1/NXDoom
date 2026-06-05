@@ -830,7 +830,7 @@ boolean G_Responder (event_t* ev)
 #endif 
 	if (HU_Responder (ev)) 
 	    return true;	// chat ate the event 
-	if (ST_Responder (ev)) 
+	if (st_responder (ev)) 
 	    return true;	// status window ate it 
 	if (am_responder (ev)) 
 	    return true;	// automap ate it 
@@ -1065,7 +1065,7 @@ void G_Ticker (void)
     { 
       case GS_LEVEL: 
 	P_Ticker (); 
-	ST_Ticker (); 
+	st_ticker (); 
 	am_ticker (); 
 	HU_Ticker ();            
 	break; 

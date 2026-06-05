@@ -538,7 +538,7 @@ void AM_initVariables(void)
 
   /* inform the status bar of the change */
 
-  ST_Responder(&st_notify);
+  st_responder(&st_notify);
 }
 
 /****************************************************************************
@@ -619,7 +619,7 @@ void am_stop(void)
 
   AM_unloadPics();
   automapactive = false;
-  ST_Responder(&st_notify);
+  st_responder(&st_notify);
   stopped = true;
 }
 
