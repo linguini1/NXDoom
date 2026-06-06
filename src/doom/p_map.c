@@ -169,8 +169,6 @@ boolean nofit;
 
 /* TELEPORT MOVE */
 
-/* PIT_StompThing */
-
 static boolean pit_stomp_thing(mobj_t *thing)
 {
   fixed_t blockdist;
@@ -315,7 +313,7 @@ boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y)
 
   for (bx = xl; bx <= xh; bx++)
     for (by = yl; by <= yh; by++)
-      if (!P_BlockThingsIterator(bx, by, PIT_StompThing)) return false;
+      if (!P_BlockThingsIterator(bx, by, pit_stomp_thing)) return false;
 
   /* the move is ok,
    * so link the thing into its new position
