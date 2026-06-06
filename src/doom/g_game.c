@@ -1029,9 +1029,9 @@ void G_Ticker (void)
 		    paused ^= 1; 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 		    if (paused) 
-			S_PauseSound (); 
+			s_pause_sound (); 
 		    else 
-			S_ResumeSound (); 
+			s_resume_sound (); 
 		    break; 
 #endif
 					 
@@ -1830,7 +1830,7 @@ G_InitNew
     {
 	paused = false;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_ResumeSound ();
+	s_resume_sound ();
 #endif
     }
 

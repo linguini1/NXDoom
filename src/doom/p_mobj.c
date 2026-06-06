@@ -627,7 +627,7 @@ void P_RemoveMobj(mobj_t *mobj)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   /* stop any playing sound */
 
-  S_StopSound(mobj);
+  s_stop_sound(mobj);
 #endif
 
   P_RemoveThinker((thinker_t *)mobj); /* free block */

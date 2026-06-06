@@ -453,7 +453,7 @@ void D_RunFrame()
     TryRunTics (); // will run at least one tic
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_UpdateSounds (players[consoleplayer].mo);// move positional sounds
+    s_update_sounds (players[consoleplayer].mo);// move positional sounds
 #endif
 
     // Update display, next frame, with current state if no profiling is on
@@ -596,10 +596,10 @@ void D_DoAdvanceDemo (void)
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if ( gamemode == commercial ) {
-        S_StartMusic(mus_dm2ttl);
+        s_start_music(mus_dm2ttl);
     }
 	else {
-        S_StartMusic (mus_intro);
+        s_start_music (mus_intro);
     }
 #endif
 
@@ -622,7 +622,7 @@ void D_DoAdvanceDemo (void)
 	    pagetic = TICRATE * 11;
 	    pagename = ("TITLEPIC");
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartMusic(mus_dm2ttl);
+	    s_start_music(mus_dm2ttl);
 #endif
 	}
 	else
@@ -1940,8 +1940,8 @@ void d_doom_main (void)
     P_Init ();
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    printf("S_Init: Setting up sound.\n");
-    S_Init (sfxVolume * 8, musicVolume * 8);
+    printf("s_init: Setting up sound.\n");
+    s_init (sfxVolume * 8, musicVolume * 8);
 #endif
 
     printf("D_CheckNetGame: Checking network game status.\n");

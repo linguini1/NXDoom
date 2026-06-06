@@ -326,6 +326,29 @@ static int clamp(int x)
   return x;
 }
 
+static void s_shutdown(void)
+{
+  I_ShutdownSound();
+  I_ShutdownMusic();
+}
+
+static void s_stop_music(void)
+{
+  if (mus_playing)
+    {
+      if (mus_paused)
+        {
+          I_ResumeSong();
+        }
+
+      I_StopSong();
+      I_UnRegisterSong(mus_playing->handle);
+      w_release_lump_num(mus_playing->lumpnum);
+      mus_playing->data = NULL;
+      mus_playing = NULL;
+    }
+}
+
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -336,7 +359,7 @@ static int clamp(int x)
  * lookup.
  */
 
-void S_Init(int sfxVolume, int musicVolume)
+void s_init(int sfxvolume, int musicvolume)
 {
   int i;
 
@@ -360,8 +383,8 @@ void S_Init(int sfxVolume, int musicVolume)
 
   I_PrecacheSounds(S_sfx, NUMSFX);
 
-  S_SetSfxVolume(sfxVolume);
-  S_SetMusicVolume(musicVolume);
+  s_set_sfx_volume(sfxvolume);
+  s_set_music_volume(musicvolume);
 
   /* Allocating the internal channels for mixing
    * (the maximum number of sounds rendered
@@ -398,18 +421,12 @@ void S_Init(int sfxVolume, int musicVolume)
   I_AtExit(S_Shutdown, true);
 }
 
-void S_Shutdown(void)
-{
-  I_ShutdownSound();
-  I_ShutdownMusic();
-}
-
 /* Per level startup code.
  * Kills playing sounds at start of level, determines music if any, changes
  * music.
  */
 
-void S_Start(void)
+void s_start(void)
 {
   int cnum;
   int mnum;
@@ -462,7 +479,7 @@ void S_Start(void)
   s_change_music(mnum, true);
 }
 
-void S_StopSound(mobj_t *origin)
+void s_stop_sound(mobj_t *origin)
 {
   int cnum;
 
@@ -553,7 +570,7 @@ void s_start_sound(void *origin_p, int sfx_id)
 
   pitch = clamp(pitch);
 
-  S_StopSound(origin); /* kill old sound */
+  s_stop_sound(origin); /* kill old sound */
 
   /* try to find a channel */
 
@@ -583,7 +600,7 @@ void s_start_sound(void *origin_p, int sfx_id)
 
 /* Stop and resume music, during game PAUSE. */
 
-void S_PauseSound(void)
+void s_pause_sound(void)
 {
   if (mus_playing && !mus_paused)
     {
@@ -592,7 +609,7 @@ void S_PauseSound(void)
     }
 }
 
-void S_ResumeSound(void)
+void s_resume_sound(void)
 {
   if (mus_playing && mus_paused)
     {
@@ -603,7 +620,7 @@ void S_ResumeSound(void)
 
 /* Updates music & sounds */
 
-void S_UpdateSounds(mobj_t *listener)
+void s_update_sounds(mobj_t *listener)
 {
   int audible;
   int cnum;
@@ -672,7 +689,7 @@ void S_UpdateSounds(mobj_t *listener)
     }
 }
 
-void S_SetMusicVolume(int volume)
+void s_set_music_volume(int volume)
 {
   if (volume < 0 || volume > 127)
     {
@@ -682,7 +699,7 @@ void S_SetMusicVolume(int volume)
   I_SetMusicVolume(volume);
 }
 
-void S_SetSfxVolume(int volume)
+void s_set_sfx_volume(int volume)
 {
   if (volume < 0 || volume > 127)
     {
@@ -694,7 +711,7 @@ void S_SetSfxVolume(int volume)
 
 /* Starts some music with the music id found in sounds.h. */
 
-void S_StartMusic(int m_id)
+void s_start_music(int m_id)
 {
   s_change_music(m_id, false);
 }
@@ -750,23 +767,4 @@ void s_change_music(int musicnum, int looping)
   I_PlaySong(handle, looping);
 
   mus_playing = music;
-}
-
-boolean S_MusicPlaying(void) { return I_MusicIsPlaying(); }
-
-void S_StopMusic(void)
-{
-  if (mus_playing)
-    {
-      if (mus_paused)
-        {
-          I_ResumeSong();
-        }
-
-      I_StopSong();
-      I_UnRegisterSong(mus_playing->handle);
-      w_release_lump_num(mus_playing->lumpnum);
-      mus_playing->data = NULL;
-      mus_playing = NULL;
-    }
 }

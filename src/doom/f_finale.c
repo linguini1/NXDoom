@@ -217,7 +217,7 @@ void F_Ticker (void)
 	wipegamestate = -1;		// force a wipe
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (gameepisode == 3)
-        S_StartMusic(mus_bunny);
+        s_start_music(mus_bunny);
 #endif
     }
 }

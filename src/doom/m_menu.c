@@ -864,7 +864,7 @@ void M_SfxVol(int choice)
 	break;
     }
 	
-    S_SetSfxVolume(sfxVolume * 8);
+    s_set_sfx_volume(sfxVolume * 8);
 #endif
 }
 
@@ -883,7 +883,7 @@ void M_MusicVol(int choice)
 	break;
     }
 	
-    S_SetMusicVolume(musicVolume * 8);
+    s_set_music_volume(musicVolume * 8);
 #endif
 }
 

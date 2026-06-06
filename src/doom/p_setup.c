@@ -740,7 +740,7 @@ P_SetupLevel
 
     // Make sure all sounds are stopped before z_free_tags.
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_Start ();			
+    s_start ();			
 #endif
 
     z_free_tags (PU_LEVEL, PU_PURGELEVEL-1);
