@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/wi_stuff.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -14,7 +18,8 @@
  *
  * DESCRIPTION:
  *  Intermission.
- */
+ *
+ ****************************************************************************/
 
 #ifndef __WI_STUFF__
 #define __WI_STUFF__

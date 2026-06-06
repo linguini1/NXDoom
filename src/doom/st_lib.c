@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/st_lib.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	The status bar widget code.
- */
+ *  The status bar widget code.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -47,32 +52,11 @@
 patch_t *sttminus;
 
 /****************************************************************************
- * Public Functions
+ * Private Functions
  ****************************************************************************/
 
-void stlib_init(void)
-{
-  if (w_check_num_for_name(("STTMINUS")) >= 0)
-    sttminus = (patch_t *)w_cache_lump_name(("STTMINUS"), PU_STATIC);
-  else
-    sttminus = NULL;
-}
-
-/* ? */
-void stlib_init_num(st_number_t *n, int x, int y, patch_t **pl, int *num,
-                   boolean *on, int width)
-{
-  n->x = x;
-  n->y = y;
-  n->oldnum = 0;
-  n->width = width;
-  n->num = num;
-  n->on = on;
-  n->p = pl;
-}
-
 /****************************************************************************
- * Name: STlib_drawNum
+ * Name: stlib_draw_num
  *
  * Description:
  *  A fairly efficient way to draw a number based on differences from the old
@@ -80,9 +64,8 @@ void stlib_init_num(st_number_t *n, int x, int y, patch_t **pl, int *num,
  *
  ****************************************************************************/
 
-void STlib_drawNum(st_number_t *n, boolean refresh)
+static void stlib_draw_num(st_number_t *n, boolean refresh)
 {
-
   int numdigits = n->width;
   int num = *n->num;
 
@@ -136,13 +119,39 @@ void STlib_drawNum(st_number_t *n, boolean refresh)
   if (neg && sttminus) v_draw_patch(x - 8, n->y, sttminus);
 }
 
-void stlib_update_num(st_number_t *n, boolean refresh)
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+void stlib_init(void)
 {
-  if (*n->on) STlib_drawNum(n, refresh);
+  if (w_check_num_for_name(("STTMINUS")) >= 0)
+    sttminus = (patch_t *)w_cache_lump_name(("STTMINUS"), PU_STATIC);
+  else
+    sttminus = NULL;
 }
 
-void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl, int *num,
-                       boolean *on, patch_t *percent)
+/* ? */
+
+void stlib_init_num(st_number_t *n, int x, int y, patch_t **pl, int *num,
+                   boolean *on, int width)
+{
+  n->x = x;
+  n->y = y;
+  n->oldnum = 0;
+  n->width = width;
+  n->num = num;
+  n->on = on;
+  n->p = pl;
+}
+
+void stlib_update_num(st_number_t *n, boolean refresh)
+{
+  if (*n->on) stlib_draw_num(n, refresh);
+}
+
+void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl,
+                        int *num, boolean *on, patch_t *percent)
 {
   stlib_init_num(&p->n, x, y, pl, num, on, 3);
   p->p = percent;
@@ -186,6 +195,7 @@ void stlib_update_mult_icon(st_multicon_t *mi, boolean refresh)
 
           v_copy_rect(x, y - ST_Y, st_backing_screen, w, h, x, y);
         }
+
       v_draw_patch(mi->x, mi->y, mi->p[*mi->inum]);
       mi->oldinum = *mi->inum;
     }
