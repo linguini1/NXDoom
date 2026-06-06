@@ -187,7 +187,7 @@ void z_free(void *ptr)
 
   block = (memblock_t *)((byte *)ptr - sizeof(memblock_t));
 
-  if (block->id != ZONEID) I_Error("z_free: freed a pointer without ZONEID");
+  if (block->id != ZONEID) i_error("z_free: freed a pointer without ZONEID");
 
   if (block->tag != PU_FREE && block->user != NULL)
     {
@@ -283,7 +283,7 @@ void *z_malloc(int size, int tag, void *user)
         {
           /* scanned all the way around the list */
 
-          I_Error("z_malloc: failed on allocation of %i bytes", size);
+          i_error("z_malloc: failed on allocation of %i bytes", size);
         }
 
       if (rover->tag != PU_FREE)
@@ -335,7 +335,7 @@ void *z_malloc(int size, int tag, void *user)
     }
 
   if (user == NULL && tag >= PU_PURGELEVEL)
-    I_Error("z_malloc: an owner is required for purgeable blocks");
+    i_error("z_malloc: an owner is required for purgeable blocks");
 
   base->user = user;
   base->tag = tag;
@@ -466,13 +466,13 @@ void z_check_heap(void)
         }
 
       if ((byte *)block + block->size != (byte *)block->next)
-        I_Error("z_check_heap: block size does not touch the next block\n");
+        i_error("z_check_heap: block size does not touch the next block\n");
 
       if (block->next->prev != block)
-        I_Error("z_check_heap: next block doesn't have proper back link\n");
+        i_error("z_check_heap: next block doesn't have proper back link\n");
 
       if (block->tag == PU_FREE && block->next->tag == PU_FREE)
-        I_Error("z_check_heap: two consecutive free blocks\n");
+        i_error("z_check_heap: two consecutive free blocks\n");
     }
 }
 
@@ -487,10 +487,10 @@ void z_change_tag2(void *ptr, int tag, const char *file, int line)
   block = (memblock_t *)((byte *)ptr - sizeof(memblock_t));
 
   if (block->id != ZONEID)
-    I_Error("%s:%i: z_change_tag: block without a ZONEID!", file, line);
+    i_error("%s:%i: z_change_tag: block without a ZONEID!", file, line);
 
   if (tag >= PU_PURGELEVEL && block->user == NULL)
-    I_Error("%s:%i: z_change_tag: an owner is required "
+    i_error("%s:%i: z_change_tag: an owner is required "
             "for purgeable blocks",
             file, line);
 
@@ -509,7 +509,7 @@ void z_change_user(void *ptr, void **user)
 
   if (block->id != ZONEID)
     {
-      I_Error("z_change_user: Tried to change user for invalid block!");
+      i_error("z_change_user: Tried to change user for invalid block!");
     }
 
   block->user = user;

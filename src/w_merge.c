@@ -146,13 +146,13 @@ static void setup_lists(void)
 
   if (!setup_list(&iwad_flats, &iwad, "F_START", "F_END", NULL, NULL))
     {
-      I_Error("Flats section not found in IWAD");
+      i_error("Flats section not found in IWAD");
     }
 
   if (!setup_list(&iwad_sprites, &iwad, "S_START", "S_END", NULL, NULL))
 
     {
-      I_Error("Sprites section not found in IWAD");
+      i_error("Sprites section not found in IWAD");
     }
 
   /* PWAD */

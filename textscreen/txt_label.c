@@ -1,16 +1,25 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_label.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +31,34 @@
 #include "txt_utf8.h"
 #include "txt_window.h"
 
-static void TXT_LabelSizeCalc(TXT_UNCAST_ARG(label))
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
+
+static void txt_label_size_calc(TXT_UNCAST_ARG(label));
+static void txt_label_drawer(TXT_UNCAST_ARG(label));
+static void txt_label_destructor(TXT_UNCAST_ARG(label));
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+txt_widget_class_t txt_label_class =
+{
+  txt_never_selectable,
+  txt_label_size_calc,
+  txt_label_drawer,
+  NULL,
+  txt_label_destructor,
+  NULL,
+  NULL,
+};
+
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
+
+static void txt_label_size_calc(TXT_UNCAST_ARG(label))
 {
   TXT_CAST_ARG(txt_label_t, label);
 
@@ -30,32 +66,37 @@ static void TXT_LabelSizeCalc(TXT_UNCAST_ARG(label))
   label->widget.h = label->h;
 }
 
-static void TXT_LabelDrawer(TXT_UNCAST_ARG(label))
+static void txt_label_drawer(TXT_UNCAST_ARG(label))
 {
   TXT_CAST_ARG(txt_label_t, label);
-  unsigned int x, y;
-  int origin_x, origin_y;
+  unsigned int x;
+  unsigned int y;
+  int origin_x;
+  int origin_y;
   unsigned int align_indent = 0;
-  unsigned int w, sw;
+  unsigned int w;
+  unsigned int sw;
 
   w = label->widget.w;
 
   if (label->bgcolor >= 0)
     {
-      TXT_BGColor(label->bgcolor, 0);
+      txt_bgcolour(label->bgcolor, 0);
     }
   if (label->fgcolor >= 0)
     {
-      TXT_FGColor(label->fgcolor);
+      txt_fgcolour(label->fgcolor);
     }
 
-  TXT_GetXY(&origin_x, &origin_y);
+  txt_get_xy(&origin_x, &origin_y);
 
   for (y = 0; y < label->h; ++y)
     {
-      // Calculate the amount to indent this line due to the align
-      // setting
-      sw = TXT_UTF8_Strlen(label->lines[y]);
+      /* Calculate the amount to indent this line due to the align
+       * setting
+       */
+
+      sw = txt_utf8_strlen(label->lines[y]);
       switch (label->widget.align)
         {
         case TXT_HORIZ_LEFT:
@@ -69,32 +110,32 @@ static void TXT_LabelDrawer(TXT_UNCAST_ARG(label))
           break;
         }
 
-      // Draw this line
+      /* Draw this line */
 
-      TXT_GotoXY(origin_x, origin_y + y);
+      txt_goto_xy(origin_x, origin_y + y);
 
-      // Gap at the start
+      /* Gap at the start */
 
       for (x = 0; x < align_indent; ++x)
         {
-          TXT_DrawString(" ");
+          txt_draw_string(" ");
         }
 
-      // The string itself
+      /* The string itself */
 
-      TXT_DrawString(label->lines[y]);
+      txt_draw_string(label->lines[y]);
       x += sw;
 
-      // Gap at the end
+      /* Gap at the end */
 
       for (; x < w; ++x)
         {
-          TXT_DrawString(" ");
+          txt_draw_string(" ");
         }
     }
 }
 
-static void TXT_LabelDestructor(TXT_UNCAST_ARG(label))
+static void txt_label_destructor(TXT_UNCAST_ARG(label))
 {
   TXT_CAST_ARG(txt_label_t, label);
 
@@ -102,31 +143,32 @@ static void TXT_LabelDestructor(TXT_UNCAST_ARG(label))
   free(label->lines);
 }
 
-txt_widget_class_t txt_label_class = {
-    TXT_NeverSelectable,
-    TXT_LabelSizeCalc,
-    TXT_LabelDrawer,
-    NULL,
-    TXT_LabelDestructor,
-    NULL,
-    NULL,
-};
+#if 0 /* UNUSED */
+static void txt_set_bg_colour(txt_label_t *label, txt_color_t color)
+{
+  label->bgcolor = color;
+}
+#endif
 
-void TXT_SetLabel(txt_label_t *label, const char *value)
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+void txt_set_label(txt_label_t *label, const char *value)
 {
   char *p;
   unsigned int y;
 
-  // Free back the old label
+  /* Free back the old label */
 
   free(label->label);
   free(label->lines);
 
-  // Set the new value
+  /* Set the new value */
 
   label->label = strdup(value);
 
-  // Work out how many lines in this label
+  /* Work out how many lines in this label */
 
   label->h = 1;
 
@@ -138,7 +180,7 @@ void TXT_SetLabel(txt_label_t *label, const char *value)
         }
     }
 
-  // Split into lines
+  /* Split into lines */
 
   label->lines = malloc(sizeof(char *) * label->h);
   label->lines[0] = label->label;
@@ -160,7 +202,7 @@ void TXT_SetLabel(txt_label_t *label, const char *value)
     {
       unsigned int line_len;
 
-      line_len = TXT_UTF8_Strlen(label->lines[y]);
+      line_len = txt_utf8_strlen(label->lines[y]);
 
       if (line_len > label->w) label->w = line_len;
     }
@@ -172,26 +214,21 @@ txt_label_t *txt_new_label(const char *text)
 
   label = malloc(sizeof(txt_label_t));
 
-  TXT_InitWidget(label, &txt_label_class);
+  txt_init_widget(label, &txt_label_class);
   label->label = NULL;
   label->lines = NULL;
 
-  // Default colors
+  /* Default colors */
 
   label->bgcolor = -1;
   label->fgcolor = -1;
 
-  TXT_SetLabel(label, text);
+  txt_set_label(label, text);
 
   return label;
 }
 
-void TXT_SetFGColor(txt_label_t *label, txt_color_t color)
+void txt_set_fg_colour(txt_label_t *label, txt_color_t color)
 {
   label->fgcolor = color;
-}
-
-void TXT_SetBGColor(txt_label_t *label, txt_color_t color)
-{
-  label->bgcolor = color;
 }

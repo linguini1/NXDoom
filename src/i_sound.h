@@ -143,7 +143,7 @@ typedef struct
    * Returns true if successfully initialised
    */
 
-  boolean (*Init)(GameMission_t mission);
+  boolean (*Init)(gamemission_t mission);
 
   /* Shutdown sound module */
 
@@ -296,7 +296,7 @@ extern float fsynth_gain;
  * Public Function Prototypes
  ****************************************************************************/
 
-void i_init_sound(GameMission_t mission);
+void i_init_sound(gamemission_t mission);
 void i_shutdown_sound(void);
 int i_get_sfx_lumpnum(sfxinfo_t *sfxinfo);
 void i_update_sound(void);

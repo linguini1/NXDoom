@@ -62,7 +62,7 @@ boolean P_GiveAmmo(player_t *player, ammotype_t ammo, int num)
 
   if (ammo == am_noammo) return false;
 
-  if (ammo >= NUMAMMO) I_Error("P_GiveAmmo: bad type %i", ammo);
+  if (ammo >= NUMAMMO) i_error("P_GiveAmmo: bad type %i", ammo);
 
   if (player->ammo[ammo] == player->maxammo[ammo]) return false;
 
@@ -586,7 +586,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       break;
 
     default:
-      I_Error("P_SpecialThing: Unknown gettable thing");
+      i_error("P_SpecialThing: Unknown gettable thing");
     }
 
   if (special->flags & MF_COUNTITEM) player->itemcount++;

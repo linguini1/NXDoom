@@ -128,7 +128,7 @@ fixed_t P_InterceptVector2(divline_t *v2, divline_t *v1)
   den = FixedMul(v1->dy >> 8, v2->dx) - FixedMul(v1->dx >> 8, v2->dy);
 
   if (den == 0) return 0;
-  //	I_Error ("P_InterceptVector: parallel");
+  //	i_error ("P_InterceptVector: parallel");
 
   num = FixedMul((v1->x - v2->x) >> 8, v1->dy) +
         FixedMul((v2->y - v1->y) >> 8, v1->dx);
@@ -162,7 +162,7 @@ boolean P_CrossSubsector(int num)
 
 #ifdef RANGECHECK
   if (num >= numsubsectors)
-    I_Error("P_CrossSubsector: ss %i with numss = %i", num, numsubsectors);
+    i_error("P_CrossSubsector: ss %i with numss = %i", num, numsubsectors);
 #endif
 
   sub = &subsectors[num];

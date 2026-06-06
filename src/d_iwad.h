@@ -30,20 +30,20 @@
 typedef struct
 {
   const char *name;
-  GameMission_t mission;
-  GameMode_t mode;
+  gamemission_t mission;
+  game_mode_t mode;
   const char *description;
 } iwad_t;
 
 boolean D_IsIWADName(const char *name);
 char *D_FindWADByName(const char *filename);
 char *d_try_find_wad_by_name(const char *filename);
-char *D_FindIWAD(int mask, GameMission_t *mission);
-const iwad_t **D_FindAllIWADs(int mask);
-const char *D_SaveGameIWADName(GameMission_t gamemission,
+char *D_FindIWAD(int mask, gamemission_t *mission);
+const iwad_t **d_find_all_iwads(int mask);
+const char *D_SaveGameIWADName(gamemission_t gamemission,
                                GameVariant_t gamevariant);
-const char *D_SuggestIWADName(GameMission_t mission, GameMode_t mode);
-const char *d_suggest_game_name(GameMission_t mission, GameMode_t mode);
-void D_CheckCorrectIWAD(GameMission_t mission);
+const char *D_SuggestIWADName(gamemission_t mission, game_mode_t mode);
+const char *d_suggest_game_name(gamemission_t mission, game_mode_t mode);
+void D_CheckCorrectIWAD(gamemission_t mission);
 
 #endif

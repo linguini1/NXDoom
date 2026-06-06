@@ -1,19 +1,35 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_window_action.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
 
 #ifndef TXT_WINDOW_ACTION_H
 #define TXT_WINDOW_ACTION_H
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+#include "txt_window.h"
+
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
 
 /**
  * @file txt_window_action.h
@@ -33,15 +49,16 @@
 
 typedef struct txt_window_action_s txt_window_action_t;
 
-#include "txt_widget.h"
-#include "txt_window.h"
-
 struct txt_window_action_s
 {
   txt_widget_t widget;
   char *label;
   int key;
 };
+
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
 
 /**
  * Create a new window action.
@@ -62,7 +79,7 @@ txt_window_action_t *txt_new_window_action(int key, const char *label);
  * @return              Pointer to the new window action widget.
  */
 
-txt_window_action_t *txt_new_windowEscapeAction(txt_window_t *window);
+txt_window_action_t *txt_new_window_escape_action(txt_window_t *window);
 
 /**
  * Create a new window action that closes the window when the
@@ -72,7 +89,7 @@ txt_window_action_t *txt_new_windowEscapeAction(txt_window_t *window);
  * @return              Pointer to the new window action widget.
  */
 
-txt_window_action_t *txt_new_windowAbortAction(txt_window_t *window);
+txt_window_action_t *txt_new_window_abort_action(txt_window_t *window);
 
 /**
  * Create a new "select" window action.  This does not really do
@@ -83,6 +100,6 @@ txt_window_action_t *txt_new_windowAbortAction(txt_window_t *window);
  * @return              Pointer to the new window action widget.
  */
 
-txt_window_action_t *txt_new_windowSelectAction(txt_window_t *window);
+txt_window_action_t *txt_new_window_select_action(txt_window_t *window);
 
-#endif /* #ifndef TXT_WINDOW_ACTION_H */
+#endif /* TXT_WINDOW_ACTION_H */

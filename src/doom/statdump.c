@@ -49,7 +49,7 @@ static const char *player_colors[] = {"Green", "Indigo", "Brown", "Red"};
 static wbstartstruct_t captured_stats[MAX_CAPTURES];
 static int num_captured_stats = 0;
 
-static GameMission_t discovered_gamemission = none;
+static gamemission_t discovered_gamemission = none;
 
 /* Try to work out whether this is a Doom 1 or Doom 2 game, by looking
  * at the episode and map, and the par times.  This is used to decide

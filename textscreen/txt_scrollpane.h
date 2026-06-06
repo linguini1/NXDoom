@@ -1,25 +1,29 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_scrollpane.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ *
+ ****************************************************************************/
 
 #ifndef TXT_SCROLLPANE_H
 #define TXT_SCROLLPANE_H
 
-/**
- * @file txt_scrollpane.h
- *
- * Scrollable pane widget.
- */
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
 
 /**
  * Scrollable pane widget.
@@ -42,6 +46,10 @@ struct txt_scrollpane_s
   txt_widget_t *child;
 };
 
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
+
 /**
  * Create a new scroll pane widget.
  *
@@ -52,6 +60,6 @@ struct txt_scrollpane_s
  * @return                Pointer to the new scroll pane widget.
  */
 
-txt_scrollpane_t *TXT_NewScrollPane(int w, int h, TXT_UNCAST_ARG(target));
+txt_scrollpane_t *txt_new_scrollpane(int w, int h, TXT_UNCAST_ARG(target));
 
-#endif /* #ifndef TXT_SCROLLPANE_H */
+#endif /* TXT_SCROLLPANE_H */

@@ -399,7 +399,7 @@ void R_GenerateLookup(int texnum)
           return;
         }
 
-      /* I_Error ("R_GenerateLookup: column without a patch"); */
+      /* i_error ("R_GenerateLookup: column without a patch"); */
 
       if (patchcount[x] > 1)
         {
@@ -410,7 +410,7 @@ void R_GenerateLookup(int texnum)
 
           if (texturecompositesize[texnum] > 0x10000 - texture->height)
             {
-              I_Error("R_GenerateLookup: texture %i is >64k", texnum);
+              i_error("R_GenerateLookup: texture %i is >64k", texnum);
             }
 
           texturecompositesize[texnum] += texture->height;
@@ -571,7 +571,7 @@ void R_InitTextures(void)
 
       offset = LONG(*directory);
 
-      if (offset > maxoff) I_Error("R_InitTextures: bad texture directory");
+      if (offset > maxoff) i_error("R_InitTextures: bad texture directory");
 
       mtexture = (maptexture_t *)((byte *)maptex + offset);
 
@@ -595,7 +595,7 @@ void R_InitTextures(void)
           patch->patch = patchlookup[SHORT(mpatch->patch)];
           if (patch->patch == -1)
             {
-              I_Error("R_InitTextures: Missing patch in texture %s",
+              i_error("R_InitTextures: Missing patch in texture %s",
                       texture->name);
             }
         }
@@ -743,7 +743,7 @@ int R_FlatNumForName(const char *name)
     {
       namet[8] = 0;
       memcpy(namet, name, 8);
-      I_Error("R_FlatNumForName: %s not found", namet);
+      i_error("R_FlatNumForName: %s not found", namet);
     }
   return i - firstflat;
 }
@@ -796,7 +796,7 @@ int R_TextureNumForName(const char *name)
 
   if (i == -1)
     {
-      I_Error("R_TextureNumForName: %s not found", name);
+      i_error("R_TextureNumForName: %s not found", name);
     }
   return i;
 }

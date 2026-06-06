@@ -106,6 +106,6 @@ void I_InitJoystick(void);
 void I_ShutdownJoystick(void);
 void I_UpdateJoystick(void);
 
-void I_BindJoystickVariables(void);
+void I_bind_joystick_variables(void);
 
 #endif /* #ifndef __I_JOYSTICK__ */

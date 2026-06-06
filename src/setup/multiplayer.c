@@ -318,12 +318,12 @@ static void start_game(int multiplayer)
 
   add_wads(exec);
 
-  TXT_Shutdown();
+  txt_shutdown();
 
   m_save_defaults();
   PassThroughArguments(exec);
 
-  ExecuteDoom(exec);
+  execute_doom(exec);
 
   exit(0);
 }
@@ -352,7 +352,7 @@ static void update_warp_button(void)
       snprintf(buf, sizeof(buf), "MAP%02i", warpmap);
     }
 
-  TXT_SetButtonLabel(warpbutton, buf);
+  txt_set_button_label(warpbutton, buf);
 }
 
 static void update_skill_button(void)
@@ -424,7 +424,7 @@ static void close_level_select_dialog(TXT_UNCAST_ARG(button),
 {
   TXT_CAST_ARG(txt_window_t, window);
 
-  TXT_CloseWindow(window);
+  txt_close_window(window);
 }
 
 static void level_select_dialog(TXT_UNCAST_ARG(widget),
@@ -446,7 +446,7 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
   if (warptype == WARP_ExMy)
     {
       episodes = D_GetNumEpisodes(iwad->mission, iwad->mode);
-      TXT_SetTableColumns(window, episodes);
+      txt_set_table_columns(window, episodes);
 
       /* ExMy levels */
 
@@ -459,30 +459,30 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
                   continue;
                 }
 
-              if (!D_ValidEpisodeMap(iwad->mission, iwad->mode, x, y))
+              if (!d_valid_episode_map(iwad->mission, iwad->mode, x, y))
                 {
-                  TXT_AddWidget(window, NULL);
+                  txt_add_widget(window, NULL);
                   continue;
                 }
 
               snprintf(buf, sizeof(buf), " E%dM%d ", x, y);
-              button = TXT_NewButton(buf);
+              button = txt_new_button(buf);
               txt_signal_connect(button, "pressed", SetExMyWarp,
                                  (void *)(intptr_t)(x * 10 + y));
               txt_signal_connect(button, "pressed", CloseLevelSelectDialog,
                                  window);
-              TXT_AddWidget(window, button);
+              txt_add_widget(window, button);
 
               if (warpepisode == x && warpmap == y)
                 {
-                  TXT_SelectWidget(window, button);
+                  txt_select_widget(window, button);
                 }
             }
         }
     }
   else
     {
-      TXT_SetTableColumns(window, 6);
+      txt_set_table_columns(window, 6);
 
       for (i = 0; i < 60; ++i)
         {
@@ -491,23 +491,23 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
 
           l = x * 10 + y + 1;
 
-          if (!D_ValidEpisodeMap(iwad->mission, iwad->mode, 1, l))
+          if (!d_valid_episode_map(iwad->mission, iwad->mode, 1, l))
             {
-              TXT_AddWidget(window, NULL);
+              txt_add_widget(window, NULL);
               continue;
             }
 
           snprintf(buf, sizeof(buf), " MAP%02d ", l);
-          button = TXT_NewButton(buf);
+          button = txt_new_button(buf);
           txt_signal_connect(button, "pressed", SetMAPxyWarp,
                              (void *)(intptr_t)l);
           txt_signal_connect(button, "pressed", CloseLevelSelectDialog,
                              window);
-          TXT_AddWidget(window, button);
+          txt_add_widget(window, button);
 
           if (warpmap == l)
             {
-              TXT_SelectWidget(window, button);
+              txt_select_widget(window, button);
             }
         }
     }
@@ -638,7 +638,7 @@ static txt_widget_t *iwad_selector(void)
       /* Dropdown list allowing IWAD to be selected. */
 
       dropdown =
-          TXT_NewDropdownList(&found_iwad_selected, iwad_labels, num_iwads);
+          txt_new_dropdown_list(&found_iwad_selected, iwad_labels, num_iwads);
 
       txt_signal_connect(dropdown, "changed", IWADSelected, NULL);
 
@@ -668,7 +668,7 @@ static txt_widget_t *iwad_selector(void)
 static txt_window_action_t *start_game_action(int multiplayer)
 {
   txt_window_action_t *action;
-  TxtWidgetSignalFunc callback;
+  txt_widget_signal_f callback;
 
   action = txt_new_window_action(KEY_F10, "Start");
 
@@ -696,7 +696,7 @@ static void open_wads_window(TXT_UNCAST_ARG(widget),
 
   for (i = 0; i < NUM_WADS; ++i)
     {
-      TXT_AddWidget(window,
+      txt_add_widget(window,
                     txt_new_file_selector(&wads[i], 60, "Select a WAD file",
                                           wad_extensions));
     }
@@ -712,7 +712,7 @@ static void open_extra_params_window(TXT_UNCAST_ARG(widget),
 
   for (i = 0; i < NUM_EXTRA_PARAMS; ++i)
     {
-      TXT_AddWidget(window, TXT_NewInputBox(&extra_params[i], 70));
+      txt_add_widget(window, txt_new_input_box(&extra_params[i], 70));
     }
 }
 
@@ -732,13 +732,13 @@ static txt_dropdown_list_t *game_type_dropdown(void)
     {
     case doom:
     default:
-      return TXT_NewDropdownList(&deathmatch, gamemodes, 3);
+      return txt_new_dropdown_list(&deathmatch, gamemodes, 3);
 
       /* Heretic and Hexen don't support Deathmatch II: */
 
     case heretic:
     case hexen:
-      return TXT_NewDropdownList(&deathmatch, gamemodes, 2);
+      return txt_new_dropdown_list(&deathmatch, gamemodes, 2);
 
       /* Strife supports both deathmatch modes, but doesn't support
        * multiplayer co-op. Use a different variable to indicate whether
@@ -746,7 +746,7 @@ static txt_dropdown_list_t *game_type_dropdown(void)
        */
 
     case strife:
-      return TXT_NewDropdownList(&strife_altdeath, strife_gamemodes, 2);
+      return txt_new_dropdown_list(&strife_altdeath, strife_gamemodes, 2);
     }
 }
 
@@ -761,7 +761,7 @@ static void start_game_menu(const char *window_title, int multiplayer)
   txt_widget_t *iwad_selector;
 
   window = txt_new_window(window_title);
-  TXT_SetTableColumns(window, 2);
+  txt_set_table_columns(window, 2);
   txt_set_column_widths(window, 12, 6);
 
   if (multiplayer)
@@ -784,7 +784,7 @@ static void start_game_menu(const char *window_title, int multiplayer)
     {
       txt_dropdown_list_t *cc_dropdown;
       txt_add_widgets(window, txt_new_label("Character class "),
-                      cc_dropdown = TXT_NewDropdownList(&character_class,
+                      cc_dropdown = txt_new_dropdown_list(&character_class,
                                                         character_classes, 3),
                       NULL);
 
@@ -794,22 +794,22 @@ static void start_game_menu(const char *window_title, int multiplayer)
     }
 
   txt_add_widgets(window, txt_new_label("Skill"),
-                  skillbutton = TXT_NewDropdownList(&skill, doom_skills, 5),
+                  skillbutton = txt_new_dropdown_list(&skill, doom_skills, 5),
                   txt_new_label("Level warp"),
-                  warpbutton = TXT_NewButton2("?", LevelSelectDialog, NULL),
+                  warpbutton = txt_new_button2("?", LevelSelectDialog, NULL),
                   NULL);
 
   if (multiplayer)
     {
       txt_add_widgets(window, txt_new_label("Game type"), GameTypeDropdown(),
                       txt_new_label("Time limit"),
-                      txt_new_horiz_box(TXT_NewIntInputBox(&timer, 2),
+                      txt_new_horiz_box(txt_new_int_input_box(&timer, 2),
                                         txt_new_label("minutes"), NULL),
                       NULL);
     }
 
   txt_add_widgets(window, txt_new_separator("Monster options"),
-                  TXT_NewInvertedCheckBox("Monsters enabled", &nomonsters),
+                  txt_new_inverted_checkbox("Monsters enabled", &nomonsters),
                   TXT_TABLE_OVERFLOW_RIGHT,
                   txt_new_check_box("Fast monsters", &fast),
                   TXT_TABLE_OVERFLOW_RIGHT,
@@ -820,15 +820,15 @@ static void start_game_menu(const char *window_title, int multiplayer)
     {
       txt_add_widgets(window, txt_new_separator("Advanced"),
                       txt_new_label("UDP port"),
-                      TXT_NewIntInputBox(&udpport, 5),
-                      TXT_NewInvertedCheckBox("Register with master server",
+                      txt_new_int_input_box(&udpport, 5),
+                      txt_new_inverted_checkbox("Register with master server",
                                               &privateserver),
                       TXT_TABLE_OVERFLOW_RIGHT, NULL);
     }
 
   txt_add_widgets(
       window,
-      TXT_NewButton2("Add extra parameters...", OpenExtraParamsWindow, NULL),
+      txt_new_button2("Add extra parameters...", OpenExtraParamsWindow, NULL),
       TXT_TABLE_OVERFLOW_RIGHT, NULL);
 
   txt_signal_connect(iwad_selector, "changed", UpdateWarpType, NULL);
@@ -865,13 +865,13 @@ static void do_join_game(void *unused1, void *unused2)
   add_iwad_parameter(exec);
   add_wads(exec);
 
-  TXT_Shutdown();
+  txt_shutdown();
 
   m_save_defaults();
 
   PassThroughArguments(exec);
 
-  ExecuteDoom(exec);
+  execute_doom(exec);
 
   exit(0);
 }
@@ -940,7 +940,7 @@ static void select_query_address(TXT_UNCAST_ARG(button),
 
   /* Finished with search. */
 
-  TXT_CloseWindow(query_window);
+  txt_close_window(query_window);
 }
 
 static void query_response_callback(net_addr_t *addr,
@@ -986,7 +986,7 @@ static void query_response_callback(net_addr_t *addr,
 
   txt_add_widgets(
       results_table, txt_new_label(ping_time_str),
-      TXT_NewButton2(NET_AddrToString(addr), SelectQueryAddress, querydata),
+      txt_new_button2(net_addr_to_string(addr), SelectQueryAddress, querydata),
       txt_new_label(description), NULL);
 
   ++query_servers_found;
@@ -996,9 +996,9 @@ static void query_periodic_callback(TXT_UNCAST_ARG(results_table))
 {
   TXT_CAST_ARG(txt_table_t, results_table);
 
-  if (!NET_Query_Poll(QueryResponseCallback, results_table))
+  if (!net_query_poll(QueryResponseCallback, results_table))
     {
-      TXT_SetPeriodicCallback(NULL, NULL, 0);
+      txt_set_periodic_callback(NULL, NULL, 0);
 
       if (query_servers_found == 0)
         {
@@ -1011,7 +1011,7 @@ static void query_periodic_callback(TXT_UNCAST_ARG(results_table))
 
 static void query_window_closed(TXT_UNCAST_ARG(window), void *unused)
 {
-  TXT_SetPeriodicCallback(NULL, NULL, 0);
+  txt_set_periodic_callback(NULL, NULL, 0);
 }
 
 static void server_query_window(const char *title)
@@ -1022,11 +1022,11 @@ static void server_query_window(const char *title)
 
   query_window = txt_new_window(title);
 
-  TXT_AddWidget(query_window,
-                TXT_NewScrollPane(70, 10, results_table = TXT_NewTable(3)));
+  txt_add_widget(query_window,
+                txt_new_scrollpane(70, 10, results_table = txt_new_table(3)));
 
   txt_set_column_widths(results_table, 7, 22, 40);
-  TXT_SetPeriodicCallback(QueryPeriodicCallback, results_table, 1);
+  txt_set_periodic_callback(QueryPeriodicCallback, results_table, 1);
 
   txt_signal_connect(query_window, "closed", QueryWindowClosed, NULL);
 }
@@ -1034,13 +1034,13 @@ static void server_query_window(const char *title)
 static void find_internet_server(TXT_UNCAST_ARG(widget),
                                  TXT_UNCAST_ARG(user_data))
 {
-  NET_StartMasterQuery();
+  net_start_master_query();
   server_query_window("Find Internet server");
 }
 
 static void find_lan_server(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(user_data))
 {
-  NET_StartLANQuery();
+  net_start_lan_query();
   server_query_window("Find LAN server");
 }
 
@@ -1064,7 +1064,7 @@ void join_multi_game(TXT_UNCAST_ARG(widget), void *user_data)
   txt_inputbox_t *address_box;
 
   window = txt_new_window("Join multiplayer game");
-  TXT_SetTableColumns(window, 2);
+  txt_set_table_columns(window, 2);
   txt_set_column_widths(window, 12, 12);
 
   txt_set_window_help_url(window, MULTI_JOIN_HELP_URL);
@@ -1075,22 +1075,22 @@ void join_multi_game(TXT_UNCAST_ARG(widget), void *user_data)
     {
       txt_add_widgets(
           window, txt_new_label("Character class "),
-          TXT_NewDropdownList(&character_class, character_classes, 3), NULL);
+          txt_new_dropdown_list(&character_class, character_classes, 3), NULL);
     }
 
   txt_add_widgets(
       window, txt_new_separator("Server"),
       txt_new_label("Connect to address: "),
-      address_box = TXT_NewInputBox(&connect_address, 30),
+      address_box = txt_new_input_box(&connect_address, 30),
 
-      TXT_NewButton2("Find server on Internet...", FindInternetServer, NULL),
+      txt_new_button2("Find server on Internet...", FindInternetServer, NULL),
       TXT_TABLE_OVERFLOW_RIGHT,
-      TXT_NewButton2("Find server on local network...", FindLANServer, NULL),
+      txt_new_button2("Find server on local network...", FindLANServer, NULL),
       TXT_TABLE_OVERFLOW_RIGHT, TXT_NewStrut(0, 1), TXT_TABLE_OVERFLOW_RIGHT,
-      TXT_NewButton2("Add extra parameters...", OpenExtraParamsWindow, NULL),
+      txt_new_button2("Add extra parameters...", OpenExtraParamsWindow, NULL),
       NULL);
 
-  TXT_SelectWidget(window, address_box);
+  txt_select_widget(window, address_box);
 
   txt_set_window_action(window, TXT_HORIZ_CENTER, WadWindowAction());
   txt_set_window_action(window, TXT_HORIZ_RIGHT, JoinGameAction());
@@ -1137,24 +1137,24 @@ void multiplayer_config(TXT_UNCAST_ARG(widget), void *user_data)
 
   txt_add_widgets(window, TXT_NewStrut(0, 1),
                   txt_new_horiz_box(txt_new_label("Player name:  "),
-                                    TXT_NewInputBox(&net_player_name, 25),
+                                    txt_new_input_box(&net_player_name, 25),
                                     NULL),
                   TXT_NewStrut(0, 1), txt_new_separator("Chat macros"), NULL);
 
-  table = TXT_NewTable(2);
+  table = txt_new_table(2);
 
   for (i = 0; i < 10; ++i)
     {
       snprintf(buf, sizeof(buf), "#%i ", i + 1);
 
       label = txt_new_label(buf);
-      TXT_SetFGColor(label, TXT_COLOR_BRIGHT_CYAN);
+      txt_set_fg_colour(label, TXT_COLOR_BRIGHT_CYAN);
 
       txt_add_widgets(table, label,
-                      TXT_NewInputBox(&chat_macros[(i + 1) % 10], 40), NULL);
+                      txt_new_input_box(&chat_macros[(i + 1) % 10], 40), NULL);
     }
 
-  TXT_AddWidget(window, table);
+  txt_add_widget(window, table);
 }
 
 void bind_multiple_variables(void)

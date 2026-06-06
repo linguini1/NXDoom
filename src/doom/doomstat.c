@@ -21,8 +21,8 @@
 #include "doomstat.h"
 
 // Game Mode - identify IWAD as shareware, retail etc.
-GameMode_t gamemode = indetermined;
-GameMission_t gamemission = doom;
+game_mode_t gamemode = indetermined;
+gamemission_t gamemission = doom;
 GameVersion_t gameversion = exe_final2;
 GameVariant_t gamevariant = vanilla;
 

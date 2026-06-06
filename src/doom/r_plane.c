@@ -113,7 +113,7 @@ void R_MapPlane(int y, int x1, int x2)
 #ifdef RANGECHECK
   if (x2 < x1 || x1 < 0 || x2 >= viewwidth || y > viewheight)
     {
-      I_Error("R_MapPlane: %i, %i at %i", x1, x2, y);
+      i_error("R_MapPlane: %i, %i at %i", x1, x2, y);
     }
 #endif
 
@@ -210,7 +210,7 @@ visplane_t *r_find_plane(fixed_t height, int picnum, int lightlevel)
   if (check < lastvisplane) return check;
 
   if (lastvisplane - visplanes == MAXVISPLANES)
-    I_Error("r_find_plane: no more visplanes");
+    i_error("r_find_plane: no more visplanes");
 
   lastvisplane++;
 
@@ -276,7 +276,7 @@ visplane_t *R_CheckPlane(visplane_t *pl, int start, int stop)
   lastvisplane->lightlevel = pl->lightlevel;
 
   if (lastvisplane - visplanes == MAXVISPLANES)
-    I_Error("R_CheckPlane: no more visplanes");
+    i_error("R_CheckPlane: no more visplanes");
 
   pl = lastvisplane++;
   pl->minx = start;
@@ -330,14 +330,14 @@ void R_DrawPlanes(void)
 
 #ifdef RANGECHECK
   if (ds_p - drawsegs > MAXDRAWSEGS)
-    I_Error("R_DrawPlanes: drawsegs overflow (%td)", ds_p - drawsegs);
+    i_error("R_DrawPlanes: drawsegs overflow (%td)", ds_p - drawsegs);
 
   if (lastvisplane - visplanes > MAXVISPLANES)
-    I_Error("R_DrawPlanes: visplane overflow (%td)",
+    i_error("R_DrawPlanes: visplane overflow (%td)",
             lastvisplane - visplanes);
 
   if (lastopening - openings > MAXOPENINGS)
-    I_Error("R_DrawPlanes: opening overflow (%td)", lastopening - openings);
+    i_error("R_DrawPlanes: opening overflow (%td)", lastopening - openings);
 #endif
 
   for (pl = visplanes; pl < lastvisplane; pl++)

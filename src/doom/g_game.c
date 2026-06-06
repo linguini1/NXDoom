@@ -294,7 +294,7 @@ static int G_NextWeapon(int direction)
   // otherwise something has gone terribly wrong
   if (i >= arrlen(weapon_order_table))
     {
-      I_Error("Internal error: weapon %d not present in weapon_order_table",
+      i_error("Internal error: weapon %d not present in weapon_order_table",
               weapon);
     }
 
@@ -956,7 +956,7 @@ void G_Ticker(void)
               if (gametic > BACKUPTICS &&
                   consistancy[i][buf] != cmd->consistancy)
                 {
-                  I_Error("consistency failure (%i should be %i)",
+                  i_error("consistency failure (%i should be %i)",
                           cmd->consistancy, consistancy[i][buf]);
                 }
               if (players[i].mo)
@@ -1204,7 +1204,7 @@ boolean G_CheckSpot(int playernum, mapthing_t *mthing)
         ya = finesine[8192]; // finesine[8192]
         break;
       default:
-        I_Error("G_CheckSpot: unexpected angle %d\n", an);
+        i_error("G_CheckSpot: unexpected angle %d\n", an);
         xa = ya = 0;
         break;
       }
@@ -1234,7 +1234,7 @@ void G_DeathMatchSpawnPlayer(int playernum)
 
   selections = deathmatch_p - deathmatchstarts;
   if (selections < 4)
-    I_Error("Only %i deathmatch spots, 4 required", selections);
+    i_error("Only %i deathmatch spots, 4 required", selections);
 
   for (j = 0; j < 20; j++)
     {
@@ -1570,7 +1570,7 @@ void G_DoLoadGame(void)
 
   if (save_stream == NULL)
     {
-      I_Error("Could not load savegame %s", savename);
+      i_error("Could not load savegame %s", savename);
     }
 
   savegame_error = false;
@@ -1594,7 +1594,7 @@ void G_DoLoadGame(void)
   P_UnArchiveThinkers();
   P_UnArchiveSpecials();
 
-  if (!P_ReadSaveGameEOF()) I_Error("Bad savegame");
+  if (!P_ReadSaveGameEOF()) i_error("Bad savegame");
 
   fclose(save_stream);
 
@@ -1635,12 +1635,12 @@ void G_DoSaveGame(void)
   if (save_stream == NULL)
     {
       // Failed to save the game, so we're going to have to abort. But
-      // to be nice, save to somewhere else before we call I_Error().
+      // to be nice, save to somewhere else before we call i_error().
       recovery_savegame_file = m_temp_file("recovery.dsg");
       save_stream = fopen(recovery_savegame_file, "wb");
       if (save_stream == NULL)
         {
-          I_Error("Failed to open either '%s' or '%s' to write savegame.",
+          i_error("Failed to open either '%s' or '%s' to write savegame.",
                   temp_savegame_file, recovery_savegame_file);
         }
     }
@@ -1661,7 +1661,7 @@ void G_DoSaveGame(void)
 
   if (vanilla_savegame_limit && ftell(save_stream) > SAVEGAMESIZE)
     {
-      I_Error("Savegame buffer overrun");
+      i_error("Savegame buffer overrun");
     }
 
   // Finish up, close the savegame file.
@@ -1673,7 +1673,7 @@ void G_DoSaveGame(void)
       // We failed to save to the normal location, but we wrote a
       // recovery file to the temp directory. Now we can bomb out
       // with an error.
-      I_Error("Failed to open savegame file '%s' for writing.\n"
+      i_error("Failed to open savegame file '%s' for writing.\n"
               "But your game has been saved to '%s' for recovery.",
               temp_savegame_file, recovery_savegame_file);
     }
@@ -2177,7 +2177,7 @@ void G_DoPlayDemo(void)
                             "/info/patches.php\n"
                             "    This appears to be %s.";
 
-      I_Error(message, demoversion, G_VanillaVersionCode(),
+      i_error(message, demoversion, G_VanillaVersionCode(),
               DemoVersionDescription(demoversion));
     }
 
@@ -2269,7 +2269,7 @@ boolean G_CheckDemoStatus(void)
       timingdemo = false;
       demoplayback = false;
 
-      I_Error("timed %i gametics in %i realtics (%f fps)", gametic, realtics,
+      i_error("timed %i gametics in %i realtics (%f fps)", gametic, realtics,
               fps);
     }
 
@@ -2300,7 +2300,7 @@ boolean G_CheckDemoStatus(void)
       m_write_file(demoname, demobuffer, demo_p - demobuffer);
       z_free(demobuffer);
       demorecording = false;
-      I_Error("Demo %s recorded", demoname);
+      i_error("Demo %s recorded", demoname);
     }
 
   return false;

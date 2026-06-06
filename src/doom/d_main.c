@@ -329,19 +329,19 @@ void D_BindVariables(void)
 {
   int i;
 
-  M_ApplyPlatformDefaults();
+  m_apply_platform_defaults();
 
   i_bind_input_variables();
   i_bind_video_variables();
-  I_BindJoystickVariables();
+  I_bind_joystick_variables();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   i_bind_sound_variables();
 #endif
 
-  M_BindBaseControls();
-  M_BindWeaponControls();
-  M_BindMapControls();
-  M_BindMenuControls();
+  m_bind_base_controls();
+  m_bind_weapon_controls();
+  m_bind_map_controls();
+  m_bind_menu_controls();
   M_BindChatControls(MAXPLAYERS);
 
   key_multi_msgplayer[0] = HUSTR_KEYGREEN;
@@ -711,7 +711,7 @@ static char *GetGameName(const char *gamename)
           deh_gamename = malloc(gamename_size);
           if (deh_gamename == NULL)
             {
-              I_Error("GetGameName: Failed to allocate new string");
+              i_error("GetGameName: Failed to allocate new string");
             }
           version = G_VanillaVersionCode();
           snprintf(deh_gamename, gamename_size, banners[i], version / 100,
@@ -764,7 +764,7 @@ static void SetMissionForPackName(const char *pack_name)
       printf("\t%s\n", packs[i].name);
     }
 
-  I_Error("Unknown mission pack name: %s", pack_name);
+  i_error("Unknown mission pack name: %s", pack_name);
 }
 
 //
@@ -801,7 +801,7 @@ void D_IdentifyVersion(void)
         {
           // Still no idea.  I don't think this is going to work.
 
-          I_Error("Unknown or invalid IWAD file.");
+          i_error("Unknown or invalid IWAD file.");
         }
     }
 
@@ -1044,7 +1044,7 @@ static void InitGameVersion(void)
                      gameversions[i].description);
             }
 
-          I_Error("Unknown game version '%s'", myargv[p + 1]);
+          i_error("Unknown game version '%s'", myargv[p + 1]);
         }
     }
   else
@@ -1214,7 +1214,7 @@ static void LoadIwadDeh(void)
     {
       if (!DEH_LoadLumpByName("DEHACKED", true, false))
         {
-          I_Error("DEHACKED lump not found.  Please check that this is the "
+          i_error("DEHACKED lump not found.  Please check that this is the "
                   "Hacx v1.2 IWAD.");
         }
     }
@@ -1242,7 +1242,7 @@ static void LoadIwadDeh(void)
       // Still not found?
       if (chex_deh == NULL)
         {
-          I_Error("Unable to find Chex Quest dehacked file (chex.deh).\n"
+          i_error("Unable to find Chex Quest dehacked file (chex.deh).\n"
                   "The dehacked file is required in order to emulate\n"
                   "chex.exe correctly.  It can be found in your nearest\n"
                   "/idgames repository mirror at:\n\n"
@@ -1251,7 +1251,7 @@ static void LoadIwadDeh(void)
 
       if (!DEH_LoadFile(chex_deh))
         {
-          I_Error("Failed to load chex.deh needed for emulating chex.exe.");
+          i_error("Failed to load chex.deh needed for emulating chex.exe.");
         }
     }
 
@@ -1278,7 +1278,7 @@ static void LoadIwadDeh(void)
       // Still not found?
       if (french_deh == NULL)
         {
-          I_Error("Unable to find French Doom II dehacked file\n"
+          i_error("Unable to find French Doom II dehacked file\n"
                   "(french.deh).  The dehacked file is required in order to\n"
                   "emulate French doom2.exe correctly.  It can be found in\n"
                   "your nearest /idgames repository mirror at:\n\n"
@@ -1287,7 +1287,7 @@ static void LoadIwadDeh(void)
 
       if (!DEH_LoadFile(french_deh))
         {
-          I_Error("Failed to load french.deh needed for emulating French\n"
+          i_error("Failed to load french.deh needed for emulating French\n"
                   "doom2.exe.");
         }
     }
@@ -1337,7 +1337,7 @@ void d_doom_main(void)
 
   if (m_check_parm("-search"))
     {
-      NET_MasterQuery();
+      net_master_query();
       exit(0);
     }
 
@@ -1353,7 +1353,7 @@ void d_doom_main(void)
 
   if (p)
     {
-      NET_QueryAddress(myargv[p + 1]);
+      net_query_address(myargv[p + 1]);
       exit(0);
     }
 
@@ -1365,7 +1365,7 @@ void d_doom_main(void)
 
   if (m_check_parm("-localsearch"))
     {
-      NET_LANQuery();
+      net_lan_query();
       exit(0);
     }
 
@@ -1479,7 +1479,7 @@ void d_doom_main(void)
 
   if (iwadfile == NULL)
     {
-      I_Error("Game mode indeterminate.  No IWAD file was found.  Try\n"
+      i_error("Game mode indeterminate.  No IWAD file was found.  Try\n"
               "specifying one with the '-iwad' command line parameter.\n");
     }
 
@@ -1727,7 +1727,7 @@ void d_doom_main(void)
       int i;
 
       if (gamemode == shareware)
-        I_Error(("\nYou cannot -file with the shareware "
+        i_error(("\nYou cannot -file with the shareware "
                  "version. Register!"));
 
       // Check for fake IWAD with right name,
@@ -1735,7 +1735,7 @@ void d_doom_main(void)
       if (gamemode == registered)
         for (i = 0; i < 23; i++)
           if (w_check_num_for_name(name[i]) < 0)
-            I_Error(("\nThis is not the registered version."));
+            i_error(("\nThis is not the registered version."));
     }
 
   if (w_check_num_for_name("SS_START") >= 0 ||

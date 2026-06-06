@@ -23,6 +23,6 @@ extern int use_gamepad;
 extern int gamepad_type;
 
 void ConfigJoystick(void *widget, void *user_data);
-void BindJoystickVariables(void);
+void bind_joystick_variables(void);
 
 #endif /* #ifndef SETUP_JOYSTICK_H */

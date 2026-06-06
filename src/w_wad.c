@@ -143,7 +143,7 @@ wad_file_t *w_add_file(const char *filename)
     {
       if (reloadname != NULL)
         {
-          I_Error("Prefixing a WAD filename with '~' indicates that the "
+          i_error("Prefixing a WAD filename with '~' indicates that the "
                   "WAD should be reloaded\n"
                   "on each level restart, for use by level authors for "
                   "rapid development. You\n"
@@ -200,7 +200,7 @@ wad_file_t *w_add_file(const char *filename)
           if (strncmp(header.identification, "PWAD", 4))
             {
               w_close_file(wad_file);
-              I_Error("Wad file %s doesn't have IWAD "
+              i_error("Wad file %s doesn't have IWAD "
                       "or PWAD id\n",
                       filename);
             }
@@ -218,7 +218,7 @@ wad_file_t *w_add_file(const char *filename)
           header.numlumps > 4046)
         {
           w_close_file(wad_file);
-          I_Error("Error: Vanilla limit for lumps in a WAD is 4046, "
+          i_error("Error: Vanilla limit for lumps in a WAD is 4046, "
                   "PWAD %s has %d",
                   filename, header.numlumps);
         }
@@ -237,12 +237,12 @@ wad_file_t *w_add_file(const char *filename)
   if (filelumps == NULL)
     {
       w_close_file(wad_file);
-      I_Error("Failed to allocate array for lumps from new file.");
+      i_error("Failed to allocate array for lumps from new file.");
     }
 
   startlump = numlumps;
   numlumps += numfilelumps;
-  lumpinfo = I_Realloc(lumpinfo, numlumps * sizeof(lumpinfo_t *));
+  lumpinfo = i_realloc(lumpinfo, numlumps * sizeof(lumpinfo_t *));
   filerover = fileinfo;
 
   for (i = startlump; i < numlumps; ++i)
@@ -342,7 +342,7 @@ lumpindex_t w_get_num_for_name(const char *name)
 
   if (i < 0)
     {
-      I_Error("w_get_num_for_name: %s not found!", name);
+      i_error("w_get_num_for_name: %s not found!", name);
     }
 
   return i;
@@ -356,7 +356,7 @@ int w_lump_length(lumpindex_t lump)
 {
   if (lump >= numlumps)
     {
-      I_Error("w_lump_length: %i >= numlumps", lump);
+      i_error("w_lump_length: %i >= numlumps", lump);
     }
 
   return lumpinfo[lump]->size;
@@ -374,7 +374,7 @@ void w_read_lump(lumpindex_t lump, void *dest)
 
   if (lump >= numlumps)
     {
-      I_Error("w_read_lump: %i >= numlumps", lump);
+      i_error("w_read_lump: %i >= numlumps", lump);
     }
 
   l = lumpinfo[lump];
@@ -385,7 +385,7 @@ void w_read_lump(lumpindex_t lump, void *dest)
 
   if (c < l->size)
     {
-      I_Error("w_read_lump: only read %i of %i on lump %i", c, l->size, lump);
+      i_error("w_read_lump: only read %i of %i on lump %i", c, l->size, lump);
     }
 }
 
@@ -407,7 +407,7 @@ void *w_cache_lump_num(lumpindex_t lumpnum, int tag)
 
   if ((unsigned)lumpnum >= numlumps)
     {
-      I_Error("w_cache_lump_num: %i >= numlumps", lumpnum);
+      i_error("w_cache_lump_num: %i >= numlumps", lumpnum);
     }
 
   lump = lumpinfo[lumpnum];
@@ -465,7 +465,7 @@ void w_release_lump_num(lumpindex_t lumpnum)
 
   if ((unsigned)lumpnum >= numlumps)
     {
-      I_Error("w_release_lump_num: %i >= numlumps", lumpnum);
+      i_error("w_release_lump_num: %i >= numlumps", lumpnum);
     }
 
   lump = lumpinfo[lumpnum];

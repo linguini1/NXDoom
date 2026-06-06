@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 boolean w_parse_command_line(void);
-void w_check_correct_iwad(GameMission_t mission);
+void w_check_correct_iwad(gamemission_t mission);
 
 /* Autoload all .wad files from the given directory: */
 

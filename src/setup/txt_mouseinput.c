@@ -1,16 +1,25 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/setup/txt_mouseinput.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,51 +35,91 @@
 #include "txt_utf8.h"
 #include "txt_window.h"
 
-// eg. "BUTTON #10"
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* eg. "BUTTON #10" */
+
 #define MOUSE_INPUT_WIDTH 10
 
-static int MousePressCallback(txt_window_t *window, int x, int y, int b,
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
+
+static int mouse_press_callback(txt_window_t *window, int x, int y, int b,
+                                TXT_UNCAST_ARG(mouse_input));
+static void open_prompt_window(txt_mouse_input_t *mouse_input);
+static void txt_mouse_input_size_calc(TXT_UNCAST_ARG(mouse_input));
+static void get_mouse_button_description(int button, char *buf,
+                                         size_t buf_len);
+static void txt_mouse_input_drawer(TXT_UNCAST_ARG(mouse_input));
+static void txt_mouse_input_destructor(TXT_UNCAST_ARG(mouse_input));
+static int txt_mouse_input_keypress(TXT_UNCAST_ARG(mouse_input), int key);
+static void txt_mouse_input_mousepress(TXT_UNCAST_ARG(widget), int x, int y,
+                                       int b);
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+txt_widget_class_t txt_mouse_input_class =
+{
+  txt_always_selectable,
+  txt_mouse_input_size_calc,
+  txt_mouse_input_drawer,
+  txt_mouse_input_keypress,
+  txt_mouse_input_destructor,
+  txt_mouse_input_mousepress,
+  NULL,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static int mouse_press_callback(txt_window_t *window, int x, int y, int b,
                               TXT_UNCAST_ARG(mouse_input))
 {
   TXT_CAST_ARG(txt_mouse_input_t, mouse_input);
 
-  // Got the mouse press.  Save to the variable and close the window.
+  /* Got the mouse press.  Save to the variable and close the window. */
 
   *mouse_input->variable = b - TXT_MOUSE_BASE;
 
   if (mouse_input->check_conflicts)
     {
-      TXT_EmitSignal(mouse_input, "set");
+      txt_emit_signal(mouse_input, "set");
     }
 
-  TXT_CloseWindow(window);
+  txt_close_window(window);
 
   return 1;
 }
 
-static void OpenPromptWindow(txt_mouse_input_t *mouse_input)
+static void open_prompt_window(txt_mouse_input_t *mouse_input)
 {
   txt_window_t *window;
 
-  // Silently update when the shift key is held down.
-  mouse_input->check_conflicts = !TXT_GetModifierState(TXT_MOD_SHIFT);
+  /* Silently update when the shift key is held down. */
 
+  mouse_input->check_conflicts = !txt_get_modifier_state(TXT_MOD_SHIFT);
   window = txt_message_box(NULL, "Press the new mouse button...");
-
-  TXT_SetMouseListener(window, MousePressCallback, mouse_input);
+  txt_set_mouse_listener(window, mouse_press_callback, mouse_input);
 }
 
-static void TXT_MouseInputSizeCalc(TXT_UNCAST_ARG(mouse_input))
+static void txt_mouse_input_size_calc(TXT_UNCAST_ARG(mouse_input))
 {
   TXT_CAST_ARG(txt_mouse_input_t, mouse_input);
 
-  // All mouseinputs are the same size.
+  /* All mouseinputs are the same size. */
 
   mouse_input->widget.w = MOUSE_INPUT_WIDTH;
   mouse_input->widget.h = 1;
 }
 
-static void GetMouseButtonDescription(int button, char *buf, size_t buf_len)
+static void get_mouse_button_description(int button, char *buf,
+                                         size_t buf_len)
 {
   switch (button)
     {
@@ -95,7 +144,7 @@ static void GetMouseButtonDescription(int button, char *buf, size_t buf_len)
     }
 }
 
-static void TXT_MouseInputDrawer(TXT_UNCAST_ARG(mouse_input))
+static void txt_mouse_input_drawer(TXT_UNCAST_ARG(mouse_input))
 {
   TXT_CAST_ARG(txt_mouse_input_t, mouse_input);
   char buf[20];
@@ -107,31 +156,33 @@ static void TXT_MouseInputDrawer(TXT_UNCAST_ARG(mouse_input))
     }
   else
     {
-      GetMouseButtonDescription(*mouse_input->variable, buf, sizeof(buf));
+      get_mouse_button_description(*mouse_input->variable, buf, sizeof(buf));
     }
 
-  TXT_SetWidgetBG(mouse_input);
-  TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
+  txt_set_widget_bg(mouse_input);
+  txt_fgcolour(TXT_COLOR_BRIGHT_WHITE);
 
-  TXT_DrawString(buf);
+  txt_draw_string(buf);
 
-  for (i = TXT_UTF8_Strlen(buf); i < MOUSE_INPUT_WIDTH; ++i)
+  for (i = txt_utf8_strlen(buf); i < MOUSE_INPUT_WIDTH; ++i)
     {
-      TXT_DrawString(" ");
+      txt_draw_string(" ");
     }
 }
 
-static void TXT_MouseInputDestructor(TXT_UNCAST_ARG(mouse_input)) {}
+static void txt_mouse_input_destructor(TXT_UNCAST_ARG(mouse_input))
+{
+}
 
-static int TXT_MouseInputKeyPress(TXT_UNCAST_ARG(mouse_input), int key)
+static int txt_mouse_input_keypress(TXT_UNCAST_ARG(mouse_input), int key)
 {
   TXT_CAST_ARG(txt_mouse_input_t, mouse_input);
 
   if (key == KEY_ENTER)
     {
-      // Open a window to prompt for the new mouse press
+      /* Open a window to prompt for the new mouse press */
 
-      OpenPromptWindow(mouse_input);
+      open_prompt_window(mouse_input);
 
       return 1;
     }
@@ -144,36 +195,30 @@ static int TXT_MouseInputKeyPress(TXT_UNCAST_ARG(mouse_input), int key)
   return 0;
 }
 
-static void TXT_MouseInputMousePress(TXT_UNCAST_ARG(widget), int x, int y,
+static void txt_mouse_input_mousepress(TXT_UNCAST_ARG(widget), int x, int y,
                                      int b)
 {
   TXT_CAST_ARG(txt_mouse_input_t, widget);
 
-  // Clicking is like pressing enter
+  /* Clicking is like pressing enter */
 
   if (b == TXT_MOUSE_LEFT)
     {
-      TXT_MouseInputKeyPress(widget, KEY_ENTER);
+      txt_mouse_input_keypress(widget, KEY_ENTER);
     }
 }
 
-txt_widget_class_t txt_mouse_input_class = {
-    TXT_AlwaysSelectable,
-    TXT_MouseInputSizeCalc,
-    TXT_MouseInputDrawer,
-    TXT_MouseInputKeyPress,
-    TXT_MouseInputDestructor,
-    TXT_MouseInputMousePress,
-    NULL,
-};
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
-txt_mouse_input_t *TXT_NewMouseInput(int *variable)
+txt_mouse_input_t *txt_new_mouse_input(int *variable)
 {
   txt_mouse_input_t *mouse_input;
 
   mouse_input = malloc(sizeof(txt_mouse_input_t));
 
-  TXT_InitWidget(mouse_input, &txt_mouse_input_class);
+  txt_init_widget(mouse_input, &txt_mouse_input_class);
   mouse_input->variable = variable;
 
   return mouse_input;

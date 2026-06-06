@@ -72,7 +72,7 @@ static int expected_nodes;
 
 static void escape_pressed(TXT_UNCAST_ARG(widget), void *unused)
 {
-  TXT_Shutdown();
+  txt_shutdown();
   I_Quit();
 }
 
@@ -85,11 +85,11 @@ static void open_wait_dialog(void)
 {
   txt_window_action_t *cancel;
 
-  TXT_SetDesktopTitle(PACKAGE_STRING);
+  txt_set_desktop_title(PACKAGE_STRING);
 
   window = txt_new_window("Waiting for game start...");
 
-  TXT_AddWidget(window, txt_new_label("\nPlease wait...\n\n"));
+  txt_add_widget(window, txt_new_label("\nPlease wait...\n\n"));
 
   cancel = txt_new_window_action(KEY_ESCAPE, "Cancel");
   txt_signal_connect(cancel, "pressed", escape_pressed, NULL);
@@ -107,31 +107,31 @@ static void build_window(void)
   txt_table_t *table;
   int i;
 
-  TXT_ClearTable(window);
-  table = TXT_NewTable(3);
-  TXT_AddWidget(window, table);
+  txt_clear_table(window);
+  table = txt_new_table(3);
+  txt_add_widget(window, table);
 
   /* Add spacers */
 
-  TXT_AddWidget(table, NULL);
-  TXT_AddWidget(table, txt_new_strut(25, 1));
-  TXT_AddWidget(table, txt_new_strut(17, 1));
+  txt_add_widget(table, NULL);
+  txt_add_widget(table, txt_new_strut(25, 1));
+  txt_add_widget(table, txt_new_strut(17, 1));
 
   /* Player labels */
 
   for (i = 0; i < net_client_wait_data.max_players; ++i)
     {
       snprintf(buf, sizeof(buf), " %i. ", i + 1);
-      TXT_AddWidget(table, txt_new_label(buf));
+      txt_add_widget(table, txt_new_label(buf));
       player_labels[i] = txt_new_label("");
       ip_labels[i] = txt_new_label("");
-      TXT_AddWidget(table, player_labels[i]);
-      TXT_AddWidget(table, ip_labels[i]);
+      txt_add_widget(table, player_labels[i]);
+      txt_add_widget(table, ip_labels[i]);
     }
 
   drone_label = txt_new_label("");
 
-  TXT_AddWidget(window, drone_label);
+  txt_add_widget(window, drone_label);
 }
 
 static void update_gui(void)
@@ -166,19 +166,19 @@ static void update_gui(void)
           color = TXT_COLOR_YELLOW;
         }
 
-      TXT_SetFGColor(player_labels[i], color);
-      TXT_SetFGColor(ip_labels[i], color);
+      txt_set_fg_colour(player_labels[i], color);
+      txt_set_fg_colour(ip_labels[i], color);
 
       if (i < net_client_wait_data.num_players)
         {
-          TXT_SetLabel(player_labels[i],
+          txt_set_label(player_labels[i],
                        net_client_wait_data.player_names[i]);
-          TXT_SetLabel(ip_labels[i], net_client_wait_data.player_addrs[i]);
+          txt_set_label(ip_labels[i], net_client_wait_data.player_addrs[i]);
         }
       else
         {
-          TXT_SetLabel(player_labels[i], "");
-          TXT_SetLabel(ip_labels[i], "");
+          txt_set_label(player_labels[i], "");
+          txt_set_label(ip_labels[i], "");
         }
     }
 
@@ -186,11 +186,11 @@ static void update_gui(void)
     {
       snprintf(buf, sizeof(buf), " (+%i observer clients)",
                net_client_wait_data.num_drones);
-      TXT_SetLabel(drone_label, buf);
+      txt_set_label(drone_label, buf);
     }
   else
     {
-      TXT_SetLabel(drone_label, "");
+      txt_set_label(drone_label, "");
     }
 
   if (net_client_wait_data.is_controller)
@@ -212,13 +212,13 @@ static void build_master_status_window(void)
 
   master_window = txt_new_window(NULL);
   master_msg_label = txt_new_label("");
-  TXT_AddWidget(master_window, master_msg_label);
+  txt_add_widget(master_window, master_msg_label);
 
   /* This window is here purely for information, so it should be
    * in the background.
    */
 
-  TXT_LowerWindow(master_window);
+  txt_lower_window(master_window);
   txt_set_window_position(master_window, TXT_HORIZ_CENTER, TXT_VERT_CENTER,
                           TXT_SCREEN_W / 2, TXT_SCREEN_H - 4);
   txt_set_window_action(master_window, TXT_HORIZ_LEFT, NULL);
@@ -230,7 +230,7 @@ static void check_master_status(void)
 {
   boolean added;
 
-  if (!NET_Query_CheckAddedToMaster(&added))
+  if (!net_query_check_added_to_master(&added))
     {
       return;
     }
@@ -242,14 +242,14 @@ static void check_master_status(void)
 
   if (added)
     {
-      TXT_SetLabel(
+      txt_set_label(
           master_msg_label,
           "Your server is now registered with the global master server.\n"
           "Other players can find your server online.");
     }
   else
     {
-      TXT_SetLabel(
+      txt_set_label(
           master_msg_label,
           "Failed to register with the master server. Your server is not\n"
           "publicly accessible. You may need to reconfigure your Internet\n"
@@ -276,7 +276,7 @@ static void close_window(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(p_window))
 {
   TXT_CAST_ARG(txt_window_t, p_window);
 
-  TXT_CloseWindow(p_window);
+  txt_close_window(p_window);
 }
 
 static void check_sha1_sums(void)
@@ -344,7 +344,7 @@ static void check_sha1_sums(void)
 
       if (net_local_is_freedoom)
         {
-          TXT_AddWidget(
+          txt_add_widget(
               l_window,
               txt_new_label(
                   "You are using the Freedoom IWAD to play with players\n"
@@ -353,7 +353,7 @@ static void check_sha1_sums(void)
         }
       else
         {
-          TXT_AddWidget(
+          txt_add_widget(
               l_window,
               txt_new_label(
                   "You are using an official IWAD to play with players\n"
@@ -363,7 +363,7 @@ static void check_sha1_sums(void)
     }
   else if (!correct_wad)
     {
-      TXT_AddWidget(
+      txt_add_widget(
           l_window,
           txt_new_label(
               "Your WAD directory does not match other players in the game.\n"
@@ -373,7 +373,7 @@ static void check_sha1_sums(void)
 
   if (!correct_deh)
     {
-      TXT_AddWidget(
+      txt_add_widget(
           l_window,
           txt_new_label(
               "Your dehacked signature does not match other players in the\n"
@@ -381,7 +381,7 @@ static void check_sha1_sums(void)
               "as other players.\n"));
     }
 
-  TXT_AddWidget(
+  txt_add_widget(
       l_window,
       txt_new_label("If you continue, this may cause your game to desync."));
 
@@ -429,7 +429,7 @@ static void check_auto_latch(void)
 
 void NET_WaitForLaunch(void)
 {
-  if (!TXT_Init())
+  if (!txt_init())
     {
       fprintf(stderr, "Failed to initialize GUI\n");
       exit(-1);
@@ -437,7 +437,7 @@ void NET_WaitForLaunch(void)
 
   /* Romero's "funky blue" color */
 
-  TXT_SetColor(TXT_COLOR_BLUE, 0x04, 0x14, 0x40);
+  txt_set_colour(TXT_COLOR_BLUE, 0x04, 0x14, 0x40);
 
   i_init_window_icon();
 
@@ -452,19 +452,19 @@ void NET_WaitForLaunch(void)
       check_sha1_sums();
       check_master_status();
 
-      TXT_DispatchEvents();
-      TXT_DrawDesktop();
+      txt_dispatch_events();
+      txt_draw_desktop();
 
       NET_CL_Run();
       net_sv_run();
 
       if (!net_client_connected)
         {
-          I_Error("Lost connection to server");
+          i_error("Lost connection to server");
         }
 
-      TXT_Sleep(100);
+      txt_sleep(100);
     }
 
-  TXT_Shutdown();
+  txt_shutdown();
 }

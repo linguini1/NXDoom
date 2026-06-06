@@ -247,7 +247,7 @@ static void D_Disconnected(void)
 
   if (drone)
     {
-      I_Error("Disconnected from server in drone mode.");
+      i_error("Disconnected from server in drone mode.");
     }
 
   // disconnected from server
@@ -310,13 +310,13 @@ static void BlockUntilStart(net_gamesettings_t *settings,
 
       if (!net_client_connected)
         {
-          I_Error("Lost connection to server");
+          i_error("Lost connection to server");
         }
 
       if (callback != NULL && !callback(net_client_wait_data.ready_players,
                                         net_client_wait_data.num_players))
         {
-          I_Error("Netgame startup aborted.");
+          i_error("Netgame startup aborted.");
         }
 
       usleep(100000);
@@ -407,7 +407,7 @@ void D_StartNetGame(net_gamesettings_t *settings,
 
   if (ticdup < 1)
     {
-      I_Error("D_StartNetGame: invalid ticdup value (%d)", ticdup);
+      i_error("D_StartNetGame: invalid ticdup value (%d)", ticdup);
     }
 
   // TODO: Message disabled until we fix new_sync.
@@ -442,9 +442,9 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
       net_sv_add_module(&net_sdl_module);
       net_sv_register_with_master();
 
-      net_loop_client_module.InitClient();
+      net_loop_client_module.init_client();
       addr = net_loop_client_module.ResolveAddress(NULL);
-      NET_ReferenceAddress(addr);
+      net_reference_address(addr);
     }
   else
     {
@@ -459,11 +459,11 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
 
       if (i > 0)
         {
-          addr = NET_FindLANServer();
+          addr = net_find_lan_server();
 
           if (addr == NULL)
             {
-              I_Error("No server found on local LAN");
+              i_error("No server found on local LAN");
             }
         }
 
@@ -479,13 +479,13 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
 
       if (i > 0)
         {
-          net_sdl_module.InitClient();
+          net_sdl_module.init_client();
           addr = net_sdl_module.ResolveAddress(myargv[i + 1]);
-          NET_ReferenceAddress(addr);
+          net_reference_address(addr);
 
           if (addr == NULL)
             {
-              I_Error("Unable to resolve '%s'\n", myargv[i + 1]);
+              i_error("Unable to resolve '%s'\n", myargv[i + 1]);
             }
         }
     }
@@ -499,12 +499,12 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
 
       if (!NET_CL_Connect(addr, connect_data))
         {
-          I_Error("D_InitNetGame: Failed to connect to %s:\n%s\n",
-                  NET_AddrToString(addr), net_client_reject_reason);
+          i_error("D_InitNetGame: Failed to connect to %s:\n%s\n",
+                  net_addr_to_string(addr), net_client_reject_reason);
         }
 
-      printf("D_InitNetGame: Connected to %s\n", NET_AddrToString(addr));
-      NET_ReleaseAddress(addr);
+      printf("D_InitNetGame: Connected to %s\n", net_addr_to_string(addr));
+      net_release_address(addr);
 
       // Wait for launch message received from server.
 
@@ -726,7 +726,7 @@ void TryRunTics(void)
 
       lowtic = GetLowTic();
 
-      if (lowtic < gametic / ticdup) I_Error("TryRunTics: lowtic < gametic");
+      if (lowtic < gametic / ticdup) i_error("TryRunTics: lowtic < gametic");
 
       // Still no tics to run? Sleep until some are available.
       if (lowtic < gametic / ticdup + counts)
@@ -762,7 +762,7 @@ void TryRunTics(void)
 
       for (i = 0; i < ticdup; i++)
         {
-          if (gametic / ticdup > lowtic) I_Error("gametic>lowtic");
+          if (gametic / ticdup > lowtic) i_error("gametic>lowtic");
 
           memcpy(local_playeringame, set->ingame, sizeof(local_playeringame));
 

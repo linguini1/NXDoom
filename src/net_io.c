@@ -33,7 +33,7 @@ struct _net_context_s
 
 net_addr_t net_broadcast_addr;
 
-net_context_t *NET_NewContext(void)
+net_context_t *net_new_context(void)
 {
   net_context_t *context;
 
@@ -43,18 +43,18 @@ net_context_t *NET_NewContext(void)
   return context;
 }
 
-void NET_AddModule(net_context_t *context, net_module_t *module)
+void net_add_module(net_context_t *context, net_module_t *module)
 {
   if (context->num_modules >= MAX_MODULES)
     {
-      I_Error("NET_AddModule: No more modules for context");
+      i_error("net_add_module: No more modules for context");
     }
 
   context->modules[context->num_modules] = module;
   ++context->num_modules;
 }
 
-net_addr_t *NET_ResolveAddress(net_context_t *context, const char *addr)
+net_addr_t *net_resolve_address(net_context_t *context, const char *addr)
 {
   int i;
   net_addr_t *result;
@@ -65,7 +65,7 @@ net_addr_t *NET_ResolveAddress(net_context_t *context, const char *addr)
 
       if (result != NULL)
         {
-          NET_ReferenceAddress(result);
+          net_reference_address(result);
           return result;
         }
     }
@@ -73,12 +73,12 @@ net_addr_t *NET_ResolveAddress(net_context_t *context, const char *addr)
   return NULL;
 }
 
-void NET_SendPacket(net_addr_t *addr, net_packet_t *packet)
+void net_send_packet(net_addr_t *addr, net_packet_t *packet)
 {
   addr->module->SendPacket(addr, packet);
 }
 
-void NET_SendBroadcast(net_context_t *context, net_packet_t *packet)
+void net_send_broadcast(net_context_t *context, net_packet_t *packet)
 {
   int i;
 
@@ -88,7 +88,7 @@ void NET_SendBroadcast(net_context_t *context, net_packet_t *packet)
     }
 }
 
-boolean NET_RecvPacket(net_context_t *context, net_addr_t **addr,
+boolean net_recv_packet(net_context_t *context, net_addr_t **addr,
                        net_packet_t **packet)
 {
   int i;
@@ -99,7 +99,7 @@ boolean NET_RecvPacket(net_context_t *context, net_addr_t **addr,
     {
       if (context->modules[i]->RecvPacket(addr, packet))
         {
-          NET_ReferenceAddress(*addr);
+          net_reference_address(*addr);
           return true;
         }
     }
@@ -110,7 +110,7 @@ boolean NET_RecvPacket(net_context_t *context, net_addr_t **addr,
 // Note: this prints into a static buffer, calling again overwrites
 // the first result
 
-char *NET_AddrToString(net_addr_t *addr)
+char *net_addr_to_string(net_addr_t *addr)
 {
   static char buf[128];
 
@@ -119,17 +119,17 @@ char *NET_AddrToString(net_addr_t *addr)
   return buf;
 }
 
-void NET_ReferenceAddress(net_addr_t *addr)
+void net_reference_address(net_addr_t *addr)
 {
   if (addr == NULL)
     {
       return;
     }
   ++addr->refcount;
-  // printf("%s: +refcount=%d\n", NET_AddrToString(addr), addr->refcount);
+  // printf("%s: +refcount=%d\n", net_addr_to_string(addr), addr->refcount);
 }
 
-void NET_ReleaseAddress(net_addr_t *addr)
+void net_release_address(net_addr_t *addr)
 {
   if (addr == NULL)
     {
@@ -137,7 +137,7 @@ void NET_ReleaseAddress(net_addr_t *addr)
     }
 
   --addr->refcount;
-  // printf("%s: -refcount=%d\n", NET_AddrToString(addr), addr->refcount);
+  // printf("%s: -refcount=%d\n", net_addr_to_string(addr), addr->refcount);
   if (addr->refcount <= 0)
     {
       addr->module->FreeAddress(addr);

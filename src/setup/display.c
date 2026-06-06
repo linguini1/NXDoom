@@ -134,16 +134,16 @@ static void GenerateSizesTable(TXT_UNCAST_ARG(widget),
     }
 
   // Build the table
-  TXT_ClearTable(sizes_table);
+  txt_clear_table(sizes_table);
   txt_set_column_widths(sizes_table, 14, 14, 14);
 
-  TXT_AddWidget(sizes_table, txt_new_separator("Window size"));
+  txt_add_widget(sizes_table, txt_new_separator("Window size"));
 
   have_size = false;
 
   for (i = 0; sizes[i].w != 0; ++i)
     {
-      TXT_AddWidget(sizes_table, SizeSelectButton(&sizes[i]));
+      txt_add_widget(sizes_table, SizeSelectButton(&sizes[i]));
       have_size = have_size || window_width == sizes[i].w;
     }
 
@@ -156,7 +156,7 @@ static void GenerateSizesTable(TXT_UNCAST_ARG(widget),
       static window_size_t current_size;
       current_size.w = window_width;
       current_size.h = window_height;
-      TXT_AddWidget(sizes_table, SizeSelectButton(&current_size));
+      txt_add_widget(sizes_table, SizeSelectButton(&current_size));
     }
 }
 
@@ -204,7 +204,7 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
   // Build window:
   txt_add_widgets(
       window, txt_new_check_box("Full screen", &fullscreen),
-      txt_new_conidtional(&fullscreen, 0, sizes_table = TXT_NewTable(3)),
+      txt_new_conidtional(&fullscreen, 0, sizes_table = txt_new_table(3)),
       NULL);
 
   txt_set_column_widths(window, 42);
@@ -227,7 +227,7 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
                      sizes_table);
 }
 
-void BindDisplayVariables(void)
+void bind_display_variables(void)
 {
   m_bind_int_variable("video_display", &video_display);
   m_bind_int_variable("aspect_ratio_correct", &aspect_ratio_correct);

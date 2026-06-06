@@ -43,7 +43,7 @@
 
 struct uniquelump
 {
-  GameMission_t mission;
+  gamemission_t mission;
   const char *lumpname;
 };
 
@@ -56,11 +56,12 @@ struct uniquelump
  * chocolate-doom -iwad hexen.wad.
  */
 
-static const struct uniquelump unique_lumps[] = {
-    {doom, "POSSA1"},
-    {heretic, "IMPXA1"},
-    {hexen, "ETTNA1"},
-    {strife, "AGRDA1"},
+static const struct uniquelump g_unique_lumps[] =
+{
+  {doom, "POSSA1"},
+  {heretic, "IMPXA1"},
+  {hexen, "ETTNA1"},
+  {strife, "AGRDA1"},
 };
 
 /****************************************************************************
@@ -204,7 +205,8 @@ boolean w_parse_command_line(void)
           filename = d_try_find_wad_by_name(myargv[p]);
 
           printf(" merging sprites and flats from %s\n", filename);
-          w_nwt_merge_file(filename, W_NWT_MERGE_SPRITES | W_NWT_MERGE_FLATS);
+          w_nwt_merge_file(filename,
+                  W_NWT_MERGE_SPRITES | W_NWT_MERGE_FLATS);
           free(filename);
         }
     }
@@ -249,7 +251,7 @@ void w_auto_load_wads(const char *path)
 
   glob = i_start_multi_glob(path, GLOB_FLAG_NOCASE | GLOB_FLAG_SORTED,
                             "*.wad", "*.lmp", NULL);
-  for (;;)
+  for (; ; )
     {
       filename = i_next_glob(glob);
       if (filename == NULL)
@@ -264,27 +266,28 @@ void w_auto_load_wads(const char *path)
   i_end_glob(glob);
 }
 
-void w_check_correct_iwad(GameMission_t mission)
+void w_check_correct_iwad(gamemission_t mission)
 {
   int i;
   lumpindex_t lumpnum;
 
-  for (i = 0; i < arrlen(unique_lumps); ++i)
+  for (i = 0; i < arrlen(g_unique_lumps); ++i)
     {
-      if (mission != unique_lumps[i].mission)
+      if (mission != g_unique_lumps[i].mission)
         {
-          lumpnum = w_check_num_for_name(unique_lumps[i].lumpname);
+          lumpnum = w_check_num_for_name(g_unique_lumps[i].lumpname);
 
           if (lumpnum >= 0)
             {
-              I_Error(
+              i_error(
                   "\nYou are trying to use a %s IWAD file with "
                   "the %s%s binary.\nThis isn't going to work.\n"
                   "You probably want to use the %s%s binary.",
-                  d_suggest_game_name(unique_lumps[i].mission, indetermined),
+                  d_suggest_game_name(
+                      g_unique_lumps[i].mission, indetermined),
                   PROGRAM_PREFIX, d_game_mission_string(mission),
                   PROGRAM_PREFIX,
-                  d_game_mission_string(unique_lumps[i].mission));
+                  d_game_mission_string(g_unique_lumps[i].mission));
             }
         }
     }

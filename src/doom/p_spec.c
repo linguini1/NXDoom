@@ -166,7 +166,7 @@ void P_InitPicAnims(void)
       lastanim->numpics = lastanim->picnum - lastanim->basepic + 1;
 
       if (lastanim->numpics < 2)
-        I_Error("P_InitPicAnims: bad cycle from %s to %s", startname,
+        i_error("P_InitPicAnims: bad cycle from %s to %s", startname,
                 endname);
 
       lastanim->speed = animdefs[i].speed;
@@ -307,7 +307,7 @@ fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight)
           else if (h == MAX_ADJOINING_SECTORS + 2)
             {
               // Fatal overflow: game crashes at 22 sectors
-              I_Error("Sector with more than 22 adjoining sectors. "
+              i_error("Sector with more than 22 adjoining sectors. "
                       "Vanilla will crash here");
             }
 
@@ -992,7 +992,7 @@ void P_PlayerInSpecialSector(player_t *player)
       break;
 
     default:
-      I_Error("P_PlayerInSpecialSector: "
+      i_error("P_PlayerInSpecialSector: "
               "unknown special %i",
               sector->special);
       break;
@@ -1385,7 +1385,7 @@ void P_SpawnSpecials(void)
         case 48:
           if (numlinespecials >= maxlineanims)
             {
-              I_Error("P_SpawnSpecials: Too many scrolling wall linedefs "
+              i_error("P_SpawnSpecials: Too many scrolling wall linedefs "
                       "(%d)! (Vanilla limit is %d)",
                       NumScrollers(), maxlineanims);
             }

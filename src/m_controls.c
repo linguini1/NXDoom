@@ -226,7 +226,7 @@ int dclick_use = 1;
 // Bind all of the common controls used by Doom and all other games.
 //
 
-void M_BindBaseControls(void)
+void m_bind_base_controls(void)
 {
   m_bind_int_variable("key_right", &key_right);
   m_bind_int_variable("key_left", &key_left);
@@ -267,7 +267,7 @@ void M_BindBaseControls(void)
   m_bind_int_variable("key_message_refresh", &key_message_refresh);
 }
 
-void M_BindHereticControls(void)
+void m_bind_heretic_controls(void)
 {
   m_bind_int_variable("key_flyup", &key_flyup);
   m_bind_int_variable("key_flydown", &key_flydown);
@@ -305,7 +305,7 @@ void M_BindHereticControls(void)
   m_bind_int_variable("key_arti_morph", &key_arti_morph);
 }
 
-void M_BindHexenControls(void)
+void m_bind_hexen_controls(void)
 {
   m_bind_int_variable("key_jump", &key_jump);
   m_bind_int_variable("mouseb_jump", &mousebjump);
@@ -321,7 +321,7 @@ void M_BindHexenControls(void)
   m_bind_int_variable("key_arti_invulnerability", &key_arti_invulnerability);
 }
 
-void M_BindStrifeControls(void)
+void m_bind_strife_controls(void)
 {
   // These are shared with all games, but have different defaults:
   key_message_refresh = '/';
@@ -362,7 +362,7 @@ void M_BindStrifeControls(void)
   m_bind_int_variable("joyb_useartifact", &joybuseartifact);
 }
 
-void M_BindWeaponControls(void)
+void m_bind_weapon_controls(void)
 {
   m_bind_int_variable("key_weapon1", &key_weapon1);
   m_bind_int_variable("key_weapon2", &key_weapon2);
@@ -383,7 +383,7 @@ void M_BindWeaponControls(void)
   m_bind_int_variable("mouseb_nextweapon", &mousebnextweapon);
 }
 
-void M_BindMapControls(void)
+void m_bind_map_controls(void)
 {
   m_bind_int_variable("key_map_north", &key_map_north);
   m_bind_int_variable("key_map_south", &key_map_south);
@@ -399,7 +399,7 @@ void M_BindMapControls(void)
   m_bind_int_variable("key_map_clearmark", &key_map_clearmark);
 }
 
-void M_BindMenuControls(void)
+void m_bind_menu_controls(void)
 {
   m_bind_int_variable("key_menu_activate", &key_menu_activate);
   m_bind_int_variable("key_menu_up", &key_menu_up);
@@ -449,7 +449,7 @@ void M_BindChatControls(unsigned int num_players)
 // platform we are running on.
 //
 
-void M_ApplyPlatformDefaults(void)
+void m_apply_platform_defaults(void)
 {
   // no-op. Add your platform-specific patches here.
 }

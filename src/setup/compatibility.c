@@ -41,7 +41,7 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
       txt_new_check_box("Vanilla demo limit", &vanilla_demo_limit), NULL);
 }
 
-void BindCompatibilityVariables(void)
+void bind_compatibility_variables(void)
 {
   m_bind_int_variable("vanilla_savegame_limit", &vanilla_savegame_limit);
   m_bind_int_variable("vanilla_demo_limit", &vanilla_demo_limit);

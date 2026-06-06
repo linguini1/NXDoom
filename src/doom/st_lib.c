@@ -93,7 +93,7 @@ static void stlib_draw_num(st_number_t *n, boolean refresh)
 
   x = n->x - numdigits * w;
 
-  if (n->y - ST_Y < 0) I_Error("drawNum: n->y - ST_Y < 0");
+  if (n->y - ST_Y < 0) i_error("drawNum: n->y - ST_Y < 0");
 
   v_copy_rect(x, n->y - ST_Y, st_backing_screen, w * numdigits, h, x, n->y);
 
@@ -191,7 +191,7 @@ void stlib_update_mult_icon(st_multicon_t *mi, boolean refresh)
           w = SHORT(mi->p[mi->oldinum]->width);
           h = SHORT(mi->p[mi->oldinum]->height);
 
-          if (y - ST_Y < 0) I_Error("updateMultIcon: y - ST_Y < 0");
+          if (y - ST_Y < 0) i_error("updateMultIcon: y - ST_Y < 0");
 
           v_copy_rect(x, y - ST_Y, st_backing_screen, w, h, x, y);
         }
@@ -226,7 +226,7 @@ void stlib_update_bin_icon(st_binicon_t *bi, boolean refresh)
       w = SHORT(bi->p->width);
       h = SHORT(bi->p->height);
 
-      if (y - ST_Y < 0) I_Error("updateBinIcon: y - ST_Y < 0");
+      if (y - ST_Y < 0) i_error("updateBinIcon: y - ST_Y < 0");
 
       if (*bi->val)
         v_draw_patch(bi->x, bi->y, bi->p);

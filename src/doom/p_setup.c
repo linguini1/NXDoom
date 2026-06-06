@@ -197,7 +197,7 @@ void P_LoadSegs(int lump)
       // e6y: check for wrong indexes
       if ((unsigned)ldef->sidenum[side] >= (unsigned)numsides)
         {
-          I_Error("P_LoadSegs: linedef %d for seg %d references a "
+          i_error("P_LoadSegs: linedef %d for seg %d references a "
                   "non-existent sidedef %d",
                   linedef_int, i, (unsigned)ldef->sidenum[side]);
         }
@@ -385,7 +385,7 @@ void P_LoadThings(int lump)
         {
           if (playeringame[i] && !playerstartsingame[i])
             {
-              I_Error("P_LoadThings: Player %d start missing (vanilla "
+              i_error("P_LoadThings: Player %d start missing (vanilla "
                       "crashes here)",
                       i + 1);
             }

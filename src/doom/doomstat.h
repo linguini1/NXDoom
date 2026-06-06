@@ -49,8 +49,8 @@ extern boolean devparm; // DEBUG: launched with -devparm
 // -----------------------------------------------------
 // Game Mode - identify IWAD as shareware, retail etc.
 //
-extern GameMode_t gamemode;
-extern GameMission_t gamemission;
+extern game_mode_t gamemode;
+extern gamemission_t gamemission;
 extern GameVersion_t gameversion;
 extern GameVariant_t gamevariant;
 

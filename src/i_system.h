@@ -48,17 +48,17 @@ ticcmd_t *I_BaseTiccmd(void);
 // Clean exit, displays sell blurb.
 void I_Quit(void) NORETURN;
 
-void I_Error(const char *error, ...) NORETURN PRINTF_ATTR(1, 2);
+void i_error(const char *error, ...) NORETURN PRINTF_ATTR(1, 2);
 
 void I_Tactile(int on, int off, int total);
 
-void *I_Realloc(void *ptr, size_t size);
+void *i_realloc(void *ptr, size_t size);
 
 boolean I_GetMemoryValue(unsigned int offset, void *value, int size);
 
 // Schedule a function to be called when the program exits.
 // If run_if_error is true, the function is called if the exit
-// is due to an error (I_Error)
+// is due to an error (i_error)
 
 void i_at_exit(atexit_func_t func, boolean run_if_error);
 

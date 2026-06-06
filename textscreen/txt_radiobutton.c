@@ -1,16 +1,25 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_radiobutton.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
@@ -24,17 +33,47 @@
 #include "txt_utf8.h"
 #include "txt_window.h"
 
-static void TXT_RadioButtonSizeCalc(TXT_UNCAST_ARG(radiobutton))
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
+
+static void txt_radio_button_size_calc(TXT_UNCAST_ARG(radiobutton));
+static void txt_radio_button_drawer(TXT_UNCAST_ARG(radiobutton));
+static void txt_radio_button_destructor(TXT_UNCAST_ARG(radiobutton));
+static int txt_radio_button_keypress(TXT_UNCAST_ARG(radiobutton), int key);
+static void txt_radio_button_mousepress(TXT_UNCAST_ARG(radiobutton), int x,
+                                        int y, int b);
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+txt_widget_class_t txt_radiobutton_class =
+{
+  txt_always_selectable,
+  txt_radio_button_size_calc,
+  txt_radio_button_drawer,
+  txt_radio_button_keypress,
+  txt_radio_button_destructor,
+  txt_radio_button_mousepress,
+  NULL,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void txt_radio_button_size_calc(TXT_UNCAST_ARG(radiobutton))
 {
   TXT_CAST_ARG(txt_radiobutton_t, radiobutton);
 
-  // Minimum width is the string length + right-side spaces for padding
+  /* Minimum width is the string length + right-side spaces for padding */
 
-  radiobutton->widget.w = TXT_UTF8_Strlen(radiobutton->label) + 5;
+  radiobutton->widget.w = txt_utf8_strlen(radiobutton->label) + 5;
   radiobutton->widget.h = 1;
 }
 
-static void TXT_RadioButtonDrawer(TXT_UNCAST_ARG(radiobutton))
+static void txt_radio_button_drawer(TXT_UNCAST_ARG(radiobutton))
 {
   TXT_CAST_ARG(txt_radiobutton_t, radiobutton);
   txt_saved_colors_t colors;
@@ -43,44 +82,44 @@ static void TXT_RadioButtonDrawer(TXT_UNCAST_ARG(radiobutton))
 
   w = radiobutton->widget.w;
 
-  TXT_SaveColors(&colors);
-  TXT_FGColor(TXT_COLOR_BRIGHT_CYAN);
-  TXT_DrawString("(");
+  txt_save_colours(&colors);
+  txt_fgcolour(TXT_COLOR_BRIGHT_CYAN);
+  txt_draw_string("(");
 
-  TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
+  txt_fgcolour(TXT_COLOR_BRIGHT_WHITE);
 
   if (*radiobutton->variable == radiobutton->value)
     {
-      TXT_DrawCodePageString("\x07");
+      txt_draw_code_page_string("\x07");
     }
   else
     {
-      TXT_DrawString(" ");
+      txt_draw_string(" ");
     }
 
-  TXT_FGColor(TXT_COLOR_BRIGHT_CYAN);
+  txt_fgcolour(TXT_COLOR_BRIGHT_CYAN);
 
-  TXT_DrawString(") ");
+  txt_draw_string(") ");
 
-  TXT_RestoreColors(&colors);
-  TXT_SetWidgetBG(radiobutton);
+  txt_restore_colours(&colors);
+  txt_set_widget_bg(radiobutton);
 
-  TXT_DrawString(radiobutton->label);
+  txt_draw_string(radiobutton->label);
 
-  for (i = TXT_UTF8_Strlen(radiobutton->label); i < w - 5; ++i)
+  for (i = txt_utf8_strlen(radiobutton->label); i < w - 5; ++i)
     {
-      TXT_DrawString(" ");
+      txt_draw_string(" ");
     }
 }
 
-static void TXT_RadioButtonDestructor(TXT_UNCAST_ARG(radiobutton))
+static void txt_radio_button_destructor(TXT_UNCAST_ARG(radiobutton))
 {
   TXT_CAST_ARG(txt_radiobutton_t, radiobutton);
 
   free(radiobutton->label);
 }
 
-static int TXT_RadioButtonKeyPress(TXT_UNCAST_ARG(radiobutton), int key)
+static int txt_radio_button_keypress(TXT_UNCAST_ARG(radiobutton), int key)
 {
   TXT_CAST_ARG(txt_radiobutton_t, radiobutton);
 
@@ -89,36 +128,31 @@ static int TXT_RadioButtonKeyPress(TXT_UNCAST_ARG(radiobutton), int key)
       if (*radiobutton->variable != radiobutton->value)
         {
           *radiobutton->variable = radiobutton->value;
-          TXT_EmitSignal(radiobutton, "selected");
+          txt_emit_signal(radiobutton, "selected");
         }
+
       return 1;
     }
 
   return 0;
 }
 
-static void TXT_RadioButtonMousePress(TXT_UNCAST_ARG(radiobutton), int x,
+static void txt_radio_button_mousepress(TXT_UNCAST_ARG(radiobutton), int x,
                                       int y, int b)
 {
   TXT_CAST_ARG(txt_radiobutton_t, radiobutton);
 
   if (b == TXT_MOUSE_LEFT)
     {
-      // Equivalent to pressing enter
+      /* Equivalent to pressing enter */
 
-      TXT_RadioButtonKeyPress(radiobutton, KEY_ENTER);
+      txt_radio_button_keypress(radiobutton, KEY_ENTER);
     }
 }
 
-txt_widget_class_t txt_radiobutton_class = {
-    TXT_AlwaysSelectable,
-    TXT_RadioButtonSizeCalc,
-    TXT_RadioButtonDrawer,
-    TXT_RadioButtonKeyPress,
-    TXT_RadioButtonDestructor,
-    TXT_RadioButtonMousePress,
-    NULL,
-};
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 txt_radiobutton_t *txt_new_radio_button(const char *label, int *variable,
                                         int value)
@@ -127,7 +161,7 @@ txt_radiobutton_t *txt_new_radio_button(const char *label, int *variable,
 
   radiobutton = malloc(sizeof(txt_radiobutton_t));
 
-  TXT_InitWidget(radiobutton, &txt_radiobutton_class);
+  txt_init_widget(radiobutton, &txt_radiobutton_class);
   radiobutton->label = strdup(label);
   radiobutton->variable = variable;
   radiobutton->value = value;
@@ -135,9 +169,11 @@ txt_radiobutton_t *txt_new_radio_button(const char *label, int *variable,
   return radiobutton;
 }
 
-void TXT_SetRadioButtonLabel(txt_radiobutton_t *radiobutton,
-                             const char *value)
+#if 0 /* UNUSED */
+static void txt_set_radio_button_label(txt_radiobutton_t *radiobutton,
+                                       const char *value)
 {
   free(radiobutton->label);
   radiobutton->label = strdup(value);
 }
+#endif

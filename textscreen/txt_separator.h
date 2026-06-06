@@ -1,25 +1,28 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_separator.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
 
 #ifndef TXT_SEPARATOR_H
 #define TXT_SEPARATOR_H
 
-/**
- * @file txt_separator.h
- *
- * Horizontal separator widget.
- */
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
 
 /**
  * Horizontal separator.
@@ -40,7 +43,15 @@ struct txt_separator_s
   char *label;
 };
 
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
 extern txt_widget_class_t txt_separator_class;
+
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
 
 /**
  * Create a new horizontal separator widget.
@@ -52,13 +63,4 @@ extern txt_widget_class_t txt_separator_class;
 
 txt_separator_t *txt_new_separator(const char *label);
 
-/**
- * Change the label on a separator.
- *
- * @param separator     The separator.
- * @param label         The new label (UTF-8 format).
- */
-
-void TXT_SetSeparatorLabel(txt_separator_t *separator, const char *label);
-
-#endif /* #ifndef TXT_SEPARATOR_H */
+#endif /* TXT_SEPARATOR_H */

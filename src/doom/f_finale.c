@@ -62,7 +62,7 @@ unsigned int finalecount;
 
 typedef struct
 {
-  GameMission_t mission;
+  gamemission_t mission;
   int episode, level;
   const char *background;
   const char *text;

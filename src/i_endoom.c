@@ -55,15 +55,17 @@ void I_Endoom(byte *endoom_data)
 
   /* Set up text mode screen */
 
-  TXT_Init();
+  txt_init();
 
-  TXT_SetWindowTitle(PACKAGE_STRING);
-  // SDL2-TODO i_init_window_title();
-  // SDL2-TODO i_init_window_icon();
+  txt_set_window_title(PACKAGE_STRING);
+
+  /* SDL2-TODO i_init_window_title();
+   * SDL2-TODO i_init_window_icon();
+   */
 
   /* Write the data to the screen memory */
 
-  screendata = TXT_GetScreenData();
+  screendata = txt_get_screen_data();
 
   indent = (ENDOOM_W - TXT_SCREEN_W) / 2;
 
@@ -77,17 +79,17 @@ void I_Endoom(byte *endoom_data)
 
   while (true)
     {
-      TXT_UpdateScreen();
+      txt_update_screen();
 
-      if (TXT_GetChar() > 0)
+      if (txt_getchar() > 0)
         {
           break;
         }
 
-      TXT_Sleep(0);
+      txt_sleep(0);
     }
 
   /* Shut down text mode screen */
 
-  TXT_Shutdown();
+  txt_shutdown();
 }

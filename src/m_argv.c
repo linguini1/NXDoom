@@ -42,7 +42,7 @@ int m_check_parm_with_args(const char *check, int num_args)
   int i;
 
   // Check if myargv[i] has been set to NULL in LoadResponseFile(),
-  // which may call I_Error(), which in turn calls m_parm_exists("-nogui").
+  // which may call i_error(), which in turn calls m_parm_exists("-nogui").
 
   for (i = 1; i < myargc - num_args && myargv[i]; i++)
     {
@@ -106,7 +106,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
       if (k < 0)
         {
-          I_Error("Failed to read full contents of '%s'", filename);
+          i_error("Failed to read full contents of '%s'", filename);
         }
 
       i += k;
@@ -124,7 +124,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
   if (argv_index >= MAXARGVS)
     {
-      I_Error("Too many arguments up to the response file!");
+      i_error("Too many arguments up to the response file!");
     }
 
   for (i = 0; i < argv_index; ++i)
@@ -172,7 +172,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
           if (k >= size || infile[k] == '\n')
             {
-              I_Error("Quotes unclosed in response file '%s'", filename);
+              i_error("Quotes unclosed in response file '%s'", filename);
             }
 
           // Cut off the string at the closing quote
@@ -182,7 +182,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
           if (newargc >= MAXARGVS)
             {
-              I_Error("Too many arguments in the response file!");
+              i_error("Too many arguments in the response file!");
             }
 
           newargv[newargc++] = m_string_duplicate(argstart);
@@ -206,7 +206,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
           if (newargc >= MAXARGVS)
             {
-              I_Error("Too many arguments in the response file!");
+              i_error("Too many arguments in the response file!");
             }
 
           newargv[newargc++] = m_string_duplicate(argstart);
@@ -217,7 +217,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
   if (newargc + myargc - (argv_index + 1) >= MAXARGVS)
     {
-      I_Error("Too many arguments following the response file!");
+      i_error("Too many arguments following the response file!");
     }
 
   for (i = argv_index + 1; i < myargc; ++i)
