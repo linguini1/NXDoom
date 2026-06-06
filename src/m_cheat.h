@@ -58,7 +58,7 @@ typedef struct
 } cheatseq_t;
 
 /****************************************************************************
- * Public Functions
+ * Public Function Prototypes
  ****************************************************************************/
 
 int cht_check_cheat(cheatseq_t *cht, char key);

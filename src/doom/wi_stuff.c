@@ -59,7 +59,7 @@
  * Loads of by-pixel layout and placement, offsets etc.
  */
 
-/* Different vetween registered DOOM (1994) and
+/* Different between registered DOOM (1994) and
  *  Ultimate DOOM - Final edition (retail, 1995?).
  * This is supposedly ignored for commercial
  *  release (aka DOOM II), which had 34 maps
@@ -956,7 +956,7 @@ void WI_updateNoState(void)
 
   if (!--cnt)
     {
-      /* Don't call wi_end yet.  G_WorldDone doesnt immediately
+      /* Don't call wi_end yet.  G_WorldDone doesn't immediately
        * change gamestate, so wi_drawer is still going to get
        * run until that happens.  If we do that after wi_end
        * (which unloads all the graphics), we're in trouble.
