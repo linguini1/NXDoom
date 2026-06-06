@@ -33,20 +33,24 @@ typedef struct txt_spincontrol_s txt_spincontrol_t;
 
 typedef enum
 {
-    TXT_SPINCONTROL_INT,
-    TXT_SPINCONTROL_FLOAT,
+  TXT_SPINCONTROL_INT,
+  TXT_SPINCONTROL_FLOAT,
 } txt_spincontrol_type_t;
 
 #include "txt_widget.h"
 
 struct txt_spincontrol_s
 {
-    txt_widget_t widget;
-    txt_spincontrol_type_t type;
-    union { float f; int i; } min, max, *value, step; 
-    int editing;
-    char *buffer;
-    size_t buffer_len;
+  txt_widget_t widget;
+  txt_spincontrol_type_t type;
+  union
+  {
+    float f;
+    int i;
+  } min, max, *value, step;
+  int editing;
+  char *buffer;
+  size_t buffer_len;
 };
 
 /**
@@ -71,8 +75,7 @@ txt_spincontrol_t *TXT_NewSpinControl(int *value, int min, int max);
  * @return             Pointer to the new spin control widget.
  */
 
-txt_spincontrol_t *TXT_NewFloatSpinControl(float *value, float min, float max);
+txt_spincontrol_t *TXT_NewFloatSpinControl(float *value, float min,
+                                           float max);
 
 #endif /* #ifndef TXT_SPINCONTROL_H */
-
-

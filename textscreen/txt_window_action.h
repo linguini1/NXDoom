@@ -38,9 +38,9 @@ typedef struct txt_window_action_s txt_window_action_t;
 
 struct txt_window_action_s
 {
-    txt_widget_t widget;
-    char *label;
-    int key;
+  txt_widget_t widget;
+  char *label;
+  int key;
 };
 
 /**
@@ -86,4 +86,3 @@ txt_window_action_t *txt_new_windowAbortAction(txt_window_t *window);
 txt_window_action_t *txt_new_windowSelectAction(txt_window_t *window);
 
 #endif /* #ifndef TXT_WINDOW_ACTION_H */
-

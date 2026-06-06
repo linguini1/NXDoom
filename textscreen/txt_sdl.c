@@ -32,18 +32,18 @@
 
 typedef struct
 {
-    const char *name;
-    const uint8_t *data;
-    unsigned int w;
-    unsigned int h;
+  const char *name;
+  const uint8_t *data;
+  unsigned int w;
+  unsigned int h;
 } txt_font_t;
 
 // Fonts:
 
-#include "fonts/small.h"
-#include "fonts/normal.h"
-#include "fonts/large.h"
 #include "fonts/codepage.h"
+#include "fonts/large.h"
+#include "fonts/normal.h"
+#include "fonts/small.h"
 
 // Time between character blinks in ms
 
@@ -194,7 +194,7 @@ int TXT_Init(void)
 
     return 1;
 #endif
-    return 1;
+  return 1;
 }
 
 void TXT_Shutdown(void)
@@ -221,10 +221,7 @@ void TXT_SetColor(txt_color_t color, int r, int g, int b)
 #endif
 }
 
-unsigned char *TXT_GetScreenData(void)
-{
-    return screendata;
-}
+unsigned char *TXT_GetScreenData(void) { return screendata; }
 
 static inline void UpdateCharacter(int x, int y)
 {
@@ -362,7 +359,7 @@ void TXT_UpdateScreenArea(int x, int y, int w, int h)
 
 void TXT_UpdateScreen(void)
 {
-    TXT_UpdateScreenArea(0, 0, TXT_SCREEN_W, TXT_SCREEN_H);
+  TXT_UpdateScreenArea(0, 0, TXT_SCREEN_W, TXT_SCREEN_H);
 }
 
 void TXT_GetMousePosition(int *x, int *y)
@@ -598,7 +595,7 @@ signed int TXT_GetChar(void)
 
     return -1;
 #endif
-    return -1;
+  return -1;
 }
 
 int TXT_GetModifierState(txt_modifier_t mod)
@@ -620,25 +617,25 @@ int TXT_GetModifierState(txt_modifier_t mod)
             return 0;
     }
 #endif
-    return 0;
+  return 0;
 }
 
 int TXT_UnicodeCharacter(unsigned int c)
 {
-    unsigned int i;
+  unsigned int i;
 
-    // Check the code page mapping to see if this character maps
-    // to anything.
+  // Check the code page mapping to see if this character maps
+  // to anything.
 
-    for (i = 0; i < arrlen(code_page_to_unicode); ++i)
+  for (i = 0; i < arrlen(code_page_to_unicode); ++i)
     {
-        if (code_page_to_unicode[i] == c)
+      if (code_page_to_unicode[i] == c)
         {
-            return i;
+          return i;
         }
     }
 
-    return -1;
+  return -1;
 }
 
 #if 0
@@ -707,29 +704,29 @@ static const char *NameForKey(int key)
 
     return NULL;
 #endif
-    return NULL;
+  return NULL;
 }
 
 void TXT_GetKeyDescription(int key, char *buf, size_t buf_len)
 {
-    const char *keyname;
-    int i;
+  const char *keyname;
+  int i;
 
-    keyname = NameForKey(key);
+  keyname = NameForKey(key);
 
-    if (keyname != NULL)
+  if (keyname != NULL)
     {
-        TXT_StringCopy(buf, keyname, buf_len);
+      TXT_StringCopy(buf, keyname, buf_len);
 
-        // Key description should be all-uppercase to match setup.exe.
-        for (i = 0; buf[i] != '\0'; ++i)
+      // Key description should be all-uppercase to match setup.exe.
+      for (i = 0; buf[i] != '\0'; ++i)
         {
-            buf[i] = toupper(buf[i]);
+          buf[i] = toupper(buf[i]);
         }
     }
-    else
+  else
     {
-        TXT_snprintf(buf, buf_len, "??%i", key);
+      TXT_snprintf(buf, buf_len, "??%i", key);
     }
 }
 
@@ -738,32 +735,32 @@ void TXT_GetKeyDescription(int key, char *buf, size_t buf_len)
 
 int TXT_ScreenHasBlinkingChars(void)
 {
-    int x, y;
-    unsigned char *p;
+  int x, y;
+  unsigned char *p;
 
-    // Check all characters in screen buffer
+  // Check all characters in screen buffer
 
-    for (y=0; y<TXT_SCREEN_H; ++y)
+  for (y = 0; y < TXT_SCREEN_H; ++y)
     {
-        for (x=0; x<TXT_SCREEN_W; ++x) 
+      for (x = 0; x < TXT_SCREEN_W; ++x)
         {
-            p = &screendata[(y * TXT_SCREEN_W + x) * 2];
+          p = &screendata[(y * TXT_SCREEN_W + x) * 2];
 
-            if (p[1] & 0x80)
+          if (p[1] & 0x80)
             {
-                // This character is blinking
+              // This character is blinking
 
-                return 1;
+              return 1;
             }
         }
     }
 
-    // None found
+  // None found
 
-    return 0;
+  return 0;
 }
 
-// Sleeps until an event is received, the screen needs to be redrawn, 
+// Sleeps until an event is received, the screen needs to be redrawn,
 // or until timeout expires (if timeout != 0)
 
 void TXT_Sleep(int timeout)
@@ -842,7 +839,7 @@ void TXT_SetWindowTitle(const char *title)
 }
 
 void TXT_SDL_SetEventCallback(void *user_data)
-    /* First argument was TxtSDLEventCallbackFunc callback */
+/* First argument was TxtSDLEventCallbackFunc callback */
 {
 #if 0
     event_callback = callback;
@@ -854,62 +851,61 @@ void TXT_SDL_SetEventCallback(void *user_data)
 
 void TXT_StringCopy(char *dest, const char *src, size_t dest_len)
 {
-    if (dest_len < 1)
+  if (dest_len < 1)
     {
-        return;
+      return;
     }
 
-    dest[dest_len - 1] = '\0';
-    strncpy(dest, src, dest_len - 1);
+  dest[dest_len - 1] = '\0';
+  strncpy(dest, src, dest_len - 1);
 }
 
 void TXT_StringConcat(char *dest, const char *src, size_t dest_len)
 {
-    size_t offset;
+  size_t offset;
 
-    offset = strlen(dest);
-    if (offset > dest_len)
+  offset = strlen(dest);
+  if (offset > dest_len)
     {
-        offset = dest_len;
+      offset = dest_len;
     }
 
-    TXT_StringCopy(dest + offset, src, dest_len - offset);
+  TXT_StringCopy(dest + offset, src, dest_len - offset);
 }
 
 // Safe, portable vsnprintf().
 int TXT_vsnprintf(char *buf, size_t buf_len, const char *s, va_list args)
 {
-    int result;
+  int result;
 
-    if (buf_len < 1)
+  if (buf_len < 1)
     {
-        return 0;
+      return 0;
     }
 
-    // Windows (and other OSes?) has a vsnprintf() that doesn't always
-    // append a trailing \0. So we must do it, and write into a buffer
-    // that is one byte shorter; otherwise this function is unsafe.
-    result = vsnprintf(buf, buf_len, s, args);
+  // Windows (and other OSes?) has a vsnprintf() that doesn't always
+  // append a trailing \0. So we must do it, and write into a buffer
+  // that is one byte shorter; otherwise this function is unsafe.
+  result = vsnprintf(buf, buf_len, s, args);
 
-    // If truncated, change the final char in the buffer to a \0.
-    // A negative result indicates a truncated buffer on Windows.
-    if (result < 0 || result >= buf_len)
+  // If truncated, change the final char in the buffer to a \0.
+  // A negative result indicates a truncated buffer on Windows.
+  if (result < 0 || result >= buf_len)
     {
-        buf[buf_len - 1] = '\0';
-        result = buf_len - 1;
+      buf[buf_len - 1] = '\0';
+      result = buf_len - 1;
     }
 
-    return result;
+  return result;
 }
 
 // Safe, portable snprintf().
 int TXT_snprintf(char *buf, size_t buf_len, const char *s, ...)
 {
-    va_list args;
-    int result;
-    va_start(args, s);
-    result = TXT_vsnprintf(buf, buf_len, s, args);
-    va_end(args);
-    return result;
+  va_list args;
+  int result;
+  va_start(args, s);
+  result = TXT_vsnprintf(buf, buf_len, s, args);
+  va_end(args);
+  return result;
 }
-

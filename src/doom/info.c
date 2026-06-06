@@ -1146,8 +1146,7 @@ state_t states[NUMSTATES] = {
     {SPR_TLP2, 32771, 4, {NULL}, S_TECH2LAMP, 0, 0}     /* S_TECH2LAMP4 */
 };
 
-mobjinfo_t mobjinfo[NUMMOBJTYPES] =
-{
+mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     {
         /* MT_PLAYER */
 

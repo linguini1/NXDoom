@@ -57,12 +57,11 @@
  * Private Data
  ****************************************************************************/
 
-static const int cheat_sequence[] =
-{
-  KEY_UPARROW,   KEY_UPARROW,    KEY_DOWNARROW,
-  KEY_DOWNARROW, KEY_LEFTARROW,  KEY_RIGHTARROW,
-  KEY_LEFTARROW, KEY_RIGHTARROW, 'b',
-  'a',           KEY_ENTER,      0,
+static const int cheat_sequence[] = {
+    KEY_UPARROW,   KEY_UPARROW,    KEY_DOWNARROW,
+    KEY_DOWNARROW, KEY_LEFTARROW,  KEY_RIGHTARROW,
+    KEY_LEFTARROW, KEY_RIGHTARROW, 'b',
+    'a',           KEY_ENTER,      0,
 };
 
 static unsigned int cheat_sequence_index = 0;
@@ -116,8 +115,7 @@ static void sensible_defaults(void)
   png_screenshots = 1;
 }
 
-static int main_menu_key_press(txt_window_t *window, int key,
-        void *user_data)
+static int main_menu_key_press(txt_window_t *window, int key, void *user_data)
 {
   if (key == cheat_sequence[cheat_sequence_index])
     {
@@ -163,10 +161,10 @@ static void quit_confirm(void *unused1, void *unused2)
   window = txt_new_window(NULL);
 
   txt_add_widgets(window,
-                 label = txt_new_label("Exiting setup.\nSave settings?"),
-                 txt_new_strut(24, 0),
-                 yes_button = TXT_NewButton2("  Yes  ", DoQuit, DoQuit),
-                 no_button = TXT_NewButton2("  No   ", DoQuit, NULL), NULL);
+                  label = txt_new_label("Exiting setup.\nSave settings?"),
+                  txt_new_strut(24, 0),
+                  yes_button = TXT_NewButton2("  Yes  ", DoQuit, DoQuit),
+                  no_button = TXT_NewButton2("  No   ", DoQuit, NULL), NULL);
 
   TXT_SetWidgetAlign(label, TXT_HORIZ_CENTER);
   TXT_SetWidgetAlign(yes_button, TXT_HORIZ_CENTER);
@@ -176,7 +174,7 @@ static void quit_confirm(void *unused1, void *unused2)
 
   txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
   txt_set_window_action(window, TXT_HORIZ_CENTER,
-                      txt_new_windowAbortAction(window));
+                        txt_new_windowAbortAction(window));
   txt_set_window_action(window, TXT_HORIZ_RIGHT, NULL);
 }
 
@@ -264,8 +262,8 @@ static void set_window_title(void)
 {
   char *title;
 
-  title = m_string_replace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION,
-          "Doom", get_game_title());
+  title = m_string_replace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION, "Doom",
+                           get_game_title());
 
   TXT_SetDesktopTitle(title);
 
@@ -350,7 +348,7 @@ void main_menu(void)
   warp_action = txt_new_window_action(KEY_F2, "Warp");
   txt_signal_connect(quit_action, "pressed", quit_confirm, NULL);
   txt_signal_connect(warp_action, "pressed", (TxtWidgetSignalFunc)warp_menu,
-                    NULL);
+                     NULL);
   txt_set_window_action(window, TXT_HORIZ_LEFT, quit_action);
   txt_set_window_action(window, TXT_HORIZ_CENTER, warp_action);
 

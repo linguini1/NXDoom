@@ -55,24 +55,21 @@ typedef enum
  * Private Data
  ****************************************************************************/
 
-static const char *opltype_strings[] =
-{
-  "OPL2",
-  "OPL3",
+static const char *opltype_strings[] = {
+    "OPL2",
+    "OPL3",
 };
 
-static const char *cfg_extension[] =
-{
-  "cfg",
-  NULL,
+static const char *cfg_extension[] = {
+    "cfg",
+    NULL,
 };
 
 #ifdef HAVE_FLUIDSYNTH
-static const char *sf_extension[] =
-{
-  "sf2",
-  "sf3",
-  NULL,
+static const char *sf_extension[] = {
+    "sf2",
+    "sf3",
+    NULL,
 };
 #endif
 
@@ -155,8 +152,7 @@ static void update_snd_devices(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 #endif
 }
 
-static void open_musc_pack_dir(TXT_UNCAST_ARG(widget),
-        TXT_UNCAST_ARG(unused))
+static void open_musc_pack_dir(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 {
   if (!open_folder(music_pack_path))
     {
@@ -198,11 +194,10 @@ void config_sound(TXT_UNCAST_ARG(widget), void *user_data)
                  gamemission == hexen,
              txt_new_conidtional(
                  &snd_sfxdevice, SNDDEVICE_SB,
-                 txt_new_horiz_box(
-                     txt_new_strut(4, 0),
-                     txt_new_check_box("Pitch-shifted sounds",
-                                     &snd_pitchshift),
-                     NULL))),
+                 txt_new_horiz_box(txt_new_strut(4, 0),
+                                   txt_new_check_box("Pitch-shifted sounds",
+                                                     &snd_pitchshift),
+                                   NULL))),
       txt_if(gamemission == strife,
              txt_new_conidtional(
                  &snd_sfxdevice, SNDDEVICE_SB,
@@ -214,20 +209,18 @@ void config_sound(TXT_UNCAST_ARG(widget), void *user_data)
       txt_new_separator("Music"),
       txt_new_radio_button("Disabled", &snd_musicdevice, SNDDEVICE_NONE),
 
-      txt_new_radio_button("OPL (Adlib/Soundblaster)",
-              &snd_musicdevice, SNDDEVICE_SB),
+      txt_new_radio_button("OPL (Adlib/Soundblaster)", &snd_musicdevice,
+                           SNDDEVICE_SB),
 
-      txt_new_radio_button("GUS (emulated)", &snd_musicdevice,
-              SNDDEVICE_GUS),
+      txt_new_radio_button("GUS (emulated)", &snd_musicdevice, SNDDEVICE_GUS),
       txt_new_conidtional(
           &snd_musicdevice, SNDDEVICE_GUS,
           txt_make_table(
               2, txt_new_strut(4, 0), txt_new_label("Path to patch files: "),
               txt_new_strut(4, 0),
-              txt_new_file_selector(
-                  &g_gus_patch_path, 34,
-                  "Select directory containing GUS patches",
-                  TXT_DIRECTORY),
+              txt_new_file_selector(&g_gus_patch_path, 34,
+                                    "Select directory containing GUS patches",
+                                    TXT_DIRECTORY),
               NULL)),
 
       txt_new_radio_button("Native MIDI", &snd_musicdevice,

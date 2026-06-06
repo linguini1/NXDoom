@@ -14,27 +14,24 @@
 //
 // DESCRIPTION:
 //
-//    
-
+//
 
 #ifndef __M_RANDOM__
 #define __M_RANDOM__
 
-
 #include "doomtype.h"
-
 
 // Returns a number from 0 to 255,
 // from a lookup table.
-int m_random (void);
+int m_random(void);
 
 // As m_random, but used only by the play simulation.
-int P_Random (void);
+int P_Random(void);
 
 // Fix randoms for demos.
-void M_ClearRandom (void);
+void M_ClearRandom(void);
 
 // Defined version of P_Random() - P_Random()
-int P_SubRandom (void);
+int P_SubRandom(void);
 
 #endif

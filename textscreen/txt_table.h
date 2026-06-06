@@ -68,19 +68,19 @@ typedef struct txt_table_s txt_table_t;
 
 struct txt_table_s
 {
-    txt_widget_t widget;
+  txt_widget_t widget;
 
-    // Widgets in this table
-    // The widget at (x,y) in the table is widgets[columns * y + x]
-    txt_widget_t **widgets;
-    int num_widgets;
+  // Widgets in this table
+  // The widget at (x,y) in the table is widgets[columns * y + x]
+  txt_widget_t **widgets;
+  int num_widgets;
 
-    // Number of columns
-    int columns;
+  // Number of columns
+  int columns;
 
-    // Currently selected:
-    int selected_x;
-    int selected_y;
+  // Currently selected:
+  int selected_x;
+  int selected_y;
 };
 
 extern txt_widget_class_t txt_table_class;
@@ -241,5 +241,3 @@ void TXT_ClearTable(TXT_UNCAST_ARG(table));
 int TXT_PageTable(TXT_UNCAST_ARG(table), int pagex, int pagey);
 
 #endif /* #ifndef TXT_TABLE_T */
-
-

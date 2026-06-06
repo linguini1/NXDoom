@@ -18,9 +18,9 @@
 
 #include "SDL.h"
 
-#include "joystick.h"
 #include "i_joystick.h"
 #include "i_system.h"
+#include "joystick.h"
 #include "m_controls.h"
 #include "m_misc.h"
 
@@ -34,43 +34,43 @@
 
 static const char *CalibrationLabel(txt_joystick_axis_t *joystick_axis)
 {
-    switch (joystick_axis->config_stage)
+  switch (joystick_axis->config_stage)
     {
-        case CONFIG_CENTER:
-            return "Center the D-pad or joystick,\n"
-                   "and press a button.";
+    case CONFIG_CENTER:
+      return "Center the D-pad or joystick,\n"
+             "and press a button.";
 
-        case CONFIG_STAGE1:
-            if (joystick_axis->dir == JOYSTICK_AXIS_VERTICAL)
-            {
-                return "Push the D-pad or joystick up,\n"
-                       "and press the button.";
-            }
-            else
-            {
-                return "Push the D-pad or joystick to the\n"
-                       "left, and press the button.";
-            }
+    case CONFIG_STAGE1:
+      if (joystick_axis->dir == JOYSTICK_AXIS_VERTICAL)
+        {
+          return "Push the D-pad or joystick up,\n"
+                 "and press the button.";
+        }
+      else
+        {
+          return "Push the D-pad or joystick to the\n"
+                 "left, and press the button.";
+        }
 
-        case CONFIG_STAGE2:
-            if (joystick_axis->dir == JOYSTICK_AXIS_VERTICAL)
-            {
-                return "Push the D-pad or joystick down,\n"
-                       "and press the button.";
-            }
-            else
-            {
-                return "Push the D-pad or joystick to the\n"
-                       "right, and press the button.";
-            }
+    case CONFIG_STAGE2:
+      if (joystick_axis->dir == JOYSTICK_AXIS_VERTICAL)
+        {
+          return "Push the D-pad or joystick down,\n"
+                 "and press the button.";
+        }
+      else
+        {
+          return "Push the D-pad or joystick to the\n"
+                 "right, and press the button.";
+        }
     }
 
-    return NULL;
+  return NULL;
 }
 
 static void SetCalibrationLabel(txt_joystick_axis_t *joystick_axis)
 {
-    TXT_SetLabel(joystick_axis->config_label, CalibrationLabel(joystick_axis));
+  TXT_SetLabel(joystick_axis->config_label, CalibrationLabel(joystick_axis));
 }
 
 // Search all axes on joystick being configured; find a button that is
@@ -78,536 +78,530 @@ static void SetCalibrationLabel(txt_joystick_axis_t *joystick_axis)
 
 static int FindPressedAxisButton(txt_joystick_axis_t *joystick_axis)
 {
-    int i;
+  int i;
 
-    for (i = 0; i < SDL_JoystickNumButtons(joystick_axis->joystick); ++i)
+  for (i = 0; i < SDL_JoystickNumButtons(joystick_axis->joystick); ++i)
     {
-        if (i == joystick_axis->config_button)
+      if (i == joystick_axis->config_button)
         {
-            continue;
+          continue;
         }
 
-        if (SDL_JoystickGetButton(joystick_axis->joystick, i))
+      if (SDL_JoystickGetButton(joystick_axis->joystick, i))
         {
-            return i;
+          return i;
         }
     }
 
-    return -1;
+  return -1;
 }
 
 // Look for a hat that isn't centered. Returns the encoded hat axis.
 
 static int FindUncenteredHat(SDL_Joystick *joystick, int *axis_invert)
 {
-    int i, hatval;
+  int i, hatval;
 
-    for (i = 0; i < SDL_JoystickNumHats(joystick); ++i)
+  for (i = 0; i < SDL_JoystickNumHats(joystick); ++i)
     {
-        hatval = SDL_JoystickGetHat(joystick, i);
+      hatval = SDL_JoystickGetHat(joystick, i);
 
-        switch (hatval)
+      switch (hatval)
         {
-            case SDL_HAT_LEFT:
-            case SDL_HAT_RIGHT:
-                *axis_invert = hatval != SDL_HAT_LEFT;
-                return CREATE_HAT_AXIS(i, HAT_AXIS_HORIZONTAL);
+        case SDL_HAT_LEFT:
+        case SDL_HAT_RIGHT:
+          *axis_invert = hatval != SDL_HAT_LEFT;
+          return CREATE_HAT_AXIS(i, HAT_AXIS_HORIZONTAL);
 
-            case SDL_HAT_UP:
-            case SDL_HAT_DOWN:
-                *axis_invert = hatval != SDL_HAT_UP;
-                return CREATE_HAT_AXIS(i, HAT_AXIS_VERTICAL);
+        case SDL_HAT_UP:
+        case SDL_HAT_DOWN:
+          *axis_invert = hatval != SDL_HAT_UP;
+          return CREATE_HAT_AXIS(i, HAT_AXIS_VERTICAL);
 
-            // If the hat is centered, or is not pointing in a
-            // definite direction, then ignore it. We don't accept
-            // the hat being pointed to the upper-left for example,
-            // because it's ambiguous.
-            case SDL_HAT_CENTERED:
-            default:
-                break;
+        // If the hat is centered, or is not pointing in a
+        // definite direction, then ignore it. We don't accept
+        // the hat being pointed to the upper-left for example,
+        // because it's ambiguous.
+        case SDL_HAT_CENTERED:
+        default:
+          break;
         }
     }
 
-    // None found.
-    return -1;
+  // None found.
+  return -1;
 }
 
 static boolean CalibrateAxis(txt_joystick_axis_t *joystick_axis)
 {
-    int best_axis;
-    int best_value;
-    int best_invert;
-    Sint16 axis_value;
-    int i;
+  int best_axis;
+  int best_value;
+  int best_invert;
+  Sint16 axis_value;
+  int i;
 
-    // Check all axes to find which axis has the largest value.  We test
-    // for one axis at a time, so eg. when we prompt to push the joystick 
-    // left, whichever axis has the largest value is the left axis.
+  // Check all axes to find which axis has the largest value.  We test
+  // for one axis at a time, so eg. when we prompt to push the joystick
+  // left, whichever axis has the largest value is the left axis.
 
-    best_axis = 0;
-    best_value = 0;
-    best_invert = 0;
+  best_axis = 0;
+  best_value = 0;
+  best_invert = 0;
 
-    for (i = 0; i < SDL_JoystickNumAxes(joystick_axis->joystick); ++i)
+  for (i = 0; i < SDL_JoystickNumAxes(joystick_axis->joystick); ++i)
     {
-        axis_value = SDL_JoystickGetAxis(joystick_axis->joystick, i);
+      axis_value = SDL_JoystickGetAxis(joystick_axis->joystick, i);
 
-        if (joystick_axis->bad_axis[i])
+      if (joystick_axis->bad_axis[i])
         {
-            continue;
+          continue;
         }
 
-        if (abs(axis_value) > best_value)
+      if (abs(axis_value) > best_value)
         {
-            best_value = abs(axis_value);
-            best_invert = axis_value > 0;
-            best_axis = i;
+          best_value = abs(axis_value);
+          best_invert = axis_value > 0;
+          best_axis = i;
         }
     }
 
-    // Did we find one axis that had a significant value?
+  // Did we find one axis that had a significant value?
 
-    if (best_value > 32768 / 4)
+  if (best_value > 32768 / 4)
     {
-        // Save the best values we have found
+      // Save the best values we have found
 
-        *joystick_axis->axis = best_axis;
-        *joystick_axis->invert = best_invert;
-        return true;
+      *joystick_axis->axis = best_axis;
+      *joystick_axis->invert = best_invert;
+      return true;
     }
 
-    // Otherwise, maybe this is a "button axis", like the PS3 SIXAXIS
-    // controller that exposes the D-pad as four individual buttons.
-    // Search for a button.
+  // Otherwise, maybe this is a "button axis", like the PS3 SIXAXIS
+  // controller that exposes the D-pad as four individual buttons.
+  // Search for a button.
 
-    i = FindPressedAxisButton(joystick_axis);
+  i = FindPressedAxisButton(joystick_axis);
 
-    if (i >= 0)
+  if (i >= 0)
     {
-        *joystick_axis->axis = CREATE_BUTTON_AXIS(i, 0);
-        *joystick_axis->invert = 0;
-        return true;
+      *joystick_axis->axis = CREATE_BUTTON_AXIS(i, 0);
+      *joystick_axis->invert = 0;
+      return true;
     }
 
-    // Maybe it's a D-pad that is presented as a hat. This sounds weird
-    // but gamepads like this really do exist; an example is the
-    // Nyko AIRFLO Ex.
+  // Maybe it's a D-pad that is presented as a hat. This sounds weird
+  // but gamepads like this really do exist; an example is the
+  // Nyko AIRFLO Ex.
 
-    i = FindUncenteredHat(joystick_axis->joystick, joystick_axis->invert);
+  i = FindUncenteredHat(joystick_axis->joystick, joystick_axis->invert);
 
-    if (i >= 0)
+  if (i >= 0)
     {
-        *joystick_axis->axis = i;
-        return true;
+      *joystick_axis->axis = i;
+      return true;
     }
 
-    // User pressed the button without pushing the joystick anywhere.
-    return false;
+  // User pressed the button without pushing the joystick anywhere.
+  return false;
 }
 
 static boolean SetButtonAxisPositive(txt_joystick_axis_t *joystick_axis)
 {
-    int button;
+  int button;
 
-    button = FindPressedAxisButton(joystick_axis);
+  button = FindPressedAxisButton(joystick_axis);
 
-    if (button >= 0)
+  if (button >= 0)
     {
-        *joystick_axis->axis |= CREATE_BUTTON_AXIS(0, button);
-        return true;
+      *joystick_axis->axis |= CREATE_BUTTON_AXIS(0, button);
+      return true;
     }
 
-    return false;
+  return false;
 }
 
 static void IdentifyBadAxes(txt_joystick_axis_t *joystick_axis)
 {
-    int i, val;
+  int i, val;
 
-    free(joystick_axis->bad_axis);
+  free(joystick_axis->bad_axis);
 
-    joystick_axis->bad_axis
-        = calloc(SDL_JoystickNumAxes(joystick_axis->joystick),
-                                     sizeof(boolean));
+  joystick_axis->bad_axis =
+      calloc(SDL_JoystickNumAxes(joystick_axis->joystick), sizeof(boolean));
 
-    // Look for uncentered axes.
+  // Look for uncentered axes.
 
-    for (i = 0; i < SDL_JoystickNumAxes(joystick_axis->joystick); ++i)
+  for (i = 0; i < SDL_JoystickNumAxes(joystick_axis->joystick); ++i)
     {
-        val = SDL_JoystickGetAxis(joystick_axis->joystick, i);
+      val = SDL_JoystickGetAxis(joystick_axis->joystick, i);
 
-        joystick_axis->bad_axis[i] = abs(val) > (32768 / 5);
+      joystick_axis->bad_axis[i] = abs(val) > (32768 / 5);
 
-        if (joystick_axis->bad_axis[i])
+      if (joystick_axis->bad_axis[i])
         {
-            printf("Ignoring uncentered joystick axis #%i: %i\n", i, val);
+          printf("Ignoring uncentered joystick axis #%i: %i\n", i, val);
         }
     }
 }
 
 static int NextCalibrateStage(txt_joystick_axis_t *joystick_axis)
 {
-    switch (joystick_axis->config_stage)
+  switch (joystick_axis->config_stage)
     {
-        case CONFIG_CENTER:
-            return CONFIG_STAGE1;
+    case CONFIG_CENTER:
+      return CONFIG_STAGE1;
 
-        // After pushing to the left, there are two possibilities:
-        // either it is a button axis, in which case we need to find
-        // the other button, or we can just move on to the next axis.
-        case CONFIG_STAGE1:
-            if (IS_BUTTON_AXIS(*joystick_axis->axis))
-            {
-                return CONFIG_STAGE2;
-            }
-            else
-            {
-                return CONFIG_CENTER;
-            }
+    // After pushing to the left, there are two possibilities:
+    // either it is a button axis, in which case we need to find
+    // the other button, or we can just move on to the next axis.
+    case CONFIG_STAGE1:
+      if (IS_BUTTON_AXIS(*joystick_axis->axis))
+        {
+          return CONFIG_STAGE2;
+        }
+      else
+        {
+          return CONFIG_CENTER;
+        }
 
-        case CONFIG_STAGE2:
-            return CONFIG_CENTER;
+    case CONFIG_STAGE2:
+      return CONFIG_CENTER;
     }
 
-    return -1;
+  return -1;
 }
 
 static int EventCallback(SDL_Event *event, TXT_UNCAST_ARG(joystick_axis))
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
-    boolean advance;
+  TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
+  boolean advance;
 
-    if (event->type != SDL_JOYBUTTONDOWN)
+  if (event->type != SDL_JOYBUTTONDOWN)
     {
-        return 0;
+      return 0;
     }
 
-    // At this point, we have a button press.
-    // In the first "center" stage, we're just trying to work out which
-    // joystick is being configured and which button the user is pressing.
-    if (joystick_axis->config_stage == CONFIG_CENTER)
+  // At this point, we have a button press.
+  // In the first "center" stage, we're just trying to work out which
+  // joystick is being configured and which button the user is pressing.
+  if (joystick_axis->config_stage == CONFIG_CENTER)
     {
-        joystick_axis->config_button = event->jbutton.button;
-        IdentifyBadAxes(joystick_axis);
+      joystick_axis->config_button = event->jbutton.button;
+      IdentifyBadAxes(joystick_axis);
 
-        // Advance to next stage.
-        joystick_axis->config_stage = CONFIG_STAGE1;
-        SetCalibrationLabel(joystick_axis);
+      // Advance to next stage.
+      joystick_axis->config_stage = CONFIG_STAGE1;
+      SetCalibrationLabel(joystick_axis);
 
-        return 1;
+      return 1;
     }
 
-    // In subsequent stages, the user is asked to push in a specific
-    // direction and press the button. They must push the same button
-    // as they did before; this is necessary to support button axes.
-    if (event->jbutton.which == SDL_JoystickInstanceID(joystick_axis->joystick)
-     && event->jbutton.button == joystick_axis->config_button)
+  // In subsequent stages, the user is asked to push in a specific
+  // direction and press the button. They must push the same button
+  // as they did before; this is necessary to support button axes.
+  if (event->jbutton.which ==
+          SDL_JoystickInstanceID(joystick_axis->joystick) &&
+      event->jbutton.button == joystick_axis->config_button)
     {
-        switch (joystick_axis->config_stage)
+      switch (joystick_axis->config_stage)
         {
-            default:
-            case CONFIG_STAGE1:
-                advance = CalibrateAxis(joystick_axis);
-                break;
+        default:
+        case CONFIG_STAGE1:
+          advance = CalibrateAxis(joystick_axis);
+          break;
 
-            case CONFIG_STAGE2:
-                advance = SetButtonAxisPositive(joystick_axis);
-                break;
+        case CONFIG_STAGE2:
+          advance = SetButtonAxisPositive(joystick_axis);
+          break;
         }
 
-        // Advance to the next calibration stage?
+      // Advance to the next calibration stage?
 
-        if (advance)
+      if (advance)
         {
-            joystick_axis->config_stage = NextCalibrateStage(joystick_axis);
-            SetCalibrationLabel(joystick_axis);
+          joystick_axis->config_stage = NextCalibrateStage(joystick_axis);
+          SetCalibrationLabel(joystick_axis);
 
-            // Finished?
-            if (joystick_axis->config_stage == CONFIG_CENTER)
+          // Finished?
+          if (joystick_axis->config_stage == CONFIG_CENTER)
             {
-                TXT_CloseWindow(joystick_axis->config_window);
+              TXT_CloseWindow(joystick_axis->config_window);
 
-                if (joystick_axis->callback != NULL)
+              if (joystick_axis->callback != NULL)
                 {
-                    joystick_axis->callback();
+                  joystick_axis->callback();
                 }
             }
 
-            return 1;
+          return 1;
         }
     }
 
-    return 0;
+  return 0;
 }
 
 static void CalibrateWindowClosed(TXT_UNCAST_ARG(widget),
                                   TXT_UNCAST_ARG(joystick_axis))
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
+  TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
 
-    free(joystick_axis->bad_axis);
-    joystick_axis->bad_axis = NULL;
+  free(joystick_axis->bad_axis);
+  joystick_axis->bad_axis = NULL;
 
-    SDL_JoystickClose(joystick_axis->joystick);
-    SDL_JoystickEventState(SDL_DISABLE);
-    SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
-    TXT_SDL_SetEventCallback(NULL, NULL);
+  SDL_JoystickClose(joystick_axis->joystick);
+  SDL_JoystickEventState(SDL_DISABLE);
+  SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+  TXT_SDL_SetEventCallback(NULL, NULL);
 }
 
 void TXT_ConfigureJoystickAxis(txt_joystick_axis_t *joystick_axis,
                                int using_button,
                                txt_joystick_axis_callback_t callback)
 {
-    // Open the joystick first.
-    if (SDL_InitSubSystem(SDL_INIT_JOYSTICK) < 0)
+  // Open the joystick first.
+  if (SDL_InitSubSystem(SDL_INIT_JOYSTICK) < 0)
     {
-        return;
+      return;
     }
 
-    joystick_axis->joystick = SDL_JoystickOpen(joystick_index);
-    if (joystick_axis->joystick == NULL)
+  joystick_axis->joystick = SDL_JoystickOpen(joystick_index);
+  if (joystick_axis->joystick == NULL)
     {
-        txt_message_box(NULL, "Please configure a controller first!");
-        return;
+      txt_message_box(NULL, "Please configure a controller first!");
+      return;
     }
 
-    SDL_JoystickEventState(SDL_ENABLE);
+  SDL_JoystickEventState(SDL_ENABLE);
 
-    // Build the prompt window.
+  // Build the prompt window.
 
-    joystick_axis->config_window
-        = txt_new_window("Gamepad/Joystick calibration");
-    txt_add_widgets(joystick_axis->config_window,
-                   TXT_NewStrut(0, 1),
-                   joystick_axis->config_label = txt_new_label(""),
-                   TXT_NewStrut(0, 1),
-                   NULL);
+  joystick_axis->config_window =
+      txt_new_window("Gamepad/Joystick calibration");
+  txt_add_widgets(joystick_axis->config_window, TXT_NewStrut(0, 1),
+                  joystick_axis->config_label = txt_new_label(""),
+                  TXT_NewStrut(0, 1), NULL);
 
-    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
-    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_CENTER,
-                        txt_new_windowAbortAction(joystick_axis->config_window));
-    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
-    TXT_SetWidgetAlign(joystick_axis->config_window, TXT_HORIZ_CENTER);
+  txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
+  txt_set_window_action(
+      joystick_axis->config_window, TXT_HORIZ_CENTER,
+      txt_new_windowAbortAction(joystick_axis->config_window));
+  txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
+  TXT_SetWidgetAlign(joystick_axis->config_window, TXT_HORIZ_CENTER);
 
-    if (using_button >= 0)
+  if (using_button >= 0)
     {
-        joystick_axis->config_stage = CONFIG_STAGE1;
-        joystick_axis->config_button = using_button;
-        IdentifyBadAxes(joystick_axis);
+      joystick_axis->config_stage = CONFIG_STAGE1;
+      joystick_axis->config_button = using_button;
+      IdentifyBadAxes(joystick_axis);
     }
-    else
+  else
     {
-        joystick_axis->config_stage = CONFIG_CENTER;
+      joystick_axis->config_stage = CONFIG_CENTER;
     }
 
-    SetCalibrationLabel(joystick_axis);
+  SetCalibrationLabel(joystick_axis);
 
-    // Close the joystick and shut down joystick subsystem when the window
-    // is closed.
-    txt_signal_connect(joystick_axis->config_window, "closed",
-                      CalibrateWindowClosed, joystick_axis);
+  // Close the joystick and shut down joystick subsystem when the window
+  // is closed.
+  txt_signal_connect(joystick_axis->config_window, "closed",
+                     CalibrateWindowClosed, joystick_axis);
 
-    TXT_SDL_SetEventCallback(EventCallback, joystick_axis);
+  TXT_SDL_SetEventCallback(EventCallback, joystick_axis);
 
-    // When successfully calibrated, invoke this callback:
-    joystick_axis->callback = callback;
+  // When successfully calibrated, invoke this callback:
+  joystick_axis->callback = callback;
 }
 
 void TXT_ConfigureGamepadAxis(txt_joystick_axis_t *joystick_axis,
                               int using_button,
                               txt_joystick_axis_callback_t callback)
 {
-    // Build the prompt window.
+  // Build the prompt window.
 
-    joystick_axis->config_window = txt_new_window("Configure axis");
-    TXT_SetTableColumns(joystick_axis->config_window, 2);
-    txt_set_column_widths(joystick_axis->config_window, 10, 5);
-    txt_add_widgets(joystick_axis->config_window,
-                   txt_new_check_box("Invert", joystick_axis->invert),
-                   TXT_TABLE_EMPTY,
-                   txt_new_label("Dead zone"),
-                   TXT_NewSpinControl(joystick_axis->dead_zone, 10, 90),
-                   NULL);
+  joystick_axis->config_window = txt_new_window("Configure axis");
+  TXT_SetTableColumns(joystick_axis->config_window, 2);
+  txt_set_column_widths(joystick_axis->config_window, 10, 5);
+  txt_add_widgets(joystick_axis->config_window,
+                  txt_new_check_box("Invert", joystick_axis->invert),
+                  TXT_TABLE_EMPTY, txt_new_label("Dead zone"),
+                  TXT_NewSpinControl(joystick_axis->dead_zone, 10, 90), NULL);
 
-    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
-    txt_set_window_action(
-        joystick_axis->config_window, TXT_HORIZ_CENTER,
-        txt_new_windowEscapeAction(joystick_axis->config_window));
-    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
-    TXT_SetWidgetAlign(joystick_axis->config_window, TXT_HORIZ_CENTER);
+  txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
+  txt_set_window_action(
+      joystick_axis->config_window, TXT_HORIZ_CENTER,
+      txt_new_windowEscapeAction(joystick_axis->config_window));
+  txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
+  TXT_SetWidgetAlign(joystick_axis->config_window, TXT_HORIZ_CENTER);
 }
 
 static void TXT_JoystickAxisSizeCalc(TXT_UNCAST_ARG(joystick_axis))
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
+  TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
 
-    // All joystickinputs are the same size.
+  // All joystickinputs are the same size.
 
-    joystick_axis->widget.w = JOYSTICK_AXIS_WIDTH;
-    joystick_axis->widget.h = 1;
+  joystick_axis->widget.w = JOYSTICK_AXIS_WIDTH;
+  joystick_axis->widget.h = 1;
 }
 
 static void TXT_JoystickAxisDrawer(TXT_UNCAST_ARG(joystick_axis))
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
-    char buf[JOYSTICK_AXIS_WIDTH + 1];
-    int i;
+  TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
+  char buf[JOYSTICK_AXIS_WIDTH + 1];
+  int i;
 
-    if (*joystick_axis->axis < 0)
+  if (*joystick_axis->axis < 0)
     {
-        m_str_copy(buf, "(none)", sizeof(buf));
+      m_str_copy(buf, "(none)", sizeof(buf));
     }
-    else if (IS_BUTTON_AXIS(*joystick_axis->axis))
+  else if (IS_BUTTON_AXIS(*joystick_axis->axis))
     {
-        int neg, pos;
+      int neg, pos;
 
-        neg = BUTTON_AXIS_NEG(*joystick_axis->axis);
-        pos = BUTTON_AXIS_POS(*joystick_axis->axis);
-        snprintf(buf, sizeof(buf), "BUTTONS #%i+#%i", neg, pos);
+      neg = BUTTON_AXIS_NEG(*joystick_axis->axis);
+      pos = BUTTON_AXIS_POS(*joystick_axis->axis);
+      snprintf(buf, sizeof(buf), "BUTTONS #%i+#%i", neg, pos);
     }
-    else if (IS_HAT_AXIS(*joystick_axis->axis))
+  else if (IS_HAT_AXIS(*joystick_axis->axis))
     {
-        int hat, dir;
+      int hat, dir;
 
-        hat = HAT_AXIS_HAT(*joystick_axis->axis);
-        dir = HAT_AXIS_DIRECTION(*joystick_axis->axis);
+      hat = HAT_AXIS_HAT(*joystick_axis->axis);
+      dir = HAT_AXIS_DIRECTION(*joystick_axis->axis);
 
-        snprintf(buf, sizeof(buf), "HAT #%i (%s)", hat,
-                   dir == HAT_AXIS_HORIZONTAL ? "horizontal" : "vertical");
+      snprintf(buf, sizeof(buf), "HAT #%i (%s)", hat,
+               dir == HAT_AXIS_HORIZONTAL ? "horizontal" : "vertical");
     }
-    else
+  else
     {
-        snprintf(buf, sizeof(buf), "AXIS #%i", *joystick_axis->axis);
+      snprintf(buf, sizeof(buf), "AXIS #%i", *joystick_axis->axis);
     }
 
-    TXT_SetWidgetBG(joystick_axis);
-    TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
+  TXT_SetWidgetBG(joystick_axis);
+  TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
 
-    TXT_DrawString(buf);
+  TXT_DrawString(buf);
 
-    for (i = TXT_UTF8_Strlen(buf); i < joystick_axis->widget.w; ++i)
+  for (i = TXT_UTF8_Strlen(buf); i < joystick_axis->widget.w; ++i)
     {
-        TXT_DrawString(" ");
+      TXT_DrawString(" ");
     }
 }
 
 static void GetAxisDescription(int axis, char *buf, size_t buf_len)
 {
-    switch (axis)
+  switch (axis)
     {
-        case SDL_CONTROLLER_AXIS_INVALID:
-            m_str_copy(buf, "(none)", sizeof(buf));
-            break;
+    case SDL_CONTROLLER_AXIS_INVALID:
+      m_str_copy(buf, "(none)", sizeof(buf));
+      break;
 
-        case SDL_CONTROLLER_AXIS_LEFTX:
-            m_str_copy(buf, "Left X", sizeof(buf));
-            break;
+    case SDL_CONTROLLER_AXIS_LEFTX:
+      m_str_copy(buf, "Left X", sizeof(buf));
+      break;
 
-        case SDL_CONTROLLER_AXIS_LEFTY:
-            m_str_copy(buf, "Left Y", sizeof(buf));
-            break;
+    case SDL_CONTROLLER_AXIS_LEFTY:
+      m_str_copy(buf, "Left Y", sizeof(buf));
+      break;
 
-        case SDL_CONTROLLER_AXIS_RIGHTX:
-            m_str_copy(buf, "Right X", sizeof(buf));
-            break;
+    case SDL_CONTROLLER_AXIS_RIGHTX:
+      m_str_copy(buf, "Right X", sizeof(buf));
+      break;
 
-        case SDL_CONTROLLER_AXIS_RIGHTY:
-            m_str_copy(buf, "Right Y", sizeof(buf));
-            break;
+    case SDL_CONTROLLER_AXIS_RIGHTY:
+      m_str_copy(buf, "Right Y", sizeof(buf));
+      break;
 
-        default:
-            m_str_copy(buf, "(unknown)", sizeof(buf));
-            break;
+    default:
+      m_str_copy(buf, "(unknown)", sizeof(buf));
+      break;
     }
 }
 
 static void TXT_GamepadAxisDrawer(TXT_UNCAST_ARG(joystick_axis))
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
-    char buf[JOYSTICK_AXIS_WIDTH + 1];
-    int i;
+  TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
+  char buf[JOYSTICK_AXIS_WIDTH + 1];
+  int i;
 
-    GetAxisDescription(*joystick_axis->axis, buf, sizeof(buf));
+  GetAxisDescription(*joystick_axis->axis, buf, sizeof(buf));
 
-    TXT_SetWidgetBG(joystick_axis);
-    TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
+  TXT_SetWidgetBG(joystick_axis);
+  TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
 
-    TXT_DrawString(buf);
+  TXT_DrawString(buf);
 
-    for (i = TXT_UTF8_Strlen(buf); i < joystick_axis->widget.w; ++i)
+  for (i = TXT_UTF8_Strlen(buf); i < joystick_axis->widget.w; ++i)
     {
-        TXT_DrawString(" ");
+      TXT_DrawString(" ");
     }
 }
 
-static void TXT_JoystickAxisDestructor(TXT_UNCAST_ARG(joystick_axis))
-{
-}
+static void TXT_JoystickAxisDestructor(TXT_UNCAST_ARG(joystick_axis)) {}
 
 static int TXT_JoystickAxisKeyPress(TXT_UNCAST_ARG(joystick_axis), int key)
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
+  TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
 
-    if (key == KEY_ENTER)
+  if (key == KEY_ENTER)
     {
-        TXT_ConfigureJoystickAxis(joystick_axis, -1, NULL);
-        return 1;
+      TXT_ConfigureJoystickAxis(joystick_axis, -1, NULL);
+      return 1;
     }
 
-    if (key == KEY_BACKSPACE || key == KEY_DEL)
+  if (key == KEY_BACKSPACE || key == KEY_DEL)
     {
-        *joystick_axis->axis = -1;
+      *joystick_axis->axis = -1;
     }
 
-    return 0;
+  return 0;
 }
 
 static int TXT_GamepadAxisKeyPress(TXT_UNCAST_ARG(joystick_axis), int key)
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
+  TXT_CAST_ARG(txt_joystick_axis_t, joystick_axis);
 
-    if (key == KEY_ENTER)
+  if (key == KEY_ENTER)
     {
-        TXT_ConfigureGamepadAxis(joystick_axis, -1, NULL);
-        return 1;
+      TXT_ConfigureGamepadAxis(joystick_axis, -1, NULL);
+      return 1;
     }
 
-    if (key == KEY_BACKSPACE || key == KEY_DEL)
+  if (key == KEY_BACKSPACE || key == KEY_DEL)
     {
-        *joystick_axis->axis = -1;
+      *joystick_axis->axis = -1;
     }
 
-    return 0;
+  return 0;
 }
 
-static void TXT_JoystickAxisMousePress(TXT_UNCAST_ARG(widget),
-                                       int x, int y, int b)
+static void TXT_JoystickAxisMousePress(TXT_UNCAST_ARG(widget), int x, int y,
+                                       int b)
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, widget);
+  TXT_CAST_ARG(txt_joystick_axis_t, widget);
 
-    // Clicking is like pressing enter
+  // Clicking is like pressing enter
 
-    if (b == TXT_MOUSE_LEFT)
+  if (b == TXT_MOUSE_LEFT)
     {
-        TXT_JoystickAxisKeyPress(widget, KEY_ENTER);
+      TXT_JoystickAxisKeyPress(widget, KEY_ENTER);
     }
 }
 
 static void TXT_GamepadAxisMousePress(TXT_UNCAST_ARG(widget), int x, int y,
                                       int b)
 {
-    TXT_CAST_ARG(txt_joystick_axis_t, widget);
+  TXT_CAST_ARG(txt_joystick_axis_t, widget);
 
-    // Clicking is like pressing enter
+  // Clicking is like pressing enter
 
-    if (b == TXT_MOUSE_LEFT)
+  if (b == TXT_MOUSE_LEFT)
     {
-        TXT_GamepadAxisKeyPress(widget, KEY_ENTER);
+      TXT_GamepadAxisKeyPress(widget, KEY_ENTER);
     }
 }
 
-txt_widget_class_t txt_joystick_axis_class =
-{
+txt_widget_class_t txt_joystick_axis_class = {
     TXT_AlwaysSelectable,
     TXT_JoystickAxisSizeCalc,
     TXT_JoystickAxisDrawer,
@@ -617,8 +611,7 @@ txt_widget_class_t txt_joystick_axis_class =
     NULL,
 };
 
-txt_widget_class_t txt_gamepad_axis_class =
-{
+txt_widget_class_t txt_gamepad_axis_class = {
     TXT_AlwaysSelectable,
     TXT_JoystickAxisSizeCalc,
     TXT_GamepadAxisDrawer,
@@ -628,27 +621,27 @@ txt_widget_class_t txt_gamepad_axis_class =
     NULL,
 };
 
-txt_joystick_axis_t *TXT_NewJoystickAxis(int *axis, int *invert, int *dead_zone,
+txt_joystick_axis_t *TXT_NewJoystickAxis(int *axis, int *invert,
+                                         int *dead_zone,
                                          txt_joystick_axis_direction_t dir)
 {
-    txt_joystick_axis_t *joystick_axis;
+  txt_joystick_axis_t *joystick_axis;
 
-    joystick_axis = malloc(sizeof(txt_joystick_axis_t));
+  joystick_axis = malloc(sizeof(txt_joystick_axis_t));
 
-    if (use_gamepad)
+  if (use_gamepad)
     {
-        TXT_InitWidget(joystick_axis, &txt_gamepad_axis_class);
+      TXT_InitWidget(joystick_axis, &txt_gamepad_axis_class);
     }
-    else
+  else
     {
-        TXT_InitWidget(joystick_axis, &txt_joystick_axis_class);
+      TXT_InitWidget(joystick_axis, &txt_joystick_axis_class);
     }
-    joystick_axis->axis = axis;
-    joystick_axis->invert = invert;
-    joystick_axis->dead_zone = dead_zone;
-    joystick_axis->dir = dir;
-    joystick_axis->bad_axis = NULL;
+  joystick_axis->axis = axis;
+  joystick_axis->invert = invert;
+  joystick_axis->dead_zone = dead_zone;
+  joystick_axis->dir = dir;
+  joystick_axis->bad_axis = NULL;
 
-    return joystick_axis;
+  return joystick_axis;
 }
-

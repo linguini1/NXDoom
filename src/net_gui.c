@@ -96,7 +96,7 @@ static void open_wait_dialog(void)
 
   txt_set_window_action(window, TXT_HORIZ_LEFT, cancel);
   txt_set_window_position(window, TXT_HORIZ_CENTER, TXT_VERT_BOTTOM,
-                        TXT_SCREEN_W / 2, TXT_SCREEN_H - 9);
+                          TXT_SCREEN_W / 2, TXT_SCREEN_H - 9);
 
   old_max_players = 0;
 }
@@ -185,7 +185,7 @@ static void update_gui(void)
   if (net_client_wait_data.num_drones > 0)
     {
       snprintf(buf, sizeof(buf), " (+%i observer clients)",
-                 net_client_wait_data.num_drones);
+               net_client_wait_data.num_drones);
       TXT_SetLabel(drone_label, buf);
     }
   else
@@ -220,7 +220,7 @@ static void build_master_status_window(void)
 
   TXT_LowerWindow(master_window);
   txt_set_window_position(master_window, TXT_HORIZ_CENTER, TXT_VERT_CENTER,
-                        TXT_SCREEN_W / 2, TXT_SCREEN_H - 4);
+                          TXT_SCREEN_W / 2, TXT_SCREEN_H - 4);
   txt_set_window_action(master_window, TXT_HORIZ_LEFT, NULL);
   txt_set_window_action(master_window, TXT_HORIZ_CENTER, NULL);
   txt_set_window_action(master_window, TXT_HORIZ_RIGHT, NULL);
@@ -366,10 +366,9 @@ static void check_sha1_sums(void)
       TXT_AddWidget(
           l_window,
           txt_new_label(
-            "Your WAD directory does not match other players in the game.\n"
-            "Check that you have loaded the exact same WAD files as other\n"
-            "players.\n")
-          );
+              "Your WAD directory does not match other players in the game.\n"
+              "Check that you have loaded the exact same WAD files as other\n"
+              "players.\n"));
     }
 
   if (!correct_deh)

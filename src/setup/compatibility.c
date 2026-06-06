@@ -17,8 +17,8 @@
 #include <stdlib.h>
 
 #include "m_config.h"
-#include "textscreen.h"
 #include "mode.h"
+#include "textscreen.h"
 
 #include "compatibility.h"
 
@@ -29,23 +29,20 @@ int vanilla_demo_limit = 1;
 
 void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
 {
-    txt_window_t *window;
+  txt_window_t *window;
 
-    window = txt_new_window("Compatibility");
+  window = txt_new_window("Compatibility");
 
-    txt_set_window_help_url(window, WINDOW_HELP_URL);
+  txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-    txt_add_widgets(window,
-                   txt_new_check_box("Vanilla savegame limit",
-                                   &vanilla_savegame_limit),
-                   txt_new_check_box("Vanilla demo limit",
-                                   &vanilla_demo_limit),
-                   NULL);
+  txt_add_widgets(
+      window,
+      txt_new_check_box("Vanilla savegame limit", &vanilla_savegame_limit),
+      txt_new_check_box("Vanilla demo limit", &vanilla_demo_limit), NULL);
 }
 
 void BindCompatibilityVariables(void)
 {
-    m_bind_int_variable("vanilla_savegame_limit", &vanilla_savegame_limit);
-    m_bind_int_variable("vanilla_demo_limit",     &vanilla_demo_limit);
+  m_bind_int_variable("vanilla_savegame_limit", &vanilla_savegame_limit);
+  m_bind_int_variable("vanilla_demo_limit", &vanilla_demo_limit);
 }
-

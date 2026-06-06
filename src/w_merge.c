@@ -168,9 +168,8 @@ static void init_sprite_list(void)
   if (sprite_frames == NULL)
     {
       sprite_frames_alloced = 128;
-      sprite_frames = z_malloc(
-              sizeof(*sprite_frames) * sprite_frames_alloced,
-              PU_STATIC, NULL);
+      sprite_frames = z_malloc(sizeof(*sprite_frames) * sprite_frames_alloced,
+                               PU_STATIC, NULL);
     }
 
   num_sprite_frames = 0;
@@ -226,9 +225,8 @@ static sprite_frame_t *find_sprite_frame(char *name, int frame)
     {
       sprite_frame_t *newframes;
 
-      newframes = z_malloc(
-              sprite_frames_alloced * 2 * sizeof(*sprite_frames),
-              PU_STATIC, NULL);
+      newframes = z_malloc(sprite_frames_alloced * 2 * sizeof(*sprite_frames),
+                           PU_STATIC, NULL);
       memcpy(newframes, sprite_frames,
              sprite_frames_alloced * sizeof(*sprite_frames));
       z_free(sprite_frames);

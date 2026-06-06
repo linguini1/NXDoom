@@ -20,7 +20,7 @@
 
 #include <stdarg.h>
 
-// For the moment, txt_sdl.c is the only implementation of the base 
+// For the moment, txt_sdl.c is the only implementation of the base
 // text mode screen API:
 
 #include "txt_sdl.h"
@@ -39,36 +39,37 @@
 
 // Special keypress values that correspond to mouse button clicks
 
-#define TXT_MOUSE_BASE         256
-#define TXT_MOUSE_LEFT         (TXT_MOUSE_BASE + 0)
-#define TXT_MOUSE_RIGHT        (TXT_MOUSE_BASE + 1)
-#define TXT_MOUSE_MIDDLE       (TXT_MOUSE_BASE + 2)
-#define TXT_MOUSE_SCROLLUP     (TXT_MOUSE_BASE + 3)
-#define TXT_MOUSE_SCROLLDOWN   (TXT_MOUSE_BASE + 4)
-#define TXT_MOUSE_X1           (TXT_MOUSE_BASE + 5)
-#define TXT_MOUSE_X2           (TXT_MOUSE_BASE + 6)
-#define TXT_MAX_MOUSE_BUTTONS  16
+#define TXT_MOUSE_BASE 256
+#define TXT_MOUSE_LEFT (TXT_MOUSE_BASE + 0)
+#define TXT_MOUSE_RIGHT (TXT_MOUSE_BASE + 1)
+#define TXT_MOUSE_MIDDLE (TXT_MOUSE_BASE + 2)
+#define TXT_MOUSE_SCROLLUP (TXT_MOUSE_BASE + 3)
+#define TXT_MOUSE_SCROLLDOWN (TXT_MOUSE_BASE + 4)
+#define TXT_MOUSE_X1 (TXT_MOUSE_BASE + 5)
+#define TXT_MOUSE_X2 (TXT_MOUSE_BASE + 6)
+#define TXT_MAX_MOUSE_BUTTONS 16
 
-#define TXT_KEY_TO_MOUSE_BUTTON(x)                                        \
-        ( (x) >= TXT_MOUSE_BASE                                           \
-       && (x) < TXT_MOUSE_BASE + TXT_MAX_MOUSE_BUTTONS ?                  \
-          (x) - TXT_MOUSE_BASE : -1 )
+#define TXT_KEY_TO_MOUSE_BUTTON(x)                                           \
+  ((x) >= TXT_MOUSE_BASE && (x) < TXT_MOUSE_BASE + TXT_MAX_MOUSE_BUTTONS     \
+       ? (x) - TXT_MOUSE_BASE                                                \
+       : -1)
 
 // Unicode offset. Unicode values from 128 onwards are offset up into
 // this range, so TXT_UNICODE_BASE = Unicode character #128, and so on.
 
-#define TXT_UNICODE_BASE       512
+#define TXT_UNICODE_BASE 512
 
 // Convert a key value to a Unicode character:
 
-#define TXT_KEY_TO_UNICODE(x)                                             \
-        ( (x) < 128 ? (x) :                                               \
-          (x) >= TXT_UNICODE_BASE ? ((x) - TXT_UNICODE_BASE + 128) : 0 )
+#define TXT_KEY_TO_UNICODE(x)                                                \
+  ((x) < 128                 ? (x)                                           \
+   : (x) >= TXT_UNICODE_BASE ? ((x) - TXT_UNICODE_BASE + 128)                \
+                             : 0)
 
 // Convert a Unicode character to a key value:
 
-#define TXT_UNICODE_TO_KEY(u)                                            \
-        ( (u) < 128 ? (u) : ((u) - 128 + TXT_UNICODE_BASE) )
+#define TXT_UNICODE_TO_KEY(u)                                                \
+  ((u) < 128 ? (u) : ((u) - 128 + TXT_UNICODE_BASE))
 
 // Screen size
 
@@ -79,63 +80,62 @@
 
 typedef enum
 {
-    TXT_COLOR_BLACK,
-    TXT_COLOR_BLUE,
-    TXT_COLOR_GREEN,
-    TXT_COLOR_CYAN,
-    TXT_COLOR_RED,
-    TXT_COLOR_MAGENTA,
-    TXT_COLOR_BROWN,
-    TXT_COLOR_GREY,
-    TXT_COLOR_DARK_GREY,
-    TXT_COLOR_BRIGHT_BLUE,
-    TXT_COLOR_BRIGHT_GREEN,
-    TXT_COLOR_BRIGHT_CYAN,
-    TXT_COLOR_BRIGHT_RED,
-    TXT_COLOR_BRIGHT_MAGENTA,
-    TXT_COLOR_YELLOW,
-    TXT_COLOR_BRIGHT_WHITE,
+  TXT_COLOR_BLACK,
+  TXT_COLOR_BLUE,
+  TXT_COLOR_GREEN,
+  TXT_COLOR_CYAN,
+  TXT_COLOR_RED,
+  TXT_COLOR_MAGENTA,
+  TXT_COLOR_BROWN,
+  TXT_COLOR_GREY,
+  TXT_COLOR_DARK_GREY,
+  TXT_COLOR_BRIGHT_BLUE,
+  TXT_COLOR_BRIGHT_GREEN,
+  TXT_COLOR_BRIGHT_CYAN,
+  TXT_COLOR_BRIGHT_RED,
+  TXT_COLOR_BRIGHT_MAGENTA,
+  TXT_COLOR_YELLOW,
+  TXT_COLOR_BRIGHT_WHITE,
 } txt_color_t;
 
 // Modifier keys.
 
 typedef enum
 {
-    TXT_MOD_SHIFT,
-    TXT_MOD_CTRL,
-    TXT_MOD_ALT,
-    TXT_NUM_MODIFIERS
+  TXT_MOD_SHIFT,
+  TXT_MOD_CTRL,
+  TXT_MOD_ALT,
+  TXT_NUM_MODIFIERS
 } txt_modifier_t;
 
 // Due to the way the SDL API works, we provide different ways of configuring
 // how we read input events, each of which is useful in different scenarios.
 typedef enum
 {
-    // "Localized" output that takes software keyboard layout into account,
-    // but key shifting has no effect.
-    TXT_INPUT_NORMAL,
+  // "Localized" output that takes software keyboard layout into account,
+  // but key shifting has no effect.
+  TXT_INPUT_NORMAL,
 
-    // "Raw" input; the keys correspond to physical keyboard layout and
-    // software keyboard layout has no effect.
-    TXT_INPUT_RAW,
+  // "Raw" input; the keys correspond to physical keyboard layout and
+  // software keyboard layout has no effect.
+  TXT_INPUT_RAW,
 
-    // Used for full text input. Events are fully shifted and localized.
-    // However, not all keyboard keys will generate input.
-    // Setting this mode may activate the on-screen keyboard, depending on
-    // device and OS.
-    TXT_INPUT_TEXT,
+  // Used for full text input. Events are fully shifted and localized.
+  // However, not all keyboard keys will generate input.
+  // Setting this mode may activate the on-screen keyboard, depending on
+  // device and OS.
+  TXT_INPUT_TEXT,
 } txt_input_mode_t;
-
 
 #ifdef __GNUC__
 
 #define PRINTF_ATTR(fmt, first) __attribute__((format(printf, fmt, first)))
 
-#else  // __GNUC__
+#else // __GNUC__
 
 #define PRINTF_ATTR(fmt, first)
 
-#endif  // __GNUC__
+#endif // __GNUC__
 
 // Initialize the screen
 // Returns 1 if successful, 0 if failed.
@@ -199,7 +199,7 @@ void TXT_StringConcat(char *dest, const char *src, size_t dest_len);
 int TXT_vsnprintf(char *buf, size_t buf_len, const char *s, va_list args);
 
 // Safe version of snprintf().
-int TXT_snprintf(char *buf, size_t buf_len, const char *s, ...) PRINTF_ATTR(3, 4);
+int TXT_snprintf(char *buf, size_t buf_len, const char *s, ...)
+    PRINTF_ATTR(3, 4);
 
 #endif /* #ifndef TXT_MAIN_H */
-

@@ -29,4 +29,3 @@ void PRNG_Stop(void);
 unsigned int PRNG_Random(void);
 
 #endif /* #ifndef __AES_PRNG_H__ */
-

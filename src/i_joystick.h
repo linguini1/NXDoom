@@ -15,7 +15,6 @@
 //      System-specific joystick interface.
 //
 
-
 #ifndef __I_JOYSTICK__
 #define __I_JOYSTICK__
 
@@ -40,8 +39,8 @@
 #define IS_BUTTON_AXIS(axis) ((axis) >= 0 && ((axis) & BUTTON_AXIS) != 0)
 
 // Get the individual buttons from a button axis value.
-#define BUTTON_AXIS_NEG(axis)  ((axis) & 0xff)
-#define BUTTON_AXIS_POS(axis)  (((axis) >> 8) & 0xff)
+#define BUTTON_AXIS_NEG(axis) ((axis) & 0xff)
+#define BUTTON_AXIS_POS(axis) (((axis) >> 8) & 0xff)
 
 // Create a button axis value from two button values.
 #define CREATE_BUTTON_AXIS(neg, pos) (BUTTON_AXIS | (neg) | ((pos) << 8))
@@ -49,24 +48,24 @@
 // If this bit is set in an axis value, the axis is not actually a
 // joystick axis, but is a "hat" axis. This means that we read (one of)
 // the hats on the joystick.
-#define HAT_AXIS    0x20000
+#define HAT_AXIS 0x20000
 
 #define IS_HAT_AXIS(axis) ((axis) >= 0 && ((axis) & HAT_AXIS) != 0)
 
 // Get the hat number from a hat axis value.
-#define HAT_AXIS_HAT(axis)         ((axis) & 0xff)
+#define HAT_AXIS_HAT(axis) ((axis) & 0xff)
 // Which axis of the hat? (horizonal or vertical)
-#define HAT_AXIS_DIRECTION(axis)   (((axis) >> 8) & 0xff)
+#define HAT_AXIS_DIRECTION(axis) (((axis) >> 8) & 0xff)
 
-#define CREATE_HAT_AXIS(hat, direction) \
-    (HAT_AXIS | (hat) | ((direction) << 8))
+#define CREATE_HAT_AXIS(hat, direction)                                      \
+  (HAT_AXIS | (hat) | ((direction) << 8))
 
 #define HAT_AXIS_HORIZONTAL 1
-#define HAT_AXIS_VERTICAL   2
+#define HAT_AXIS_VERTICAL 2
 
-// When a trigger reads greater than this, consider it to be pressed.  30 comes
-// from XINPUT_GAMEPAD_TRIGGER_THRESHOLD in xinput.h, and is scaled here for
-// the SDL_GameController trigger max value.
+// When a trigger reads greater than this, consider it to be pressed.  30
+// comes from XINPUT_GAMEPAD_TRIGGER_THRESHOLD in xinput.h, and is scaled here
+// for the SDL_GameController trigger max value.
 #define TRIGGER_THRESHOLD (30 * 32767 / 255)
 
 // To be used with SDL_JoystickGetGUIDString; see SDL_joystick.h
@@ -83,19 +82,19 @@
 // 4-way direction data for gamepad directional inputs.
 enum
 {
-    JOY_DIR_NONE = 0x0,
-    JOY_DIR_UP = 0x1,
-    JOY_DIR_DOWN = 0x2,
-    JOY_DIR_LEFT = 0x4,
-    JOY_DIR_RIGHT = 0x8
+  JOY_DIR_NONE = 0x0,
+  JOY_DIR_UP = 0x1,
+  JOY_DIR_DOWN = 0x2,
+  JOY_DIR_LEFT = 0x4,
+  JOY_DIR_RIGHT = 0x8
 };
 
 // Extend the SDL_GameControllerButton enum to include the triggers.
 enum
 {
-    GAMEPAD_BUTTON_TRIGGERLEFT, /* = SDL_CONTROLLER_BUTTON_MAX, */
-    GAMEPAD_BUTTON_TRIGGERRIGHT,
-    GAMEPAD_BUTTON_MAX
+  GAMEPAD_BUTTON_TRIGGERLEFT, /* = SDL_CONTROLLER_BUTTON_MAX, */
+  GAMEPAD_BUTTON_TRIGGERRIGHT,
+  GAMEPAD_BUTTON_MAX
 };
 
 extern int use_analog;
@@ -110,4 +109,3 @@ void I_UpdateJoystick(void);
 void I_BindJoystickVariables(void);
 
 #endif /* #ifndef __I_JOYSTICK__ */
-

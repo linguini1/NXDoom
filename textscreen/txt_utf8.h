@@ -23,4 +23,3 @@ unsigned int TXT_UTF8_Strlen(const char *s);
 char *TXT_UTF8_SkipChars(const char *s, unsigned int n);
 
 #endif /* #ifndef TXT_UTF8_H */
-

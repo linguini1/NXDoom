@@ -31,15 +31,9 @@
  * Public Data
  ****************************************************************************/
 
-const char *doom1_endmsg[] =
-{
-  DOOM1_ENDMSG
-};
+const char *doom1_endmsg[] = {DOOM1_ENDMSG};
 
-const char *doom2_endmsg[] =
-{
-  DOOM2_ENDMSG
-};
+const char *doom2_endmsg[] = {DOOM2_ENDMSG};
 
 /* UNUSED messages included in the source release */
 

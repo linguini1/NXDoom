@@ -38,8 +38,7 @@
  * Private Data
  ****************************************************************************/
 
-static wad_file_class_t *wad_file_classes[] =
-{
+static wad_file_class_t *wad_file_classes[] = {
 #ifdef HAVE_MMAP
     &posix_wad_file,
 #endif
@@ -83,10 +82,7 @@ wad_file_t *w_open_file(const char *path)
   return result;
 }
 
-void w_close_file(wad_file_t *wad)
-{
-  wad->file_class->CloseFile(wad);
-}
+void w_close_file(wad_file_t *wad) { wad->file_class->CloseFile(wad); }
 
 size_t w_read(wad_file_t *wad, unsigned int offset, void *buffer,
               size_t buffer_len)

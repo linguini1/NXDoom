@@ -25,24 +25,24 @@
 
 typedef enum
 {
-    // Client has sent a SYN, is waiting for a SYN in response.
-    NET_CONN_STATE_CONNECTING,
+  // Client has sent a SYN, is waiting for a SYN in response.
+  NET_CONN_STATE_CONNECTING,
 
-    // Successfully connected.
-    NET_CONN_STATE_CONNECTED,
+  // Successfully connected.
+  NET_CONN_STATE_CONNECTED,
 
-    // Sent a DISCONNECT packet, waiting for a DISCONNECT_ACK reply
-    NET_CONN_STATE_DISCONNECTING,
+  // Sent a DISCONNECT packet, waiting for a DISCONNECT_ACK reply
+  NET_CONN_STATE_DISCONNECTING,
 
-    // Client successfully disconnected
-    NET_CONN_STATE_DISCONNECTED,
+  // Client successfully disconnected
+  NET_CONN_STATE_DISCONNECTED,
 
-    // We are disconnected, but in a sleep state, waiting for several
-    // seconds.  This is in case the DISCONNECT_ACK we sent failed
-    // to arrive, and we need to send another one.  We keep this as
-    // a valid connection for a few seconds until we are sure that
-    // the other end has successfully disconnected as well.
-    NET_CONN_STATE_DISCONNECTED_SLEEP,
+  // We are disconnected, but in a sleep state, waiting for several
+  // seconds.  This is in case the DISCONNECT_ACK we sent failed
+  // to arrive, and we need to send another one.  We keep this as
+  // a valid connection for a few seconds until we are sure that
+  // the other end has successfully disconnected as well.
+  NET_CONN_STATE_DISCONNECTED_SLEEP,
 
 } net_connstate_t;
 
@@ -50,17 +50,17 @@ typedef enum
 
 typedef enum
 {
-    // As the result of a local disconnect request
+  // As the result of a local disconnect request
 
-    NET_DISCONNECT_LOCAL,
+  NET_DISCONNECT_LOCAL,
 
-    // As the result of a remote disconnect request
+  // As the result of a remote disconnect request
 
-    NET_DISCONNECT_REMOTE,
+  NET_DISCONNECT_REMOTE,
 
-    // Timeout (no data received in a long time)
+  // Timeout (no data received in a long time)
 
-    NET_DISCONNECT_TIMEOUT,
+  NET_DISCONNECT_TIMEOUT,
 
 } net_disconnect_reason_t;
 
@@ -68,21 +68,20 @@ typedef enum
 
 typedef struct net_reliable_packet_s net_reliable_packet_t;
 
-typedef struct 
+typedef struct
 {
-    net_connstate_t state;
-    net_disconnect_reason_t disconnect_reason;
-    net_addr_t *addr;
-    net_protocol_t protocol;
-    int last_send_time;
-    int num_retries;
-    int keepalive_send_time;
-    int keepalive_recv_time;
-    net_reliable_packet_t *reliable_packets;
-    int reliable_send_seq;
-    int reliable_recv_seq;
+  net_connstate_t state;
+  net_disconnect_reason_t disconnect_reason;
+  net_addr_t *addr;
+  net_protocol_t protocol;
+  int last_send_time;
+  int num_retries;
+  int keepalive_send_time;
+  int keepalive_recv_time;
+  net_reliable_packet_t *reliable_packets;
+  int reliable_send_seq;
+  int reliable_recv_seq;
 } net_connection_t;
-
 
 void NET_Conn_SendPacket(net_connection_t *conn, net_packet_t *packet);
 void NET_Conn_InitClient(net_connection_t *conn, net_addr_t *addr,
@@ -104,8 +103,9 @@ boolean NET_ValidGameSettings(GameMode_t mode, GameMission_t mission,
 
 #ifdef CONFIG_GAMES_NXDOOM_NET_LOGS
 #define net_log_info(fmt, ...) syslog(LOG_USER | LOG_INFO, fmt, ##__VA_ARGS__)
-#define net_log_warn(fmt, ...) syslog(LOG_USER | LOG_WARNING, fmt, ##__VA_ARGS__)
-#define net_log_err(fmt, ...)  syslog(LOG_USER | LOG_ERR, fmt, ##__VA_ARGS__)
+#define net_log_warn(fmt, ...)                                               \
+  syslog(LOG_USER | LOG_WARNING, fmt, ##__VA_ARGS__)
+#define net_log_err(fmt, ...) syslog(LOG_USER | LOG_ERR, fmt, ##__VA_ARGS__)
 
 void net_log_packet(net_packet_t *packet);
 #else

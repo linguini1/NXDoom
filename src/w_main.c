@@ -56,12 +56,11 @@ struct uniquelump
  * chocolate-doom -iwad hexen.wad.
  */
 
-static const struct uniquelump unique_lumps[] =
-{
-  {doom, "POSSA1"},
-  {heretic, "IMPXA1"},
-  {hexen, "ETTNA1"},
-  {strife, "AGRDA1"},
+static const struct uniquelump unique_lumps[] = {
+    {doom, "POSSA1"},
+    {heretic, "IMPXA1"},
+    {hexen, "ETTNA1"},
+    {strife, "AGRDA1"},
 };
 
 /****************************************************************************
@@ -205,8 +204,7 @@ boolean w_parse_command_line(void)
           filename = d_try_find_wad_by_name(myargv[p]);
 
           printf(" merging sprites and flats from %s\n", filename);
-          w_nwt_merge_file(filename,
-                  W_NWT_MERGE_SPRITES | W_NWT_MERGE_FLATS);
+          w_nwt_merge_file(filename, W_NWT_MERGE_SPRITES | W_NWT_MERGE_FLATS);
           free(filename);
         }
     }
@@ -251,7 +249,7 @@ void w_auto_load_wads(const char *path)
 
   glob = i_start_multi_glob(path, GLOB_FLAG_NOCASE | GLOB_FLAG_SORTED,
                             "*.wad", "*.lmp", NULL);
-  for (; ; )
+  for (;;)
     {
       filename = i_next_glob(glob);
       if (filename == NULL)

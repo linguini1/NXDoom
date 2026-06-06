@@ -627,8 +627,8 @@ void R_InitLightTables(void)
  * Name: R_SetViewSize
  *
  * Description:
- *  Do not really change anything here, because it might be in the middle of a refresh.
- *  The change will take effect next refresh.
+ *  Do not really change anything here, because it might be in the middle of a
+ * refresh. The change will take effect next refresh.
  *
  ****************************************************************************/
 

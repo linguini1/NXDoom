@@ -22,7 +22,7 @@
 // headers included where main() is defined.
 
 // Event callback function type: a function of this type can be used
-// to intercept events in the textscreen event processing loop.  
+// to intercept events in the textscreen event processing loop.
 // Returning 1 will cause the event to be eaten; the textscreen code
 // will not see it.
 
@@ -37,11 +37,8 @@ typedef int (*TxtSDLEventCallbackFunc)(SDL_Event *event, void *user_data);
 
 void TXT_SDL_SetEventCallback(void *user_data);
 
-
 #if 0
 extern SDL_Window *TXT_SDLWindow;
 #endif
 
-
 #endif /* #ifndef TXT_SDL_H */
-

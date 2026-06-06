@@ -32,4 +32,3 @@ void I_BlackPaletteHR(void);
 boolean I_CheckAbortHR(void);
 
 #endif /* #ifndef I_VIDEOHR_H */
-

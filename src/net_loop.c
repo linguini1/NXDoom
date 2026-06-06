@@ -69,7 +69,7 @@ static boolean net_cl_init_server(void);
 static void net_cl_send_packet(net_addr_t *addr, net_packet_t *packet);
 static boolean net_cl_recv_packet(net_addr_t **addr, net_packet_t **packet);
 static void net_cl_addr_to_string(net_addr_t *addr, char *buffer,
-                                int buffer_len);
+                                  int buffer_len);
 static void net_cl_free_address(net_addr_t *addr);
 static net_addr_t *net_cl_resolve_address(const char *address);
 
@@ -78,7 +78,7 @@ static boolean net_sv_init_server(void);
 static void net_sv_send_packet(net_addr_t *addr, net_packet_t *packet);
 static boolean net_sv_recv_packet(net_addr_t **addr, net_packet_t **packet);
 static void net_sv_addr_to_string(net_addr_t *addr, char *buffer,
-                                int buffer_len);
+                                  int buffer_len);
 static void net_sv_free_address(net_addr_t *addr);
 static net_addr_t *net_sv_resolve_address(const char *address);
 
@@ -86,18 +86,16 @@ static net_addr_t *net_sv_resolve_address(const char *address);
  * Public Data
  ****************************************************************************/
 
-net_module_t net_loop_client_module =
-{
-  net_cl_init_client,     net_cl_init_server,   net_cl_send_packet,
-  net_cl_recv_packet,     net_cl_addr_to_string, net_cl_free_address,
-  net_cl_resolve_address,
+net_module_t net_loop_client_module = {
+    net_cl_init_client,     net_cl_init_server,    net_cl_send_packet,
+    net_cl_recv_packet,     net_cl_addr_to_string, net_cl_free_address,
+    net_cl_resolve_address,
 };
 
-net_module_t net_loop_server_module =
-{
-  net_sv_init_client,     net_sv_init_server,   net_sv_send_packet,
-  net_sv_recv_packet,     net_sv_addr_to_string, net_sv_free_address,
-  net_sv_resolve_address,
+net_module_t net_loop_server_module = {
+    net_sv_init_client,     net_sv_init_server,    net_sv_send_packet,
+    net_sv_recv_packet,     net_sv_addr_to_string, net_sv_free_address,
+    net_sv_resolve_address,
 };
 
 /****************************************************************************
@@ -185,14 +183,12 @@ static boolean net_cl_recv_packet(net_addr_t **addr, net_packet_t **packet)
 }
 
 static void net_cl_addr_to_string(net_addr_t *addr, char *buffer,
-                                int buffer_len)
+                                  int buffer_len)
 {
   snprintf(buffer, buffer_len, "local server");
 }
 
-static void net_cl_free_address(net_addr_t *addr)
-{
-}
+static void net_cl_free_address(net_addr_t *addr) {}
 
 static net_addr_t *net_cl_resolve_address(const char *address)
 {
@@ -249,14 +245,12 @@ static boolean net_sv_recv_packet(net_addr_t **addr, net_packet_t **packet)
 }
 
 static void net_sv_addr_to_string(net_addr_t *addr, char *buffer,
-                                int buffer_len)
+                                  int buffer_len)
 {
   snprintf(buffer, buffer_len, "local client");
 }
 
-static void net_sv_free_address(net_addr_t *addr)
-{
-}
+static void net_sv_free_address(net_addr_t *addr) {}
 
 static net_addr_t *net_sv_resolve_address(const char *address)
 {

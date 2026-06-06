@@ -31,44 +31,43 @@ static deh_mapping_entry_t *GetMappingEntryByName(deh_context_t *context,
                                                   deh_mapping_t *mapping,
                                                   char *name)
 {
-    int i;
+  int i;
 
-    for (i=0; mapping->entries[i].name != NULL; ++i)
+  for (i = 0; mapping->entries[i].name != NULL; ++i)
     {
-        deh_mapping_entry_t *entry = &mapping->entries[i];
+      deh_mapping_entry_t *entry = &mapping->entries[i];
 
-        if (!strcasecmp(entry->name, name))
+      if (!strcasecmp(entry->name, name))
         {
-            if (entry->location == NULL)
+          if (entry->location == NULL)
             {
-                DEH_Warning(context, "Field '%s' is unsupported", name);
-                return NULL;
+              DEH_Warning(context, "Field '%s' is unsupported", name);
+              return NULL;
             }
 
-            return entry;
+          return entry;
         }
     }
 
-    // Not found.
+  // Not found.
 
-    DEH_Warning(context, "Field named '%s' not found", name);
+  DEH_Warning(context, "Field named '%s' not found", name);
 
-    return NULL;
+  return NULL;
 }
 
 //
 // Get the location of the specified field in the specified structure.
 //
 
-static void *GetStructField(void *structptr,
-                            deh_mapping_t *mapping,
+static void *GetStructField(void *structptr, deh_mapping_t *mapping,
                             deh_mapping_entry_t *entry)
 {
-    unsigned int offset;
+  unsigned int offset;
 
-    offset = (uint8_t *)entry->location - (uint8_t *)mapping->base;
+  offset = (uint8_t *)entry->location - (uint8_t *)mapping->base;
 
-    return (uint8_t *)structptr + offset;
+  return (uint8_t *)structptr + offset;
 }
 
 //
@@ -78,48 +77,48 @@ static void *GetStructField(void *structptr,
 boolean DEH_SetMapping(deh_context_t *context, deh_mapping_t *mapping,
                        void *structptr, char *name, int value)
 {
-    deh_mapping_entry_t *entry;
-    void *location;
+  deh_mapping_entry_t *entry;
+  void *location;
 
-    entry = GetMappingEntryByName(context, mapping, name);
+  entry = GetMappingEntryByName(context, mapping, name);
 
-    if (entry == NULL)
+  if (entry == NULL)
     {
-        return false;
+      return false;
     }
 
-    // Sanity check:
+  // Sanity check:
 
-    if (entry->is_string)
+  if (entry->is_string)
     {
-        DEH_Error(context, "Tried to set '%s' as integer (BUG)", name);
-        return false;
+      DEH_Error(context, "Tried to set '%s' as integer (BUG)", name);
+      return false;
     }
 
-    location = GetStructField(structptr, mapping, entry);
+  location = GetStructField(structptr, mapping, entry);
 
-    //       printf("Setting %p::%s to %i (%i bytes)\n",
-    //               structptr, name, value, entry->size);
+  //       printf("Setting %p::%s to %i (%i bytes)\n",
+  //               structptr, name, value, entry->size);
 
-    // Set field content based on its type:
+  // Set field content based on its type:
 
-    switch (entry->size)
+  switch (entry->size)
     {
-        case 1:
-            * ((uint8_t *) location) = value;
-            break;
-        case 2:
-            * ((uint16_t *) location) = value;
-            break;
-        case 4:
-            * ((uint32_t *) location) = value;
-            break;
-        default:
-            DEH_Error(context, "Unknown field type for '%s' (BUG)", name);
-            return false;
+    case 1:
+      *((uint8_t *)location) = value;
+      break;
+    case 2:
+      *((uint16_t *)location) = value;
+      break;
+    case 4:
+      *((uint32_t *)location) = value;
+      break;
+    default:
+      DEH_Error(context, "Unknown field type for '%s' (BUG)", name);
+      return false;
     }
 
-    return true;
+  return true;
 }
 
 //
@@ -129,72 +128,72 @@ boolean DEH_SetMapping(deh_context_t *context, deh_mapping_t *mapping,
 boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
                              void *structptr, char *name, char *value)
 {
-    deh_mapping_entry_t *entry;
-    void *location;
+  deh_mapping_entry_t *entry;
+  void *location;
 
-    entry = GetMappingEntryByName(context, mapping, name);
+  entry = GetMappingEntryByName(context, mapping, name);
 
-    if (entry == NULL)
+  if (entry == NULL)
     {
-        return false;
+      return false;
     }
 
-    // Sanity check:
+  // Sanity check:
 
-    if (!entry->is_string)
+  if (!entry->is_string)
     {
-        DEH_Error(context, "Tried to set '%s' as string (BUG)", name);
-        return false;
+      DEH_Error(context, "Tried to set '%s' as string (BUG)", name);
+      return false;
     }
 
-    location = GetStructField(structptr, mapping, entry);
+  location = GetStructField(structptr, mapping, entry);
 
-    // Copy value into field:
+  // Copy value into field:
 
-    m_str_copy(location, value, entry->size);
+  m_str_copy(location, value, entry->size);
 
-    return true;
+  return true;
 }
 
 void DEH_StructSHA1Sum(sha1_context_t *context, deh_mapping_t *mapping,
                        void *structptr)
 {
-    int i;
+  int i;
 
-    // Go through each mapping
+  // Go through each mapping
 
-    for (i=0; mapping->entries[i].name != NULL; ++i)
+  for (i = 0; mapping->entries[i].name != NULL; ++i)
     {
-        deh_mapping_entry_t *entry = &mapping->entries[i];
-        void *location;
+      deh_mapping_entry_t *entry = &mapping->entries[i];
+      void *location;
 
-        if (entry->location == NULL)
+      if (entry->location == NULL)
         {
-            // Unsupported field
+          // Unsupported field
 
-            continue;
+          continue;
         }
 
-        // Add in data for this field
+      // Add in data for this field
 
-        location = (uint8_t *)structptr + ((uint8_t *)entry->location - (uint8_t *)mapping->base);
+      location = (uint8_t *)structptr +
+                 ((uint8_t *)entry->location - (uint8_t *)mapping->base);
 
-        switch (entry->size)
+      switch (entry->size)
         {
-            case 1:
-                SHA1_UpdateInt32(context, *((uint8_t *) location));
-                break;
-            case 2:
-                SHA1_UpdateInt32(context, *((uint16_t *) location));
-                break;
-            case 4:
-                SHA1_UpdateInt32(context, *((uint32_t *) location));
-                break;
-            default:
-                I_Error("Unknown dehacked mapping field type for '%s' (BUG)", 
-                        entry->name);
-                break;
+        case 1:
+          SHA1_UpdateInt32(context, *((uint8_t *)location));
+          break;
+        case 2:
+          SHA1_UpdateInt32(context, *((uint16_t *)location));
+          break;
+        case 4:
+          SHA1_UpdateInt32(context, *((uint32_t *)location));
+          break;
+        default:
+          I_Error("Unknown dehacked mapping field type for '%s' (BUG)",
+                  entry->name);
+          break;
         }
     }
 }
-

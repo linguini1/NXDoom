@@ -27,85 +27,84 @@
 
 struct _net_context_s
 {
-    net_module_t *modules[MAX_MODULES];
-    int num_modules;
+  net_module_t *modules[MAX_MODULES];
+  int num_modules;
 };
 
 net_addr_t net_broadcast_addr;
 
 net_context_t *NET_NewContext(void)
 {
-    net_context_t *context;
+  net_context_t *context;
 
-    context = z_malloc(sizeof(net_context_t), PU_STATIC, 0);
-    context->num_modules = 0;
+  context = z_malloc(sizeof(net_context_t), PU_STATIC, 0);
+  context->num_modules = 0;
 
-    return context;
+  return context;
 }
 
 void NET_AddModule(net_context_t *context, net_module_t *module)
 {
-    if (context->num_modules >= MAX_MODULES)
+  if (context->num_modules >= MAX_MODULES)
     {
-        I_Error("NET_AddModule: No more modules for context");
+      I_Error("NET_AddModule: No more modules for context");
     }
-    
-    context->modules[context->num_modules] = module;
-    ++context->num_modules;
+
+  context->modules[context->num_modules] = module;
+  ++context->num_modules;
 }
 
 net_addr_t *NET_ResolveAddress(net_context_t *context, const char *addr)
 {
-    int i;
-    net_addr_t *result;
+  int i;
+  net_addr_t *result;
 
-    for (i=0; i<context->num_modules; ++i)
+  for (i = 0; i < context->num_modules; ++i)
     {
-        result = context->modules[i]->ResolveAddress(addr);
+      result = context->modules[i]->ResolveAddress(addr);
 
-        if (result != NULL)
+      if (result != NULL)
         {
-            NET_ReferenceAddress(result);
-            return result;
+          NET_ReferenceAddress(result);
+          return result;
         }
     }
 
-    return NULL;
+  return NULL;
 }
 
 void NET_SendPacket(net_addr_t *addr, net_packet_t *packet)
 {
-    addr->module->SendPacket(addr, packet);
+  addr->module->SendPacket(addr, packet);
 }
 
 void NET_SendBroadcast(net_context_t *context, net_packet_t *packet)
 {
-    int i;
+  int i;
 
-    for (i=0; i<context->num_modules; ++i)
+  for (i = 0; i < context->num_modules; ++i)
     {
-        context->modules[i]->SendPacket(&net_broadcast_addr, packet);
+      context->modules[i]->SendPacket(&net_broadcast_addr, packet);
     }
 }
 
-boolean NET_RecvPacket(net_context_t *context, 
-                       net_addr_t **addr, 
+boolean NET_RecvPacket(net_context_t *context, net_addr_t **addr,
                        net_packet_t **packet)
 {
-    int i;
-    
-    // check all modules for new packets
-    
-    for (i=0; i<context->num_modules; ++i)
+  int i;
+
+  // check all modules for new packets
+
+  for (i = 0; i < context->num_modules; ++i)
     {
-        if (context->modules[i]->RecvPacket(addr, packet))
+      if (context->modules[i]->RecvPacket(addr, packet))
         {
-            NET_ReferenceAddress(*addr);
-            return true;
+          NET_ReferenceAddress(*addr);
+          return true;
         }
     }
 
-    return false;
+  return false;
 }
 
 // Note: this prints into a static buffer, calling again overwrites
@@ -113,35 +112,34 @@ boolean NET_RecvPacket(net_context_t *context,
 
 char *NET_AddrToString(net_addr_t *addr)
 {
-    static char buf[128];
+  static char buf[128];
 
-    addr->module->AddrToString(addr, buf, sizeof(buf) - 1);
+  addr->module->AddrToString(addr, buf, sizeof(buf) - 1);
 
-    return buf;
+  return buf;
 }
 
 void NET_ReferenceAddress(net_addr_t *addr)
 {
-    if (addr == NULL)
+  if (addr == NULL)
     {
-        return;
+      return;
     }
-    ++addr->refcount;
-    //printf("%s: +refcount=%d\n", NET_AddrToString(addr), addr->refcount);
+  ++addr->refcount;
+  // printf("%s: +refcount=%d\n", NET_AddrToString(addr), addr->refcount);
 }
 
 void NET_ReleaseAddress(net_addr_t *addr)
 {
-    if (addr == NULL)
+  if (addr == NULL)
     {
-        return;
+      return;
     }
 
-    --addr->refcount;
-    //printf("%s: -refcount=%d\n", NET_AddrToString(addr), addr->refcount);
-    if (addr->refcount <= 0)
+  --addr->refcount;
+  // printf("%s: -refcount=%d\n", NET_AddrToString(addr), addr->refcount);
+  if (addr->refcount <= 0)
     {
-        addr->module->FreeAddress(addr);
+      addr->module->FreeAddress(addr);
     }
 }
-

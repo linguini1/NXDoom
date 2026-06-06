@@ -400,11 +400,10 @@ cheatseq_t cheat_ammonokey = CHEAT("idfa", 0);
 cheatseq_t cheat_noclip = CHEAT("idspispopd", 0);
 cheatseq_t cheat_commercial_noclip = CHEAT("idclip", 0);
 
-cheatseq_t cheat_powerup[7] =
-{
-  CHEAT("idbeholdv", 0), CHEAT("idbeholds", 0), CHEAT("idbeholdi", 0),
-  CHEAT("idbeholdr", 0), CHEAT("idbeholda", 0), CHEAT("idbeholdl", 0),
-  CHEAT("idbehold", 0),
+cheatseq_t cheat_powerup[7] = {
+    CHEAT("idbeholdv", 0), CHEAT("idbeholds", 0), CHEAT("idbeholdi", 0),
+    CHEAT("idbeholdr", 0), CHEAT("idbeholda", 0), CHEAT("idbeholdl", 0),
+    CHEAT("idbehold", 0),
 };
 
 cheatseq_t cheat_choppers = CHEAT("idchoppers", 0);
@@ -1015,7 +1014,7 @@ static void st_create_widgets(void)
   /* arms background */
 
   stlib_init_bin_icon(&w_armsbg, ST_ARMSBGX, ST_ARMSBGY, armsbg,
-                    &st_notdeathmatch, &st_statusbaron);
+                      &st_notdeathmatch, &st_statusbaron);
 
   /* weapons owned */
 
@@ -1043,14 +1042,14 @@ static void st_create_widgets(void)
 
   /* keyboxes 0-2 */
 
-  stlib_init_mutl_icon(&w_keyboxes[0], ST_KEY0X, ST_KEY0Y, keys,
-                       &keyboxes[0], &st_statusbaron);
+  stlib_init_mutl_icon(&w_keyboxes[0], ST_KEY0X, ST_KEY0Y, keys, &keyboxes[0],
+                       &st_statusbaron);
 
-  stlib_init_mutl_icon(&w_keyboxes[1], ST_KEY1X, ST_KEY1Y, keys,
-                       &keyboxes[1], &st_statusbaron);
+  stlib_init_mutl_icon(&w_keyboxes[1], ST_KEY1X, ST_KEY1Y, keys, &keyboxes[1],
+                       &st_statusbaron);
 
-  stlib_init_mutl_icon(&w_keyboxes[2], ST_KEY2X, ST_KEY2Y, keys,
-                       &keyboxes[2], &st_statusbaron);
+  stlib_init_mutl_icon(&w_keyboxes[2], ST_KEY2X, ST_KEY2Y, keys, &keyboxes[2],
+                       &st_statusbaron);
 
   /* ammo count (all four kinds) */
 

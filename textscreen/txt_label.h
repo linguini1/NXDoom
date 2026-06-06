@@ -34,12 +34,12 @@ typedef struct txt_label_s txt_label_t;
 
 struct txt_label_s
 {
-    txt_widget_t widget;
-    char *label;
-    char **lines;
-    unsigned int w, h;
-    int fgcolor;
-    int bgcolor;
+  txt_widget_t widget;
+  char *label;
+  char **lines;
+  unsigned int w, h;
+  int fgcolor;
+  int bgcolor;
 };
 
 /**
@@ -79,5 +79,3 @@ void TXT_SetBGColor(txt_label_t *label, txt_color_t color);
 void TXT_SetFGColor(txt_label_t *label, txt_color_t color);
 
 #endif /* #ifndef TXT_LABEL_H */
-
-

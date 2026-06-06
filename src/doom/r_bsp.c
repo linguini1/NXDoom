@@ -86,68 +86,67 @@ drawseg_t *ds_p;
 cliprange_t *newend;
 cliprange_t solidsegs[MAXSEGS];
 
-int checkcoord[12][4] =
-{
-  {
-    3,
-    0,
-    2,
-    1,
-  },
-  {
-    3,
-    0,
-    2,
-    0,
-  },
-  {
-    3,
-    1,
-    2,
-    0,
-  },
-  {
-     0,
-  },
-  {
-    2,
-    0,
-    2,
-    1,
-  },
-  {
-    0,
-    0,
-    0,
-    0,
-  },
-  {
-    3,
-    1,
-    3,
-    0,
-  },
-  {
-     0,
-  },
-  {
-    2,
-    0,
-    3,
-    1,
-  },
-  {
-    2,
-    1,
-    3,
-    1,
-  },
-  {
-    2,
-    1,
-    3,
-    0,
-  },
+int checkcoord[12][4] = {
+    {
+        3,
+        0,
+        2,
+        1,
+    },
+    {
+        3,
+        0,
+        2,
+        0,
+    },
+    {
+        3,
+        1,
+        2,
+        0,
+    },
+    {
+        0,
+    },
+    {
+        2,
+        0,
+        2,
+        1,
+    },
+    {
+        0,
+        0,
+        0,
+        0,
+    },
+    {
+        3,
+        1,
+        3,
+        0,
+    },
+    {
+        0,
+    },
+    {
+        2,
+        0,
+        3,
+        1,
+    },
+    {
+        2,
+        1,
+        3,
+        1,
+    },
+    {
+        2,
+        1,
+        3,
+        0,
+    },
 };
 
 /****************************************************************************
@@ -482,7 +481,7 @@ static void r_subsector(int num)
     {
       floorplane =
           r_find_plane(frontsector->floorheight, frontsector->floorpic,
-                      frontsector->lightlevel);
+                       frontsector->lightlevel);
     }
   else
     floorplane = NULL;
@@ -492,7 +491,7 @@ static void r_subsector(int num)
     {
       ceilingplane =
           r_find_plane(frontsector->ceilingheight, frontsector->ceilingpic,
-                      frontsector->lightlevel);
+                       frontsector->lightlevel);
     }
   else
     ceilingplane = NULL;
@@ -521,10 +520,7 @@ static void r_subsector(int num)
  * Name: r_clear_draw_segs
  ****************************************************************************/
 
-void r_clear_draw_segs(void)
-{
-  ds_p = drawsegs;
-}
+void r_clear_draw_segs(void) { ds_p = drawsegs; }
 
 /****************************************************************************
  * Name: r_clip_solid_wall_segment

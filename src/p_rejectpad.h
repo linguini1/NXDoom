@@ -14,8 +14,7 @@
 //
 // DESCRIPTION:
 // Padding of Reject Lump
-//    
-
+//
 
 #ifndef __P_REJECTPAD__
 #define __P_REJECTPAD__

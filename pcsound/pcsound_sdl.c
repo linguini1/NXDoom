@@ -23,13 +23,12 @@
 #include "pcsound.h"
 #include "pcsound_internal.h"
 
-
 #ifndef DISABLE_SDL2MIXER
 
 #define MAX_SOUND_SLICE_TIME 70 /* ms */
 #define SQUARE_WAVE_AMP 0x2000
 
-// If true, we initialized SDL and have the responsibility to shut it 
+// If true, we initialized SDL and have the responsibility to shut it
 // down
 
 static int sdl_was_initialized = 0;
@@ -57,99 +56,99 @@ static int phase_offset = 0;
 
 static void PCSound_Mix_Callback(int chan, void *stream, int len, void *udata)
 {
-    Sint16 *leftptr;
-    Sint16 *rightptr;
-    Sint16 this_value;
-    int frequency;
-    int i;
-    int nsamples;
+  Sint16 *leftptr;
+  Sint16 *rightptr;
+  Sint16 this_value;
+  int frequency;
+  int i;
+  int nsamples;
 
-    // Number of samples is quadrupled, because of 16-bit and stereo
+  // Number of samples is quadrupled, because of 16-bit and stereo
 
-    nsamples = len / 4;
+  nsamples = len / 4;
 
-    leftptr = (Sint16 *) stream;
-    rightptr = ((Sint16 *) stream) + 1;
-    
-    // Fill the output buffer
+  leftptr = (Sint16 *)stream;
+  rightptr = ((Sint16 *)stream) + 1;
 
-    for (i=0; i<nsamples; ++i)
+  // Fill the output buffer
+
+  for (i = 0; i < nsamples; ++i)
     {
-        // Has this sound expired? If so, invoke the callback to get 
-        // the next frequency.
+      // Has this sound expired? If so, invoke the callback to get
+      // the next frequency.
 
-        while (current_remaining == 0) 
+      while (current_remaining == 0)
         {
-            // Get the next frequency to play
+          // Get the next frequency to play
 
-            callback(&current_remaining, &frequency);
+          callback(&current_remaining, &frequency);
 
-            if (current_freq != frequency)
+          if (current_freq != frequency)
             {
-                current_freq = frequency;
-                phase_offset = 0;
+              current_freq = frequency;
+              phase_offset = 0;
             }
 
-            current_remaining = (current_remaining * mixing_freq) / 1000;
+          current_remaining = (current_remaining * mixing_freq) / 1000;
         }
 
-        // Set the value for this sample.
-        
-        if (current_freq == 0)
+      // Set the value for this sample.
+
+      if (current_freq == 0)
         {
-            // Silence
+          // Silence
 
-            this_value = 0;
+          this_value = 0;
         }
-        else 
+      else
         {
-            int frac;
+          int frac;
 
-            // Determine whether we are at a peak or trough in the current
-            // sound.  Multiply by 2 so that frac % 2 will give 0 or 1 
-            // depending on whether we are at a peak or trough.
+          // Determine whether we are at a peak or trough in the current
+          // sound.  Multiply by 2 so that frac % 2 will give 0 or 1
+          // depending on whether we are at a peak or trough.
 
-            frac = (phase_offset * current_freq * 2) / mixing_freq;
+          frac = (phase_offset * current_freq * 2) / mixing_freq;
 
-            if ((frac % 2) == 0) 
+          if ((frac % 2) == 0)
             {
-                this_value = SQUARE_WAVE_AMP;
+              this_value = SQUARE_WAVE_AMP;
             }
-            else
+          else
             {
-                this_value = -SQUARE_WAVE_AMP;
+              this_value = -SQUARE_WAVE_AMP;
             }
 
-            ++phase_offset;
+          ++phase_offset;
         }
 
-        --current_remaining;
+      --current_remaining;
 
-        // Use the same value for the left and right channels.
+      // Use the same value for the left and right channels.
 
-        *leftptr += this_value;
-        *rightptr += this_value;
+      *leftptr += this_value;
+      *rightptr += this_value;
 
-        leftptr += 2;
-        rightptr += 2;
+      leftptr += 2;
+      rightptr += 2;
     }
 }
 
 static int SDLIsInitialized(void)
 {
-    int freq, channels;
-    Uint16 format;
+  int freq, channels;
+  Uint16 format;
 
-    return Mix_QuerySpec(&freq, &format, &channels);
+  return Mix_QuerySpec(&freq, &format, &channels);
 }
 
 static void PCSound_SDL_Shutdown(void)
 {
-    if (sdl_was_initialized)
+  if (sdl_was_initialized)
     {
-        Mix_CloseAudio();
-        SDL_QuitSubSystem(SDL_INIT_AUDIO);
-        sdl_was_initialized = 0;
+      Mix_CloseAudio();
+      SDL_QuitSubSystem(SDL_INIT_AUDIO);
+      sdl_was_initialized = 0;
     }
 }
 
@@ -158,92 +157,91 @@ static void PCSound_SDL_Shutdown(void)
 
 static int GetSliceSize(void)
 {
-    int limit;
-    int n;
+  int limit;
+  int n;
 
-    limit = (pcsound_sample_rate * MAX_SOUND_SLICE_TIME) / 1000;
+  limit = (pcsound_sample_rate * MAX_SOUND_SLICE_TIME) / 1000;
 
-    // Try all powers of two, not exceeding the limit.
+  // Try all powers of two, not exceeding the limit.
 
-    for (n=0;; ++n)
+  for (n = 0;; ++n)
     {
-        // 2^n <= limit < 2^n+1 ?
+      // 2^n <= limit < 2^n+1 ?
 
-        if ((1 << (n + 1)) > limit)
+      if ((1 << (n + 1)) > limit)
         {
-            return (1 << n);
+          return (1 << n);
         }
     }
 
-    // Should never happen?
+  // Should never happen?
 
-    return 1024;
+  return 1024;
 }
 
 static int PCSound_SDL_Init(pcsound_callback_func callback_func)
 {
-    int slicesize;
+  int slicesize;
 
-    // Check if SDL_mixer has been opened already
-    // If not, we must initialize it now
+  // Check if SDL_mixer has been opened already
+  // If not, we must initialize it now
 
-    if (!SDLIsInitialized())
+  if (!SDLIsInitialized())
     {
-        if (SDL_Init(SDL_INIT_AUDIO) < 0)
+      if (SDL_Init(SDL_INIT_AUDIO) < 0)
         {
-            fprintf(stderr, "Unable to set up sound.\n");
-            return 0;
+          fprintf(stderr, "Unable to set up sound.\n");
+          return 0;
         }
 
-        slicesize = GetSliceSize();
+      slicesize = GetSliceSize();
 
-        if (Mix_OpenAudioDevice(pcsound_sample_rate, AUDIO_S16SYS, 2, slicesize, NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+      if (Mix_OpenAudioDevice(pcsound_sample_rate, AUDIO_S16SYS, 2, slicesize,
+                              NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
         {
-            fprintf(stderr, "Error initializing SDL_mixer: %s\n", Mix_GetError());
+          fprintf(stderr, "Error initializing SDL_mixer: %s\n",
+                  Mix_GetError());
 
-            SDL_QuitSubSystem(SDL_INIT_AUDIO);
-            return 0;
+          SDL_QuitSubSystem(SDL_INIT_AUDIO);
+          return 0;
         }
 
-        SDL_PauseAudio(0);
+      SDL_PauseAudio(0);
 
-        // When this module shuts down, it has the responsibility to 
-        // shut down SDL.
+      // When this module shuts down, it has the responsibility to
+      // shut down SDL.
 
-        sdl_was_initialized = 1;
+      sdl_was_initialized = 1;
     }
 
-    // Get the mixer frequency, format and number of channels.
+  // Get the mixer frequency, format and number of channels.
 
-    Mix_QuerySpec(&mixing_freq, &mixing_format, &mixing_channels);
+  Mix_QuerySpec(&mixing_freq, &mixing_format, &mixing_channels);
 
-    // Only supports AUDIO_S16SYS
+  // Only supports AUDIO_S16SYS
 
-    if (mixing_format != AUDIO_S16SYS || mixing_channels != 2)
+  if (mixing_format != AUDIO_S16SYS || mixing_channels != 2)
     {
-        fprintf(stderr, 
-                "PCSound_SDL only supports native signed 16-bit LSB, "
-                "stereo format!\n");
+      fprintf(stderr, "PCSound_SDL only supports native signed 16-bit LSB, "
+                      "stereo format!\n");
 
-        PCSound_SDL_Shutdown();
-        return 0;
+      PCSound_SDL_Shutdown();
+      return 0;
     }
 
-    callback = callback_func;
-    current_freq = 0;
-    current_remaining = 0;
+  callback = callback_func;
+  current_freq = 0;
+  current_remaining = 0;
 
-    Mix_RegisterEffect(MIX_CHANNEL_POST, PCSound_Mix_Callback, NULL, NULL);
+  Mix_RegisterEffect(MIX_CHANNEL_POST, PCSound_Mix_Callback, NULL, NULL);
 
-    return 1;
+  return 1;
 }
 
-pcsound_driver_t pcsound_sdl_driver = 
-{
+pcsound_driver_t pcsound_sdl_driver = {
     "SDL",
     PCSound_SDL_Init,
     PCSound_SDL_Shutdown,
 };
-
 
 #endif // DISABLE_SDL2MIXER

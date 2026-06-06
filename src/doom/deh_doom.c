@@ -19,38 +19,31 @@
  * Included Files
  ****************************************************************************/
 
-#include <stdlib.h>
 #include "deh_defs.h"
 #include "deh_main.h"
+#include <stdlib.h>
 
 /****************************************************************************
  * Public Data
  ****************************************************************************/
 
-const char *deh_signatures[] =
-{
-    "Patch File for DeHackEd v2.3",
-    "Patch File for DeHackEd v3.0",
-    NULL
-};
+const char *deh_signatures[] = {"Patch File for DeHackEd v2.3",
+                                "Patch File for DeHackEd v3.0", NULL};
 
 /* List of section types: */
 
-deh_section_t *deh_section_types[] =
-{
-  &deh_section_ammo,
-  &deh_section_cheat,
-  &deh_section_frame,
-  &deh_section_misc,
-  &deh_section_pointer,
+deh_section_t *deh_section_types[] = {&deh_section_ammo,
+                                      &deh_section_cheat,
+                                      &deh_section_frame,
+                                      &deh_section_misc,
+                                      &deh_section_pointer,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  &deh_section_sound,
+                                      &deh_section_sound,
 #else
-  NULL,
+                                      NULL,
 #endif
-  &deh_section_text,
-  &deh_section_thing,
-  &deh_section_weapon,
-  &deh_section_bexstr,
-  NULL
-};
+                                      &deh_section_text,
+                                      &deh_section_thing,
+                                      &deh_section_weapon,
+                                      &deh_section_bexstr,
+                                      NULL};

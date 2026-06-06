@@ -52,7 +52,7 @@ begin_packed_struct typedef struct
   char identification[4];
   int numlumps;
   int infotableofs;
-}end_packed_struct wadinfo_t;
+} end_packed_struct wadinfo_t;
 
 begin_packed_struct typedef struct
 {
@@ -281,10 +281,7 @@ wad_file_t *w_add_file(const char *filename)
 
 /* W_NumLumps */
 
-int W_NumLumps(void)
-{
-  return numlumps;
-}
+int W_NumLumps(void) { return numlumps; }
 
 /* w_check_num_for_name
  * Returns -1 if name not found.
@@ -388,8 +385,7 @@ void w_read_lump(lumpindex_t lump, void *dest)
 
   if (c < l->size)
     {
-      I_Error("w_read_lump: only read %i of %i on lump %i",
-              c, l->size, lump);
+      I_Error("w_read_lump: only read %i of %i on lump %i", c, l->size, lump);
     }
 }
 

@@ -141,10 +141,7 @@ void v_enable_loading_disk(const char *lump_name, int xoffs, int yoffs)
  * Public Functions
  ****************************************************************************/
 
-void v_begin_read(size_t nbytes)
-{
-  recent_bytes_read += nbytes;
-}
+void v_begin_read(size_t nbytes) { recent_bytes_read += nbytes; }
 
 static pixel_t *disk_region_pointer(void)
 {
@@ -164,7 +161,7 @@ void v_draw_disk_icon(void)
       /* Write the disk to the screen buffer. */
 
       copy_region(disk_region_pointer(), SCREENWIDTH, disk_data,
-              LOADING_DISK_W, LOADING_DISK_W, LOADING_DISK_H);
+                  LOADING_DISK_W, LOADING_DISK_W, LOADING_DISK_H);
       disk_drawn = true;
     }
 

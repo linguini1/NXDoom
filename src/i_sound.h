@@ -302,7 +302,7 @@ int i_get_sfx_lumpnum(sfxinfo_t *sfxinfo);
 void i_update_sound(void);
 void i_update_sound_params(int channel, int vol, int sep);
 int i_start_sound(sfxinfo_t *sfxinfo, int channel, int vol, int sep,
-                 int pitch);
+                  int pitch);
 void i_stop_sound(int channel);
 boolean i_sound_playing(int channel);
 void i_precache_sounds(sfxinfo_t *sounds, int num_sounds);

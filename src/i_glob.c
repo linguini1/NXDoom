@@ -214,7 +214,7 @@ static void read_all_filenames(glob_t *glob)
   glob->filenames_len = 0;
   glob->next_index = 0;
 
-  for (; ; )
+  for (;;)
     {
       name = next_glob(glob);
       if (name == NULL)
@@ -275,8 +275,8 @@ static void sort_filenames(char **filenames, int len, int flags)
  * Public Functions
  ****************************************************************************/
 
-glob_t *i_start_multi_glob(const char *directory, int flags,
-        const char *glob, ...)
+glob_t *i_start_multi_glob(const char *directory, int flags, const char *glob,
+                           ...)
 {
   char **globs;
   int num_globs;
@@ -293,7 +293,7 @@ glob_t *i_start_multi_glob(const char *directory, int flags,
   num_globs = 1;
 
   va_start(args, glob);
-  for (; ; )
+  for (;;)
     {
       const char *arg = va_arg(args, const char *);
       char **new_globs;
@@ -412,18 +412,12 @@ glob_t *i_start_glob(const char *directory, const char *glob, int flags)
   return NULL;
 }
 
-void i_end_glob(glob_t *glob)
-{
-  return;
-}
+void i_end_glob(glob_t *glob) { return; }
 
-const char *i_next_glob(glob_t *glob)
-{
-  return "";
-}
+const char *i_next_glob(glob_t *glob) { return ""; }
 
-glob_t *i_start_multi_glob(const char *directory, int flags,
-        const char *glob, ...)
+glob_t *i_start_multi_glob(const char *directory, int flags, const char *glob,
+                           ...)
 {
   return NULL;
 }

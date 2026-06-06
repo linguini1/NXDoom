@@ -53,10 +53,7 @@ static struct timespec basetime = {.tv_nsec = 0, .tv_sec = 0};
  *  The current time in 1/35th second tics.
  ****************************************************************************/
 
-int i_get_time(void)
-{
-  return (i_get_time_ms() * TICRATE) / 1000;
-}
+int i_get_time(void) { return (i_get_time_ms() * TICRATE) / 1000; }
 
 /****************************************************************************
  * Name: i_get_time_ms
@@ -103,7 +100,4 @@ void i_init_timer(void)
  *   Wait for vertical retrace or pause a bit.
  ****************************************************************************/
 
-void i_wait_vbl(int count)
-{
-  usleep((count * 1000000) / 70);
-}
+void i_wait_vbl(int count) { usleep((count * 1000000) / 70); }

@@ -20,130 +20,123 @@
 
 struct txt_conditional_s
 {
-    txt_widget_t widget;
-    int *var;
-    int expected_value;
-    txt_widget_t *child;
+  txt_widget_t widget;
+  int *var;
+  int expected_value;
+  txt_widget_t *child;
 };
 
 static int ConditionTrue(txt_conditional_t *conditional)
 {
-    return *conditional->var == conditional->expected_value;
+  return *conditional->var == conditional->expected_value;
 }
 
 static int TXT_CondSelectable(TXT_UNCAST_ARG(conditional))
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
-    return ConditionTrue(conditional)
-        && TXT_SelectableWidget(conditional->child);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
+  return ConditionTrue(conditional) &&
+         TXT_SelectableWidget(conditional->child);
 }
 
 static void TXT_CondSizeCalc(TXT_UNCAST_ARG(conditional))
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
 
-    if (!ConditionTrue(conditional))
+  if (!ConditionTrue(conditional))
     {
-        conditional->widget.w = 0;
-        conditional->widget.h = 0;
+      conditional->widget.w = 0;
+      conditional->widget.h = 0;
     }
-    else
+  else
     {
-        TXT_CalcWidgetSize(conditional->child);
-        conditional->widget.w = conditional->child->w;
-        conditional->widget.h = conditional->child->h;
+      TXT_CalcWidgetSize(conditional->child);
+      conditional->widget.w = conditional->child->w;
+      conditional->widget.h = conditional->child->h;
     }
 }
 
 static void TXT_CondLayout(TXT_UNCAST_ARG(conditional))
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
 
-    if (ConditionTrue(conditional))
+  if (ConditionTrue(conditional))
     {
-        conditional->child->x = conditional->widget.x;
-        conditional->child->y = conditional->widget.y;
-        TXT_LayoutWidget(conditional->child);
+      conditional->child->x = conditional->widget.x;
+      conditional->child->y = conditional->widget.y;
+      TXT_LayoutWidget(conditional->child);
     }
 }
 
 static void TXT_CondDrawer(TXT_UNCAST_ARG(conditional))
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
 
-    if (ConditionTrue(conditional))
+  if (ConditionTrue(conditional))
     {
-        TXT_DrawWidget(conditional->child);
+      TXT_DrawWidget(conditional->child);
     }
 }
 
 static void TXT_CondDestructor(TXT_UNCAST_ARG(conditional))
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
-    TXT_DestroyWidget(conditional->child);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
+  TXT_DestroyWidget(conditional->child);
 }
 
 static void TXT_CondFocused(TXT_UNCAST_ARG(conditional), int focused)
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
 
-    if (ConditionTrue(conditional))
+  if (ConditionTrue(conditional))
     {
-        TXT_SetWidgetFocus(conditional->child, focused);
+      TXT_SetWidgetFocus(conditional->child, focused);
     }
 }
 
 static int TXT_CondKeyPress(TXT_UNCAST_ARG(conditional), int key)
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
 
-    if (ConditionTrue(conditional))
+  if (ConditionTrue(conditional))
     {
-        return TXT_WidgetKeyPress(conditional->child, key);
+      return TXT_WidgetKeyPress(conditional->child, key);
     }
 
-    return 0;
+  return 0;
 }
 
-static void TXT_CondMousePress(TXT_UNCAST_ARG(conditional),
-                               int x, int y, int b)
+static void TXT_CondMousePress(TXT_UNCAST_ARG(conditional), int x, int y,
+                               int b)
 {
-    TXT_CAST_ARG(txt_conditional_t, conditional);
+  TXT_CAST_ARG(txt_conditional_t, conditional);
 
-    if (ConditionTrue(conditional))
+  if (ConditionTrue(conditional))
     {
-        TXT_WidgetMousePress(conditional->child, x, y, b);
+      TXT_WidgetMousePress(conditional->child, x, y, b);
     }
 }
 
-txt_widget_class_t txt_conditional_class =
-{
-    TXT_CondSelectable,
-    TXT_CondSizeCalc,
-    TXT_CondDrawer,
-    TXT_CondKeyPress,
-    TXT_CondDestructor,
-    TXT_CondMousePress,
-    TXT_CondLayout,
-    TXT_CondFocused,
+txt_widget_class_t txt_conditional_class = {
+    TXT_CondSelectable, TXT_CondSizeCalc,   TXT_CondDrawer, TXT_CondKeyPress,
+    TXT_CondDestructor, TXT_CondMousePress, TXT_CondLayout, TXT_CondFocused,
 };
 
 txt_conditional_t *txt_new_conidtional(int *var, int expected_value,
-                                      TXT_UNCAST_ARG(child))
+                                       TXT_UNCAST_ARG(child))
 {
-    TXT_CAST_ARG(txt_widget_t, child);
-    txt_conditional_t *conditional;
+  TXT_CAST_ARG(txt_widget_t, child);
+  txt_conditional_t *conditional;
 
-    conditional = malloc(sizeof(txt_conditional_t));
+  conditional = malloc(sizeof(txt_conditional_t));
 
-    TXT_InitWidget(conditional, &txt_conditional_class);
-    conditional->var = var;
-    conditional->expected_value = expected_value;
-    conditional->child = child;
+  TXT_InitWidget(conditional, &txt_conditional_class);
+  conditional->var = var;
+  conditional->expected_value = expected_value;
+  conditional->child = child;
 
-    child->parent = &conditional->widget;
+  child->parent = &conditional->widget;
 
-    return conditional;
+  return conditional;
 }
 
 // "Static" conditional that returns an empty strut if the given static
@@ -151,18 +144,17 @@ txt_conditional_t *txt_new_conidtional(int *var, int expected_value,
 // creation time.
 txt_widget_t *txt_if(int conditional, TXT_UNCAST_ARG(child))
 {
-    TXT_CAST_ARG(txt_widget_t, child);
+  TXT_CAST_ARG(txt_widget_t, child);
 
-    if (conditional)
+  if (conditional)
     {
-        return child;
+      return child;
     }
-    else
+  else
     {
-        txt_strut_t *nullwidget;
-        TXT_DestroyWidget(child);
-        nullwidget = txt_new_strut(0, 0);
-        return &nullwidget->widget;
+      txt_strut_t *nullwidget;
+      TXT_DestroyWidget(child);
+      nullwidget = txt_new_strut(0, 0);
+      return &nullwidget->widget;
     }
 }
-

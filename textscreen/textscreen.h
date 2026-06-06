@@ -16,7 +16,8 @@
 #define TEXTSCREEN_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include "../src/doomkeys.h"
@@ -37,12 +38,11 @@ extern "C" {
 #include "txt_strut.h"
 #include "txt_table.h"
 #include "txt_widget.h"
-#include "txt_window_action.h"
 #include "txt_window.h"
+#include "txt_window_action.h"
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* #ifndef TEXTSCREEN_H */
-

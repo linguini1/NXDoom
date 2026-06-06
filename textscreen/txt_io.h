@@ -22,8 +22,8 @@
 
 typedef struct
 {
-    int bgcolor;
-    int fgcolor;
+  int bgcolor;
+  int fgcolor;
 } txt_saved_colors_t;
 
 void TXT_PutSymbol(int c);
@@ -38,4 +38,3 @@ void TXT_RestoreColors(txt_saved_colors_t *save);
 void TXT_ClearScreen(void);
 
 #endif /* #ifndef TXT_IO_H */
-

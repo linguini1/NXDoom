@@ -134,7 +134,7 @@ void stlib_init(void)
 /* ? */
 
 void stlib_init_num(st_number_t *n, int x, int y, patch_t **pl, int *num,
-                   boolean *on, int width)
+                    boolean *on, int width)
 {
   n->x = x;
   n->y = y;
@@ -150,8 +150,8 @@ void stlib_update_num(st_number_t *n, boolean refresh)
   if (*n->on) stlib_draw_num(n, refresh);
 }
 
-void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl,
-                        int *num, boolean *on, patch_t *percent)
+void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl, int *num,
+                        boolean *on, patch_t *percent)
 {
   stlib_init_num(&p->n, x, y, pl, num, on, 3);
   p->p = percent;
@@ -165,7 +165,7 @@ void stlib_update_percent(st_percent_t *per, int refresh)
 }
 
 void stlib_init_mutl_icon(st_multicon_t *i, int x, int y, patch_t **il,
-                        int *inum, boolean *on)
+                          int *inum, boolean *on)
 {
   i->x = x;
   i->y = y;
@@ -202,7 +202,7 @@ void stlib_update_mult_icon(st_multicon_t *mi, boolean refresh)
 }
 
 void stlib_init_bin_icon(st_binicon_t *b, int x, int y, patch_t *i,
-                       boolean *val, boolean *on)
+                         boolean *val, boolean *on)
 {
   b->x = x;
   b->y = y;
