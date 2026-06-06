@@ -228,7 +228,7 @@ void I_InitGamepad(void)
     SDL_GameControllerEventState(SDL_ENABLE);
 
     printf("I_InitGamepad: %s\n", SDL_GameControllerName(gamepad));
-    I_AtExit(I_ShutdownGamepad, true);
+    i_at_exit(I_ShutdownGamepad, true);
 #endif
 }
 
@@ -601,7 +601,7 @@ void I_InitJoystick(void)
 
     printf("I_InitJoystick: %s\n", SDL_JoystickName(joystick));
 
-    I_AtExit(I_ShutdownJoystick, true);
+    i_at_exit(I_ShutdownJoystick, true);
 #endif
 }
 

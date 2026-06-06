@@ -1,5 +1,5 @@
 /****************************************************************************
- * apps/game/NXDoom/src/doom/s_sound.c
+ * apps/games/NXDoom/src/doom/s_sound.c
  *
  * SPDX-License-Identifer: GPLv2
  *
@@ -95,7 +95,6 @@ typedef struct
   int handle;
 
   int pitch;
-
 } channel_t;
 
 /****************************************************************************
@@ -108,7 +107,7 @@ static channel_t *channels;
 
 /* Internal volume level, ranging from 0-127 */
 
-static int snd_SfxVolume;
+static int g_snd_sfx_volume;
 
 /* Whether songs are mus_paused */
 
@@ -126,11 +125,11 @@ static musicinfo_t *mus_playing = NULL;
  * Internal default is max out of 0-15.
  */
 
-int sfxVolume = 8;
+int g_sfx_volume = 8;
 
 /* Maximum volume of music. */
 
-int musicVolume = 8;
+int g_music_volume = 8;
 
 /* Number of channels to use */
 
@@ -151,9 +150,9 @@ static void s_stop_channel(int cnum)
     {
       /* stop the sound playing */
 
-      if (I_SoundIsPlaying(c->handle))
+      if (i_sound_playing(c->handle))
         {
-          I_StopSound(c->handle);
+          i_stop_sound(c->handle);
         }
 
       /* check to see if other channels are playing the sound */
@@ -287,7 +286,7 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
 
   if (approx_dist < S_CLOSE_DIST)
     {
-      *vol = snd_SfxVolume;
+      *vol = g_snd_sfx_volume;
     }
   else if (gamemap == 8)
     {
@@ -296,7 +295,7 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
           approx_dist = S_CLIPPING_DIST;
         }
 
-      *vol = 15 + ((snd_SfxVolume - 15) *
+      *vol = 15 + ((g_snd_sfx_volume - 15) *
                    ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) /
                       S_ATTENUATOR;
     }
@@ -304,8 +303,8 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
     {
       /* distance effect */
 
-      *vol = (snd_SfxVolume * ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) /
-             S_ATTENUATOR;
+      *vol = (g_snd_sfx_volume *
+              ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) / S_ATTENUATOR;
     }
 
   return (*vol > 0);
@@ -323,13 +322,14 @@ static int clamp(int x)
     {
       return 255;
     }
+
   return x;
 }
 
 static void s_shutdown(void)
 {
-  I_ShutdownSound();
-  I_ShutdownMusic();
+  i_shutdown_sound();
+  i_shutdown_music();
 }
 
 static void s_stop_music(void)
@@ -338,11 +338,11 @@ static void s_stop_music(void)
     {
       if (mus_paused)
         {
-          I_ResumeSong();
+          i_resume_song();
         }
 
-      I_StopSong();
-      I_UnRegisterSong(mus_playing->handle);
+      i_stop_song();
+      i_unregister_song(mus_playing->handle);
       w_release_lump_num(mus_playing->lumpnum);
       mus_playing->data = NULL;
       mus_playing = NULL;
@@ -355,7 +355,7 @@ static void s_stop_music(void)
 
 /* Initializes sound stuff, including volume
  *
- * Sets channels, SFX and music volume, allocates channel buffer, sets S_sfx
+ * Sets channels, SFX and music volume, allocates channel buffer, sets s_sfx
  * lookup.
  */
 
@@ -368,20 +368,20 @@ void s_init(int sfxvolume, int musicvolume)
     {
       if (logical_gamemission == doom)
         {
-          I_SetOPLDriverVer(opl_doom1_1_666);
+          i_set_opl_driver_ver(opl_doom1_1_666);
         }
       else
         {
-          I_SetOPLDriverVer(opl_doom2_1_666);
+          i_set_opl_driver_ver(opl_doom2_1_666);
         }
     }
   else
     {
-      I_SetOPLDriverVer(opl_doom_1_9);
+      i_set_opl_driver_ver(opl_doom_1_9);
     }
 #endif
 
-  I_PrecacheSounds(S_sfx, NUMSFX);
+  i_precache_sounds(s_sfx, NUMSFX);
 
   s_set_sfx_volume(sfxvolume);
   s_set_music_volume(musicvolume);
@@ -408,7 +408,7 @@ void s_init(int sfxvolume, int musicvolume)
 
   for (i = 1; i < NUMSFX; i++)
     {
-      S_sfx[i].lumpnum = S_sfx[i].usefulness = -1;
+      s_sfx[i].lumpnum = s_sfx[i].usefulness = -1;
     }
 
   /* Doom defaults to pitch-shifting off. */
@@ -418,7 +418,7 @@ void s_init(int sfxvolume, int musicvolume)
       snd_pitchshift = 0;
     }
 
-  I_AtExit(S_Shutdown, true);
+  i_at_exit(s_shutdown, true);
 }
 
 /* Per level startup code.
@@ -504,7 +504,7 @@ void s_start_sound(void *origin_p, int sfx_id)
   int volume;
 
   origin = (mobj_t *)origin_p;
-  volume = snd_SfxVolume;
+  volume = g_snd_sfx_volume;
 
   /* check for bogus sound # */
 
@@ -513,7 +513,7 @@ void s_start_sound(void *origin_p, int sfx_id)
       I_Error("Bad sfx #: %d", sfx_id);
     }
 
-  sfx = &S_sfx[sfx_id];
+  sfx = &s_sfx[sfx_id];
 
   /* Initialize sound parameters */
 
@@ -528,9 +528,9 @@ void s_start_sound(void *origin_p, int sfx_id)
           return;
         }
 
-      if (volume > snd_SfxVolume)
+      if (volume > g_snd_sfx_volume)
         {
-          volume = snd_SfxVolume;
+          volume = g_snd_sfx_volume;
         }
     }
 
@@ -590,12 +590,12 @@ void s_start_sound(void *origin_p, int sfx_id)
 
   if (sfx->lumpnum < 0)
     {
-      sfx->lumpnum = I_GetSfxLumpNum(sfx);
+      sfx->lumpnum = i_get_sfx_lumpnum(sfx);
     }
 
   channels[cnum].pitch = pitch;
   channels[cnum].handle =
-      I_StartSound(sfx, cnum, volume, sep, channels[cnum].pitch);
+      i_start_sound(sfx, cnum, volume, sep, channels[cnum].pitch);
 }
 
 /* Stop and resume music, during game PAUSE. */
@@ -604,7 +604,7 @@ void s_pause_sound(void)
 {
   if (mus_playing && !mus_paused)
     {
-      I_PauseSong();
+      i_pause_song();
       mus_paused = true;
     }
 }
@@ -613,7 +613,7 @@ void s_resume_sound(void)
 {
   if (mus_playing && mus_paused)
     {
-      I_ResumeSong();
+      i_resume_song();
       mus_paused = false;
     }
 }
@@ -629,7 +629,7 @@ void s_update_sounds(mobj_t *listener)
   sfxinfo_t *sfx;
   channel_t *c;
 
-  I_UpdateSound();
+  i_update_sound();
 
   for (cnum = 0; cnum < snd_channels; cnum++)
     {
@@ -638,11 +638,11 @@ void s_update_sounds(mobj_t *listener)
 
       if (c->sfxinfo)
         {
-          if (I_SoundIsPlaying(c->handle))
+          if (i_sound_playing(c->handle))
             {
               /* initialize parameters */
 
-              volume = snd_SfxVolume;
+              volume = g_snd_sfx_volume;
               sep = NORM_SEP;
 
               if (sfx->link)
@@ -653,9 +653,9 @@ void s_update_sounds(mobj_t *listener)
                       s_stop_channel(cnum);
                       continue;
                     }
-                  else if (volume > snd_SfxVolume)
+                  else if (volume > g_snd_sfx_volume)
                     {
-                      volume = snd_SfxVolume;
+                      volume = g_snd_sfx_volume;
                     }
                 }
 
@@ -674,7 +674,7 @@ void s_update_sounds(mobj_t *listener)
                     }
                   else
                     {
-                      I_UpdateSoundParams(c->handle, volume, sep);
+                      i_update_sound_params(c->handle, volume, sep);
                     }
                 }
             }
@@ -696,7 +696,7 @@ void s_set_music_volume(int volume)
       I_Error("Attempt to set music volume at %d", volume);
     }
 
-  I_SetMusicVolume(volume);
+  i_set_music_volume(volume);
 }
 
 void s_set_sfx_volume(int volume)
@@ -706,7 +706,7 @@ void s_set_sfx_volume(int volume)
       I_Error("Attempt to set sfx volume at %d", volume);
     }
 
-  snd_SfxVolume = volume;
+  g_snd_sfx_volume = volume;
 }
 
 /* Starts some music with the music id found in sounds.h. */
@@ -740,7 +740,7 @@ void s_change_music(int musicnum, int looping)
     }
   else
     {
-      music = &S_music[musicnum];
+      music = &s_music[musicnum];
     }
 
   if (mus_playing == music)
@@ -750,7 +750,7 @@ void s_change_music(int musicnum, int looping)
 
   /* shutdown old music */
 
-  S_StopMusic();
+  s_stop_music();
 
   /* get lumpnum if necessary */
 
@@ -762,9 +762,9 @@ void s_change_music(int musicnum, int looping)
 
   music->data = w_cache_lump_num(music->lumpnum, PU_STATIC);
 
-  handle = I_RegisterSong(music->data, w_lump_length(music->lumpnum));
+  handle = i_register_song(music->data, w_lump_length(music->lumpnum));
   music->handle = handle;
-  I_PlaySong(handle, looping);
+  i_play_song(handle, looping);
 
   mus_playing = music;
 }

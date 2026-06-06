@@ -831,10 +831,10 @@ void M_DrawSound(void)
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
-		 16,sfxVolume);
+		 16,g_sfx_volume);
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),
-		 16,musicVolume);
+		 16,g_music_volume);
 #else
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
 		 16,0);
@@ -855,16 +855,16 @@ void M_SfxVol(int choice)
     switch(choice)
     {
       case 0:
-	if (sfxVolume)
-	    sfxVolume--;
+	if (g_sfx_volume)
+	    g_sfx_volume--;
 	break;
       case 1:
-	if (sfxVolume < 15)
-	    sfxVolume++;
+	if (g_sfx_volume < 15)
+	    g_sfx_volume++;
 	break;
     }
 	
-    s_set_sfx_volume(sfxVolume * 8);
+    s_set_sfx_volume(g_sfx_volume * 8);
 #endif
 }
 
@@ -874,16 +874,16 @@ void M_MusicVol(int choice)
     switch(choice)
     {
       case 0:
-	if (musicVolume)
-	    musicVolume--;
+	if (g_music_volume)
+	    g_music_volume--;
 	break;
       case 1:
-	if (musicVolume < 15)
-	    musicVolume++;
+	if (g_music_volume < 15)
+	    g_music_volume++;
 	break;
     }
 	
-    s_set_music_volume(musicVolume * 8);
+    s_set_music_volume(g_music_volume * 8);
 #endif
 }
 
@@ -1991,7 +1991,7 @@ static void M_DrawOPLDev(void)
     int line;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    I_OPL_DevMessages(debug, sizeof(debug));
+    i_opl_dev_messages(debug, sizeof(debug));
 #endif
     curr = debug;
     line = 0;

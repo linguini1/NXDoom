@@ -64,7 +64,7 @@ boolean I_GetMemoryValue(unsigned int offset, void *value, int size);
 // If run_if_error is true, the function is called if the exit
 // is due to an error (I_Error)
 
-void I_AtExit(atexit_func_t func, boolean run_if_error);
+void i_at_exit(atexit_func_t func, boolean run_if_error);
 
 // Add all system-specific config file variable bindings.
 

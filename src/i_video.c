@@ -1659,7 +1659,7 @@ void i_init_graphics(void)
 
   /* Call i_shutdown_graphics on quit */
 
-  I_AtExit(i_shutdown_graphics, true);
+  i_at_exit(i_shutdown_graphics, true);
 }
 
 /* Bind all variables controlling video options into the configuration

@@ -42,7 +42,7 @@ extern int snd_channels;
  ****************************************************************************/
 
 /* Initializes sound stuff, including volume
- * Sets channels, SFX and music volume, allocates channel buffer, sets S_sfx
+ * Sets channels, SFX and music volume, allocates channel buffer, sets s_sfx
  * lookup.
  */
 

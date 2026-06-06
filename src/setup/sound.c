@@ -64,8 +64,8 @@ char *snd_musiccmd = "";
 int snd_pitchshift = 0;
 
 static int numChannels = 8;
-static int sfxVolume = 8;
-static int musicVolume = 8;
+static int g_sfx_volume = 8;
+static int g_music_volume = 8;
 static int voiceVolume = 15;
 static int show_talk = 0;
 int use_libsamplerate = 0;
@@ -218,8 +218,8 @@ void BindSoundVariables(void)
     m_bind_int_variable("snd_musicdevice",          &snd_musicdevice);
     m_bind_int_variable("snd_channels",             &numChannels);
     m_bind_int_variable("snd_samplerate",           &snd_samplerate);
-    m_bind_int_variable("sfx_volume",               &sfxVolume);
-    m_bind_int_variable("music_volume",             &musicVolume);
+    m_bind_int_variable("sfx_volume",               &g_sfx_volume);
+    m_bind_int_variable("music_volume",             &g_music_volume);
 
     m_bind_int_variable("use_libsamplerate",        &use_libsamplerate);
     m_bind_float_variable("libsamplerate_scale",    &libsamplerate_scale);
@@ -280,14 +280,14 @@ void BindSoundVariables(void)
     {
         case doom:
         default:
-            sfxVolume = 8;  musicVolume = 8;
+            g_sfx_volume = 8;  g_music_volume = 8;
             break;
         case heretic:
         case hexen:
-            sfxVolume = 10; musicVolume = 10;
+            g_sfx_volume = 10; g_music_volume = 10;
             break;
         case strife:
-            sfxVolume = 8;  musicVolume = 13;
+            g_sfx_volume = 8;  g_music_volume = 13;
             break;
     }
 }

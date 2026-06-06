@@ -776,7 +776,7 @@ P_KillMobj
     if (target->tics < 1)
 	target->tics = 1;
 		
-    //	I_StartSound (&actor->r, actor->info->deathsound);
+    //	i_start_sound (&actor->r, actor->info->deathsound);
 
     // In Chex Quest, monsters don't drop items.
 

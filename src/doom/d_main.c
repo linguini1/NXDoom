@@ -354,7 +354,7 @@ void D_BindVariables(void)
     i_bind_video_variables();
     I_BindJoystickVariables();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    I_BindSoundVariables();
+    i_bind_sound_variables();
 #endif
 
     M_BindBaseControls();
@@ -372,8 +372,8 @@ void D_BindVariables(void)
 
     m_bind_int_variable("mouse_sensitivity",      &mouseSensitivity);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    m_bind_int_variable("sfx_volume",             &sfxVolume);
-    m_bind_int_variable("music_volume",           &musicVolume);
+    m_bind_int_variable("sfx_volume",             &g_sfx_volume);
+    m_bind_int_variable("music_volume",           &g_music_volume);
     m_bind_int_variable("snd_channels",           &snd_channels);
 #endif
     m_bind_int_variable("show_messages",          &showMessages);
@@ -1324,7 +1324,7 @@ void d_doom_main (void)
     char file[256];
     char demolumpname[9];
 
-    I_AtExit(D_Endoom, false);
+    i_at_exit(D_Endoom, false);
 
     // print banner
 
@@ -1496,7 +1496,7 @@ void d_doom_main (void)
     m_load_defaults();
 
     // Save configuration at exit.
-    I_AtExit(m_save_defaults, false);
+    i_at_exit(m_save_defaults, false);
 
     // Find main IWAD file and load it.
     iwadfile = D_FindIWAD(IWAD_MASK_DOOM, &gamemission);
@@ -1697,7 +1697,7 @@ void d_doom_main (void)
         printf("Playing demo %s.\n", file);
     }
 
-    I_AtExit(G_CheckDemoStatusAtExit, true);
+    i_at_exit(G_CheckDemoStatusAtExit, true);
 
     // Generate the WAD hash table.  Speed things up a bit.
     w_generate_hash_table();
@@ -1781,8 +1781,8 @@ void d_doom_main (void)
     i_init_timer();
     I_InitJoystick();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    I_InitSound(doom);
-    I_InitMusic();
+    i_init_sound(doom);
+    i_init_music();
 #endif
 
     printf ("NET_Init: Init network subsystem.\n");
@@ -1941,7 +1941,7 @@ void d_doom_main (void)
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     printf("s_init: Setting up sound.\n");
-    s_init (sfxVolume * 8, musicVolume * 8);
+    s_init (g_sfx_volume * 8, g_music_volume * 8);
 #endif
 
     printf("D_CheckNetGame: Checking network game status.\n");
@@ -1964,7 +1964,7 @@ void d_doom_main (void)
 
     if (m_check_parm_with_args("-statdump", 1))
     {
-        I_AtExit(StatDump, true);
+        i_at_exit(StatDump, true);
         printf("External statistics registered.\n");
     }
 

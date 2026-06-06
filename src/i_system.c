@@ -55,7 +55,7 @@ struct atexit_listentry_s
 
 static atexit_listentry_t *exit_funcs = NULL;
 
-void I_AtExit(atexit_func_t func, boolean run_on_error)
+void i_at_exit(atexit_func_t func, boolean run_on_error)
 {
     atexit_listentry_t *entry;
 
@@ -226,7 +226,7 @@ void I_BindVariables(void)
 {
     i_bind_video_variables();
     I_BindJoystickVariables();
-    I_BindSoundVariables();
+    i_bind_sound_variables();
 }
 */
 

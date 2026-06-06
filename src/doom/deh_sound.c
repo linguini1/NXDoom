@@ -58,7 +58,7 @@ static void *DEH_SoundStart(deh_context_t *context, char *line)
                              "problems in Vanilla dehacked.", sound_number); 
     }
 
-    return &S_sfx[sound_number];
+    return &s_sfx[sound_number];
 }
 
 static void DEH_SoundParseLine(deh_context_t *context, char *line, void *tag)

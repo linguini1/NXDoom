@@ -179,10 +179,10 @@ static void InitMusicModule(void)
 //
 // Initializes sound stuff, including volume
 // Sets channels, SFX and music volume,
-//  allocates channel buffer, sets S_sfx lookup.
+//  allocates channel buffer, sets s_sfx lookup.
 //
 
-void I_InitSound(GameMission_t mission)
+void i_init_sound(GameMission_t mission)
 {
     boolean nosound, nosfx, nomusic, nomusicpacks;
 
@@ -232,7 +232,7 @@ void I_InitSound(GameMission_t mission)
          && (snd_musicdevice == SNDDEVICE_GENMIDI
           || snd_musicdevice == SNDDEVICE_GUS))
         {
-            I_InitTimidityConfig();
+            i_init_timidity_config();
         }
 
         if (!nosfx)
@@ -254,7 +254,7 @@ void I_InitSound(GameMission_t mission)
     }
 }
 
-void I_ShutdownSound(void)
+void i_shutdown_sound(void)
 {
     if (sound_module != NULL)
     {
@@ -272,7 +272,7 @@ void I_ShutdownSound(void)
     }
 }
 
-int I_GetSfxLumpNum(sfxinfo_t *sfxinfo)
+int i_get_sfx_lumpnum(sfxinfo_t *sfxinfo)
 {
     if (sound_module != NULL)
     {
@@ -284,7 +284,7 @@ int I_GetSfxLumpNum(sfxinfo_t *sfxinfo)
     }
 }
 
-void I_UpdateSound(void)
+void i_update_sound(void)
 {
     if (sound_module != NULL)
     {
@@ -318,7 +318,7 @@ static void CheckVolumeSeparation(int *vol, int *sep)
     }
 }
 
-void I_UpdateSoundParams(int channel, int vol, int sep)
+void i_update_sound_params(int channel, int vol, int sep)
 {
     if (sound_module != NULL)
     {
@@ -327,7 +327,7 @@ void I_UpdateSoundParams(int channel, int vol, int sep)
     }
 }
 
-int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
+int i_start_sound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
 {
     if (sound_module != NULL)
     {
@@ -340,7 +340,7 @@ int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
     }
 }
 
-void I_StopSound(int channel)
+void i_stop_sound(int channel)
 {
     if (sound_module != NULL)
     {
@@ -348,7 +348,7 @@ void I_StopSound(int channel)
     }
 }
 
-boolean I_SoundIsPlaying(int channel)
+boolean i_sound_playing(int channel)
 {
     if (sound_module != NULL)
     {
@@ -360,7 +360,7 @@ boolean I_SoundIsPlaying(int channel)
     }
 }
 
-void I_PrecacheSounds(sfxinfo_t *sounds, int num_sounds)
+void i_precache_sounds(sfxinfo_t *sounds, int num_sounds)
 {
     if (sound_module != NULL && sound_module->CacheSounds != NULL)
     {
@@ -368,16 +368,16 @@ void I_PrecacheSounds(sfxinfo_t *sounds, int num_sounds)
     }
 }
 
-void I_InitMusic(void)
+void i_init_music(void)
 {
 }
 
-void I_ShutdownMusic(void)
+void i_shutdown_music(void)
 {
 
 }
 
-void I_SetMusicVolume(int volume)
+void i_set_music_volume(int volume)
 {
     if (music_module != NULL)
     {
@@ -390,7 +390,7 @@ void I_SetMusicVolume(int volume)
     }
 }
 
-void I_PauseSong(void)
+void i_pause_song(void)
 {
     if (active_music_module != NULL)
     {
@@ -398,7 +398,7 @@ void I_PauseSong(void)
     }
 }
 
-void I_ResumeSong(void)
+void i_resume_song(void)
 {
     if (active_music_module != NULL)
     {
@@ -406,7 +406,7 @@ void I_ResumeSong(void)
     }
 }
 
-void *I_RegisterSong(void *data, int len)
+void *i_register_song(void *data, int len)
 {
     // If the music pack module is active, check to see if there is a
     // valid substitution for this track. If there is, we set the
@@ -436,7 +436,7 @@ void *I_RegisterSong(void *data, int len)
     }
 }
 
-void I_UnRegisterSong(void *handle)
+void i_unregister_song(void *handle)
 {
     if (active_music_module != NULL)
     {
@@ -444,7 +444,7 @@ void I_UnRegisterSong(void *handle)
     }
 }
 
-void I_PlaySong(void *handle, boolean looping)
+void i_play_song(void *handle, boolean looping)
 {
     if (active_music_module != NULL)
     {
@@ -452,7 +452,7 @@ void I_PlaySong(void *handle, boolean looping)
     }
 }
 
-void I_StopSong(void)
+void i_stop_song(void)
 {
     if (active_music_module != NULL)
     {
@@ -460,19 +460,7 @@ void I_StopSong(void)
     }
 }
 
-boolean I_MusicIsPlaying(void)
-{
-    if (active_music_module != NULL)
-    {
-        return active_music_module->MusicIsPlaying();
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void I_BindSoundVariables(void)
+void i_bind_sound_variables(void)
 {
     m_bind_int_variable("snd_musicdevice",         &snd_musicdevice);
     m_bind_int_variable("snd_sfxdevice",           &snd_sfxdevice);
