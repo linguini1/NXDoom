@@ -404,11 +404,9 @@ void S_Shutdown(void)
   I_ShutdownMusic();
 }
 
-/*
- * Per level startup code.
- * Kills playing sounds at start of level,
- *  determines music if any, changes music.
- *
+/* Per level startup code.
+ * Kills playing sounds at start of level, determines music if any, changes
+ * music.
  */
 
 void S_Start(void)
@@ -416,8 +414,7 @@ void S_Start(void)
   int cnum;
   int mnum;
 
-  /* kill all playing sounds at start of level
-   *  (trust me - a good idea)
+  /* kill all playing sounds at start of level (trust me - a good idea)
    */
 
   for (cnum = 0; cnum < snd_channels; cnum++)
@@ -462,7 +459,7 @@ void S_Start(void)
         }
     }
 
-  S_ChangeMusic(mnum, true);
+  s_change_music(mnum, true);
 }
 
 void S_StopSound(mobj_t *origin)
@@ -547,12 +544,13 @@ void S_StartSound(void *origin_p, int sfx_id)
 
   if (sfx_id >= sfx_sawup && sfx_id <= sfx_sawhit)
     {
-      pitch += 8 - (M_Random() & 15);
+      pitch += 8 - (m_random() & 15);
     }
   else if (sfx_id != sfx_itemup && sfx_id != sfx_tink)
     {
-      pitch += 16 - (M_Random() & 31);
+      pitch += 16 - (m_random() & 31);
     }
+
   pitch = clamp(pitch);
 
   S_StopSound(origin); /* kill old sound */
@@ -696,9 +694,12 @@ void S_SetSfxVolume(int volume)
 
 /* Starts some music with the music id found in sounds.h. */
 
-void S_StartMusic(int m_id) { S_ChangeMusic(m_id, false); }
+void S_StartMusic(int m_id)
+{
+  s_change_music(m_id, false);
+}
 
-void S_ChangeMusic(int musicnum, int looping)
+void s_change_music(int musicnum, int looping)
 {
   musicinfo_t *music = NULL;
   char namebuf[9];

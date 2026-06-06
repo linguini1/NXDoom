@@ -121,11 +121,11 @@ void F_StartFinale (void)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (logical_gamemission == doom)
     {
-        S_ChangeMusic(mus_victor, true);
+        s_change_music(mus_victor, true);
     }
     else
     {
-        S_ChangeMusic(mus_read_m, true);
+        s_change_music(mus_read_m, true);
     }
 #endif
 
@@ -356,7 +356,7 @@ void F_StartCast (void)
     castonmelee = 0;
     castattacking = false;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_ChangeMusic(mus_evil, true);
+    s_change_music(mus_evil, true);
 #endif
 }
 

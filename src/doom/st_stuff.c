@@ -671,7 +671,7 @@ static void st_update_widgets(void)
   w_ready.data = plyr->readyweapon;
 
   /* if (*w_ready.on)
-   *  STlib_updateNum(&w_ready, true);
+   *  stlib_update_num(&w_ready, true);
    * refresh weapon change
    *  }
    */
@@ -789,28 +789,28 @@ static void st_draw_widgets(boolean refresh)
 
   st_fragson = deathmatch && st_statusbaron;
 
-  STlib_updateNum(&w_ready, refresh);
+  stlib_update_num(&w_ready, refresh);
 
   for (i = 0; i < 4; i++)
     {
-      STlib_updateNum(&w_ammo[i], refresh);
-      STlib_updateNum(&w_maxammo[i], refresh);
+      stlib_update_num(&w_ammo[i], refresh);
+      stlib_update_num(&w_maxammo[i], refresh);
     }
 
-  STlib_updatePercent(&w_health, refresh);
-  STlib_updatePercent(&w_armor, refresh);
+  stlib_update_percent(&w_health, refresh);
+  stlib_update_percent(&w_armor, refresh);
 
-  STlib_updateBinIcon(&w_armsbg, refresh);
+  stlib_update_bin_icon(&w_armsbg, refresh);
 
   for (i = 0; i < 6; i++)
-    STlib_updateMultIcon(&w_arms[i], refresh);
+    stlib_update_mult_icon(&w_arms[i], refresh);
 
-  STlib_updateMultIcon(&w_faces, refresh);
+  stlib_update_mult_icon(&w_faces, refresh);
 
   for (i = 0; i < 3; i++)
-    STlib_updateMultIcon(&w_keyboxes[i], refresh);
+    stlib_update_mult_icon(&w_keyboxes[i], refresh);
 
-  STlib_updateNum(&w_frags, refresh);
+  stlib_update_num(&w_frags, refresh);
 }
 
 static void st_do_refresh(void)
@@ -990,7 +990,7 @@ static void st_init_data(void)
   for (i = 0; i < 3; i++)
     keyboxes[i] = -1;
 
-  STlib_init();
+  stlib_init();
 }
 
 static void st_create_widgets(void)
@@ -999,9 +999,9 @@ static void st_create_widgets(void)
 
   /* ready weapon ammo */
 
-  STlib_initNum(&w_ready, ST_AMMOX, ST_AMMOY, tallnum,
-                &plyr->ammo[weaponinfo[plyr->readyweapon].ammo],
-                &st_statusbaron, ST_AMMOWIDTH);
+  stlib_init_num(&w_ready, ST_AMMOX, ST_AMMOY, tallnum,
+                 &plyr->ammo[weaponinfo[plyr->readyweapon].ammo],
+                 &st_statusbaron, ST_AMMOWIDTH);
 
   /* the last weapon type */
 
@@ -1009,76 +1009,76 @@ static void st_create_widgets(void)
 
   /* health percentage */
 
-  STlib_initPercent(&w_health, ST_HEALTHX, ST_HEALTHY, tallnum,
-          &plyr->health, &st_statusbaron, tallpercent);
+  stlib_init_percent(&w_health, ST_HEALTHX, ST_HEALTHY, tallnum,
+                     &plyr->health, &st_statusbaron, tallpercent);
 
   /* arms background */
 
-  STlib_initBinIcon(&w_armsbg, ST_ARMSBGX, ST_ARMSBGY, armsbg,
+  stlib_init_bin_icon(&w_armsbg, ST_ARMSBGX, ST_ARMSBGY, armsbg,
                     &st_notdeathmatch, &st_statusbaron);
 
   /* weapons owned */
 
   for (i = 0; i < 6; i++)
     {
-      STlib_initMultIcon(&w_arms[i], ST_ARMSX + (i % 3) * ST_ARMSXSPACE,
-                         ST_ARMSY + (i / 3) * ST_ARMSYSPACE, arms[i],
-                         &plyr->weaponowned[i + 1], &st_armson);
+      stlib_init_mutl_icon(&w_arms[i], ST_ARMSX + (i % 3) * ST_ARMSXSPACE,
+                           ST_ARMSY + (i / 3) * ST_ARMSYSPACE, arms[i],
+                           &plyr->weaponowned[i + 1], &st_armson);
     }
 
   /* frags sum */
 
-  STlib_initNum(&w_frags, ST_FRAGSX, ST_FRAGSY, tallnum, &st_fragscount,
-                &st_fragson, ST_FRAGSWIDTH);
+  stlib_init_num(&w_frags, ST_FRAGSX, ST_FRAGSY, tallnum, &st_fragscount,
+                 &st_fragson, ST_FRAGSWIDTH);
 
   /* faces */
 
-  STlib_initMultIcon(&w_faces, ST_FACESX, ST_FACESY, faces, &st_faceindex,
-                     &st_statusbaron);
+  stlib_init_mutl_icon(&w_faces, ST_FACESX, ST_FACESY, faces, &st_faceindex,
+                       &st_statusbaron);
 
   /* armor percentage - should be colored later */
 
-  STlib_initPercent(&w_armor, ST_ARMORX, ST_ARMORY, tallnum,
-                    &plyr->armorpoints, &st_statusbaron, tallpercent);
+  stlib_init_percent(&w_armor, ST_ARMORX, ST_ARMORY, tallnum,
+                     &plyr->armorpoints, &st_statusbaron, tallpercent);
 
   /* keyboxes 0-2 */
 
-  STlib_initMultIcon(&w_keyboxes[0], ST_KEY0X, ST_KEY0Y, keys, &keyboxes[0],
-                     &st_statusbaron);
+  stlib_init_mutl_icon(&w_keyboxes[0], ST_KEY0X, ST_KEY0Y, keys,
+                       &keyboxes[0], &st_statusbaron);
 
-  STlib_initMultIcon(&w_keyboxes[1], ST_KEY1X, ST_KEY1Y, keys, &keyboxes[1],
-                     &st_statusbaron);
+  stlib_init_mutl_icon(&w_keyboxes[1], ST_KEY1X, ST_KEY1Y, keys,
+                       &keyboxes[1], &st_statusbaron);
 
-  STlib_initMultIcon(&w_keyboxes[2], ST_KEY2X, ST_KEY2Y, keys, &keyboxes[2],
-                     &st_statusbaron);
+  stlib_init_mutl_icon(&w_keyboxes[2], ST_KEY2X, ST_KEY2Y, keys,
+                       &keyboxes[2], &st_statusbaron);
 
   /* ammo count (all four kinds) */
 
-  STlib_initNum(&w_ammo[0], ST_AMMO0X, ST_AMMO0Y, shortnum, &plyr->ammo[0],
-                &st_statusbaron, ST_AMMO0WIDTH);
+  stlib_init_num(&w_ammo[0], ST_AMMO0X, ST_AMMO0Y, shortnum, &plyr->ammo[0],
+                 &st_statusbaron, ST_AMMO0WIDTH);
 
-  STlib_initNum(&w_ammo[1], ST_AMMO1X, ST_AMMO1Y, shortnum, &plyr->ammo[1],
-                &st_statusbaron, ST_AMMO1WIDTH);
+  stlib_init_num(&w_ammo[1], ST_AMMO1X, ST_AMMO1Y, shortnum, &plyr->ammo[1],
+                 &st_statusbaron, ST_AMMO1WIDTH);
 
-  STlib_initNum(&w_ammo[2], ST_AMMO2X, ST_AMMO2Y, shortnum, &plyr->ammo[2],
-                &st_statusbaron, ST_AMMO2WIDTH);
+  stlib_init_num(&w_ammo[2], ST_AMMO2X, ST_AMMO2Y, shortnum, &plyr->ammo[2],
+                 &st_statusbaron, ST_AMMO2WIDTH);
 
-  STlib_initNum(&w_ammo[3], ST_AMMO3X, ST_AMMO3Y, shortnum, &plyr->ammo[3],
-                &st_statusbaron, ST_AMMO3WIDTH);
+  stlib_init_num(&w_ammo[3], ST_AMMO3X, ST_AMMO3Y, shortnum, &plyr->ammo[3],
+                 &st_statusbaron, ST_AMMO3WIDTH);
 
   /* max ammo count (all four kinds) */
 
-  STlib_initNum(&w_maxammo[0], ST_MAXAMMO0X, ST_MAXAMMO0Y, shortnum,
-                &plyr->maxammo[0], &st_statusbaron, ST_MAXAMMO0WIDTH);
+  stlib_init_num(&w_maxammo[0], ST_MAXAMMO0X, ST_MAXAMMO0Y, shortnum,
+                 &plyr->maxammo[0], &st_statusbaron, ST_MAXAMMO0WIDTH);
 
-  STlib_initNum(&w_maxammo[1], ST_MAXAMMO1X, ST_MAXAMMO1Y, shortnum,
-                &plyr->maxammo[1], &st_statusbaron, ST_MAXAMMO1WIDTH);
+  stlib_init_num(&w_maxammo[1], ST_MAXAMMO1X, ST_MAXAMMO1Y, shortnum,
+                 &plyr->maxammo[1], &st_statusbaron, ST_MAXAMMO1WIDTH);
 
-  STlib_initNum(&w_maxammo[2], ST_MAXAMMO2X, ST_MAXAMMO2Y, shortnum,
-                &plyr->maxammo[2], &st_statusbaron, ST_MAXAMMO2WIDTH);
+  stlib_init_num(&w_maxammo[2], ST_MAXAMMO2X, ST_MAXAMMO2Y, shortnum,
+                 &plyr->maxammo[2], &st_statusbaron, ST_MAXAMMO2WIDTH);
 
-  STlib_initNum(&w_maxammo[3], ST_MAXAMMO3X, ST_MAXAMMO3Y, shortnum,
-                &plyr->maxammo[3], &st_statusbaron, ST_MAXAMMO3WIDTH);
+  stlib_init_num(&w_maxammo[3], ST_MAXAMMO3X, ST_MAXAMMO3Y, shortnum,
+                 &plyr->maxammo[3], &st_statusbaron, ST_MAXAMMO3WIDTH);
 }
 
 /****************************************************************************
@@ -1114,7 +1114,7 @@ boolean st_responder(event_t *ev)
         {
           /* 'dqd' cheat for toggleable god mode */
 
-          if (cht_CheckCheat(&cheat_god, ev->data2))
+          if (cht_check_cheat(&cheat_god, ev->data2))
             {
               plyr->cheats ^= CF_GODMODE;
               if (plyr->cheats & CF_GODMODE)
@@ -1130,7 +1130,7 @@ boolean st_responder(event_t *ev)
 
           /* 'fa' cheat for killer fucking arsenal */
 
-          else if (cht_CheckCheat(&cheat_ammonokey, ev->data2))
+          else if (cht_check_cheat(&cheat_ammonokey, ev->data2))
             {
               plyr->armorpoints = deh_idfa_armor;
               plyr->armortype = deh_idfa_armor_class;
@@ -1146,7 +1146,7 @@ boolean st_responder(event_t *ev)
 
           /* 'kfa' cheat for key full ammo */
 
-          else if (cht_CheckCheat(&cheat_ammo, ev->data2))
+          else if (cht_check_cheat(&cheat_ammo, ev->data2))
             {
               plyr->armorpoints = deh_idkfa_armor;
               plyr->armortype = deh_idkfa_armor_class;
@@ -1165,7 +1165,7 @@ boolean st_responder(event_t *ev)
 
           /* 'mus' cheat for changing music */
 
-          else if (cht_CheckCheat(&cheat_mus, ev->data2))
+          else if (cht_check_cheat(&cheat_mus, ev->data2))
             {
               char buf[3];
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -1173,7 +1173,7 @@ boolean st_responder(event_t *ev)
 #endif
 
               plyr->message = (STSTR_MUS);
-              cht_GetParam(&cheat_mus, buf);
+              ch_get_param(&cheat_mus, buf);
 
               /* Note: The original v1.9 had a bug that tried to play back
                * the Doom II music regardless of gamemode.  This was fixed
@@ -1194,7 +1194,7 @@ boolean st_responder(event_t *ev)
                   else
                     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-                      S_ChangeMusic(musnum, 1);
+                      s_change_music(musnum, 1);
 #endif
                     }
                 }
@@ -1209,15 +1209,15 @@ boolean st_responder(event_t *ev)
                   else
                     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-                      S_ChangeMusic(musnum, 1);
+                      s_change_music(musnum, 1);
 #endif
                     }
                 }
             }
           else if ((logical_gamemission == doom &&
-                    cht_CheckCheat(&cheat_noclip, ev->data2)) ||
+                    cht_check_cheat(&cheat_noclip, ev->data2)) ||
                    (logical_gamemission != doom &&
-                    cht_CheckCheat(&cheat_commercial_noclip, ev->data2)))
+                    cht_check_cheat(&cheat_commercial_noclip, ev->data2)))
             {
               /* Noclip cheat.
                * For Doom 1, use the idspipsopd cheat; for all others, use
@@ -1236,10 +1236,10 @@ boolean st_responder(event_t *ev)
 
           for (i = 0; i < 6; i++)
             {
-              if (cht_CheckCheat(&cheat_powerup[i], ev->data2))
+              if (cht_check_cheat(&cheat_powerup[i], ev->data2))
                 {
                   if (!plyr->powers[i])
-                    P_GivePower(plyr, i);
+                    p_give_power(plyr, i);
                   else if (i != pw_strength)
                     plyr->powers[i] = 1;
                   else
@@ -1251,14 +1251,14 @@ boolean st_responder(event_t *ev)
 
           /* 'behold' power-up menu */
 
-          if (cht_CheckCheat(&cheat_powerup[6], ev->data2))
+          if (cht_check_cheat(&cheat_powerup[6], ev->data2))
             {
               plyr->message = (STSTR_BEHOLD);
             }
 
           /* 'choppers' invulnerability & chainsaw */
 
-          else if (cht_CheckCheat(&cheat_choppers, ev->data2))
+          else if (cht_check_cheat(&cheat_choppers, ev->data2))
             {
               plyr->weaponowned[wp_chainsaw] = true;
               plyr->powers[pw_invulnerability] = true;
@@ -1267,7 +1267,7 @@ boolean st_responder(event_t *ev)
 
           /* 'mypos' for player position */
 
-          else if (cht_CheckCheat(&cheat_mypos, ev->data2))
+          else if (cht_check_cheat(&cheat_mypos, ev->data2))
             {
               static char buf[ST_MSGWIDTH];
               snprintf(buf, sizeof(buf), "ang=0x%x;x,y=(0x%x,0x%x)",
@@ -1280,13 +1280,13 @@ boolean st_responder(event_t *ev)
 
       /* 'clev' change-level cheat */
 
-      if (!netgame && cht_CheckCheat(&cheat_clev, ev->data2))
+      if (!netgame && cht_check_cheat(&cheat_clev, ev->data2))
         {
           char buf[3];
           int epsd;
           int map;
 
-          cht_GetParam(&cheat_clev, buf);
+          ch_get_param(&cheat_clev, buf);
 
           if (gamemode == commercial)
             {
@@ -1359,7 +1359,7 @@ boolean st_responder(event_t *ev)
           /* So be it. */
 
           plyr->message = (STSTR_CLEV);
-          G_DeferedInitNew(gameskill, epsd, map);
+          g_deferred_init_new(gameskill, epsd, map);
         }
     }
 
@@ -1368,7 +1368,7 @@ boolean st_responder(event_t *ev)
 
 void st_ticker(void)
 {
-  st_randomnumber = M_Random();
+  st_randomnumber = m_random();
   st_update_widgets();
   st_oldhealth = plyr->health;
 }

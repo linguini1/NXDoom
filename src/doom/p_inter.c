@@ -280,10 +280,10 @@ P_GiveCard
 
 
 //
-// P_GivePower
+// p_give_power
 //
 boolean
-P_GivePower
+p_give_power
 ( player_t*	player,
   int /*powertype_t*/	power )
 {
@@ -497,7 +497,7 @@ P_TouchSpecialThing
 	
 	// power ups
       case SPR_PINV:
-	if (!P_GivePower (player, pw_invulnerability))
+	if (!p_give_power (player, pw_invulnerability))
 	    return;
 	player->message = (GOTINVUL);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -507,7 +507,7 @@ P_TouchSpecialThing
 	break;
 	
       case SPR_PSTR:
-	if (!P_GivePower (player, pw_strength))
+	if (!p_give_power (player, pw_strength))
 	    return;
 	player->message = (GOTBERSERK);
 	if (player->readyweapon != wp_fist)
@@ -519,7 +519,7 @@ P_TouchSpecialThing
 	break;
 	
       case SPR_PINS:
-	if (!P_GivePower (player, pw_invisibility))
+	if (!p_give_power (player, pw_invisibility))
 	    return;
 	player->message = (GOTINVIS);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -529,7 +529,7 @@ P_TouchSpecialThing
 	break;
 	
       case SPR_SUIT:
-	if (!P_GivePower (player, pw_ironfeet))
+	if (!p_give_power (player, pw_ironfeet))
 	    return;
 	player->message = (GOTSUIT);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -539,7 +539,7 @@ P_TouchSpecialThing
 	break;
 	
       case SPR_PMAP:
-	if (!P_GivePower (player, pw_allmap))
+	if (!p_give_power (player, pw_allmap))
 	    return;
 	player->message = (GOTMAP);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -549,7 +549,7 @@ P_TouchSpecialThing
 	break;
 	
       case SPR_PVIS:
-	if (!P_GivePower (player, pw_infrared))
+	if (!p_give_power (player, pw_infrared))
 	    return;
 	player->message = (GOTVISOR);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND

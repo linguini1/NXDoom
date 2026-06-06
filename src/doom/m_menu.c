@@ -943,7 +943,7 @@ void M_VerifyNightmare(int key)
     if (key != key_menu_confirm)
 	return;
 		
-    G_DeferedInitNew(nightmare,epi+1,1);
+    g_deferred_init_new(nightmare,epi+1,1);
     M_ClearMenus ();
 }
 
@@ -955,7 +955,7 @@ void M_ChooseSkill(int choice)
 	return;
     }
 	
-    G_DeferedInitNew(choice,epi+1,1);
+    g_deferred_init_new(choice,epi+1,1);
     M_ClearMenus ();
 }
 

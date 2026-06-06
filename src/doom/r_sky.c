@@ -48,15 +48,16 @@ int skytexturemid;
  ****************************************************************************/
 
 /****************************************************************************
- * Name: R_InitSkyMap
+ * Name: r_init_sky_map
  *
  * Description:
  *  Called whenever the view size changes.
  *
  ****************************************************************************/
 
-void R_InitSkyMap(void)
+void r_init_sky_map(void)
 {
   /* skyflatnum = R_FlatNumForName ( SKYFLATNAME ); */
+
   skytexturemid = SCREENHEIGHT / 2 * FRACUNIT;
 }

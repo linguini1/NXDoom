@@ -26,9 +26,9 @@
 
 // Returns a number from 0 to 255,
 // from a lookup table.
-int M_Random (void);
+int m_random (void);
 
-// As M_Random, but used only by the play simulation.
+// As m_random, but used only by the play simulation.
 int P_Random (void);
 
 // Fix randoms for demos.

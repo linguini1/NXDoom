@@ -32,7 +32,7 @@
 // Returns a 1 if the cheat was successful, 0 if failed.
 //
 int
-cht_CheckCheat
+cht_check_cheat
 ( cheatseq_t*	cht,
   char		key )
 {
@@ -79,7 +79,7 @@ cht_CheckCheat
 }
 
 void
-cht_GetParam
+ch_get_param
 ( cheatseq_t*	cht,
   char*		buffer )
 {

@@ -758,7 +758,7 @@ void R_Init(void)
   printf(".");
   R_InitLightTables();
   printf(".");
-  R_InitSkyMap();
+  r_init_sky_map();
   R_InitTranslationTables();
   printf(".");
 

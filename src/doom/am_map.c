@@ -815,7 +815,7 @@ boolean am_responder(event_t *ev)
         }
 
       if ((!deathmatch || gameversion <= exe_doom_1_8) &&
-          cht_CheckCheat(&cheat_amap, ev->data2))
+          cht_check_cheat(&cheat_amap, ev->data2))
         {
           rc = false;
           cheating = (cheating + 1) % 3;

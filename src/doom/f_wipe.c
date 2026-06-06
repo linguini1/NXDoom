@@ -148,10 +148,10 @@ wipe_initMelt
     // setup initial column positions
     // (y<0 => not ready to scroll yet)
     g_y = (int *) z_malloc(width*sizeof(int), PU_STATIC, 0);
-    g_y[0] = -(M_Random()%16);
+    g_y[0] = -(m_random()%16);
     for (i=1;i<width;i++)
     {
-	r = (M_Random()%3) - 1;
+	r = (m_random()%3) - 1;
 	g_y[i] = g_y[i-1] + r;
 	if (g_y[i] > 0) g_y[i] = 0;
 	else if (g_y[i] == -16) g_y[i] = -15;

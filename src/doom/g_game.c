@@ -1789,7 +1789,7 @@ int     d_episode;
 int     d_map; 
  
 void
-G_DeferedInitNew
+g_deferred_init_new
 ( skill_t	skill,
   int		episode,
   int		map) 
