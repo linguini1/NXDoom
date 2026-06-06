@@ -45,7 +45,8 @@ void m_bind_float_variable(const char *name, float *variable);
 void m_bind_string_variable(const char *name, char **variable);
 boolean m_set_variable(const char *name, const char *value);
 const char *m_get_string_variable(const char *name);
-void m_set_config_filenames(const char *main_config, const char *extra_config);
+void m_set_config_filenames(const char *main_config,
+                            const char *extra_config);
 char *m_get_save_game_dir(const char *iwadname);
 char *m_get_autoload_dir(const char *iwadname);
 

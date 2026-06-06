@@ -86,7 +86,7 @@ void v_init(void);
  ****************************************************************************/
 
 void v_copy_rect(int srcx, int srcy, pixel_t *source, int width, int height,
-                int destx, int desty);
+                 int destx, int desty);
 
 void v_draw_patch(int x, int y, patch_t *patch);
 void v_draw_patch_flipped(int x, int y, patch_t *patch);

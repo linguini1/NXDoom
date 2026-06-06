@@ -49,46 +49,45 @@
 
 void I_Endoom(byte *endoom_data)
 {
-    unsigned char *screendata;
-    int y;
-    int indent;
+  unsigned char *screendata;
+  int y;
+  int indent;
 
-    /* Set up text mode screen */
+  /* Set up text mode screen */
 
-    TXT_Init();
+  TXT_Init();
 
-    TXT_SetWindowTitle(PACKAGE_STRING);
-    // SDL2-TODO i_init_window_title();
-    // SDL2-TODO i_init_window_icon();
+  TXT_SetWindowTitle(PACKAGE_STRING);
+  // SDL2-TODO i_init_window_title();
+  // SDL2-TODO i_init_window_icon();
 
-    /* Write the data to the screen memory */
+  /* Write the data to the screen memory */
 
-    screendata = TXT_GetScreenData();
+  screendata = TXT_GetScreenData();
 
-    indent = (ENDOOM_W - TXT_SCREEN_W) / 2;
+  indent = (ENDOOM_W - TXT_SCREEN_W) / 2;
 
-    for (y=0; y<TXT_SCREEN_H; ++y)
+  for (y = 0; y < TXT_SCREEN_H; ++y)
     {
-        memcpy(screendata + (y * TXT_SCREEN_W * 2),
-               endoom_data + (y * ENDOOM_W + indent) * 2,
-               TXT_SCREEN_W * 2);
+      memcpy(screendata + (y * TXT_SCREEN_W * 2),
+             endoom_data + (y * ENDOOM_W + indent) * 2, TXT_SCREEN_W * 2);
     }
 
-    /* Wait for a keypress */
+  /* Wait for a keypress */
 
-    while (true)
+  while (true)
     {
-        TXT_UpdateScreen();
+      TXT_UpdateScreen();
 
-        if (TXT_GetChar() > 0)
+      if (TXT_GetChar() > 0)
         {
-            break;
+          break;
         }
 
-        TXT_Sleep(0);
+      TXT_Sleep(0);
     }
 
-    /* Shut down text mode screen */
+  /* Shut down text mode screen */
 
-    TXT_Shutdown();
+  TXT_Shutdown();
 }

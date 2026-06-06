@@ -101,10 +101,7 @@ struct graphics_state_s
 
 /* NuttX graphics state */
 
-static struct graphics_state_s g_graphics_state =
-{
-  0
-};
+static struct graphics_state_s g_graphics_state = {0};
 
 /* Window title */
 
@@ -490,10 +487,7 @@ void i_set_grab_mouse_callback(grabmouse_callback_t func)
 
 /* Set the variable controlling FPS dots. */
 
-void i_display_fps_dots(boolean dots_on)
-{
-  display_fps_dots = dots_on;
-}
+void i_display_fps_dots(boolean dots_on) { display_fps_dots = dots_on; }
 
 void i_shutdown_graphics(void)
 {
@@ -508,10 +502,7 @@ void i_shutdown_graphics(void)
   g_graphics_state.inited = false;
 }
 
-void i_start_frame(void)
-{
-  /* er? */
-}
+void i_start_frame(void) { /* er? */ }
 
 void I_GetEvent(void)
 {
@@ -1035,10 +1026,7 @@ void i_start_tic(void)
  * Public Functions
  ****************************************************************************/
 
-void i_update_no_blit(void)
-{
-  /* what is this? */
-}
+void i_update_no_blit(void) { /* what is this? */ }
 
 void i_finish_update(void)
 {
@@ -1239,10 +1227,7 @@ int i_get_palette_index(int r, int g, int b)
  *
  ****************************************************************************/
 
-void i_set_window_title(const char *title)
-{
-  g_window_title = title;
-}
+void i_set_window_title(const char *title) { g_window_title = title; }
 
 /****************************************************************************
  * Name: i_init_window_title
@@ -1659,7 +1644,7 @@ void i_init_graphics(void)
 
   /* Call i_shutdown_graphics on quit */
 
-  I_AtExit(i_shutdown_graphics, true);
+  i_at_exit(i_shutdown_graphics, true);
 }
 
 /* Bind all variables controlling video options into the configuration

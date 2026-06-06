@@ -15,25 +15,23 @@
 // DESCRIPTION:
 //
 
-
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "config.h"
 
 #include "deh_str.h"
 #include "doomtype.h"
-#include "m_argv.h"
-#include "m_config.h"
-#include "m_misc.h"
 #include "i_joystick.h"
 #include "i_sound.h"
 #include "i_timer.h"
 #include "i_video.h"
+#include "m_argv.h"
+#include "m_config.h"
+#include "m_misc.h"
 
 #include "i_system.h"
 
@@ -41,37 +39,34 @@
 #include "z_zone.h"
 
 #define DEFAULT_RAM 16 /* MiB */
-#define MIN_RAM     4  /* MiB */
-
+#define MIN_RAM 4      /* MiB */
 
 typedef struct atexit_listentry_s atexit_listentry_t;
 
 struct atexit_listentry_s
 {
-    atexit_func_t func;
-    boolean run_on_error;
-    atexit_listentry_t *next;
+  atexit_func_t func;
+  boolean run_on_error;
+  atexit_listentry_t *next;
 };
 
 static atexit_listentry_t *exit_funcs = NULL;
 
-void I_AtExit(atexit_func_t func, boolean run_on_error)
+void i_at_exit(atexit_func_t func, boolean run_on_error)
 {
-    atexit_listentry_t *entry;
+  atexit_listentry_t *entry;
 
-    entry = malloc(sizeof(*entry));
+  entry = malloc(sizeof(*entry));
 
-    entry->func = func;
-    entry->run_on_error = run_on_error;
-    entry->next = exit_funcs;
-    exit_funcs = entry;
+  entry->func = func;
+  entry->run_on_error = run_on_error;
+  entry->next = exit_funcs;
+  exit_funcs = entry;
 }
 
 // Tactile feedback function, probably used for the Logitech Cyberman
 
-void I_Tactile(int on, int off, int total)
-{
-}
+void I_Tactile(int on, int off, int total) {}
 
 // Zone memory auto-allocation function that allocates the zone size
 // by trying progressively smaller zone sizes until one is found that
@@ -79,138 +74,137 @@ void I_Tactile(int on, int off, int total)
 
 static byte *AutoAllocMemory(int *size, int default_ram, int min_ram)
 {
-    byte *zonemem;
+  byte *zonemem;
 
-    // Allocate the zone memory.  This loop tries progressively smaller
-    // zone sizes until a size is found that can be allocated.
-    // If we used the -mb command line parameter, only the parameter
-    // provided is accepted.
+  // Allocate the zone memory.  This loop tries progressively smaller
+  // zone sizes until a size is found that can be allocated.
+  // If we used the -mb command line parameter, only the parameter
+  // provided is accepted.
 
-    zonemem = NULL;
+  zonemem = NULL;
 
-    while (zonemem == NULL)
+  while (zonemem == NULL)
     {
-        // We need a reasonable minimum amount of RAM to start.
+      // We need a reasonable minimum amount of RAM to start.
 
-        if (default_ram < min_ram)
+      if (default_ram < min_ram)
         {
-            I_Error("Unable to allocate %i MiB of RAM for zone", default_ram);
+          I_Error("Unable to allocate %i MiB of RAM for zone", default_ram);
         }
 
-        // Try to allocate the zone memory.
+      // Try to allocate the zone memory.
 
-        *size = default_ram * 1024 * 1024;
+      *size = default_ram * 1024 * 1024;
 
-        zonemem = malloc(*size);
+      zonemem = malloc(*size);
 
-        // Failed to allocate?  Reduce zone size until we reach a size
-        // that is acceptable.
+      // Failed to allocate?  Reduce zone size until we reach a size
+      // that is acceptable.
 
-        if (zonemem == NULL)
+      if (zonemem == NULL)
         {
-            default_ram -= 1;
+          default_ram -= 1;
         }
     }
 
-    return zonemem;
+  return zonemem;
 }
 
-byte *I_ZoneBase (int *size)
+byte *I_ZoneBase(int *size)
 {
-    byte *zonemem;
-    int min_ram, default_ram;
-    int p;
+  byte *zonemem;
+  int min_ram, default_ram;
+  int p;
 
-    //!
-    // @category obscure
-    // @arg <mb>
-    //
-    // Specify the heap size, in MiB.
-    //
+  //!
+  // @category obscure
+  // @arg <mb>
+  //
+  // Specify the heap size, in MiB.
+  //
 
-    p = m_check_parm_with_args("-mb", 1);
+  p = m_check_parm_with_args("-mb", 1);
 
-    if (p > 0)
+  if (p > 0)
     {
-        default_ram = atoi(myargv[p+1]);
-        min_ram = default_ram;
+      default_ram = atoi(myargv[p + 1]);
+      min_ram = default_ram;
     }
-    else
+  else
     {
-        // Because of the 8-byte pointer size in a 64-bit build, the default
-        // heap size (16 MiB) is insufficient compared to a 32-bit build. For
-        // example, the Alien Vendetta avm62402.lmp demo completes successfully
-        // on a 32-bit build, but terminates with an out of memory error on a
-        // 64-bit build. Therefore, to maintain consistency with a 32-bit
-        // build, the heap size should be increased.
+      // Because of the 8-byte pointer size in a 64-bit build, the default
+      // heap size (16 MiB) is insufficient compared to a 32-bit build. For
+      // example, the Alien Vendetta avm62402.lmp demo completes successfully
+      // on a 32-bit build, but terminates with an out of memory error on a
+      // 64-bit build. Therefore, to maintain consistency with a 32-bit
+      // build, the heap size should be increased.
 
-        if (sizeof(void *) == 8)
+      if (sizeof(void *) == 8)
         {
-            default_ram = DEFAULT_RAM * 2;
+          default_ram = DEFAULT_RAM * 2;
         }
-        else
+      else
         {
-            default_ram = DEFAULT_RAM;
+          default_ram = DEFAULT_RAM;
         }
-        min_ram = MIN_RAM;
+      min_ram = MIN_RAM;
     }
 
-    zonemem = AutoAllocMemory(size, default_ram, min_ram);
+  zonemem = AutoAllocMemory(size, default_ram, min_ram);
 
-    printf("zone memory: %p, %x allocated for zone\n", 
-           zonemem, *size);
+  printf("zone memory: %p, %x allocated for zone\n", zonemem, *size);
 
-    return zonemem;
+  return zonemem;
 }
 
 void I_PrintBanner(const char *msg)
 {
-    int i;
-    int spaces = 35 - (strlen(msg) / 2);
+  int i;
+  int spaces = 35 - (strlen(msg) / 2);
 
-    for (i=0; i<spaces; ++i)
-        putchar(' ');
+  for (i = 0; i < spaces; ++i)
+    putchar(' ');
 
-    puts(msg);
+  puts(msg);
 }
 
 void I_PrintDivider(void)
 {
-    int i;
+  int i;
 
-    for (i=0; i<75; ++i)
+  for (i = 0; i < 75; ++i)
     {
-        putchar('=');
+      putchar('=');
     }
 
-    putchar('\n');
+  putchar('\n');
 }
 
 void I_PrintStartupBanner(const char *gamedescription)
 {
-    I_PrintDivider();
-    I_PrintBanner(gamedescription);
-    I_PrintDivider();
-    
-    printf(
-    " " PACKAGE_NAME " is free software, covered by the GNU General Public\n"
-    " License.  There is NO warranty; not even for MERCHANTABILITY or FITNESS\n"
-    " FOR A PARTICULAR PURPOSE. You are welcome to change and distribute\n"
-    " copies under certain conditions. See the source for more information.\n");
+  I_PrintDivider();
+  I_PrintBanner(gamedescription);
+  I_PrintDivider();
 
-    I_PrintDivider();
+  printf(
+      " " PACKAGE_NAME
+      " is free software, covered by the GNU General Public\n"
+      " License.  There is NO warranty; not even for MERCHANTABILITY or "
+      "FITNESS\n"
+      " FOR A PARTICULAR PURPOSE. You are welcome to change and distribute\n"
+      " copies under certain conditions. See the source for more "
+      "information.\n");
+
+  I_PrintDivider();
 }
 
-// 
+//
 // I_ConsoleStdout
 //
 // Returns true if stdout is a real console, false if it is a file
 //
 
-boolean I_ConsoleStdout(void)
-{
-    return isatty(fileno(stdout));
-}
+boolean I_ConsoleStdout(void) { return isatty(fileno(stdout)); }
 
 //
 // I_Init
@@ -226,7 +220,7 @@ void I_BindVariables(void)
 {
     i_bind_video_variables();
     I_BindJoystickVariables();
-    I_BindSoundVariables();
+    i_bind_sound_variables();
 }
 */
 
@@ -234,28 +228,26 @@ void I_BindVariables(void)
 // I_Quit
 //
 
-void I_Quit (void)
+void I_Quit(void)
 {
-    atexit_listentry_t *entry;
+  atexit_listentry_t *entry;
 
-    // Run through all exit functions
- 
-    entry = exit_funcs; 
+  // Run through all exit functions
 
-    while (entry != NULL)
+  entry = exit_funcs;
+
+  while (entry != NULL)
     {
-        entry->func();
-        entry = entry->next;
+      entry->func();
+      entry = entry->next;
     }
 
 #if 0
     SDL_Quit();
 #endif
 
-    exit(0);
+  exit(0);
 }
-
-
 
 //
 // I_Error
@@ -263,63 +255,63 @@ void I_Quit (void)
 
 static boolean already_quitting = false;
 
-void I_Error (const char *error, ...)
+void I_Error(const char *error, ...)
 {
-    char msgbuf[512];
-    va_list argptr;
-    atexit_listentry_t *entry;
-    boolean exit_gui_popup;
+  char msgbuf[512];
+  va_list argptr;
+  atexit_listentry_t *entry;
+  boolean exit_gui_popup;
 
-    if (already_quitting)
+  if (already_quitting)
     {
-        fprintf(stderr, "Warning: recursive call to I_Error detected.\n");
-        exit(-1);
+      fprintf(stderr, "Warning: recursive call to I_Error detected.\n");
+      exit(-1);
     }
-    else
+  else
     {
-        already_quitting = true;
+      already_quitting = true;
     }
 
-    // Message first.
-    va_start(argptr, error);
-    //fprintf(stderr, "\nError: ");
-    vfprintf(stderr, error, argptr);
-    fprintf(stderr, "\n\n");
-    va_end(argptr);
-    fflush(stderr);
+  // Message first.
+  va_start(argptr, error);
+  // fprintf(stderr, "\nError: ");
+  vfprintf(stderr, error, argptr);
+  fprintf(stderr, "\n\n");
+  va_end(argptr);
+  fflush(stderr);
 
-    // Write a copy of the message into buffer.
-    va_start(argptr, error);
-    memset(msgbuf, 0, sizeof(msgbuf));
-    vsnprintf(msgbuf, sizeof(msgbuf), error, argptr);
-    va_end(argptr);
+  // Write a copy of the message into buffer.
+  va_start(argptr, error);
+  memset(msgbuf, 0, sizeof(msgbuf));
+  vsnprintf(msgbuf, sizeof(msgbuf), error, argptr);
+  va_end(argptr);
 
-    // Shutdown. Here might be other errors.
+  // Shutdown. Here might be other errors.
 
-    entry = exit_funcs;
+  entry = exit_funcs;
 
-    while (entry != NULL)
+  while (entry != NULL)
     {
-        if (entry->run_on_error)
+      if (entry->run_on_error)
         {
-            entry->func();
+          entry->func();
         }
 
-        entry = entry->next;
+      entry = entry->next;
     }
 
-    //!
-    // @category obscure
-    //
-    // If specified, don't show a GUI window for error messages when the
-    // game exits with an error.
-    //
-    exit_gui_popup = !m_parm_exists("-nogui");
+  //!
+  // @category obscure
+  //
+  // If specified, don't show a GUI window for error messages when the
+  // game exits with an error.
+  //
+  exit_gui_popup = !m_parm_exists("-nogui");
 
-    // Pop up a GUI dialog box to show the error message, if the
-    // game was not run from the console (and the user will
-    // therefore be unable to otherwise see the message).
-    if (exit_gui_popup && !I_ConsoleStdout())
+  // Pop up a GUI dialog box to show the error message, if the
+  // game was not run from the console (and the user will
+  // therefore be unable to otherwise see the message).
+  if (exit_gui_popup && !I_ConsoleStdout())
     {
 #if 0
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
@@ -333,7 +325,7 @@ void I_Error (const char *error, ...)
     SDL_Quit();
 #endif
 
-    exit(-1);
+  exit(-1);
 }
 
 //
@@ -342,16 +334,16 @@ void I_Error (const char *error, ...)
 
 void *I_Realloc(void *ptr, size_t size)
 {
-    void *new_ptr;
+  void *new_ptr;
 
-    new_ptr = realloc(ptr, size);
+  new_ptr = realloc(ptr, size);
 
-    if (size != 0 && new_ptr == NULL)
+  if (size != 0 && new_ptr == NULL)
     {
-        I_Error ("I_Realloc: failed on reallocation of %zu bytes", size);
+      I_Error("I_Realloc: failed on reallocation of %zu bytes", size);
     }
 
-    return new_ptr;
+  return new_ptr;
 }
 
 //
@@ -375,88 +367,86 @@ void *I_Realloc(void *ptr, size_t size)
 #define DOS_MEM_DUMP_SIZE 10
 
 static const unsigned char mem_dump_dos622[DOS_MEM_DUMP_SIZE] = {
-  0x57, 0x92, 0x19, 0x00, 0xF4, 0x06, 0x70, 0x00, 0x16, 0x00};
+    0x57, 0x92, 0x19, 0x00, 0xF4, 0x06, 0x70, 0x00, 0x16, 0x00};
 static const unsigned char mem_dump_win98[DOS_MEM_DUMP_SIZE] = {
-  0x9E, 0x0F, 0xC9, 0x00, 0x65, 0x04, 0x70, 0x00, 0x16, 0x00};
+    0x9E, 0x0F, 0xC9, 0x00, 0x65, 0x04, 0x70, 0x00, 0x16, 0x00};
 static const unsigned char mem_dump_dosbox[DOS_MEM_DUMP_SIZE] = {
-  0x00, 0x00, 0x00, 0xF1, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00};
+    0x00, 0x00, 0x00, 0xF1, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00};
 static unsigned char mem_dump_custom[DOS_MEM_DUMP_SIZE];
 
 static const unsigned char *dos_mem_dump = mem_dump_dos622;
 
 boolean I_GetMemoryValue(unsigned int offset, void *value, int size)
 {
-    static boolean firsttime = true;
+  static boolean firsttime = true;
 
-    if (firsttime)
+  if (firsttime)
     {
-        int p, i, val;
+      int p, i, val;
 
-        firsttime = false;
-        i = 0;
+      firsttime = false;
+      i = 0;
 
-        //!
-        // @category compat
-        // @arg <version>
-        //
-        // Specify DOS version to emulate for NULL pointer dereference
-        // emulation.  Supported versions are: dos622, dos71, dosbox.
-        // The default is to emulate DOS 7.1 (Windows 98).
-        //
+      //!
+      // @category compat
+      // @arg <version>
+      //
+      // Specify DOS version to emulate for NULL pointer dereference
+      // emulation.  Supported versions are: dos622, dos71, dosbox.
+      // The default is to emulate DOS 7.1 (Windows 98).
+      //
 
-        p = m_check_parm_with_args("-setmem", 1);
+      p = m_check_parm_with_args("-setmem", 1);
 
-        if (p > 0)
+      if (p > 0)
         {
-            if (!strcasecmp(myargv[p + 1], "dos622"))
+          if (!strcasecmp(myargv[p + 1], "dos622"))
             {
-                dos_mem_dump = mem_dump_dos622;
+              dos_mem_dump = mem_dump_dos622;
             }
-            if (!strcasecmp(myargv[p + 1], "dos71"))
+          if (!strcasecmp(myargv[p + 1], "dos71"))
             {
-                dos_mem_dump = mem_dump_win98;
+              dos_mem_dump = mem_dump_win98;
             }
-            else if (!strcasecmp(myargv[p + 1], "dosbox"))
+          else if (!strcasecmp(myargv[p + 1], "dosbox"))
             {
-                dos_mem_dump = mem_dump_dosbox;
+              dos_mem_dump = mem_dump_dosbox;
             }
-            else
+          else
             {
-                for (i = 0; i < DOS_MEM_DUMP_SIZE; ++i)
+              for (i = 0; i < DOS_MEM_DUMP_SIZE; ++i)
                 {
-                    ++p;
+                  ++p;
 
-                    if (p >= myargc || myargv[p][0] == '-')
+                  if (p >= myargc || myargv[p][0] == '-')
                     {
-                        break;
+                      break;
                     }
 
-                    m_str_to_int(myargv[p], &val);
-                    mem_dump_custom[i++] = (unsigned char) val;
+                  m_str_to_int(myargv[p], &val);
+                  mem_dump_custom[i++] = (unsigned char)val;
                 }
 
-                dos_mem_dump = mem_dump_custom;
+              dos_mem_dump = mem_dump_custom;
             }
         }
     }
 
-    switch (size)
+  switch (size)
     {
     case 1:
-        *((unsigned char *) value) = dos_mem_dump[offset];
-        return true;
+      *((unsigned char *)value) = dos_mem_dump[offset];
+      return true;
     case 2:
-        *((unsigned short *) value) = dos_mem_dump[offset]
-                                    | (dos_mem_dump[offset + 1] << 8);
-        return true;
+      *((unsigned short *)value) =
+          dos_mem_dump[offset] | (dos_mem_dump[offset + 1] << 8);
+      return true;
     case 4:
-        *((unsigned int *) value) = dos_mem_dump[offset]
-                                  | (dos_mem_dump[offset + 1] << 8)
-                                  | (dos_mem_dump[offset + 2] << 16)
-                                  | (dos_mem_dump[offset + 3] << 24);
-        return true;
+      *((unsigned int *)value) =
+          dos_mem_dump[offset] | (dos_mem_dump[offset + 1] << 8) |
+          (dos_mem_dump[offset + 2] << 16) | (dos_mem_dump[offset + 3] << 24);
+      return true;
     }
 
-    return false;
+  return false;
 }
-

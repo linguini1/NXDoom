@@ -80,8 +80,7 @@ txt_window_t *TXT_GetActiveWindow(void);
  *                      to be invoked at least once every 200ms.
  */
 
-void TXT_SetPeriodicCallback(TxtIdleCallback callback,
-                             void *user_data,
+void TXT_SetPeriodicCallback(TxtIdleCallback callback, void *user_data,
                              unsigned int period);
 
 /**
@@ -105,4 +104,3 @@ int TXT_RaiseWindow(txt_window_t *window);
 int TXT_LowerWindow(txt_window_t *window);
 
 #endif /* #ifndef TXT_DESKTOP_H */
-

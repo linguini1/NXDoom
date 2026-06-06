@@ -447,7 +447,7 @@ void DEH_AutoLoadPatches(const char *path)
 
   glob = i_start_multi_glob(path, GLOB_FLAG_NOCASE | GLOB_FLAG_SORTED,
                             "*.deh", "*.hhe", "*.seh", NULL);
-  for (; ; )
+  for (;;)
     {
       filename = i_next_glob(glob);
       if (filename == NULL)

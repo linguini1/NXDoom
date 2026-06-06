@@ -143,7 +143,7 @@ void R_AddPointToBox(int x, int y, fixed_t *box)
 }
 
 /****************************************************************************
- * Name: R_PointOnSide
+ * Name: r_point_on_side
  *
  * Description:
  *  Traverse BSP (sub) tree, check point against partition plane.
@@ -152,7 +152,7 @@ void R_AddPointToBox(int x, int y, fixed_t *box)
  *   Side 0 (front) or 1 (back).
  ****************************************************************************/
 
-int R_PointOnSide(fixed_t x, fixed_t y, node_t *node)
+int r_point_on_side(fixed_t x, fixed_t y, node_t *node)
 {
   fixed_t dx;
   fixed_t dy;
@@ -257,7 +257,7 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
 }
 
 /****************************************************************************
- * Name: R_PointToAngle
+ * Name: r_point_to_angle
  *
  * Description:
  *  To get a global angle from cartesian coordinates, the coordinates are
@@ -267,7 +267,7 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
  *
  ****************************************************************************/
 
-angle_t R_PointToAngle(fixed_t x, fixed_t y)
+angle_t r_point_to_angle(fixed_t x, fixed_t y)
 {
   x -= viewx;
   y -= viewy;
@@ -284,11 +284,11 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
 
           if (x > y)
             {
-              return tantoangle[SlopeDiv(y, x)]; /* octant 0 */
+              return tantoangle[slope_div(y, x)]; /* octant 0 */
             }
           else
             {
-              return ANG90 - 1 - tantoangle[SlopeDiv(x, y)]; /* octant 1 */
+              return ANG90 - 1 - tantoangle[slope_div(x, y)]; /* octant 1 */
             }
         }
       else
@@ -298,11 +298,11 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
 
           if (x > y)
             {
-              return -tantoangle[SlopeDiv(y, x)]; /* octant 8 */
+              return -tantoangle[slope_div(y, x)]; /* octant 8 */
             }
           else
             {
-              return ANG270 + tantoangle[SlopeDiv(x, y)]; /* octant 7 */
+              return ANG270 + tantoangle[slope_div(x, y)]; /* octant 7 */
             }
         }
     }
@@ -316,11 +316,11 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
           /* y>= 0 */
           if (x > y)
             {
-              return ANG180 - 1 - tantoangle[SlopeDiv(y, x)]; /* octant 3 */
+              return ANG180 - 1 - tantoangle[slope_div(y, x)]; /* octant 3 */
             }
           else
             {
-              return ANG90 + tantoangle[SlopeDiv(x, y)]; /* octant 2 */
+              return ANG90 + tantoangle[slope_div(x, y)]; /* octant 2 */
             }
         }
       else
@@ -329,11 +329,11 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
 
           if (x > y)
             {
-              return ANG180 + tantoangle[SlopeDiv(y, x)]; /* octant 4 */
+              return ANG180 + tantoangle[slope_div(y, x)]; /* octant 4 */
             }
           else
             {
-              return ANG270 - 1 - tantoangle[SlopeDiv(x, y)]; /* octant 5 */
+              return ANG270 - 1 - tantoangle[slope_div(x, y)]; /* octant 5 */
             }
         }
     }
@@ -341,15 +341,15 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
 }
 
 /****************************************************************************
- * Name: R_PointToAngle2
+ * Name: r_point_to_angle2
  ****************************************************************************/
 
-angle_t R_PointToAngle2(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2)
+angle_t r_point_to_angle2(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2)
 {
   viewx = x1;
   viewy = y1;
 
-  return R_PointToAngle(x2, y2);
+  return r_point_to_angle(x2, y2);
 }
 
 /****************************************************************************
@@ -627,8 +627,8 @@ void R_InitLightTables(void)
  * Name: R_SetViewSize
  *
  * Description:
- *  Do not really change anything here, because it might be in the middle of a refresh.
- *  The change will take effect next refresh.
+ *  Do not really change anything here, because it might be in the middle of a
+ * refresh. The change will take effect next refresh.
  *
  ****************************************************************************/
 
@@ -758,7 +758,7 @@ void R_Init(void)
   printf(".");
   R_InitLightTables();
   printf(".");
-  R_InitSkyMap();
+  r_init_sky_map();
   R_InitTranslationTables();
   printf(".");
 
@@ -784,7 +784,7 @@ subsector_t *R_PointInSubsector(fixed_t x, fixed_t y)
   while (!(nodenum & NF_SUBSECTOR))
     {
       node = &nodes[nodenum];
-      side = R_PointOnSide(x, y, node);
+      side = r_point_on_side(x, y, node);
       nodenum = node->children[side];
     }
 
@@ -838,8 +838,8 @@ void R_RenderPlayerView(player_t *player)
 
   /* Clear buffers. */
 
-  R_ClearClipSegs();
-  R_ClearDrawSegs();
+  r_clear_clip_segs();
+  r_clear_draw_segs();
   R_ClearPlanes();
   R_ClearSprites();
 
@@ -849,7 +849,7 @@ void R_RenderPlayerView(player_t *player)
 
   /* The head node is the last node output. */
 
-  R_RenderBSPNode(numnodes - 1);
+  r_render_bsp_node(numnodes - 1);
 
   /* Check for new console commands. */
 

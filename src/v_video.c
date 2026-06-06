@@ -730,8 +730,7 @@ void v_draw_box(int x, int y, int w, int h, int c)
 
 void v_draw_raw_screen(pixel_t *raw)
 {
-  memcpy(dest_screen, raw,
-          SCREENWIDTH * SCREENHEIGHT * sizeof(*dest_screen));
+  memcpy(dest_screen, raw, SCREENWIDTH * SCREENHEIGHT * sizeof(*dest_screen));
 }
 
 void v_init(void)
@@ -744,17 +743,11 @@ void v_init(void)
 
 /* Set the buffer that the code draws to. */
 
-void v_use_buffer(pixel_t *buffer)
-{
-  dest_screen = buffer;
-}
+void v_use_buffer(pixel_t *buffer) { dest_screen = buffer; }
 
 /* Restore screen buffer to the i_video screen buffer. */
 
-void v_restore_buffer(void)
-{
-  dest_screen = i_video_buffer;
-}
+void v_restore_buffer(void) { dest_screen = i_video_buffer; }
 
 void WritePCXfile(char *filename, pixel_t *data, int width, int height,
                   byte *palette)

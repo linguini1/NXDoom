@@ -15,80 +15,79 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "txt_separator.h"
 #include "txt_gui.h"
 #include "txt_io.h"
 #include "txt_main.h"
+#include "txt_separator.h"
 #include "txt_utf8.h"
 #include "txt_window.h"
 
 static void TXT_SeparatorSizeCalc(TXT_UNCAST_ARG(separator))
 {
-    TXT_CAST_ARG(txt_separator_t, separator);
+  TXT_CAST_ARG(txt_separator_t, separator);
 
-    if (separator->label != NULL)
+  if (separator->label != NULL)
     {
-        // Minimum width is the string length + two spaces for padding
+      // Minimum width is the string length + two spaces for padding
 
-        separator->widget.w = TXT_UTF8_Strlen(separator->label) + 2;
+      separator->widget.w = TXT_UTF8_Strlen(separator->label) + 2;
     }
-    else
+  else
     {
-        separator->widget.w = 0;
+      separator->widget.w = 0;
     }
 
-    separator->widget.h = 1;
+  separator->widget.h = 1;
 }
 
 static void TXT_SeparatorDrawer(TXT_UNCAST_ARG(separator))
 {
-    TXT_CAST_ARG(txt_separator_t, separator);
-    int x, y;
-    int w;
+  TXT_CAST_ARG(txt_separator_t, separator);
+  int x, y;
+  int w;
 
-    w = separator->widget.w;
+  w = separator->widget.w;
 
-    TXT_GetXY(&x, &y);
+  TXT_GetXY(&x, &y);
 
-    // Draw separator.  Go back one character and draw two extra
-    // to overlap the window borders.
+  // Draw separator.  Go back one character and draw two extra
+  // to overlap the window borders.
 
-    TXT_DrawSeparator(x-2, y, w + 4);
+  TXT_DrawSeparator(x - 2, y, w + 4);
 
-    if (separator->label != NULL)
+  if (separator->label != NULL)
     {
-        TXT_GotoXY(x, y);
+      TXT_GotoXY(x, y);
 
-        TXT_FGColor(TXT_COLOR_BRIGHT_GREEN);
-        TXT_DrawString(" ");
-        TXT_DrawString(separator->label);
-        TXT_DrawString(" ");
+      TXT_FGColor(TXT_COLOR_BRIGHT_GREEN);
+      TXT_DrawString(" ");
+      TXT_DrawString(separator->label);
+      TXT_DrawString(" ");
     }
 }
 
 static void TXT_SeparatorDestructor(TXT_UNCAST_ARG(separator))
 {
-    TXT_CAST_ARG(txt_separator_t, separator);
+  TXT_CAST_ARG(txt_separator_t, separator);
 
-    free(separator->label);
+  free(separator->label);
 }
 
 void TXT_SetSeparatorLabel(txt_separator_t *separator, const char *label)
 {
-    free(separator->label);
+  free(separator->label);
 
-    if (label != NULL)
+  if (label != NULL)
     {
-        separator->label = strdup(label);
+      separator->label = strdup(label);
     }
-    else
+  else
     {
-        separator->label = NULL;
+      separator->label = NULL;
     }
 }
 
-txt_widget_class_t txt_separator_class =
-{
+txt_widget_class_t txt_separator_class = {
     TXT_NeverSelectable,
     TXT_SeparatorSizeCalc,
     TXT_SeparatorDrawer,
@@ -98,17 +97,16 @@ txt_widget_class_t txt_separator_class =
     NULL,
 };
 
-txt_separator_t *TXT_NewSeparator(const char *label)
+txt_separator_t *txt_new_separator(const char *label)
 {
-    txt_separator_t *separator;
+  txt_separator_t *separator;
 
-    separator = malloc(sizeof(txt_separator_t));
+  separator = malloc(sizeof(txt_separator_t));
 
-    TXT_InitWidget(separator, &txt_separator_class);
+  TXT_InitWidget(separator, &txt_separator_class);
 
-    separator->label = NULL;
-    TXT_SetSeparatorLabel(separator, label);
+  separator->label = NULL;
+  TXT_SetSeparatorLabel(separator, label);
 
-    return separator;
+  return separator;
 }
-

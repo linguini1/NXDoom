@@ -15,56 +15,24 @@
 //     Generate a randomized, private, memorable name for a Player
 //
 
-#include <stdlib.h>
-#include <time.h>
 #include "doomtype.h"
 #include "m_misc.h"
+#include <stdlib.h>
+#include <time.h>
 
-static const char * const adjectives [] = {
-    "Grumpy",
-    "Ecstatic",
-    "Surly",
-    "Prepared",
-    "Crafty",
-    "Alert",
-    "Sluggish",
-    "Testy",
-    "Reluctant",
-    "Languid",
-    "Passive",
-    "Pacifist",
-    "Aggressive",
-    "Hostile",
-    "Bubbly",
-    "Giggly",
-    "Laughing",
-    "Crying",
-    "Frowning",
-    "Torpid",
-    "Lethargic",
-    "Manic",
-    "Patient",
-    "Protective",
-    "Philosophical",
-    "Enquiring",
-    "Debating",
-    "Furious",
-    "Laid-Back",
-    "Easy-Going",
-    "Cromulent",
-    "Excitable",
-    "Tired",
-    "Exhausted",
-    "Ruminating",
-    "Redundant",
-    "Sporty",
-    "Ginger",
-    "Scary",
-    "Posh",
+static const char *const adjectives[] = {
+    "Grumpy",    "Ecstatic",  "Surly",      "Prepared",   "Crafty",
+    "Alert",     "Sluggish",  "Testy",      "Reluctant",  "Languid",
+    "Passive",   "Pacifist",  "Aggressive", "Hostile",    "Bubbly",
+    "Giggly",    "Laughing",  "Crying",     "Frowning",   "Torpid",
+    "Lethargic", "Manic",     "Patient",    "Protective", "Philosophical",
+    "Enquiring", "Debating",  "Furious",    "Laid-Back",  "Easy-Going",
+    "Cromulent", "Excitable", "Tired",      "Exhausted",  "Ruminating",
+    "Redundant", "Sporty",    "Ginger",     "Scary",      "Posh",
     "Baby",
 };
 
-static const char * const nouns[] = {
+static const char *const nouns[] = {
     "Frad",
     // Doom
     "Cacodemon",
@@ -101,18 +69,15 @@ static const char * const nouns[] = {
  * their setup routine. But, the two callers only invoke getRandomPetName
  * once, so the initialization might as well occur then.
  */
-static void InitPetName()
-{
-    srand((unsigned int)time(NULL));
-}
+static void InitPetName() { srand((unsigned int)time(NULL)); }
 
 char *NET_GetRandomPetName()
 {
-    const char *a, *n;
+  const char *a, *n;
 
-    InitPetName();
-    a = adjectives[rand() % arrlen(adjectives)];
-    n = nouns[rand() % arrlen(nouns)];
+  InitPetName();
+  a = adjectives[rand() % arrlen(adjectives)];
+  n = nouns[rand() % arrlen(nouns)];
 
-    return m_string_join(a, " ", n, NULL);
+  return m_string_join(a, " ", n, NULL);
 }

@@ -36,12 +36,12 @@ typedef struct txt_inputbox_s txt_inputbox_t;
 
 struct txt_inputbox_s
 {
-    txt_widget_t widget;
-    char *buffer;
-    size_t buffer_len;
-    unsigned int size;
-    int editing;
-    void *value;
+  txt_widget_t widget;
+  char *buffer;
+  size_t buffer_len;
+  unsigned int size;
+  int editing;
+  void *value;
 };
 
 /**
@@ -72,5 +72,3 @@ txt_inputbox_t *TXT_NewInputBox(char **value, int size);
 txt_inputbox_t *TXT_NewIntInputBox(int *value, int size);
 
 #endif /* #ifndef TXT_INPUTBOX_H */
-
-

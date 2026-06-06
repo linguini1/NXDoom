@@ -34,8 +34,8 @@ typedef struct txt_button_s txt_button_t;
 
 struct txt_button_s
 {
-    txt_widget_t widget;
-    char *label;
+  txt_widget_t widget;
+  char *label;
 };
 
 /**
@@ -70,5 +70,3 @@ txt_button_t *TXT_NewButton2(const char *label, TxtWidgetSignalFunc func,
 void TXT_SetButtonLabel(txt_button_t *button, const char *label);
 
 #endif /* #ifndef TXT_BUTTON_H */
-
-

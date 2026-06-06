@@ -77,44 +77,43 @@ typedef struct
 
 static const iwad_t **iwads;
 
-static mission_config_t mission_configs[] =
-{
-  {
-    "Doom",
-    doom,
-    IWAD_MASK_DOOM,
-    "doom",
-    "default.cfg",
-    PROGRAM_PREFIX "doom.cfg",
-    PROGRAM_PREFIX "doom",
-  },
-  {
-    "Heretic",
-    heretic,
-    IWAD_MASK_HERETIC,
-    "heretic",
-    "heretic.cfg",
-    PROGRAM_PREFIX "heretic.cfg",
-    PROGRAM_PREFIX "heretic",
-  },
-  {
-    "Hexen",
-    hexen,
-    IWAD_MASK_HEXEN,
-    "hexen",
-    "hexen.cfg",
-    PROGRAM_PREFIX "hexen.cfg",
-    PROGRAM_PREFIX "hexen",
-  },
-  {
-    "Strife",
-    strife,
-    IWAD_MASK_STRIFE,
-    "strife",
-    "strife.cfg",
-    PROGRAM_PREFIX "strife.cfg",
-    PROGRAM_PREFIX "strife",
-  },
+static mission_config_t mission_configs[] = {
+    {
+        "Doom",
+        doom,
+        IWAD_MASK_DOOM,
+        "doom",
+        "default.cfg",
+        PROGRAM_PREFIX "doom.cfg",
+        PROGRAM_PREFIX "doom",
+    },
+    {
+        "Heretic",
+        heretic,
+        IWAD_MASK_HERETIC,
+        "heretic",
+        "heretic.cfg",
+        PROGRAM_PREFIX "heretic.cfg",
+        PROGRAM_PREFIX "heretic",
+    },
+    {
+        "Hexen",
+        hexen,
+        IWAD_MASK_HEXEN,
+        "hexen",
+        "hexen.cfg",
+        PROGRAM_PREFIX "hexen.cfg",
+        PROGRAM_PREFIX "hexen",
+    },
+    {
+        "Strife",
+        strife,
+        IWAD_MASK_STRIFE,
+        "strife",
+        "strife.cfg",
+        PROGRAM_PREFIX "strife.cfg",
+        PROGRAM_PREFIX "strife",
+    },
 };
 
 static GameSelectCallback game_selected_callback;
@@ -275,9 +274,9 @@ static void open_game_select_dialog(GameSelectCallback callback)
   int num_games;
   int i;
 
-  window = TXT_NewWindow("Select game");
+  window = txt_new_window("Select game");
 
-  TXT_AddWidget(window, TXT_NewLabel("Select a game to configure:\n"));
+  TXT_AddWidget(window, txt_new_label("Select a game to configure:\n"));
   num_games = 0;
 
   /* Add a button for each game. */
@@ -294,15 +293,15 @@ static void open_game_select_dialog(GameSelectCallback callback)
         {
           mission = &mission_configs[i];
           TXT_AddWidget(window,
-                        TXT_NewButton2(mission_configs[i].label,
-                            GameSelected, &mission_configs[i]));
+                        TXT_NewButton2(mission_configs[i].label, GameSelected,
+                                       &mission_configs[i]));
           ++num_games;
         }
 
       free(iwads);
     }
 
-  TXT_AddWidget(window, TXT_NewStrut(0, 1));
+  TXT_AddWidget(window, txt_new_strut(0, 1));
 
   /* No IWADs found at all?  Fall back to doom, then. */
 
@@ -372,7 +371,7 @@ void init_bindings(void)
   BindJoystickVariables();
   BindKeyboardVariables();
   BindMouseVariables();
-  BindSoundVariables();
+  bind_sound_variables();
   bind_misc_variables();
   bind_multiple_variables();
 }
@@ -409,17 +408,8 @@ void setup_mission(GameSelectCallback callback)
     }
 }
 
-const char *get_executable_name(void)
-{
-  return executable;
-}
+const char *get_executable_name(void) { return executable; }
 
-const char *get_game_title(void)
-{
-  return game_title;
-}
+const char *get_game_title(void) { return game_title; }
 
-const iwad_t **get_iwads(void)
-{
-  return iwads;
-}
+const iwad_t **get_iwads(void) { return iwads; }

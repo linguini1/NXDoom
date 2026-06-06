@@ -97,7 +97,7 @@ char *m_string_duplicate(const char *orig);
 boolean m_str_copy(char *dest, const char *src, size_t dest_size);
 boolean m_string_concat(char *dest, const char *src, size_t dest_size);
 char *m_string_replace(const char *haystack, const char *needle,
-                      const char *replacement);
+                       const char *replacement);
 char *m_string_join(const char *s, ...);
 boolean m_string_starts_with(const char *s, const char *prefix);
 boolean m_string_ends_with(const char *s, const char *suffix);

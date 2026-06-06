@@ -20,66 +20,59 @@
 #ifndef DEH_MAPPING_H
 #define DEH_MAPPING_H
 
-#include "doomtype.h"
 #include "deh_io.h"
+#include "doomtype.h"
 #include "sha1.h"
 
-#define DEH_BEGIN_MAPPING(mapping_name, structname)           \
-    static structname deh_mapping_base;                       \
-    static deh_mapping_t mapping_name =                       \
-    {                                                         \
-        &deh_mapping_base,                                    \
-        {
+#define DEH_BEGIN_MAPPING(mapping_name, structname)                          \
+  static structname deh_mapping_base;                                        \
+  static deh_mapping_t mapping_name = {&deh_mapping_base, {
 
-#define DEH_MAPPING(deh_name, fieldname)                      \
-             {deh_name, &deh_mapping_base.fieldname,          \
-                 sizeof(deh_mapping_base.fieldname),          \
-                 false},
+#define DEH_MAPPING(deh_name, fieldname)                                     \
+  {deh_name, &deh_mapping_base.fieldname,                                    \
+   sizeof(deh_mapping_base.fieldname), false},
 
-#define DEH_MAPPING_STRING(deh_name, fieldname)               \
-             {deh_name, &deh_mapping_base.fieldname,          \
-                 sizeof(deh_mapping_base.fieldname),          \
-                 true},
+#define DEH_MAPPING_STRING(deh_name, fieldname)                              \
+  {deh_name, &deh_mapping_base.fieldname,                                    \
+   sizeof(deh_mapping_base.fieldname), true},
 
-#define DEH_UNSUPPORTED_MAPPING(deh_name)                     \
-             {deh_name, NULL, -1, false},
+#define DEH_UNSUPPORTED_MAPPING(deh_name) {deh_name, NULL, -1, false},
 
-#define DEH_END_MAPPING                                       \
+#define DEH_END_MAPPING                                                      \
              {NULL, NULL, -1}                                 \
-        }                                                     \
-    };
-
-
+        }                                                                    \
+  }                                                                          \
+  ;
 
 #define MAX_MAPPING_ENTRIES 32
 
 typedef struct deh_mapping_s deh_mapping_t;
 typedef struct deh_mapping_entry_s deh_mapping_entry_t;
 
-struct deh_mapping_entry_s 
+struct deh_mapping_entry_s
 {
-    // field name
-   
-    const char *name;
+  // field name
 
-    // location relative to the base in the deh_mapping_t struct
-    // If this is NULL, it is an unsupported mapping
+  const char *name;
 
-    void *location;
+  // location relative to the base in the deh_mapping_t struct
+  // If this is NULL, it is an unsupported mapping
 
-    // field size
+  void *location;
 
-    int size;
+  // field size
 
-    // if true, this is a string value.
+  int size;
 
-    boolean is_string;
+  // if true, this is a string value.
+
+  boolean is_string;
 };
 
 struct deh_mapping_s
 {
-    void *base;
-    deh_mapping_entry_t entries[MAX_MAPPING_ENTRIES];
+  void *base;
+  deh_mapping_entry_t entries[MAX_MAPPING_ENTRIES];
 };
 
 boolean DEH_SetMapping(deh_context_t *context, deh_mapping_t *mapping,
@@ -90,4 +83,3 @@ void DEH_StructSHA1Sum(sha1_context_t *context, deh_mapping_t *mapping,
                        void *structptr);
 
 #endif /* #ifndef DEH_MAPPING_H */
-

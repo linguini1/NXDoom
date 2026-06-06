@@ -538,7 +538,7 @@ void AM_initVariables(void)
 
   /* inform the status bar of the change */
 
-  ST_Responder(&st_notify);
+  st_responder(&st_notify);
 }
 
 /****************************************************************************
@@ -619,7 +619,7 @@ void am_stop(void)
 
   AM_unloadPics();
   automapactive = false;
-  ST_Responder(&st_notify);
+  st_responder(&st_notify);
   stopped = true;
 }
 
@@ -799,8 +799,8 @@ boolean am_responder(event_t *ev)
         }
       else if (key == key_map_mark)
         {
-          snprintf(buffer, sizeof(buffer), "%s %d",
-                     (AMSTR_MARKEDSPOT), markpointnum);
+          snprintf(buffer, sizeof(buffer), "%s %d", (AMSTR_MARKEDSPOT),
+                   markpointnum);
           plr->message = buffer;
           AM_addMark();
         }
@@ -815,7 +815,7 @@ boolean am_responder(event_t *ev)
         }
 
       if ((!deathmatch || gameversion <= exe_doom_1_8) &&
-          cht_CheckCheat(&cheat_amap, ev->data2))
+          cht_check_cheat(&cheat_amap, ev->data2))
         {
           rc = false;
           cheating = (cheating + 1) % 3;

@@ -37,8 +37,8 @@
  * of the macros in the original source and some code relies on it.
  */
 
-#define SHORT(x)  ((signed short) le16toh(x))
-#define LONG(x)   ((signed int) le32toh(x))
+#define SHORT(x) ((signed short)le16toh(x))
+#define LONG(x) ((signed int)le32toh(x))
 
 /* Defines for checking the endianness of the system. */
 
@@ -47,4 +47,3 @@
 #endif
 
 #endif
-

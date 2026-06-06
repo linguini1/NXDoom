@@ -25,9 +25,10 @@
 
 #include "dstrings.h"
 
-typedef struct {
-    const char *macro;
-    const char *string;
+typedef struct
+{
+  const char *macro;
+  const char *string;
 } bex_string_t;
 
 // mnemonic keys table
@@ -335,42 +336,36 @@ static const bex_string_t bex_stringtable[] = {
 
 static void *DEH_BEXStrStart(deh_context_t *context, char *line)
 {
-    char s[10];
+  char s[10];
 
-    if (sscanf(line, "%9s", s) == 0 || strncmp("[STRINGS]", s, sizeof(s)))
+  if (sscanf(line, "%9s", s) == 0 || strncmp("[STRINGS]", s, sizeof(s)))
     {
-	DEH_Warning(context, "Parse error on section start");
+      DEH_Warning(context, "Parse error on section start");
     }
 
-    return NULL;
+  return NULL;
 }
 
 static void DEH_BEXStrParseLine(deh_context_t *context, char *line, void *tag)
 {
-    char *variable_name, *value;
-    int i;
+  char *variable_name, *value;
+  int i;
 
-    if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!DEH_ParseAssignment(line, &variable_name, &value))
     {
-	DEH_Warning(context, "Failed to parse assignment");
-	return;
+      DEH_Warning(context, "Failed to parse assignment");
+      return;
     }
 
-    for (i = 0; i < arrlen(bex_stringtable); i++)
+  for (i = 0; i < arrlen(bex_stringtable); i++)
     {
-	if (!strcmp(bex_stringtable[i].macro, variable_name))
-	{
-	    deh_add_string_replacement(bex_stringtable[i].string, value);
-	}
+      if (!strcmp(bex_stringtable[i].macro, variable_name))
+        {
+          deh_add_string_replacement(bex_stringtable[i].string, value);
+        }
     }
 }
 
-deh_section_t deh_section_bexstr =
-{
-    "[STRINGS]",
-    NULL,
-    DEH_BEXStrStart,
-    DEH_BEXStrParseLine,
-    NULL,
-    NULL,
+deh_section_t deh_section_bexstr = {
+    "[STRINGS]", NULL, DEH_BEXStrStart, DEH_BEXStrParseLine, NULL, NULL,
 };

@@ -51,10 +51,9 @@ struct keyboard_dev
  ****************************************************************************/
 
 #ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
-struct keyboard_dev g_kbd_dev =
-{
-  .fd = -1,
-  .inited = false,
+struct keyboard_dev g_kbd_dev = {
+    .fd = -1,
+    .inited = false,
 };
 #endif
 

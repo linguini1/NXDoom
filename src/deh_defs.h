@@ -25,35 +25,35 @@ typedef struct deh_section_s deh_section_t;
 typedef void (*deh_section_init_t)(void);
 typedef void *(*deh_section_start_t)(deh_context_t *context, char *line);
 typedef void (*deh_section_end_t)(deh_context_t *context, void *tag);
-typedef void (*deh_line_parser_t)(deh_context_t *context, char *line, void *tag);
+typedef void (*deh_line_parser_t)(deh_context_t *context, char *line,
+                                  void *tag);
 typedef void (*deh_sha1_hash_t)(sha1_context_t *context);
 
 struct deh_section_s
 {
-    const char *name;
+  const char *name;
 
-    // Called on startup to initialize code
+  // Called on startup to initialize code
 
-    deh_section_init_t init;
-    
-    // This is called when a new section is started.  The pointer
-    // returned is used as a tag for the following calls.
+  deh_section_init_t init;
 
-    deh_section_start_t start;
+  // This is called when a new section is started.  The pointer
+  // returned is used as a tag for the following calls.
 
-    // This is called for each line in the section
+  deh_section_start_t start;
 
-    deh_line_parser_t line_parser;
+  // This is called for each line in the section
 
-    // This is called at the end of the section for any cleanup
+  deh_line_parser_t line_parser;
 
-    deh_section_end_t end;
+  // This is called at the end of the section for any cleanup
 
-    // Called when generating an SHA1 sum of the dehacked state
+  deh_section_end_t end;
 
-    deh_sha1_hash_t sha1_hash;
+  // Called when generating an SHA1 sum of the dehacked state
+
+  deh_sha1_hash_t sha1_hash;
 };
-
 
 extern deh_section_t *deh_section_types[];
 extern const char *deh_signatures[];
@@ -81,7 +81,4 @@ extern deh_section_t deh_section_weapon;
 // deh_bexstr.c:
 extern deh_section_t deh_section_bexstr;
 
-
 #endif /* #ifndef DEH_DEFS_H */
-
-

@@ -57,12 +57,11 @@
  * Private Data
  ****************************************************************************/
 
-static const int cheat_sequence[] =
-{
-  KEY_UPARROW,   KEY_UPARROW,    KEY_DOWNARROW,
-  KEY_DOWNARROW, KEY_LEFTARROW,  KEY_RIGHTARROW,
-  KEY_LEFTARROW, KEY_RIGHTARROW, 'b',
-  'a',           KEY_ENTER,      0,
+static const int cheat_sequence[] = {
+    KEY_UPARROW,   KEY_UPARROW,    KEY_DOWNARROW,
+    KEY_DOWNARROW, KEY_LEFTARROW,  KEY_RIGHTARROW,
+    KEY_LEFTARROW, KEY_RIGHTARROW, 'b',
+    'a',           KEY_ENTER,      0,
 };
 
 static unsigned int cheat_sequence_index = 0;
@@ -116,8 +115,7 @@ static void sensible_defaults(void)
   png_screenshots = 1;
 }
 
-static int main_menu_key_press(txt_window_t *window, int key,
-        void *user_data)
+static int main_menu_key_press(txt_window_t *window, int key, void *user_data)
 {
   if (key == cheat_sequence[cheat_sequence_index])
     {
@@ -128,7 +126,7 @@ static int main_menu_key_press(txt_window_t *window, int key,
           sensible_defaults();
           cheat_sequence_index = 0;
 
-          window = TXT_MessageBox(NULL, "    \x01    ");
+          window = txt_message_box(NULL, "    \x01    ");
 
           return 1;
         }
@@ -160,13 +158,13 @@ static void quit_confirm(void *unused1, void *unused2)
   txt_button_t *yes_button;
   txt_button_t *no_button;
 
-  window = TXT_NewWindow(NULL);
+  window = txt_new_window(NULL);
 
-  TXT_AddWidgets(window,
-                 label = TXT_NewLabel("Exiting setup.\nSave settings?"),
-                 TXT_NewStrut(24, 0),
-                 yes_button = TXT_NewButton2("  Yes  ", DoQuit, DoQuit),
-                 no_button = TXT_NewButton2("  No   ", DoQuit, NULL), NULL);
+  txt_add_widgets(window,
+                  label = txt_new_label("Exiting setup.\nSave settings?"),
+                  txt_new_strut(24, 0),
+                  yes_button = TXT_NewButton2("  Yes  ", DoQuit, DoQuit),
+                  no_button = TXT_NewButton2("  No   ", DoQuit, NULL), NULL);
 
   TXT_SetWidgetAlign(label, TXT_HORIZ_CENTER);
   TXT_SetWidgetAlign(yes_button, TXT_HORIZ_CENTER);
@@ -174,10 +172,10 @@ static void quit_confirm(void *unused1, void *unused2)
 
   /* Only an "abort" button in the middle. */
 
-  TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
-  TXT_SetWindowAction(window, TXT_HORIZ_CENTER,
-                      TXT_NewWindowAbortAction(window));
-  TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, NULL);
+  txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
+  txt_set_window_action(window, TXT_HORIZ_CENTER,
+                        txt_new_windowAbortAction(window));
+  txt_set_window_action(window, TXT_HORIZ_RIGHT, NULL);
 }
 
 static void launch_doom(void *unused1, void *unused2)
@@ -264,8 +262,8 @@ static void set_window_title(void)
 {
   char *title;
 
-  title = m_string_replace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION,
-          "Doom", get_game_title());
+  title = m_string_replace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION, "Doom",
+                           get_game_title());
 
   TXT_SetDesktopTitle(title);
 
@@ -319,15 +317,15 @@ void main_menu(void)
   txt_window_action_t *quit_action;
   txt_window_action_t *warp_action;
 
-  window = TXT_NewWindow("Main Menu");
+  window = txt_new_window("Main Menu");
 
-  TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
+  txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-  TXT_AddWidgets(
+  txt_add_widgets(
       window,
       TXT_NewButton2("Configure Display", (TxtWidgetSignalFunc)ConfigDisplay,
                      NULL),
-      TXT_NewButton2("Configure Sound", (TxtWidgetSignalFunc)ConfigSound,
+      TXT_NewButton2("Configure Sound", (TxtWidgetSignalFunc)config_sound,
                      NULL),
       TXT_NewButton2("Configure Keyboard",
                      (TxtWidgetSignalFunc)ConfigKeyboard, NULL),
@@ -337,7 +335,7 @@ void main_menu(void)
                      (TxtWidgetSignalFunc)ConfigJoystick, NULL),
       TXT_NewButton2("Compatibility",
                      (TxtWidgetSignalFunc)CompatibilitySettings, NULL),
-      GetLaunchButton(), TXT_NewStrut(0, 1),
+      GetLaunchButton(), txt_new_strut(0, 1),
       TXT_NewButton2("Start a Network Game",
                      (TxtWidgetSignalFunc)start_multi_game, NULL),
       TXT_NewButton2("Join a Network Game",
@@ -346,13 +344,13 @@ void main_menu(void)
                      (TxtWidgetSignalFunc)multiplayer_config, NULL),
       NULL);
 
-  quit_action = TXT_NewWindowAction(KEY_ESCAPE, "Quit");
-  warp_action = TXT_NewWindowAction(KEY_F2, "Warp");
-  TXT_SignalConnect(quit_action, "pressed", quit_confirm, NULL);
-  TXT_SignalConnect(warp_action, "pressed", (TxtWidgetSignalFunc)warp_menu,
-                    NULL);
-  TXT_SetWindowAction(window, TXT_HORIZ_LEFT, quit_action);
-  TXT_SetWindowAction(window, TXT_HORIZ_CENTER, warp_action);
+  quit_action = txt_new_window_action(KEY_ESCAPE, "Quit");
+  warp_action = txt_new_window_action(KEY_F2, "Warp");
+  txt_signal_connect(quit_action, "pressed", quit_confirm, NULL);
+  txt_signal_connect(warp_action, "pressed", (TxtWidgetSignalFunc)warp_menu,
+                     NULL);
+  txt_set_window_action(window, TXT_HORIZ_LEFT, quit_action);
+  txt_set_window_action(window, TXT_HORIZ_CENTER, warp_action);
 
   TXT_SetKeyListener(window, main_menuKeyPress, NULL);
 }

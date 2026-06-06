@@ -447,7 +447,7 @@ static int src_conversion_mode(void)
  */
 
 static boolean expand_sound_data_src(sfxinfo_t *sfxinfo, byte *data,
-                                   int samplerate, int length)
+                                     int samplerate, int length)
 {
   SRC_DATA src_data;
   float *data_in;
@@ -533,8 +533,7 @@ static boolean expand_sound_data_src(sfxinfo_t *sfxinfo, byte *data,
        * artifacts are noticeable during the loudest parts.
        */
 
-      float cvtval_f = src_data.data_out[i] *
-          libsamplerate_scale * INT16_MAX;
+      float cvtval_f = src_data.data_out[i] * libsamplerate_scale * INT16_MAX;
       int32_t cvtval_i = cvtval_f + (cvtval_f < 0 ? -0.5 : 0.5);
 
       /* Asymmetrical sound worries me, so we won't use -32768. */
@@ -686,34 +685,34 @@ static boolean expand_sound_data_sdl(sfxinfo_t *sfxinfo, byte *data,
        * out high-frequency noise from the conversion process.
        */
 
-    {
-      float rc;
-      float dt;
-      float alpha;
+      {
+        float rc;
+        float dt;
+        float alpha;
 
-      /* Low-pass filter for cutoff frequency f:
-       *
-       * For sampling rate r, dt = 1 / r
-       * rc = 1 / 2*pi*f
-       * alpha = dt / (rc + dt)
-       */
+        /* Low-pass filter for cutoff frequency f:
+         *
+         * For sampling rate r, dt = 1 / r
+         * rc = 1 / 2*pi*f
+         * alpha = dt / (rc + dt)
+         */
 
-      /* Filter to the half sample rate of the original sound effect
-       * (maximum frequency, by nyquist)
-       */
+        /* Filter to the half sample rate of the original sound effect
+         * (maximum frequency, by nyquist)
+         */
 
-      dt = 1.0f / mixer_freq;
-      rc = 1.0f / (3.14f * samplerate);
-      alpha = dt / (rc + dt);
+        dt = 1.0f / mixer_freq;
+        rc = 1.0f / (3.14f * samplerate);
+        alpha = dt / (rc + dt);
 
-      /* Both channels are processed in parallel, hence [i-2]: */
+        /* Both channels are processed in parallel, hence [i-2]: */
 
-      for (i = 2; i < expanded_length * 2; ++i)
-        {
-          expanded[i] = (Sint16)(alpha * expanded[i] +
-                        (1 - alpha) * expanded[i - 2]);
-        }
-    }
+        for (i = 2; i < expanded_length * 2; ++i)
+          {
+            expanded[i] =
+                (Sint16)(alpha * expanded[i] + (1 - alpha) * expanded[i - 2]);
+          }
+      }
 #endif /* LOW_PASS_FILTER */
     }
 
@@ -1051,7 +1050,7 @@ static int get_slice_size(void)
 
   /* Try all powers of two, not exceeding the limit. */
 
-  for (n = 0; ; ++n)
+  for (n = 0;; ++n)
     {
       /* 2^n <= limit < 2^n+1 ? */
 
@@ -1126,18 +1125,16 @@ static boolean i_sdl_init_sound(GameMission_t mission)
   return true;
 }
 
-static const snddevice_t sound_sdl_devices[] =
-{
-  SNDDEVICE_SB,          SNDDEVICE_PAS,         SNDDEVICE_GUS,
-  SNDDEVICE_WAVEBLASTER, SNDDEVICE_SOUNDCANVAS, SNDDEVICE_AWE32,
+static const snddevice_t sound_sdl_devices[] = {
+    SNDDEVICE_SB,          SNDDEVICE_PAS,         SNDDEVICE_GUS,
+    SNDDEVICE_WAVEBLASTER, SNDDEVICE_SOUNDCANVAS, SNDDEVICE_AWE32,
 };
 
-const sound_module_t sound_sdl_module =
-{
-  sound_sdl_devices,         arrlen(sound_sdl_devices), i_sdl_init_sound,
-  i_sdl_shutdown_sound,      i_sdl_get_sfx_lump_num,    i_sdl_update_sound,
-  i_sdl_update_sound_params, i_sdl_start_sound,         i_sdl_stop_sound,
-  i_sdl_sound_is_playing,    i_sdl_precache_sounds,
+const sound_module_t sound_sdl_module = {
+    sound_sdl_devices,         arrlen(sound_sdl_devices), i_sdl_init_sound,
+    i_sdl_shutdown_sound,      i_sdl_get_sfx_lump_num,    i_sdl_update_sound,
+    i_sdl_update_sound_params, i_sdl_start_sound,         i_sdl_stop_sound,
+    i_sdl_sound_is_playing,    i_sdl_precache_sounds,
 };
 
 #endif /* DISABLE_SDL2MIXER */
