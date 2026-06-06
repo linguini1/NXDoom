@@ -78,12 +78,12 @@ static void AddMouseControl(TXT_UNCAST_ARG(table), const char *label, int *var)
     TXT_CAST_ARG(txt_table_t, table);
     txt_mouse_input_t *mouse_input;
 
-    TXT_AddWidget(table, TXT_NewLabel(label));
+    TXT_AddWidget(table, txt_new_label(label));
 
     mouse_input = TXT_NewMouseInput(var);
     TXT_AddWidget(table, mouse_input);
 
-    TXT_SignalConnect(mouse_input, "set", MouseSetCallback, var);
+    txt_signal_connect(mouse_input, "set", MouseSetCallback, var);
 }
 
 static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
@@ -91,15 +91,15 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
     txt_window_t *window;
     txt_table_t *buttons_table;
 
-    window = TXT_NewWindow("Additional mouse buttons");
+    window = txt_new_window("Additional mouse buttons");
 
-    TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
+    txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-    TXT_AddWidgets(window,
+    txt_add_widgets(window,
                    buttons_table = TXT_NewTable(4),
                    NULL);
 
-    TXT_SetColumnWidths(buttons_table, 16, 11, 16, 10);
+    txt_set_column_widths(buttons_table, 16, 11, 16, 10);
 
     AddMouseControl(buttons_table, "Move forward", &mousebforward);
     AddMouseControl(buttons_table, "Strafe left", &mousebstrafeleft);
@@ -127,35 +127,35 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
 {
     txt_window_t *window;
 
-    window = TXT_NewWindow("Mouse configuration");
+    window = txt_new_window("Mouse configuration");
 
     TXT_SetTableColumns(window, 2);
 
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, TestConfigAction());
-    TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
+    txt_set_window_action(window, TXT_HORIZ_CENTER, TestConfigAction());
+    txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-    TXT_AddWidgets(window,
-                   TXT_NewCheckBox("Enable mouse", &usemouse),
+    txt_add_widgets(window,
+                   txt_new_check_box("Enable mouse", &usemouse),
                    TXT_TABLE_OVERFLOW_RIGHT,
                    TXT_NewInvertedCheckBox("Allow vertical mouse movement", 
                                            &novert),
                    TXT_TABLE_OVERFLOW_RIGHT,
-                   TXT_NewCheckBox("Grab mouse in windowed mode", 
+                   txt_new_check_box("Grab mouse in windowed mode", 
                                    &grabmouse),
                    TXT_TABLE_OVERFLOW_RIGHT,
-                   TXT_NewCheckBox("Double click acts as \"use\"",
+                   txt_new_check_box("Double click acts as \"use\"",
                                    &dclick_use),
                    TXT_TABLE_OVERFLOW_RIGHT,
 
-                   TXT_NewSeparator("Mouse motion"),
-                   TXT_NewLabel("Speed"),
+                   txt_new_separator("Mouse motion"),
+                   txt_new_label("Speed"),
                    TXT_NewSpinControl(&mouseSensitivity, 1, 256),
-                   TXT_NewLabel("Acceleration"),
+                   txt_new_label("Acceleration"),
                    TXT_NewFloatSpinControl(&mouse_acceleration, 1.0, 5.0),
-                   TXT_NewLabel("Acceleration threshold"),
+                   txt_new_label("Acceleration threshold"),
                    TXT_NewSpinControl(&mouse_threshold, 0, 32),
 
-                   TXT_NewSeparator("Buttons"),
+                   txt_new_separator("Buttons"),
                    NULL);
 
     AddMouseControl(window, "Fire/Attack", &mousebfire);

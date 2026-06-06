@@ -41,7 +41,7 @@ typedef struct txt_conditional_s txt_conditional_t;
  * @return                Pointer to the new conditional widget.
  */
 
-txt_conditional_t *TXT_NewConditional(int *var, int expected_value,
+txt_conditional_t *txt_new_conidtional(int *var, int expected_value,
                                       TXT_UNCAST_ARG(child));
 
 /**
@@ -56,7 +56,7 @@ txt_conditional_t *TXT_NewConditional(int *var, int expected_value,
  *                         widget.
  */
 
-txt_widget_t *TXT_If(int condition, TXT_UNCAST_ARG(child));
+txt_widget_t *txt_if(int condition, TXT_UNCAST_ARG(child));
 
 #endif /* #ifndef TXT_CONDITIONAL_H */
 

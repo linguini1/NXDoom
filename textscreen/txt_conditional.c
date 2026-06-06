@@ -128,7 +128,7 @@ txt_widget_class_t txt_conditional_class =
     TXT_CondFocused,
 };
 
-txt_conditional_t *TXT_NewConditional(int *var, int expected_value,
+txt_conditional_t *txt_new_conidtional(int *var, int expected_value,
                                       TXT_UNCAST_ARG(child))
 {
     TXT_CAST_ARG(txt_widget_t, child);
@@ -149,7 +149,7 @@ txt_conditional_t *TXT_NewConditional(int *var, int expected_value,
 // "Static" conditional that returns an empty strut if the given static
 // value is false. Kind of like a conditional but we only evaluate it at
 // creation time.
-txt_widget_t *TXT_If(int conditional, TXT_UNCAST_ARG(child))
+txt_widget_t *txt_if(int conditional, TXT_UNCAST_ARG(child))
 {
     TXT_CAST_ARG(txt_widget_t, child);
 
@@ -161,7 +161,7 @@ txt_widget_t *TXT_If(int conditional, TXT_UNCAST_ARG(child))
     {
         txt_strut_t *nullwidget;
         TXT_DestroyWidget(child);
-        nullwidget = TXT_NewStrut(0, 0);
+        nullwidget = txt_new_strut(0, 0);
         return &nullwidget->widget;
     }
 }

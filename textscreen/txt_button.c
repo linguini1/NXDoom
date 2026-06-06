@@ -120,7 +120,7 @@ txt_button_t *TXT_NewButton2(const char *label, TxtWidgetSignalFunc func,
 
     button = TXT_NewButton(label);
 
-    TXT_SignalConnect(button, "pressed", func, user_data);
+    txt_signal_connect(button, "pressed", func, user_data);
 
     return button;
 }

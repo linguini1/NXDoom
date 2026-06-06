@@ -400,7 +400,7 @@ static void InputBoxChanged(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(fileselect))
     TXT_EmitSignal(&fileselect->widget, "changed");
 }
 
-txt_fileselect_t *TXT_NewFileSelector(char **variable, int size,
+txt_fileselect_t *txt_new_file_selector(char **variable, int size,
                                       const char *prompt, const char **extensions)
 {
     txt_fileselect_t *fileselect;
@@ -413,7 +413,7 @@ txt_fileselect_t *TXT_NewFileSelector(char **variable, int size,
     fileselect->prompt = prompt;
     fileselect->extensions = extensions;
 
-    TXT_SignalConnect(fileselect->inputbox, "changed",
+    txt_signal_connect(fileselect->inputbox, "changed",
                       InputBoxChanged, fileselect);
 
     return fileselect;

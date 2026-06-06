@@ -125,7 +125,7 @@ void AddCmdLineParameter(execute_context_t *context, const char *s, ...)
     va_end(args);
 }
 
-boolean OpenFolder(const char *path)
+boolean open_folder(const char *path)
 {
 #if 0
     char *cmd;
@@ -241,7 +241,7 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
     char *extra_cfg;
     txt_window_t *testwindow;
 
-    testwindow = TXT_MessageBox("Starting Doom",
+    testwindow = txt_message_box("Starting Doom",
                                 "Starting Doom to test the\n"
                                 "settings.  Please wait.");
     TXT_DrawDesktop();
@@ -275,8 +275,8 @@ txt_window_action_t *TestConfigAction(void)
 {
     txt_window_action_t *test_action;
     
-    test_action = TXT_NewWindowAction('t', "Test");
-    TXT_SignalConnect(test_action, "pressed", TestCallback, NULL);
+    test_action = txt_new_window_action('t', "Test");
+    txt_signal_connect(test_action, "pressed", TestCallback, NULL);
 
     return test_action;
 }

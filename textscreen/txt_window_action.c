@@ -106,7 +106,7 @@ txt_widget_class_t txt_window_action_class =
     NULL,
 };
 
-txt_window_action_t *TXT_NewWindowAction(int key, const char *label)
+txt_window_action_t *txt_new_window_action(int key, const char *label)
 {
     txt_window_action_t *action;
 
@@ -135,34 +135,34 @@ static void WindowSelectCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(window))
 
 // An action with the name "close" the closes the window
 
-txt_window_action_t *TXT_NewWindowEscapeAction(txt_window_t *window)
+txt_window_action_t *txt_new_windowEscapeAction(txt_window_t *window)
 {
     txt_window_action_t *action;
 
-    action = TXT_NewWindowAction(KEY_ESCAPE, "Close");
-    TXT_SignalConnect(action, "pressed", WindowCloseCallback, window);
+    action = txt_new_window_action(KEY_ESCAPE, "Close");
+    txt_signal_connect(action, "pressed", WindowCloseCallback, window);
 
     return action;
 }
 
 // Exactly the same as the above, but the button is named "abort"
 
-txt_window_action_t *TXT_NewWindowAbortAction(txt_window_t *window)
+txt_window_action_t *txt_new_windowAbortAction(txt_window_t *window)
 {
     txt_window_action_t *action;
 
-    action = TXT_NewWindowAction(KEY_ESCAPE, "Abort");
-    TXT_SignalConnect(action, "pressed", WindowCloseCallback, window);
+    action = txt_new_window_action(KEY_ESCAPE, "Abort");
+    txt_signal_connect(action, "pressed", WindowCloseCallback, window);
 
     return action;
 }
 
-txt_window_action_t *TXT_NewWindowSelectAction(txt_window_t *window)
+txt_window_action_t *txt_new_windowSelectAction(txt_window_t *window)
 {
     txt_window_action_t *action;
 
-    action = TXT_NewWindowAction(KEY_ENTER, "Select");
-    TXT_SignalConnect(action, "pressed", WindowSelectCallback, window);
+    action = txt_new_window_action(KEY_ENTER, "Select");
+    txt_signal_connect(action, "pressed", WindowSelectCallback, window);
 
     return action;
 }

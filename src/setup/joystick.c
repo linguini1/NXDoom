@@ -1052,7 +1052,7 @@ static int CalibrationEventCallback(SDL_Event *event, void *user_data)
 
 static void NoJoystick(void)
 {
-    TXT_MessageBox(NULL, "No gamepads or joysticks could be found.\n\n"
+    txt_message_box(NULL, "No gamepads or joysticks could be found.\n\n"
                          "Try configuring your controller from within\n"
                          "your OS first. Maybe you need to install\n"
                          "some drivers or otherwise configure it.");
@@ -1078,7 +1078,7 @@ static void CalibrateWindowClosed(TXT_UNCAST_ARG(widget),
     CloseAllJoysticks();
 
     // Refresh Joystick window to update button and axis widgets.
-    TXT_SignalConnect(joystick_window, "closed", RefreshJoystickWindow, NULL);
+    txt_signal_connect(joystick_window, "closed", RefreshJoystickWindow, NULL);
     TXT_CloseWindow(joystick_window);
 }
 
@@ -1096,23 +1096,23 @@ static void CalibrateJoystick(TXT_UNCAST_ARG(widget),
         return;
     }
 
-    calibration_window = TXT_NewWindow("Gamepad/Joystick calibration");
+    calibration_window = txt_new_window("Gamepad/Joystick calibration");
 
-    TXT_AddWidgets(calibration_window,
-                   TXT_NewStrut(0, 1),
-                   TXT_NewLabel("Center the D-pad or joystick,\n"
+    txt_add_widgets(calibration_window,
+                   txt_new_strut(0, 1),
+                   txt_new_label("Center the D-pad or joystick,\n"
                                 "and press a button."),
-                   TXT_NewStrut(0, 1),
+                   txt_new_strut(0, 1),
                    NULL);
 
-    TXT_SetWindowAction(calibration_window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(calibration_window, TXT_HORIZ_CENTER, 
-                        TXT_NewWindowAbortAction(calibration_window));
-    TXT_SetWindowAction(calibration_window, TXT_HORIZ_RIGHT, NULL);
+    txt_set_window_action(calibration_window, TXT_HORIZ_LEFT, NULL);
+    txt_set_window_action(calibration_window, TXT_HORIZ_CENTER, 
+                        txt_new_windowAbortAction(calibration_window));
+    txt_set_window_action(calibration_window, TXT_HORIZ_RIGHT, NULL);
 
     TXT_SDL_SetEventCallback(CalibrationEventCallback, NULL);
 
-    TXT_SignalConnect(calibration_window, "closed", CalibrateWindowClosed,
+    txt_signal_connect(calibration_window, "closed", CalibrateWindowClosed,
                       joystick_window);
 
     // Start calibration
@@ -1129,8 +1129,8 @@ static void AddJoystickControl(TXT_UNCAST_ARG(table), const char *label, int *va
 
     joy_input = TXT_NewJoystickInput(var);
 
-    TXT_AddWidgets(table,
-                   TXT_NewLabel(label),
+    txt_add_widgets(table,
+                   txt_new_label(label),
                    joy_input,
                    TXT_TABLE_EMPTY,
                    NULL);
@@ -1162,27 +1162,27 @@ static void AdjustAnalog(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 {
     txt_window_t *window;
 
-    window = TXT_NewWindow("Analog Settings");
+    window = txt_new_window("Analog Settings");
     TXT_SetTableColumns(window, 2);
-    TXT_SetColumnWidths(window, 10, 6);
-    TXT_AddWidgets(window,
-        TXT_NewCheckBox("Use analog controls", &use_analog),
-        TXT_NewSeparator("Sensitivity"),
-        TXT_NewLabel("Movement"),
+    txt_set_column_widths(window, 10, 6);
+    txt_add_widgets(window,
+        txt_new_check_box("Use analog controls", &use_analog),
+        txt_new_separator("Sensitivity"),
+        txt_new_label("Movement"),
         TXT_NewSpinControl(&joystick_move_sensitivity, 0, 20),
-        TXT_NewLabel("Turn"),
+        txt_new_label("Turn"),
         TXT_NewSpinControl(&joystick_turn_sensitivity, 0, 20),
         NULL);
     if (gamemission == heretic || gamemission == hexen || gamemission == strife)
     {
-        TXT_AddWidgets(window,
-            TXT_NewLabel("Look"),
+        txt_add_widgets(window,
+            txt_new_label("Look"),
             TXT_NewSpinControl(&joystick_look_sensitivity, 0, 20), NULL);
     }
-    TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER,
-        TXT_NewWindowEscapeAction(window));
-    TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_CENTER,
+        txt_new_windowEscapeAction(window));
+    txt_set_window_action(window, TXT_HORIZ_RIGHT, NULL);
     TXT_SetWidgetAlign(window, TXT_HORIZ_CENTER);
 }
 
@@ -1190,9 +1190,9 @@ static void MoreControls(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 {
     txt_window_t *window;
 
-    window = TXT_NewWindow("Additional Gamepad/Joystick buttons");
+    window = txt_new_window("Additional Gamepad/Joystick buttons");
     TXT_SetTableColumns(window, 6);
-    TXT_SetColumnWidths(window, 20, 10, 1, 20, 10, 0);
+    txt_set_column_widths(window, 20, 10, 1, 20, 10, 0);
 
     AddJoystickControl(window, "Use inventory item", &joybuseartifact);
     AddJoystickControl(window, "Inventory left", &joybinvleft);
@@ -1204,10 +1204,10 @@ static void MoreControls(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
         AddJoystickControl(window, "Fly center", &joybflycenter);
     }
 
-    TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER,
-        TXT_NewWindowEscapeAction(window));
-    TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_CENTER,
+        txt_new_windowEscapeAction(window));
+    txt_set_window_action(window, TXT_HORIZ_RIGHT, NULL);
     TXT_SetWidgetAlign(window, TXT_HORIZ_CENTER);
 }
 
@@ -1215,18 +1215,18 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
 {
     txt_window_t *window;
 
-    window = TXT_NewWindow("Gamepad/Joystick configuration");
+    window = txt_new_window("Gamepad/Joystick configuration");
     TXT_SetTableColumns(window, 6);
-    TXT_SetColumnWidths(window, 18, 10, 1, 18, 10, 0);
-    TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
+    txt_set_column_widths(window, 18, 10, 1, 18, 10, 0);
+    txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-    TXT_AddWidgets(window,
-                   TXT_NewLabel("Controller"),
+    txt_add_widgets(window,
+                   txt_new_label("Controller"),
                    joystick_button = TXT_NewButton("zzzz"),
                    TXT_TABLE_EOL,
 
-                   TXT_NewSeparator("Axes"),
-                   TXT_NewLabel("Forward/backward"),
+                   txt_new_separator("Axes"),
+                   txt_new_label("Forward/backward"),
                    y_axis_widget = TXT_NewJoystickAxis(&joystick_y_axis,
                                                        &joystick_y_invert,
                                                        &joystick_y_dead_zone,
@@ -1236,7 +1236,7 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
                    TXT_TABLE_EMPTY,
                    TXT_TABLE_EMPTY,
 
-                   TXT_NewLabel("Turn left/right"),
+                   txt_new_label("Turn left/right"),
                    x_axis_widget =
                         TXT_NewJoystickAxis(&joystick_x_axis,
                                             &joystick_x_invert,
@@ -1247,7 +1247,7 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
                    TXT_TABLE_EMPTY,
                    TXT_TABLE_EMPTY,
 
-                   TXT_NewLabel("Strafe left/right"),
+                   txt_new_label("Strafe left/right"),
                    TXT_NewJoystickAxis(&joystick_strafe_axis,
                                        &joystick_strafe_invert,
                                        &joystick_strafe_dead_zone,
@@ -1260,8 +1260,8 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
 
     if (gamemission == heretic || gamemission == hexen || gamemission == strife)
     {
-        TXT_AddWidgets(window,
-                   TXT_NewLabel("Look up/down"),
+        txt_add_widgets(window,
+                   txt_new_label("Look up/down"),
                    TXT_NewJoystickAxis(&joystick_look_axis,
                                        &joystick_look_invert,
                                        &joystick_look_dead_zone,
@@ -1274,7 +1274,7 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
     }
 
     TXT_AddWidget(window,
-        TXT_NewConditional(&use_gamepad, 1,
+        txt_new_conidtional(&use_gamepad, 1,
                    TXT_NewButton2("Swap L and R sticks", SwapLRSticks, NULL)));
     TXT_AddWidget(window, TXT_TABLE_EOL);
 
@@ -1282,7 +1282,7 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
                    TXT_NewButton2("Analog settings", AdjustAnalog, NULL));
     TXT_AddWidget(window, TXT_TABLE_EOL);
 
-    TXT_AddWidget(window, TXT_NewSeparator("Buttons"));
+    TXT_AddWidget(window, txt_new_separator("Buttons"));
 
     AddJoystickControl(window, "Fire/Attack", &joybfire);
     AddJoystickControl(window, "Strafe Left", &joybstrafeleft);
@@ -1320,8 +1320,8 @@ void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
         TXT_AddWidget(window, TXT_TABLE_EOL);
     }
 
-    TXT_SignalConnect(joystick_button, "pressed", CalibrateJoystick, window);
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, TestConfigAction());
+    txt_signal_connect(joystick_button, "pressed", CalibrateJoystick, window);
+    txt_set_window_action(window, TXT_HORIZ_CENTER, TestConfigAction());
 
     InitJoystick();
     UpdateJoystickIndex();

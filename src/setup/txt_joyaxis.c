@@ -367,7 +367,7 @@ void TXT_ConfigureJoystickAxis(txt_joystick_axis_t *joystick_axis,
     joystick_axis->joystick = SDL_JoystickOpen(joystick_index);
     if (joystick_axis->joystick == NULL)
     {
-        TXT_MessageBox(NULL, "Please configure a controller first!");
+        txt_message_box(NULL, "Please configure a controller first!");
         return;
     }
 
@@ -376,17 +376,17 @@ void TXT_ConfigureJoystickAxis(txt_joystick_axis_t *joystick_axis,
     // Build the prompt window.
 
     joystick_axis->config_window
-        = TXT_NewWindow("Gamepad/Joystick calibration");
-    TXT_AddWidgets(joystick_axis->config_window,
+        = txt_new_window("Gamepad/Joystick calibration");
+    txt_add_widgets(joystick_axis->config_window,
                    TXT_NewStrut(0, 1),
-                   joystick_axis->config_label = TXT_NewLabel(""),
+                   joystick_axis->config_label = txt_new_label(""),
                    TXT_NewStrut(0, 1),
                    NULL);
 
-    TXT_SetWindowAction(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(joystick_axis->config_window, TXT_HORIZ_CENTER,
-                        TXT_NewWindowAbortAction(joystick_axis->config_window));
-    TXT_SetWindowAction(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
+    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
+    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_CENTER,
+                        txt_new_windowAbortAction(joystick_axis->config_window));
+    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
     TXT_SetWidgetAlign(joystick_axis->config_window, TXT_HORIZ_CENTER);
 
     if (using_button >= 0)
@@ -404,7 +404,7 @@ void TXT_ConfigureJoystickAxis(txt_joystick_axis_t *joystick_axis,
 
     // Close the joystick and shut down joystick subsystem when the window
     // is closed.
-    TXT_SignalConnect(joystick_axis->config_window, "closed",
+    txt_signal_connect(joystick_axis->config_window, "closed",
                       CalibrateWindowClosed, joystick_axis);
 
     TXT_SDL_SetEventCallback(EventCallback, joystick_axis);
@@ -419,21 +419,21 @@ void TXT_ConfigureGamepadAxis(txt_joystick_axis_t *joystick_axis,
 {
     // Build the prompt window.
 
-    joystick_axis->config_window = TXT_NewWindow("Configure axis");
+    joystick_axis->config_window = txt_new_window("Configure axis");
     TXT_SetTableColumns(joystick_axis->config_window, 2);
-    TXT_SetColumnWidths(joystick_axis->config_window, 10, 5);
-    TXT_AddWidgets(joystick_axis->config_window,
-                   TXT_NewCheckBox("Invert", joystick_axis->invert),
+    txt_set_column_widths(joystick_axis->config_window, 10, 5);
+    txt_add_widgets(joystick_axis->config_window,
+                   txt_new_check_box("Invert", joystick_axis->invert),
                    TXT_TABLE_EMPTY,
-                   TXT_NewLabel("Dead zone"),
+                   txt_new_label("Dead zone"),
                    TXT_NewSpinControl(joystick_axis->dead_zone, 10, 90),
                    NULL);
 
-    TXT_SetWindowAction(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(
+    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
+    txt_set_window_action(
         joystick_axis->config_window, TXT_HORIZ_CENTER,
-        TXT_NewWindowEscapeAction(joystick_axis->config_window));
-    TXT_SetWindowAction(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
+        txt_new_windowEscapeAction(joystick_axis->config_window));
+    txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_RIGHT, NULL);
     TXT_SetWidgetAlign(joystick_axis->config_window, TXT_HORIZ_CENTER);
 }
 

@@ -87,15 +87,15 @@ static void open_wait_dialog(void)
 
   TXT_SetDesktopTitle(PACKAGE_STRING);
 
-  window = TXT_NewWindow("Waiting for game start...");
+  window = txt_new_window("Waiting for game start...");
 
-  TXT_AddWidget(window, TXT_NewLabel("\nPlease wait...\n\n"));
+  TXT_AddWidget(window, txt_new_label("\nPlease wait...\n\n"));
 
-  cancel = TXT_NewWindowAction(KEY_ESCAPE, "Cancel");
-  TXT_SignalConnect(cancel, "pressed", escape_pressed, NULL);
+  cancel = txt_new_window_action(KEY_ESCAPE, "Cancel");
+  txt_signal_connect(cancel, "pressed", escape_pressed, NULL);
 
-  TXT_SetWindowAction(window, TXT_HORIZ_LEFT, cancel);
-  TXT_SetWindowPosition(window, TXT_HORIZ_CENTER, TXT_VERT_BOTTOM,
+  txt_set_window_action(window, TXT_HORIZ_LEFT, cancel);
+  txt_set_window_position(window, TXT_HORIZ_CENTER, TXT_VERT_BOTTOM,
                         TXT_SCREEN_W / 2, TXT_SCREEN_H - 9);
 
   old_max_players = 0;
@@ -114,22 +114,22 @@ static void build_window(void)
   /* Add spacers */
 
   TXT_AddWidget(table, NULL);
-  TXT_AddWidget(table, TXT_NewStrut(25, 1));
-  TXT_AddWidget(table, TXT_NewStrut(17, 1));
+  TXT_AddWidget(table, txt_new_strut(25, 1));
+  TXT_AddWidget(table, txt_new_strut(17, 1));
 
   /* Player labels */
 
   for (i = 0; i < net_client_wait_data.max_players; ++i)
     {
       snprintf(buf, sizeof(buf), " %i. ", i + 1);
-      TXT_AddWidget(table, TXT_NewLabel(buf));
-      player_labels[i] = TXT_NewLabel("");
-      ip_labels[i] = TXT_NewLabel("");
+      TXT_AddWidget(table, txt_new_label(buf));
+      player_labels[i] = txt_new_label("");
+      ip_labels[i] = txt_new_label("");
       TXT_AddWidget(table, player_labels[i]);
       TXT_AddWidget(table, ip_labels[i]);
     }
 
-  drone_label = TXT_NewLabel("");
+  drone_label = txt_new_label("");
 
   TXT_AddWidget(window, drone_label);
 }
@@ -195,23 +195,23 @@ static void update_gui(void)
 
   if (net_client_wait_data.is_controller)
     {
-      startgame = TXT_NewWindowAction(' ', "Start game");
-      TXT_SignalConnect(startgame, "pressed", start_game, NULL);
+      startgame = txt_new_window_action(' ', "Start game");
+      txt_signal_connect(startgame, "pressed", start_game, NULL);
     }
   else
     {
       startgame = NULL;
     }
 
-  TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, startgame);
+  txt_set_window_action(window, TXT_HORIZ_RIGHT, startgame);
 }
 
 static void build_master_status_window(void)
 {
   txt_window_t *master_window;
 
-  master_window = TXT_NewWindow(NULL);
-  master_msg_label = TXT_NewLabel("");
+  master_window = txt_new_window(NULL);
+  master_msg_label = txt_new_label("");
   TXT_AddWidget(master_window, master_msg_label);
 
   /* This window is here purely for information, so it should be
@@ -219,11 +219,11 @@ static void build_master_status_window(void)
    */
 
   TXT_LowerWindow(master_window);
-  TXT_SetWindowPosition(master_window, TXT_HORIZ_CENTER, TXT_VERT_CENTER,
+  txt_set_window_position(master_window, TXT_HORIZ_CENTER, TXT_VERT_CENTER,
                         TXT_SCREEN_W / 2, TXT_SCREEN_H - 4);
-  TXT_SetWindowAction(master_window, TXT_HORIZ_LEFT, NULL);
-  TXT_SetWindowAction(master_window, TXT_HORIZ_CENTER, NULL);
-  TXT_SetWindowAction(master_window, TXT_HORIZ_RIGHT, NULL);
+  txt_set_window_action(master_window, TXT_HORIZ_LEFT, NULL);
+  txt_set_window_action(master_window, TXT_HORIZ_CENTER, NULL);
+  txt_set_window_action(master_window, TXT_HORIZ_RIGHT, NULL);
 }
 
 static void check_master_status(void)
@@ -326,14 +326,14 @@ static void check_sha1_sums(void)
       print_sha1_digest("Server", net_client_wait_data.deh_sha1sum);
     }
 
-  l_window = TXT_NewWindow("WARNING!");
+  l_window = txt_new_window("WARNING!");
 
-  cont_button = TXT_NewWindowAction(KEY_ENTER, "Continue");
-  TXT_SignalConnect(cont_button, "pressed", close_window, l_window);
+  cont_button = txt_new_window_action(KEY_ENTER, "Continue");
+  txt_signal_connect(cont_button, "pressed", close_window, l_window);
 
-  TXT_SetWindowAction(l_window, TXT_HORIZ_LEFT, NULL);
-  TXT_SetWindowAction(l_window, TXT_HORIZ_CENTER, cont_button);
-  TXT_SetWindowAction(l_window, TXT_HORIZ_RIGHT, NULL);
+  txt_set_window_action(l_window, TXT_HORIZ_LEFT, NULL);
+  txt_set_window_action(l_window, TXT_HORIZ_CENTER, cont_button);
+  txt_set_window_action(l_window, TXT_HORIZ_RIGHT, NULL);
 
   if (!same_freedoom)
     {
@@ -346,7 +346,7 @@ static void check_sha1_sums(void)
         {
           TXT_AddWidget(
               l_window,
-              TXT_NewLabel(
+              txt_new_label(
                   "You are using the Freedoom IWAD to play with players\n"
                   "using an official Doom IWAD.  Make sure that you are\n"
                   "playing the same levels as other players.\n"));
@@ -355,7 +355,7 @@ static void check_sha1_sums(void)
         {
           TXT_AddWidget(
               l_window,
-              TXT_NewLabel(
+              txt_new_label(
                   "You are using an official IWAD to play with players\n"
                   "using the Freedoom IWAD.  Make sure that you are\n"
                   "playing the same levels as other players.\n"));
@@ -365,7 +365,7 @@ static void check_sha1_sums(void)
     {
       TXT_AddWidget(
           l_window,
-          TXT_NewLabel(
+          txt_new_label(
             "Your WAD directory does not match other players in the game.\n"
             "Check that you have loaded the exact same WAD files as other\n"
             "players.\n")
@@ -376,7 +376,7 @@ static void check_sha1_sums(void)
     {
       TXT_AddWidget(
           l_window,
-          TXT_NewLabel(
+          txt_new_label(
               "Your dehacked signature does not match other players in the\n"
               "game.  Check that you have loaded the same dehacked patches\n"
               "as other players.\n"));
@@ -384,7 +384,7 @@ static void check_sha1_sums(void)
 
   TXT_AddWidget(
       l_window,
-      TXT_NewLabel("If you continue, this may cause your game to desync."));
+      txt_new_label("If you continue, this may cause your game to desync."));
 
   had_warning = true;
 }

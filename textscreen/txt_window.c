@@ -27,7 +27,7 @@
 #include "txt_separator.h"
 #include "txt_window.h"
 
-void TXT_SetWindowAction(txt_window_t *window,
+void txt_set_window_action(txt_window_t *window,
                          txt_horiz_align_t position, 
                          TXT_UNCAST_ARG(action))
 {
@@ -48,7 +48,7 @@ void TXT_SetWindowAction(txt_window_t *window,
     }
 }
 
-txt_window_t *TXT_NewWindow(const char *title)
+txt_window_t *txt_new_window(const char *title)
 {
     int i;
 
@@ -75,7 +75,7 @@ txt_window_t *TXT_NewWindow(const char *title)
     win->mouse_listener = NULL;
     win->help_url = NULL;
 
-    TXT_AddWidget(win, TXT_NewSeparator(NULL));
+    TXT_AddWidget(win, txt_new_separator(NULL));
 
     for (i=0; i<3; ++i)
     {
@@ -86,8 +86,8 @@ txt_window_t *TXT_NewWindow(const char *title)
 
     // Default actions
 
-    TXT_SetWindowAction(win, TXT_HORIZ_LEFT, TXT_NewWindowEscapeAction(win));
-    TXT_SetWindowAction(win, TXT_HORIZ_RIGHT, TXT_NewWindowSelectAction(win));
+    txt_set_window_action(win, TXT_HORIZ_LEFT, txt_new_windowEscapeAction(win));
+    txt_set_window_action(win, TXT_HORIZ_RIGHT, txt_new_windowSelectAction(win));
 
     return win;
 }
@@ -363,7 +363,7 @@ void TXT_DrawWindow(txt_window_t *window)
     }
 }
 
-void TXT_SetWindowPosition(txt_window_t *window,
+void txt_set_window_position(txt_window_t *window,
                            txt_horiz_align_t horiz_align,
                            txt_vert_align_t vert_align,
                            int x, int y)
@@ -509,7 +509,7 @@ void TXT_SetWindowFocus(txt_window_t *window, int focused)
     TXT_SetWidgetFocus(window, focused);
 }
 
-void TXT_SetWindowHelpURL(txt_window_t *window, const char *help_url)
+void txt_set_window_help_url(txt_window_t *window, const char *help_url)
 {
     window->help_url = help_url;
 }
@@ -554,7 +554,7 @@ void TXT_OpenWindowHelpURL(txt_window_t *window)
     }
 }
 
-txt_window_t *TXT_MessageBox(const char *title, const char *message, ...)
+txt_window_t *txt_message_box(const char *title, const char *message, ...)
 {
     txt_window_t *window;
     char buf[256];
@@ -564,13 +564,13 @@ txt_window_t *TXT_MessageBox(const char *title, const char *message, ...)
     TXT_vsnprintf(buf, sizeof(buf), message, args);
     va_end(args);
 
-    window = TXT_NewWindow(title);
-    TXT_AddWidget(window, TXT_NewLabel(buf));
+    window = txt_new_window(title);
+    TXT_AddWidget(window, txt_new_label(buf));
 
-    TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, 
-                        TXT_NewWindowEscapeAction(window));
-    TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_CENTER, 
+                        txt_new_windowEscapeAction(window));
+    txt_set_window_action(window, TXT_HORIZ_RIGHT, NULL);
 
     return window;
 }

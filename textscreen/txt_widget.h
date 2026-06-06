@@ -55,7 +55,7 @@ typedef enum
  *
  * Widgets may emit signals.  The types of signal emitted by a widget
  * depend on the type of the widget.  It is possible to be notified
- * when a signal occurs using the @ref TXT_SignalConnect function.
+ * when a signal occurs using the @ref txt_signal_connect function.
  */
 
 typedef struct txt_widget_s txt_widget_t;
@@ -125,7 +125,7 @@ void TXT_SetWidgetFocus(TXT_UNCAST_ARG(widget), int focused);
  * @param user_data    User-specified pointer to pass to the callback function.
  */
 
-void TXT_SignalConnect(TXT_UNCAST_ARG(widget), const char *signal_name,
+void txt_signal_connect(TXT_UNCAST_ARG(widget), const char *signal_name,
                        TxtWidgetSignalFunc func, void *user_data);
 
 /**

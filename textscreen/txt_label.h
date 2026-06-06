@@ -49,7 +49,7 @@ struct txt_label_s
  * @return              Pointer to the new label widget.
  */
 
-txt_label_t *TXT_NewLabel(const char *label);
+txt_label_t *txt_new_label(const char *label);
 
 /**
  * Set the string displayed in a label widget.

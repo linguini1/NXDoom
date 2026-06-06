@@ -121,7 +121,7 @@ txt_widget_class_t txt_radiobutton_class =
     NULL,
 };
 
-txt_radiobutton_t *TXT_NewRadioButton(const char *label, int *variable, int value)
+txt_radiobutton_t *txt_new_radio_button(const char *label, int *variable, int value)
 {
     txt_radiobutton_t *radiobutton;
 

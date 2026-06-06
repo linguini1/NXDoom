@@ -275,9 +275,9 @@ static void open_game_select_dialog(GameSelectCallback callback)
   int num_games;
   int i;
 
-  window = TXT_NewWindow("Select game");
+  window = txt_new_window("Select game");
 
-  TXT_AddWidget(window, TXT_NewLabel("Select a game to configure:\n"));
+  TXT_AddWidget(window, txt_new_label("Select a game to configure:\n"));
   num_games = 0;
 
   /* Add a button for each game. */
@@ -302,7 +302,7 @@ static void open_game_select_dialog(GameSelectCallback callback)
       free(iwads);
     }
 
-  TXT_AddWidget(window, TXT_NewStrut(0, 1));
+  TXT_AddWidget(window, txt_new_strut(0, 1));
 
   /* No IWADs found at all?  Fall back to doom, then. */
 
@@ -372,7 +372,7 @@ void init_bindings(void)
   BindJoystickVariables();
   BindKeyboardVariables();
   BindMouseVariables();
-  BindSoundVariables();
+  bind_sound_variables();
   bind_misc_variables();
   bind_multiple_variables();
 }

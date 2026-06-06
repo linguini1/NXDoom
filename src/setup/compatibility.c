@@ -31,14 +31,14 @@ void CompatibilitySettings(TXT_UNCAST_ARG(widget), void *user_data)
 {
     txt_window_t *window;
 
-    window = TXT_NewWindow("Compatibility");
+    window = txt_new_window("Compatibility");
 
-    TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
+    txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-    TXT_AddWidgets(window,
-                   TXT_NewCheckBox("Vanilla savegame limit",
+    txt_add_widgets(window,
+                   txt_new_check_box("Vanilla savegame limit",
                                    &vanilla_savegame_limit),
-                   TXT_NewCheckBox("Vanilla demo limit",
+                   txt_new_check_box("Vanilla demo limit",
                                    &vanilla_demo_limit),
                    NULL);
 }

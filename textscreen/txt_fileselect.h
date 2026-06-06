@@ -65,7 +65,7 @@ char *TXT_SelectFile(const char *prompt, const char **extensions);
  *                    to select directories.
  */
 
-txt_fileselect_t *TXT_NewFileSelector(char **variable, int size,
+txt_fileselect_t *txt_new_file_selector(char **variable, int size,
                                       const char *prompt, const char **extensions);
 
 /**

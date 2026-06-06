@@ -42,8 +42,8 @@
 #define TXT_TABLE_EOL (&txt_table_eol)
 
 /**
- * Indicates an empty space to @ref TXT_AddWidgets(). Equivalent to
- * TXT_AddWidget(table, NULL), except that NULL is used by TXT_AddWidgets()
+ * Indicates an empty space to @ref txt_add_widgets(). Equivalent to
+ * TXT_AddWidget(table, NULL), except that NULL is used by txt_add_widgets()
  * to indicate the end of input.
  */
 #define TXT_TABLE_EMPTY (&txt_table_empty)
@@ -54,10 +54,10 @@
  * A table is a widget that contains other widgets.  It may have
  * multiple columns, in which case the child widgets are laid out
  * in a grid.  Columns automatically grow as necessary, although
- * minimum column widths can be set using @ref TXT_SetColumnWidths.
+ * minimum column widths can be set using @ref txt_set_column_widths.
  *
  * To create a new table, use @ref TXT_NewTable.  It is also
- * possible to use @ref TXT_NewHorizBox to create a table, specifying
+ * possible to use @ref txt_new_horiz_box to create a table, specifying
  * widgets to place inside a horizontal list.  A vertical list is
  * possible simply by creating a table containing a single column.
  */
@@ -110,7 +110,7 @@ txt_table_t *TXT_NewTable(int columns);
  * @return              Pointer to the new table structure.
  */
 
-txt_table_t *TXT_MakeTable(int columns, ...);
+txt_table_t *txt_make_table(int columns, ...);
 
 /**
  * Create a table containing the specified widgets packed horizontally,
@@ -123,7 +123,7 @@ txt_table_t *TXT_MakeTable(int columns, ...);
  * @return             Pointer to the new table structure.
  */
 
-txt_table_t *TXT_NewHorizBox(TXT_UNCAST_ARG(first_widget), ...);
+txt_table_t *txt_new_horiz_box(TXT_UNCAST_ARG(first_widget), ...);
 
 /**
  * Get the currently selected widget within a table.
@@ -147,7 +147,7 @@ txt_widget_t *TXT_GetSelectedWidget(TXT_UNCAST_ARG(table));
  * row.
  *
  * For adding many widgets, it may be easier to use
- * @ref TXT_AddWidgets.
+ * @ref txt_add_widgets.
  *
  * @param table        The table.
  * @param widget       The widget to add.
@@ -166,7 +166,7 @@ void TXT_AddWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget));
  * @param table        The table.
  */
 
-void TXT_AddWidgets(TXT_UNCAST_ARG(table), ...);
+void txt_add_widgets(TXT_UNCAST_ARG(table), ...);
 
 /**
  * Select the given widget that is contained within the specified
@@ -217,7 +217,7 @@ void TXT_SetTableColumns(TXT_UNCAST_ARG(table), int new_columns);
  * @param table     The table.
  */
 
-void TXT_SetColumnWidths(TXT_UNCAST_ARG(table), ...);
+void txt_set_column_widths(TXT_UNCAST_ARG(table), ...);
 
 /**
  * Remove all widgets from a table.

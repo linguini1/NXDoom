@@ -125,8 +125,8 @@ static txt_radiobutton_t *SizeSelectButton(window_size_t *size)
     txt_radiobutton_t *result;
 
     snprintf(buf, sizeof(buf), "%ix%i", size->w, size->h);
-    result = TXT_NewRadioButton(buf, &window_width, size->w);
-    TXT_SignalConnect(result, "selected", WindowSizeSelected, size);
+    result = txt_new_radio_button(buf, &window_width, size->w);
+    txt_signal_connect(result, "selected", WindowSizeSelected, size);
 
     return result;
 }
@@ -151,9 +151,9 @@ static void GenerateSizesTable(TXT_UNCAST_ARG(widget),
 
     // Build the table
     TXT_ClearTable(sizes_table);
-    TXT_SetColumnWidths(sizes_table, 14, 14, 14);
+    txt_set_column_widths(sizes_table, 14, 14, 14);
 
-    TXT_AddWidget(sizes_table, TXT_NewSeparator("Window size"));
+    TXT_AddWidget(sizes_table, txt_new_separator("Window size"));
 
     have_size = false;
 
@@ -183,30 +183,30 @@ static void AdvancedDisplayConfig(TXT_UNCAST_ARG(widget),
     txt_window_t *window;
     txt_checkbox_t *ar_checkbox;
 
-    window = TXT_NewWindow("Advanced display options");
+    window = txt_new_window("Advanced display options");
 
-    TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
+    txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-    TXT_SetColumnWidths(window, 40);
+    txt_set_column_widths(window, 40);
 
-    TXT_AddWidgets(window,
-        ar_checkbox = TXT_NewCheckBox("Force correct aspect ratio",
+    txt_add_widgets(window,
+        ar_checkbox = txt_new_check_box("Force correct aspect ratio",
                                       &aspect_ratio_correct),
-        TXT_If(gamemission == heretic || gamemission == hexen
+        txt_if(gamemission == heretic || gamemission == hexen
             || gamemission == strife,
-            TXT_NewCheckBox("Graphical startup", &graphical_startup)),
-        TXT_If(gamemission == doom || gamemission == heretic
+            txt_new_check_box("Graphical startup", &graphical_startup)),
+        txt_if(gamemission == doom || gamemission == heretic
             || gamemission == strife,
-            TXT_NewCheckBox("Show ENDOOM screen on exit",
+            txt_new_check_box("Show ENDOOM screen on exit",
                             &show_endoom)),
 #ifdef HAVE_LIBPNG
-        TXT_NewCheckBox("Save screenshots in PNG format",
+        txt_new_check_box("Save screenshots in PNG format",
                         &png_screenshots),
 #endif
-        TXT_NewCheckBox("Smooth pixel scaling", &smooth_pixel_scaling),
+        txt_new_check_box("Smooth pixel scaling", &smooth_pixel_scaling),
         NULL);
 
-    TXT_SignalConnect(ar_checkbox, "changed", GenerateSizesTable, sizes_table);
+    txt_signal_connect(ar_checkbox, "changed", GenerateSizesTable, sizes_table);
 }
 
 void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
@@ -216,23 +216,23 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
     txt_window_action_t *advanced_button;
 
     // Open the window
-    window = TXT_NewWindow("Display Configuration");
-    TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
+    window = txt_new_window("Display Configuration");
+    txt_set_window_help_url(window, WINDOW_HELP_URL);
 
     // Build window:
-    TXT_AddWidgets(window,
-        TXT_NewCheckBox("Full screen", &fullscreen),
-        TXT_NewConditional(&fullscreen, 0,
+    txt_add_widgets(window,
+        txt_new_check_box("Full screen", &fullscreen),
+        txt_new_conidtional(&fullscreen, 0,
             sizes_table = TXT_NewTable(3)),
         NULL);
 
-    TXT_SetColumnWidths(window, 42);
+    txt_set_column_widths(window, 42);
 
     // The window is set at a fixed vertical position.  This keeps
     // the top of the window stationary when switching between
     // fullscreen and windowed mode (which causes the window's
     // height to change).
-    TXT_SetWindowPosition(window, TXT_HORIZ_CENTER, TXT_VERT_TOP,
+    txt_set_window_position(window, TXT_HORIZ_CENTER, TXT_VERT_TOP,
                                   TXT_SCREEN_W / 2, 6);
 
     GenerateSizesTable(NULL, sizes_table);
@@ -240,9 +240,9 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
     // Button to open "advanced" window.
     // Need to pass a pointer to the window sizes table, as some of the options
     // in there trigger a rebuild of it.
-    advanced_button = TXT_NewWindowAction('a', "Advanced");
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, advanced_button);
-    TXT_SignalConnect(advanced_button, "pressed",
+    advanced_button = txt_new_window_action('a', "Advanced");
+    txt_set_window_action(window, TXT_HORIZ_CENTER, advanced_button);
+    txt_signal_connect(advanced_button, "pressed",
                       AdvancedDisplayConfig, sizes_table);
 }
 

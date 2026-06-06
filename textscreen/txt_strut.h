@@ -47,7 +47,7 @@ struct txt_strut_s
  * @param height     Height of the strut, in characters.
  */
 
-txt_strut_t *TXT_NewStrut(int width, int height);
+txt_strut_t *txt_new_strut(int width, int height);
 
 #endif /* #ifndef TXT_STRUT_H */
 

@@ -133,16 +133,16 @@ static void OpenSelectorWindow(txt_dropdown_list_t *list)
 
     // Open a simple window with no title bar or action buttons.
 
-    window = TXT_NewWindow(NULL);
+    window = txt_new_window(NULL);
 
-    TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
+    txt_set_window_action(window, TXT_HORIZ_CENTER, NULL);
+    txt_set_window_action(window, TXT_HORIZ_RIGHT, NULL);
 
     // Position the window so that the currently selected item appears
     // over the top of the list widget.
 
-    TXT_SetWindowPosition(window, TXT_HORIZ_LEFT, TXT_VERT_TOP,
+    txt_set_window_position(window, TXT_HORIZ_LEFT, TXT_VERT_TOP,
                           list->widget.x - 2, SelectorWindowY(list));
 
     // Add a button to the window for each option in the list.
@@ -165,11 +165,11 @@ static void OpenSelectorWindow(txt_dropdown_list_t *list)
         
         // When the button is pressed, invoke the button press callback
        
-        TXT_SignalConnect(button, "pressed", ItemSelected, data);
+        txt_signal_connect(button, "pressed", ItemSelected, data);
         
         // When the window is closed, free back the callback struct
 
-        TXT_SignalConnect(window, "closed", FreeCallbackData, data);
+        txt_signal_connect(window, "closed", FreeCallbackData, data);
 
         // Is this the currently-selected value?  If so, select the button
         // in the window as the default.

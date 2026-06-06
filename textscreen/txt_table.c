@@ -360,7 +360,7 @@ void TXT_AddWidget(TXT_UNCAST_ARG(table), TXT_UNCAST_ARG(widget))
 
 // Add multiple widgets to a table.
 
-void TXT_AddWidgets(TXT_UNCAST_ARG(table), ...)
+void txt_add_widgets(TXT_UNCAST_ARG(table), ...)
 {
     TXT_CAST_ARG(txt_table_t, table);
     va_list args;
@@ -885,13 +885,13 @@ void TXT_InitTable(txt_table_t *table, int columns)
     table->selected_y = 0;
 
     // Add a strut for each column at the start of the table. 
-    // These are used by the TXT_SetColumnWidths function below:
+    // These are used by the txt_set_column_widths function below:
     // the struts are created with widths of 0 each, but this
     // function changes them.
 
     for (i=0; i<columns; ++i)
     {
-        TXT_AddWidget(table, TXT_NewStrut(0, 0));
+        TXT_AddWidget(table, txt_new_strut(0, 0));
     }
 }
 
@@ -908,7 +908,7 @@ txt_table_t *TXT_NewTable(int columns)
 
 // Alternative to TXT_NewTable() that allows a list of widgets to be
 // provided in its arguments.
-txt_table_t *TXT_MakeTable(int columns, ...)
+txt_table_t *txt_make_table(int columns, ...)
 {
     txt_table_t *table;
     va_list args;
@@ -936,7 +936,7 @@ txt_table_t *TXT_MakeTable(int columns, ...)
 
 // Create a horizontal table from a list of widgets.
 
-txt_table_t *TXT_NewHorizBox(TXT_UNCAST_ARG(first_widget), ...)
+txt_table_t *txt_new_horiz_box(TXT_UNCAST_ARG(first_widget), ...)
 {
     TXT_CAST_ARG(txt_widget_t, first_widget);
     txt_table_t *result;
@@ -1120,7 +1120,7 @@ void TXT_SetTableColumns(TXT_UNCAST_ARG(table), int new_columns)
                 // the column widths.
                 if (i < table->columns)
                 {
-                    widget = &TXT_NewStrut(0, 0)->widget;
+                    widget = &txt_new_strut(0, 0)->widget;
                 }
                 else
                 {
@@ -1140,7 +1140,7 @@ void TXT_SetTableColumns(TXT_UNCAST_ARG(table), int new_columns)
 
 // Sets the widths of columns in a table.
 
-void TXT_SetColumnWidths(TXT_UNCAST_ARG(table), ...)
+void txt_set_column_widths(TXT_UNCAST_ARG(table), ...)
 {
     TXT_CAST_ARG(txt_table_t, table);
     va_list args;

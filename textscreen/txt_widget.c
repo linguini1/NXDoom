@@ -92,7 +92,7 @@ void TXT_InitWidget(TXT_UNCAST_ARG(widget), txt_widget_class_t *widget_class)
     widget->align = TXT_HORIZ_LEFT;
 }
 
-void TXT_SignalConnect(TXT_UNCAST_ARG(widget),
+void txt_signal_connect(TXT_UNCAST_ARG(widget),
                        const char *signal_name,
                        TxtWidgetSignalFunc func, 
                        void *user_data)

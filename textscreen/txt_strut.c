@@ -57,7 +57,7 @@ txt_widget_class_t txt_strut_class =
     NULL,
 };
 
-txt_strut_t *TXT_NewStrut(int width, int height)
+txt_strut_t *txt_new_strut(int width, int height)
 {
     txt_strut_t *strut;
 

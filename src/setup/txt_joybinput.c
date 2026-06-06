@@ -461,7 +461,7 @@ static void PromptWindowClosedGamepad(TXT_UNCAST_ARG(widget),
 
 static void OpenErrorWindow(void)
 {
-    TXT_MessageBox(NULL, "Please configure a controller first!");
+    txt_message_box(NULL, "Please configure a controller first!");
 }
 
 static void OpenPromptWindow(txt_joystick_input_t *joystick_input)
@@ -490,10 +490,10 @@ static void OpenPromptWindow(txt_joystick_input_t *joystick_input)
 
     // Open the prompt window
 
-    window = TXT_MessageBox(NULL, "Press the new button on the controller...");
+    window = txt_message_box(NULL, "Press the new button on the controller...");
 
     TXT_SDL_SetEventCallback(EventCallback, joystick_input);
-    TXT_SignalConnect(window, "closed", PromptWindowClosed, joystick);
+    txt_signal_connect(window, "closed", PromptWindowClosed, joystick);
     joystick_input->prompt_window = window;
 
     SDL_JoystickEventState(SDL_ENABLE);
@@ -525,10 +525,10 @@ static void OpenPromptWindowGamepad(txt_joystick_input_t *joystick_input)
 
     // Open the prompt window
 
-    window = TXT_MessageBox(NULL, "Press the new button on the controller...");
+    window = txt_message_box(NULL, "Press the new button on the controller...");
 
     TXT_SDL_SetEventCallback(EventCallbackGamepad, joystick_input);
-    TXT_SignalConnect(window, "closed", PromptWindowClosedGamepad, gamepad);
+    txt_signal_connect(window, "closed", PromptWindowClosedGamepad, gamepad);
     joystick_input->prompt_window = window;
 
     // GameController events do not fire if Joystick events are disabled.
