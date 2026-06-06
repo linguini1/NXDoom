@@ -138,7 +138,7 @@ void P_BringUpWeapon (player_t* player)
 		
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (player->pendingweapon == wp_chainsaw)
-	S_StartSound (player->mo, sfx_sawup);
+	s_start_sound (player->mo, sfx_sawup);
 #endif
 		
     newstate = weaponinfo[player->pendingweapon].upstate;
@@ -293,7 +293,7 @@ A_WeaponReady
 	&& psp->state == &states[S_SAW])
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound (player->mo, sfx_sawidl);
+	s_start_sound (player->mo, sfx_sawidl);
 #endif
     }
     
@@ -485,7 +485,7 @@ A_Punch
     if (linetarget)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound (player->mo, sfx_punch);
+	s_start_sound (player->mo, sfx_punch);
 #endif
 	player->mo->angle = r_point_to_angle2 (player->mo->x,
 					     player->mo->y,
@@ -518,12 +518,12 @@ A_Saw
     if (!linetarget)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound (player->mo, sfx_sawful);
+	s_start_sound (player->mo, sfx_sawful);
 #endif
 	return;
     }
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_StartSound (player->mo, sfx_sawhit);
+    s_start_sound (player->mo, sfx_sawhit);
 #endif
 	
     // turn to face target
@@ -671,7 +671,7 @@ A_FirePistol
   pspdef_t*	psp ) 
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_StartSound (player->mo, sfx_pistol);
+    s_start_sound (player->mo, sfx_pistol);
 #endif
 
     P_SetMobjState (player->mo, S_PLAY_ATK2);
@@ -697,7 +697,7 @@ A_FireShotgun
     int		i;
 	
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_StartSound (player->mo, sfx_shotgn);
+    s_start_sound (player->mo, sfx_shotgn);
 #endif
     P_SetMobjState (player->mo, S_PLAY_ATK2);
 
@@ -729,7 +729,7 @@ A_FireShotgun2
 		
 	
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_StartSound (player->mo, sfx_dshtgn);
+    s_start_sound (player->mo, sfx_dshtgn);
 #endif
     P_SetMobjState (player->mo, S_PLAY_ATK2);
 
@@ -763,7 +763,7 @@ A_FireCGun
   pspdef_t*	psp ) 
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_StartSound (player->mo, sfx_pistol);
+    s_start_sound (player->mo, sfx_pistol);
 #endif
 
     if (!player->ammo[weaponinfo[player->readyweapon].ammo])
@@ -850,7 +850,7 @@ A_BFGsound
   pspdef_t*	psp )
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-    S_StartSound (player->mo, sfx_bfg);
+    s_start_sound (player->mo, sfx_bfg);
 #endif
 }
 

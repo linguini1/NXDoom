@@ -61,7 +61,7 @@ boolean G_CheckDemoStatus (void);
 void G_ExitLevel (void);
 void G_SecretExitLevel (void);
 
-void G_WorldDone (void);
+void g_world_done (void);
 
 // Read current data from inputs and build a player movement command.
 

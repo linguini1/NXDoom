@@ -134,7 +134,7 @@ void P_ExplodeMissile(mobj_t *mo)
   mo->flags &= ~MF_MISSILE;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  if (mo->info->deathsound) S_StartSound(mo, mo->info->deathsound);
+  if (mo->info->deathsound) s_start_sound(mo, mo->info->deathsound);
 #endif
 }
 
@@ -365,7 +365,7 @@ void P_ZMovement(mobj_t *mo)
                */
               mo->player->deltaviewheight = mo->momz >> 3;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              S_StartSound(mo, sfx_oof);
+              s_start_sound(mo, sfx_oof);
 #endif
             }
           mo->momz = 0;
@@ -447,7 +447,7 @@ void P_NightmareRespawn(mobj_t *mobj)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   /* initiate teleport sound */
 
-  S_StartSound(mo, sfx_telept);
+  s_start_sound(mo, sfx_telept);
 #endif
 
   /* spawn a teleport fog at the new spot */
@@ -457,7 +457,7 @@ void P_NightmareRespawn(mobj_t *mobj)
   mo = P_SpawnMobj(x, y, ss->sector->floorheight, MT_TFOG);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  S_StartSound(mo, sfx_telept);
+  s_start_sound(mo, sfx_telept);
 #endif
 
   mthing = &mobj->spawnpoint; /* spawn the new monster */
@@ -671,7 +671,7 @@ void P_RespawnSpecials(void)
   ss = R_PointInSubsector(x, y);
   mo = P_SpawnMobj(x, y, ss->sector->floorheight, MT_IFOG);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  S_StartSound(mo, sfx_itmbk);
+  s_start_sound(mo, sfx_itmbk);
 #endif
 
   /* find which type to spawn */
@@ -997,7 +997,7 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
   th = P_SpawnMobj(source->x, source->y, source->z + 4 * 8 * FRACUNIT, type);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  if (th->info->seesound) S_StartSound(th, th->info->seesound);
+  if (th->info->seesound) s_start_sound(th, th->info->seesound);
 #endif
 
   th->target = source; /* where it came from */
@@ -1071,7 +1071,7 @@ void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
   th = P_SpawnMobj(x, y, z, type);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  if (th->info->seesound) S_StartSound(th, th->info->seesound);
+  if (th->info->seesound) s_start_sound(th, th->info->seesound);
 #endif
 
   th->target = source;

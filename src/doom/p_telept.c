@@ -109,7 +109,7 @@ EV_Teleport
 		// spawn teleport fog at source and destination
 		fog = P_SpawnMobj (oldx, oldy, oldz, MT_TFOG);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound (fog, sfx_telept);
+		s_start_sound (fog, sfx_telept);
 #endif
 		an = m->angle >> ANGLETOFINESHIFT;
 		fog = P_SpawnMobj (m->x+20*finecosine[an], m->y+20*finesine[an]
@@ -117,7 +117,7 @@ EV_Teleport
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 		// emit sound, where?
-		S_StartSound (fog, sfx_telept);
+		s_start_sound (fog, sfx_telept);
 #else
         UNUSED(fog);
 #endif

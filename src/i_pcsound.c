@@ -175,7 +175,7 @@ static boolean IsDisabledSound(sfxinfo_t *sfxinfo)
     return false;
 }
 #if 0
-static int I_PCS_StartSound(sfxinfo_t *sfxinfo,
+static int I_PCs_start_sound(sfxinfo_t *sfxinfo,
                             int channel,
                             int vol,
                             int sep,
@@ -342,7 +342,7 @@ const sound_module_t sound_pcsound_module =
     I_PCS_GetSfxLumpNum,
     I_PCS_UpdateSound,
     I_PCS_UpdateSoundParams,
-    I_PCS_StartSound,
+    I_PCs_start_sound,
     I_PCS_StopSound,
     I_PCS_SoundIsPlaying,
 #endif

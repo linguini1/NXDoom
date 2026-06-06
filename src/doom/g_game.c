@@ -1273,7 +1273,7 @@ G_CheckSpot
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (players[consoleplayer].viewz != 1) 
-	S_StartSound (mo, sfx_telept);	// don't start sound on first frame 
+	s_start_sound (mo, sfx_telept);	// don't start sound on first frame 
 #else
     UNUSED(mo);
 #endif
@@ -1588,9 +1588,9 @@ void G_DoCompleted (void)
 
 
 //
-// G_WorldDone 
+// g_world_done 
 //
-void G_WorldDone (void) 
+void g_world_done (void) 
 { 
     gameaction = ga_worlddone; 
 

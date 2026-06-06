@@ -186,7 +186,7 @@ P_GiveWeapon
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (player == &players[consoleplayer])
-	    S_StartSound (NULL, sfx_wpnup);
+	    s_start_sound (NULL, sfx_wpnup);
 #endif
 	return false;
     }
@@ -704,7 +704,7 @@ P_TouchSpecialThing
     player->bonuscount += BONUSADD;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (player == &players[consoleplayer])
-	S_StartSound (NULL, sound);
+	s_start_sound (NULL, sound);
 #endif
 }
 

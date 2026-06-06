@@ -1208,7 +1208,7 @@ boolean PTR_UseTraverse(intercept_t *in)
       if (openrange <= 0)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          S_StartSound(usething, sfx_noway);
+          s_start_sound(usething, sfx_noway);
 #endif
 
           /* can't use through a wall */

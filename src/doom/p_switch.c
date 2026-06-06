@@ -217,7 +217,7 @@ P_ChangeSwitchTexture
 	if (switchlist[i] == texTop)
 	{
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(buttonlist->soundorg,sound);
+	    s_start_sound(buttonlist->soundorg,sound);
 #endif
 	    sides[line->sidenum[0]].toptexture = switchlist[i^1];
 
@@ -231,7 +231,7 @@ P_ChangeSwitchTexture
 	    if (switchlist[i] == texMid)
 	    {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(buttonlist->soundorg,sound);
+		s_start_sound(buttonlist->soundorg,sound);
 #endif
 		sides[line->sidenum[0]].midtexture = switchlist[i^1];
 
@@ -245,7 +245,7 @@ P_ChangeSwitchTexture
 		if (switchlist[i] == texBot)
 		{
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		    S_StartSound(buttonlist->soundorg,sound);
+		    s_start_sound(buttonlist->soundorg,sound);
 #endif
 		    sides[line->sidenum[0]].bottomtexture = switchlist[i^1];
 

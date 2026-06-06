@@ -214,7 +214,7 @@ void T_MoveFloor(floormove_t* floor)
     
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (!(leveltime&7))
-	S_StartSound(&floor->sector->soundorg, sfx_stnmov);
+	s_start_sound(&floor->sector->soundorg, sfx_stnmov);
 #endif
     
     if (res == pastdest)
@@ -246,7 +246,7 @@ void T_MoveFloor(floormove_t* floor)
 	P_RemoveThinker(&floor->thinker);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound(&floor->sector->soundorg, sfx_pstop);
+	s_start_sound(&floor->sector->soundorg, sfx_pstop);
 #endif
     }
 

@@ -26,17 +26,8 @@
 #include "doomdef.h"
 
 /****************************************************************************
- * Public Types
+ * Public Function Prototypes
  ****************************************************************************/
-
-/* States for the intermission */
-
-typedef enum
-{
-  NoState = -1,
-  StatCount,
-  ShowNextLoc,
-} stateenum_t;
 
 /****************************************************************************
  * Name: wi_ticker

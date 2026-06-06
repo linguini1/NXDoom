@@ -59,7 +59,7 @@ void T_PlatRaise(plat_t* plat)
 	    || plat->type == raiseToNearestAndChange)
 	{
 	    if (!(leveltime&7))
-		S_StartSound(&plat->sector->soundorg, sfx_stnmov);
+		s_start_sound(&plat->sector->soundorg, sfx_stnmov);
 	}
 #endif
 	
@@ -69,7 +69,7 @@ void T_PlatRaise(plat_t* plat)
 	    plat->count = plat->wait;
 	    plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&plat->sector->soundorg, sfx_pstart);
+	    s_start_sound(&plat->sector->soundorg, sfx_pstart);
 #endif
 	}
 	else
@@ -79,7 +79,7 @@ void T_PlatRaise(plat_t* plat)
 		plat->count = plat->wait;
 		plat->status = waiting;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&plat->sector->soundorg, sfx_pstop);
+		s_start_sound(&plat->sector->soundorg, sfx_pstop);
 #endif
 
 		switch(plat->type)
@@ -109,7 +109,7 @@ void T_PlatRaise(plat_t* plat)
 	    plat->count = plat->wait;
 	    plat->status = waiting;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&plat->sector->soundorg,sfx_pstop);
+	    s_start_sound(&plat->sector->soundorg,sfx_pstop);
 #endif
 	}
 	break;
@@ -122,7 +122,7 @@ void T_PlatRaise(plat_t* plat)
 	    else
 		plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&plat->sector->soundorg,sfx_pstart);
+	    s_start_sound(&plat->sector->soundorg,sfx_pstart);
 #endif
 	}
       case	in_stasis:
@@ -192,7 +192,7 @@ EV_DoPlat
 	    sec->special = 0;		
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&sec->soundorg,sfx_stnmov);
+	    s_start_sound(&sec->soundorg,sfx_stnmov);
 #endif
 	    break;
 	    
@@ -204,7 +204,7 @@ EV_DoPlat
 	    plat->status = up;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&sec->soundorg,sfx_stnmov);
+	    s_start_sound(&sec->soundorg,sfx_stnmov);
 #endif
 	    break;
 	    
@@ -219,7 +219,7 @@ EV_DoPlat
 	    plat->wait = TICRATE*PLATWAIT;
 	    plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&sec->soundorg,sfx_pstart);
+	    s_start_sound(&sec->soundorg,sfx_pstart);
 #endif
 	    break;
 	    
@@ -234,7 +234,7 @@ EV_DoPlat
 	    plat->wait = TICRATE*PLATWAIT;
 	    plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&sec->soundorg,sfx_pstart);
+	    s_start_sound(&sec->soundorg,sfx_pstart);
 #endif
 	    break;
 	    
@@ -254,7 +254,7 @@ EV_DoPlat
 	    plat->status = P_Random()&1;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&sec->soundorg,sfx_pstart);
+	    s_start_sound(&sec->soundorg,sfx_pstart);
 #endif
 	    break;
 	}

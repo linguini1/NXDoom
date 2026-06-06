@@ -383,7 +383,7 @@ void F_CastTicker (void)
 	    castnum = 0;
 	if (mobjinfo[castorder[castnum].type].seesound) {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        S_StartSound (NULL, mobjinfo[castorder[castnum].type].seesound);
+        s_start_sound (NULL, mobjinfo[castorder[castnum].type].seesound);
 #endif
     }
 	caststate = &states[mobjinfo[castorder[castnum].type].seestate];
@@ -432,7 +432,7 @@ void F_CastTicker (void)
 	}
 		
 	if (sfx)
-	    S_StartSound (NULL, sfx);
+	    s_start_sound (NULL, sfx);
 #endif
     }
 	
@@ -495,7 +495,7 @@ boolean F_CastResponder (event_t* ev)
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
     if (mobjinfo[castorder[castnum].type].deathsound) {
-        S_StartSound (NULL, mobjinfo[castorder[castnum].type].deathsound);
+        s_start_sound (NULL, mobjinfo[castorder[castnum].type].deathsound);
     }
 #endif
 	
@@ -669,7 +669,7 @@ void F_BunnyScroll (void)
     if (stage > laststage)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound (NULL, sfx_pistol);
+	s_start_sound (NULL, sfx_pistol);
 #endif
 	laststage = stage;
     }

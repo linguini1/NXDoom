@@ -66,7 +66,7 @@ void T_MoveCeiling (ceiling_t* ceiling)
 		break;
 	      default:
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&ceiling->sector->soundorg, sfx_stnmov);
+		s_start_sound(&ceiling->sector->soundorg, sfx_stnmov);
 #endif
 		// ?
 		break;
@@ -83,7 +83,7 @@ void T_MoveCeiling (ceiling_t* ceiling)
 		
 	      case silentCrushAndRaise:
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&ceiling->sector->soundorg, sfx_pstop);
+		s_start_sound(&ceiling->sector->soundorg, sfx_pstop);
 #endif
 	      case fastCrushAndRaise:
 	      case crushAndRaise:
@@ -111,7 +111,7 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	      case silentCrushAndRaise: break;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	      default:
-		S_StartSound(&ceiling->sector->soundorg, sfx_stnmov);
+		s_start_sound(&ceiling->sector->soundorg, sfx_stnmov);
 #else
           default:
         break;
@@ -125,7 +125,7 @@ void T_MoveCeiling (ceiling_t* ceiling)
 	    {
 	      case silentCrushAndRaise:
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&ceiling->sector->soundorg, sfx_pstop);
+		s_start_sound(&ceiling->sector->soundorg, sfx_pstop);
 #endif
 	      case crushAndRaise:
 		ceiling->speed = CEILSPEED;

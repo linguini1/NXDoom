@@ -1172,7 +1172,7 @@ void P_UpdateSpecials (void)
 		    break;
 		}
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&buttonlist[i].soundorg,sfx_swtchn);
+		s_start_sound(&buttonlist[i].soundorg,sfx_swtchn);
 #endif
 		memset(&buttonlist[i],0,sizeof(button_t));
 	    }

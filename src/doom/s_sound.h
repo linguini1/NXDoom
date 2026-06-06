@@ -51,7 +51,7 @@ void S_Start(void);
 //  using <sound_id> from sounds.h
 //
 
-void S_StartSound(void *origin, int sound_id);
+void s_start_sound(void *origin, int sound_id);
 
 // Stop sound for thing at <origin>
 void S_StopSound(mobj_t *origin);

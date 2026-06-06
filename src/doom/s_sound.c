@@ -476,7 +476,7 @@ void S_StopSound(mobj_t *origin)
     }
 }
 
-void S_StartSound(void *origin_p, int sfx_id)
+void s_start_sound(void *origin_p, int sfx_id)
 {
   sfxinfo_t *sfx;
   mobj_t *origin;

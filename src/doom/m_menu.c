@@ -719,7 +719,7 @@ void M_QuickSaveResponse(int key)
     {
 	M_DoSave(quickSaveSlot);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound(NULL,sfx_swtchx);
+	s_start_sound(NULL,sfx_swtchx);
 #endif
     }
 }
@@ -729,7 +729,7 @@ void M_QuickSave(void)
     if (!usergame)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound(NULL,sfx_oof);
+	s_start_sound(NULL,sfx_oof);
 #endif
 	return;
     }
@@ -761,7 +761,7 @@ void M_QuickLoadResponse(int key)
     {
 	M_LoadSelect(quickSaveSlot);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound(NULL,sfx_swtchx);
+	s_start_sound(NULL,sfx_swtchx);
 #endif
     }
 }
@@ -1045,7 +1045,7 @@ void M_EndGame(int choice)
     if (!usergame)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound(NULL,sfx_oof);
+	s_start_sound(NULL,sfx_oof);
 #endif
 	return;
     }
@@ -1124,9 +1124,9 @@ void M_QuitResponse(int key)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	if (gamemode == commercial)
-	    S_StartSound(NULL,quitsounds2[(gametic>>2)&7]);
+	    s_start_sound(NULL,quitsounds2[(gametic>>2)&7]);
 	else
-	    S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
+	    s_start_sound(NULL,quitsounds[(gametic>>2)&7]);
 #endif
 	i_wait_vbl(105);
     }
@@ -1416,7 +1416,7 @@ boolean M_Responder (event_t* ev)
         else
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-            S_StartSound(NULL,sfx_swtchn);
+            s_start_sound(NULL,sfx_swtchn);
 #endif
             M_QuitDOOM(0);
         }
@@ -1666,7 +1666,7 @@ boolean M_Responder (event_t* ev)
 
 	menuactive = false;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound(NULL,sfx_swtchx);
+	s_start_sound(NULL,sfx_swtchx);
 #endif
 	return true;
     }
@@ -1687,7 +1687,7 @@ boolean M_Responder (event_t* ev)
 		return false;
 	    M_SizeDisplay(0);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_stnmov);
+	    s_start_sound(NULL,sfx_stnmov);
 #endif
 	    return true;
 	}
@@ -1697,7 +1697,7 @@ boolean M_Responder (event_t* ev)
 		return false;
 	    M_SizeDisplay(1);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_stnmov);
+	    s_start_sound(NULL,sfx_stnmov);
 #endif
 	    return true;
 	}
@@ -1712,7 +1712,7 @@ boolean M_Responder (event_t* ev)
 
 	    itemOn = 0;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    return true;
 	}
@@ -1720,7 +1720,7 @@ boolean M_Responder (event_t* ev)
         {
 	    M_StartControlPanel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    M_SaveGame(0);
 	    return true;
@@ -1729,7 +1729,7 @@ boolean M_Responder (event_t* ev)
         {
 	    M_StartControlPanel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    M_LoadGame(0);
 	    return true;
@@ -1740,7 +1740,7 @@ boolean M_Responder (event_t* ev)
 	    currentMenu = &SoundDef;
 	    itemOn = sfx_vol;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    return true;
 	}
@@ -1748,14 +1748,14 @@ boolean M_Responder (event_t* ev)
         {
 	    M_ChangeDetail(0);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    return true;
         }
         else if (key == key_menu_qsave)    // Quicksave
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    M_QuickSave();
 	    return true;
@@ -1763,7 +1763,7 @@ boolean M_Responder (event_t* ev)
         else if (key == key_menu_endgame)  // End game
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    M_EndGame(0);
 	    return true;
@@ -1772,14 +1772,14 @@ boolean M_Responder (event_t* ev)
         {
 	    M_ChangeMessages(0);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    return true;
         }
         else if (key == key_menu_qload)    // Quickload
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    M_QuickLoad();
 	    return true;
@@ -1787,7 +1787,7 @@ boolean M_Responder (event_t* ev)
         else if (key == key_menu_quit)     // Quit DOOM
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    M_QuitDOOM(0);
 	    return true;
@@ -1810,7 +1810,7 @@ boolean M_Responder (event_t* ev)
 	{
 	    M_StartControlPanel ();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	    return true;
 	}
@@ -1829,7 +1829,7 @@ boolean M_Responder (event_t* ev)
 		itemOn = 0;
 	    else itemOn++;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_pstop);
+	    s_start_sound(NULL,sfx_pstop);
 #endif
 	} while(currentMenu->menuitems[itemOn].status==-1);
 
@@ -1845,7 +1845,7 @@ boolean M_Responder (event_t* ev)
 		itemOn = currentMenu->numitems-1;
 	    else itemOn--;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_pstop);
+	    s_start_sound(NULL,sfx_pstop);
 #endif
 	} while(currentMenu->menuitems[itemOn].status==-1);
 
@@ -1859,7 +1859,7 @@ boolean M_Responder (event_t* ev)
 	    currentMenu->menuitems[itemOn].status == 2)
 	{
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_stnmov);
+	    s_start_sound(NULL,sfx_stnmov);
 #endif
 	    currentMenu->menuitems[itemOn].routine(0);
 	}
@@ -1873,7 +1873,7 @@ boolean M_Responder (event_t* ev)
 	    currentMenu->menuitems[itemOn].status == 2)
 	{
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_stnmov);
+	    s_start_sound(NULL,sfx_stnmov);
 #endif
 	    currentMenu->menuitems[itemOn].routine(1);
 	}
@@ -1891,14 +1891,14 @@ boolean M_Responder (event_t* ev)
 	    {
 		currentMenu->menuitems[itemOn].routine(1);      // right arrow
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(NULL,sfx_stnmov);
+		s_start_sound(NULL,sfx_stnmov);
 #endif
 	    }
 	    else
 	    {
 		currentMenu->menuitems[itemOn].routine(itemOn);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(NULL,sfx_pistol);
+		s_start_sound(NULL,sfx_pistol);
 #endif
 	    }
 	}
@@ -1911,7 +1911,7 @@ boolean M_Responder (event_t* ev)
 	currentMenu->lastOn = itemOn;
 	M_ClearMenus ();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	S_StartSound(NULL,sfx_swtchx);
+	s_start_sound(NULL,sfx_swtchx);
 #endif
 	return true;
     }
@@ -1925,7 +1925,7 @@ boolean M_Responder (event_t* ev)
 	    currentMenu = currentMenu->prevMenu;
 	    itemOn = currentMenu->lastOn;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_swtchn);
+	    s_start_sound(NULL,sfx_swtchn);
 #endif
 	}
 	return true;
@@ -1943,7 +1943,7 @@ boolean M_Responder (event_t* ev)
 	    {
 		itemOn = i;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(NULL,sfx_pstop);
+		s_start_sound(NULL,sfx_pstop);
 #endif
 		return true;
 	    }
@@ -1955,7 +1955,7 @@ boolean M_Responder (event_t* ev)
 	    {
 		itemOn = i;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(NULL,sfx_pstop);
+		s_start_sound(NULL,sfx_pstop);
 #endif
 		return true;
 	    }

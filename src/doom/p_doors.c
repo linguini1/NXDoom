@@ -72,21 +72,21 @@ void T_VerticalDoor (vldoor_t* door)
 	      case vld_blazeRaise:
 		door->direction = -1; // time to go back down
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&door->sector->soundorg, sfx_bdcls);
+		s_start_sound(&door->sector->soundorg, sfx_bdcls);
 #endif
 		break;
 		
 	      case vld_normal:
 		door->direction = -1; // time to go back down
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&door->sector->soundorg, sfx_dorcls);
+		s_start_sound(&door->sector->soundorg, sfx_dorcls);
 #endif
 		break;
 		
 	      case vld_close30ThenOpen:
 		door->direction = 1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&door->sector->soundorg, sfx_doropn);
+		s_start_sound(&door->sector->soundorg, sfx_doropn);
 #endif
 		break;
 		
@@ -106,7 +106,7 @@ void T_VerticalDoor (vldoor_t* door)
 		door->direction = 1;
 		door->type = vld_normal;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&door->sector->soundorg, sfx_doropn);
+		s_start_sound(&door->sector->soundorg, sfx_doropn);
 #endif
 		break;
 		
@@ -131,7 +131,7 @@ void T_VerticalDoor (vldoor_t* door)
 		door->sector->specialdata = NULL;
 		P_RemoveThinker (&door->thinker);  // unlink and free
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&door->sector->soundorg, sfx_bdcls);
+		s_start_sound(&door->sector->soundorg, sfx_bdcls);
 #endif
 		break;
 		
@@ -161,7 +161,7 @@ void T_VerticalDoor (vldoor_t* door)
 	      default:
 		door->direction = 1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-		S_StartSound(&door->sector->soundorg, sfx_doropn);
+		s_start_sound(&door->sector->soundorg, sfx_doropn);
 #endif
 		break;
 	    }
@@ -227,7 +227,7 @@ EV_DoLockedDoor
 	{
 	    p->message = (PD_BLUEO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_oof);
+	    s_start_sound(NULL,sfx_oof);
 #endif
 	    return 0;
 	}
@@ -239,7 +239,7 @@ EV_DoLockedDoor
 	{
 	    p->message = (PD_REDO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_oof);
+	    s_start_sound(NULL,sfx_oof);
 #endif
 	    return 0;
 	}
@@ -252,7 +252,7 @@ EV_DoLockedDoor
 	{
 	    p->message = (PD_YELLOWO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_oof);
+	    s_start_sound(NULL,sfx_oof);
 #endif
 	    return 0;
 	}
@@ -302,7 +302,7 @@ EV_DoDoor
 	    door->direction = -1;
 	    door->speed = VDOORSPEED * 4;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&door->sector->soundorg, sfx_bdcls);
+	    s_start_sound(&door->sector->soundorg, sfx_bdcls);
 #endif
 	    break;
 	    
@@ -311,7 +311,7 @@ EV_DoDoor
 	    door->topheight -= 4*FRACUNIT;
 	    door->direction = -1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&door->sector->soundorg, sfx_dorcls);
+	    s_start_sound(&door->sector->soundorg, sfx_dorcls);
 #endif
 	    break;
 	    
@@ -319,7 +319,7 @@ EV_DoDoor
 	    door->topheight = sec->ceilingheight;
 	    door->direction = -1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(&door->sector->soundorg, sfx_dorcls);
+	    s_start_sound(&door->sector->soundorg, sfx_dorcls);
 #endif
 	    break;
 	    
@@ -331,7 +331,7 @@ EV_DoDoor
 	    door->speed = VDOORSPEED * 4;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    if (door->topheight != sec->ceilingheight)
-		S_StartSound(&door->sector->soundorg, sfx_bdopn);
+		s_start_sound(&door->sector->soundorg, sfx_bdopn);
 #endif
 	    break;
 	    
@@ -342,7 +342,7 @@ EV_DoDoor
 	    door->topheight -= 4*FRACUNIT;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 	    if (door->topheight != sec->ceilingheight)
-		S_StartSound(&door->sector->soundorg, sfx_doropn);
+		s_start_sound(&door->sector->soundorg, sfx_doropn);
 #endif
 	    break;
 	    
@@ -384,7 +384,7 @@ EV_VerticalDoor
 	{
 	    player->message = (PD_BLUEK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_oof);
+	    s_start_sound(NULL,sfx_oof);
 #endif
 	    return;
 	}
@@ -400,7 +400,7 @@ EV_VerticalDoor
 	{
 	    player->message = (PD_YELLOWK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_oof);
+	    s_start_sound(NULL,sfx_oof);
 #endif
 	    return;
 	}
@@ -415,7 +415,7 @@ EV_VerticalDoor
 	{
 	    player->message = (PD_REDK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-	    S_StartSound(NULL,sfx_oof);
+	    s_start_sound(NULL,sfx_oof);
 #endif
 	    return;
 	}
@@ -493,16 +493,16 @@ EV_VerticalDoor
     {
       case 117:	// BLAZING DOOR RAISE
       case 118:	// BLAZING DOOR OPEN
-	S_StartSound(&sec->soundorg,sfx_bdopn);
+	s_start_sound(&sec->soundorg,sfx_bdopn);
 	break;
 	
       case 1:	// NORMAL DOOR SOUND
       case 31:
-	S_StartSound(&sec->soundorg,sfx_doropn);
+	s_start_sound(&sec->soundorg,sfx_doropn);
 	break;
 	
       default:	// LOCKED DOOR SOUND
-	S_StartSound(&sec->soundorg,sfx_doropn);
+	s_start_sound(&sec->soundorg,sfx_doropn);
 	break;
     }
 #endif
