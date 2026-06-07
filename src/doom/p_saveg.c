@@ -1573,7 +1573,7 @@ void P_ArchiveThinkers(void)
           continue;
         }
 
-      // I_Error ("P_ArchiveThinkers: Unknown thinker function");
+      // i_error ("P_ArchiveThinkers: Unknown thinker function");
     }
 
   // add a terminating marker
@@ -1630,7 +1630,7 @@ void P_UnArchiveThinkers(void)
           break;
 
         default:
-          I_Error("Unknown tclass %i in savegame", tclass);
+          i_error("Unknown tclass %i in savegame", tclass);
         }
     }
 }
@@ -1838,7 +1838,7 @@ void P_UnArchiveSpecials(void)
           break;
 
         default:
-          I_Error("P_UnarchiveSpecials:Unknown tclass %i "
+          i_error("P_UnarchiveSpecials:Unknown tclass %i "
                   "in savegame",
                   tclass);
         }

@@ -154,14 +154,14 @@ static boolean net_cl_init_client(void)
 
 static boolean net_cl_init_server(void)
 {
-  I_Error("NET_CL_InitServer: attempted to initialize client pipe end as a "
+  i_error("NET_CL_InitServer: attempted to initialize client pipe end as a "
           "server!");
   return false;
 }
 
 static void net_cl_send_packet(net_addr_t *addr, net_packet_t *packet)
 {
-  queue_push(&server_queue, NET_PacketDup(packet));
+  queue_push(&server_queue, net_packet_dup(packet));
 }
 
 static boolean net_cl_recv_packet(net_addr_t **addr, net_packet_t **packet)
@@ -210,7 +210,7 @@ static net_addr_t *net_cl_resolve_address(const char *address)
 
 static boolean net_sv_init_client(void)
 {
-  I_Error("net_sv_initClient: attempted to initialize server pipe end as a "
+  i_error("net_sv_initClient: attempted to initialize server pipe end as a "
           "client!");
   return false;
 }
@@ -223,7 +223,7 @@ static boolean net_sv_init_server(void)
 
 static void net_sv_send_packet(net_addr_t *addr, net_packet_t *packet)
 {
-  queue_push(&client_queue, NET_PacketDup(packet));
+  queue_push(&client_queue, net_packet_dup(packet));
 }
 
 static boolean net_sv_recv_packet(net_addr_t **addr, net_packet_t **packet)

@@ -1,16 +1,25 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_spinctrl.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <ctype.h>
 #include <math.h>
@@ -27,9 +36,42 @@
 #include "txt_utf8.h"
 #include "txt_window.h"
 
-// Generate the format string to be used for displaying floats
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
 
-static void FloatFormatString(float step, char *buf, size_t buf_len)
+static void txt_spin_control_size_calc(TXT_UNCAST_ARG(spincontrol));
+static void txt_spin_control_drawer(TXT_UNCAST_ARG(spincontrol));
+static int txt_spincontrol_keypress(TXT_UNCAST_ARG(spincontrol), int key);
+static void txt_spin_control_destructor(TXT_UNCAST_ARG(spincontrol));
+static void txt_spincontrol_mousepress(TXT_UNCAST_ARG(spincontrol), int x,
+                                      int y, int b);
+static void txt_spincontrol_focused(TXT_UNCAST_ARG(spincontrol),
+                                    int focused);
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+txt_widget_class_t txt_spincontrol_class =
+{
+  txt_always_selectable,
+  txt_spin_control_size_calc,
+  txt_spin_control_drawer,
+  txt_spincontrol_keypress,
+  txt_spin_control_destructor,
+  txt_spincontrol_mousepress,
+  NULL,
+  txt_spincontrol_focused,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+/* Generate the format string to be used for displaying floats */
+
+static void float_format_string(float step, char *buf, size_t buf_len)
 {
   int precision;
 
@@ -37,35 +79,35 @@ static void FloatFormatString(float step, char *buf, size_t buf_len)
 
   if (precision > 0)
     {
-      TXT_snprintf(buf, buf_len, "%%.%if", precision);
+      txt_snprintf(buf, buf_len, "%%.%if", precision);
     }
   else
     {
-      TXT_StringCopy(buf, "%.1f", buf_len);
+      txt_string_copy(buf, "%.1f", buf_len);
     }
 }
 
-// Number of characters needed to represent a character
+/* Number of characters needed to represent a character */
 
-static unsigned int IntWidth(int val)
+static unsigned int int_width(int val)
 {
   char buf[25];
 
-  TXT_snprintf(buf, sizeof(buf), "%i", val);
+  txt_snprintf(buf, sizeof(buf), "%i", val);
 
   return strlen(buf);
 }
 
-static unsigned int FloatWidth(float val, float step)
+static unsigned int float_width(float val, float step)
 {
   unsigned int precision;
   unsigned int result;
 
-  // Calculate the width of the int value
+  /* Calculate the width of the int value */
 
-  result = IntWidth((int)val);
+  result = int_width((int)val);
 
-  // Add a decimal part if the precision specifies it
+  /* Add a decimal part if the precision specifies it */
 
   precision = (unsigned int)ceil(-log(step) / log(10));
 
@@ -77,28 +119,30 @@ static unsigned int FloatWidth(float val, float step)
   return result;
 }
 
-// Returns the minimum width of the input box
+/* Returns the minimum width of the input box */
 
-static unsigned int SpinControlWidth(txt_spincontrol_t *spincontrol)
+static unsigned int spin_control_width(txt_spincontrol_t *spincontrol)
 {
-  unsigned int minw, maxw;
+  unsigned int minw;
+  unsigned int maxw;
 
   switch (spincontrol->type)
     {
     case TXT_SPINCONTROL_FLOAT:
-      minw = FloatWidth(spincontrol->min.f, spincontrol->step.f);
-      maxw = FloatWidth(spincontrol->max.f, spincontrol->step.f);
+      minw = float_width(spincontrol->min.f, spincontrol->step.f);
+      maxw = float_width(spincontrol->max.f, spincontrol->step.f);
       break;
 
     default:
     case TXT_SPINCONTROL_INT:
-      minw = IntWidth(spincontrol->min.i);
-      maxw = IntWidth(spincontrol->max.i);
+      minw = int_width(spincontrol->min.i);
+      maxw = int_width(spincontrol->max.i);
       break;
     }
 
-  // Choose the wider of the two values.  Add one so that there is always
-  // space for the cursor when editing.
+  /* Choose the wider of the two values.  Add one so that there is always
+   * space for the cursor when editing.
+   */
 
   if (minw > maxw)
     {
@@ -110,34 +154,34 @@ static unsigned int SpinControlWidth(txt_spincontrol_t *spincontrol)
     }
 }
 
-static void TXT_SpinControlSizeCalc(TXT_UNCAST_ARG(spincontrol))
+static void txt_spin_control_size_calc(TXT_UNCAST_ARG(spincontrol))
 {
   TXT_CAST_ARG(txt_spincontrol_t, spincontrol);
 
-  spincontrol->widget.w = SpinControlWidth(spincontrol) + 5;
+  spincontrol->widget.w = spin_control_width(spincontrol) + 5;
   spincontrol->widget.h = 1;
 }
 
-static void SetBuffer(txt_spincontrol_t *spincontrol)
+static void set_buffer(txt_spincontrol_t *spincontrol)
 {
   char format[25];
 
   switch (spincontrol->type)
     {
     case TXT_SPINCONTROL_INT:
-      TXT_snprintf(spincontrol->buffer, spincontrol->buffer_len, "%i",
+      txt_snprintf(spincontrol->buffer, spincontrol->buffer_len, "%i",
                    spincontrol->value->i);
       break;
 
     case TXT_SPINCONTROL_FLOAT:
-      FloatFormatString(spincontrol->step.f, format, sizeof(format));
-      TXT_snprintf(spincontrol->buffer, spincontrol->buffer_len, format,
+      float_format_string(spincontrol->step.f, format, sizeof(format));
+      txt_snprintf(spincontrol->buffer, spincontrol->buffer_len, format,
                    spincontrol->value->f);
       break;
     }
 }
 
-static void TXT_SpinControlDrawer(TXT_UNCAST_ARG(spincontrol))
+static void txt_spin_control_drawer(TXT_UNCAST_ARG(spincontrol))
 {
   TXT_CAST_ARG(txt_spincontrol_t, spincontrol);
   unsigned int i;
@@ -148,64 +192,65 @@ static void TXT_SpinControlDrawer(TXT_UNCAST_ARG(spincontrol))
 
   focused = spincontrol->widget.focused;
 
-  TXT_SaveColors(&colors);
+  txt_save_colours(&colors);
 
-  TXT_FGColor(TXT_COLOR_BRIGHT_CYAN);
-  TXT_DrawCodePageString("\x1b ");
+  txt_fgcolour(TXT_COLOR_BRIGHT_CYAN);
+  txt_draw_code_page_string("\x1b ");
 
-  TXT_RestoreColors(&colors);
+  txt_restore_colours(&colors);
 
-  // Choose background color
+  /* Choose background color */
 
   if (focused && spincontrol->editing)
     {
-      TXT_BGColor(TXT_COLOR_BLACK, 0);
+      txt_bgcolour(TXT_COLOR_BLACK, 0);
     }
   else
     {
-      TXT_SetWidgetBG(spincontrol);
+      txt_set_widget_bg(spincontrol);
     }
 
   if (!spincontrol->editing)
     {
-      SetBuffer(spincontrol);
+      set_buffer(spincontrol);
     }
 
   i = 0;
 
-  bw = TXT_UTF8_Strlen(spincontrol->buffer);
+  bw = txt_utf8_strlen(spincontrol->buffer);
   padding = spincontrol->widget.w - bw - 4;
 
   while (i < padding)
     {
-      TXT_DrawString(" ");
+      txt_draw_string(" ");
       ++i;
     }
 
-  TXT_DrawString(spincontrol->buffer);
+  txt_draw_string(spincontrol->buffer);
   i += bw;
 
   while (i < spincontrol->widget.w - 4)
     {
-      TXT_DrawString(" ");
+      txt_draw_string(" ");
       ++i;
     }
 
-  TXT_RestoreColors(&colors);
-  TXT_FGColor(TXT_COLOR_BRIGHT_CYAN);
-  TXT_DrawCodePageString(" \x1a");
+  txt_restore_colours(&colors);
+  txt_fgcolour(TXT_COLOR_BRIGHT_CYAN);
+  txt_draw_code_page_string(" \x1a");
 }
 
-static void TXT_SpinControlDestructor(TXT_UNCAST_ARG(spincontrol))
+static void txt_spin_control_destructor(TXT_UNCAST_ARG(spincontrol))
 {
   TXT_CAST_ARG(txt_spincontrol_t, spincontrol);
 
   free(spincontrol->buffer);
 }
 
-static void AddCharacter(txt_spincontrol_t *spincontrol, int key)
+static void add_character(txt_spincontrol_t *spincontrol, int key)
 {
-  if (TXT_UTF8_Strlen(spincontrol->buffer) < SpinControlWidth(spincontrol) &&
+  if (txt_utf8_strlen(spincontrol->buffer) <
+          spin_control_width(spincontrol) &&
       strlen(spincontrol->buffer) < spincontrol->buffer_len - 2)
     {
       spincontrol->buffer[strlen(spincontrol->buffer) + 1] = '\0';
@@ -213,15 +258,15 @@ static void AddCharacter(txt_spincontrol_t *spincontrol, int key)
     }
 }
 
-static void Backspace(txt_spincontrol_t *spincontrol)
+static void backspace(txt_spincontrol_t *spincontrol)
 {
-  if (TXT_UTF8_Strlen(spincontrol->buffer) > 0)
+  if (txt_utf8_strlen(spincontrol->buffer) > 0)
     {
       spincontrol->buffer[strlen(spincontrol->buffer) - 1] = '\0';
     }
 }
 
-static void EnforceLimits(txt_spincontrol_t *spincontrol)
+static void enforce_limits(txt_spincontrol_t *spincontrol)
 {
   switch (spincontrol->type)
     {
@@ -241,7 +286,7 @@ static void EnforceLimits(txt_spincontrol_t *spincontrol)
     }
 }
 
-static void FinishEditing(txt_spincontrol_t *spincontrol)
+static void finish_editing(txt_spincontrol_t *spincontrol)
 {
   switch (spincontrol->type)
     {
@@ -255,52 +300,54 @@ static void FinishEditing(txt_spincontrol_t *spincontrol)
     }
 
   spincontrol->editing = 0;
-  EnforceLimits(spincontrol);
+  enforce_limits(spincontrol);
 }
 
-static int TXT_SpinControlKeyPress(TXT_UNCAST_ARG(spincontrol), int key)
+static int txt_spincontrol_keypress(TXT_UNCAST_ARG(spincontrol), int key)
 {
   TXT_CAST_ARG(txt_spincontrol_t, spincontrol);
 
-  // Enter to enter edit mode
+  /* Enter to enter edit mode */
 
   if (spincontrol->editing)
     {
       if (key == KEY_ENTER)
         {
-          FinishEditing(spincontrol);
+          finish_editing(spincontrol);
           return 1;
         }
 
       if (key == KEY_ESCAPE)
         {
-          // Abort without saving value
+          /* Abort without saving value */
+
           spincontrol->editing = 0;
           return 1;
         }
 
       if (isdigit(key) || key == '-' || key == '.')
         {
-          AddCharacter(spincontrol, key);
+          add_character(spincontrol, key);
           return 1;
         }
 
       if (key == KEY_BACKSPACE)
         {
-          Backspace(spincontrol);
+          backspace(spincontrol);
           return 1;
         }
     }
   else
     {
-      // Non-editing mode
+      /* Non-editing mode */
 
       if (key == KEY_ENTER)
         {
           spincontrol->editing = 1;
-          TXT_StringCopy(spincontrol->buffer, "", spincontrol->buffer_len);
+          txt_string_copy(spincontrol->buffer, "", spincontrol->buffer_len);
           return 1;
         }
+
       if (key == KEY_LEFTARROW)
         {
           switch (spincontrol->type)
@@ -314,7 +361,7 @@ static int TXT_SpinControlKeyPress(TXT_UNCAST_ARG(spincontrol), int key)
               break;
             }
 
-          EnforceLimits(spincontrol);
+          enforce_limits(spincontrol);
 
           return 1;
         }
@@ -332,7 +379,7 @@ static int TXT_SpinControlKeyPress(TXT_UNCAST_ARG(spincontrol), int key)
               break;
             }
 
-          EnforceLimits(spincontrol);
+          enforce_limits(spincontrol);
 
           return 1;
         }
@@ -341,7 +388,7 @@ static int TXT_SpinControlKeyPress(TXT_UNCAST_ARG(spincontrol), int key)
   return 0;
 }
 
-static void TXT_SpinControlMousePress(TXT_UNCAST_ARG(spincontrol), int x,
+static void txt_spincontrol_mousepress(TXT_UNCAST_ARG(spincontrol), int x,
                                       int y, int b)
 {
   TXT_CAST_ARG(txt_spincontrol_t, spincontrol);
@@ -351,73 +398,63 @@ static void TXT_SpinControlMousePress(TXT_UNCAST_ARG(spincontrol), int x,
 
   if (rel_x < 2)
     {
-      TXT_SpinControlKeyPress(spincontrol, KEY_LEFTARROW);
+      txt_spincontrol_keypress(spincontrol, KEY_LEFTARROW);
     }
   else if (rel_x >= spincontrol->widget.w - 2)
     {
-      TXT_SpinControlKeyPress(spincontrol, KEY_RIGHTARROW);
+      txt_spincontrol_keypress(spincontrol, KEY_RIGHTARROW);
     }
 }
 
-static void TXT_SpinControlFocused(TXT_UNCAST_ARG(spincontrol), int focused)
+static void txt_spincontrol_focused(TXT_UNCAST_ARG(spincontrol), int focused)
 {
   TXT_CAST_ARG(txt_spincontrol_t, spincontrol);
 
-  FinishEditing(spincontrol);
+  finish_editing(spincontrol);
 }
 
-txt_widget_class_t txt_spincontrol_class = {
-    TXT_AlwaysSelectable,
-    TXT_SpinControlSizeCalc,
-    TXT_SpinControlDrawer,
-    TXT_SpinControlKeyPress,
-    TXT_SpinControlDestructor,
-    TXT_SpinControlMousePress,
-    NULL,
-    TXT_SpinControlFocused,
-};
-
-static txt_spincontrol_t *TXT_BaseSpinControl(void)
+static txt_spincontrol_t *txt_base_spincontrol(void)
 {
   txt_spincontrol_t *spincontrol;
 
   spincontrol = malloc(sizeof(txt_spincontrol_t));
 
-  TXT_InitWidget(spincontrol, &txt_spincontrol_class);
+  txt_init_widget(spincontrol, &txt_spincontrol_class);
   spincontrol->buffer_len = 25;
   spincontrol->buffer = malloc(spincontrol->buffer_len);
-  TXT_StringCopy(spincontrol->buffer, "", spincontrol->buffer_len);
+  txt_string_copy(spincontrol->buffer, "", spincontrol->buffer_len);
   spincontrol->editing = 0;
 
   return spincontrol;
 }
 
-txt_spincontrol_t *TXT_NewSpinControl(int *value, int min, int max)
+txt_spincontrol_t *txt_newspin_control(int *value, int min, int max)
 {
   txt_spincontrol_t *spincontrol;
 
-  spincontrol = TXT_BaseSpinControl();
+  spincontrol = txt_base_spincontrol();
   spincontrol->type = TXT_SPINCONTROL_INT;
   spincontrol->value = (void *)value;
   spincontrol->min.i = min;
   spincontrol->max.i = max;
   spincontrol->step.i = 1;
-  SetBuffer(spincontrol);
+  set_buffer(spincontrol);
 
   return spincontrol;
 }
 
-txt_spincontrol_t *TXT_NewFloatSpinControl(float *value, float min, float max)
+txt_spincontrol_t *txt_new_float_spincontrol(float *value, float min,
+                                             float max)
 {
   txt_spincontrol_t *spincontrol;
 
-  spincontrol = TXT_BaseSpinControl();
+  spincontrol = txt_base_spincontrol();
   spincontrol->type = TXT_SPINCONTROL_FLOAT;
   spincontrol->value = (void *)value;
   spincontrol->min.f = min;
   spincontrol->max.f = max;
   spincontrol->step.f = 0.1f;
-  SetBuffer(spincontrol);
+  set_buffer(spincontrol);
 
   return spincontrol;
 }

@@ -396,7 +396,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
 
   if (line->sidenum[side ^ 1] == -1)
     {
-      I_Error("EV_VerticalDoor: DR special type on 1-sided linedef");
+      i_error("EV_VerticalDoor: DR special type on 1-sided linedef");
     }
 
   sec = sides[line->sidenum[side ^ 1]].sector;
@@ -766,7 +766,7 @@ EV_SlidingDoor
 	door->whichDoorIndex = P_FindSlidingDoorType(line);
 
 	if (door->whichDoorIndex < 0)
-	    I_Error("EV_SlidingDoor: Can't use texture for sliding door!");
+	    i_error("EV_SlidingDoor: Can't use texture for sliding door!");
 			
 	door->frontsector = sec;
 	door->backsector = line->backsector;

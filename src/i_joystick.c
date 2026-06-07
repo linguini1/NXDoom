@@ -827,7 +827,7 @@ void I_UpdateJoystick(void)
 #endif
 }
 
-void I_BindJoystickVariables(void)
+void I_bind_joystick_variables(void)
 {
   int i;
 

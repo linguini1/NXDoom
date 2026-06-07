@@ -116,7 +116,7 @@ static void z_remove_block(memblock_t *block)
     {
       if (block->prev->next != block)
         {
-          I_Error("Z_RemoveBlock: Doubly-linked list corrupted!");
+          i_error("Z_RemoveBlock: Doubly-linked list corrupted!");
         }
       block->prev->next = block->next;
     }
@@ -125,7 +125,7 @@ static void z_remove_block(memblock_t *block)
     {
       if (block->next->prev != block)
         {
-          I_Error("Z_RemoveBlock: Doubly-linked list corrupted!");
+          i_error("Z_RemoveBlock: Doubly-linked list corrupted!");
         }
       block->next->prev = block->prev;
     }
@@ -257,7 +257,7 @@ void z_free(void *ptr)
 
   if (block->id != ZONEID)
     {
-      I_Error("z_free: freed a pointer without ZONEID");
+      i_error("z_free: freed a pointer without ZONEID");
     }
 
   if (block->tag != PU_FREE && block->user != NULL)
@@ -293,14 +293,14 @@ void *z_malloc(int size, int tag, void *user)
 
   if (tag < 0 || tag >= PU_NUM_TAGS || tag == PU_FREE)
     {
-      I_Error("z_malloc: attempted to allocate a block with an invalid "
+      i_error("z_malloc: attempted to allocate a block with an invalid "
               "tag: %i",
               tag);
     }
 
   if (user == NULL && tag >= PU_PURGELEVEL)
     {
-      I_Error("z_malloc: an owner is required for purgable blocks");
+      i_error("z_malloc: an owner is required for purgable blocks");
     }
 
   /* Malloc a block of the required size */
@@ -315,7 +315,7 @@ void *z_malloc(int size, int tag, void *user)
         {
           if (!clear_cache(sizeof(memblock_t) + size))
             {
-              I_Error("z_malloc: failed on allocation of %i bytes", size);
+              i_error("z_malloc: failed on allocation of %i bytes", size);
             }
         }
     }
@@ -476,12 +476,12 @@ void z_check_heap(void)
         {
           if (block->id != ZONEID)
             {
-              I_Error("z_check_heap: Block without a ZONEID!");
+              i_error("z_check_heap: Block without a ZONEID!");
             }
 
           if (block->prev != prev)
             {
-              I_Error("z_check_heap: Doubly-linked list corrupted!");
+              i_error("z_check_heap: Doubly-linked list corrupted!");
             }
 
           prev = block;
@@ -500,10 +500,10 @@ void z_change_tag2(void *ptr, int tag, const char *file, int line)
   block = (memblock_t *)((byte *)ptr - sizeof(memblock_t));
 
   if (block->id != ZONEID)
-    I_Error("%s:%i: z_change_tag: block without a ZONEID!", file, line);
+    i_error("%s:%i: z_change_tag: block without a ZONEID!", file, line);
 
   if (tag >= PU_PURGELEVEL && block->user == NULL)
-    I_Error("%s:%i: z_change_tag: an owner is required "
+    i_error("%s:%i: z_change_tag: an owner is required "
             "for purgable blocks",
             file, line);
 
@@ -524,7 +524,7 @@ void z_change_user(void *ptr, void **user)
 
   if (block->id != ZONEID)
     {
-      I_Error("z_change_user: Tried to change user for invalid block!");
+      i_error("z_change_user: Tried to change user for invalid block!");
     }
 
   block->user = user;

@@ -89,7 +89,7 @@ static byte *AutoAllocMemory(int *size, int default_ram, int min_ram)
 
       if (default_ram < min_ram)
         {
-          I_Error("Unable to allocate %i MiB of RAM for zone", default_ram);
+          i_error("Unable to allocate %i MiB of RAM for zone", default_ram);
         }
 
       // Try to allocate the zone memory.
@@ -219,7 +219,7 @@ void I_Init (void)
 void I_BindVariables(void)
 {
     i_bind_video_variables();
-    I_BindJoystickVariables();
+    I_bind_joystick_variables();
     i_bind_sound_variables();
 }
 */
@@ -250,12 +250,12 @@ void I_Quit(void)
 }
 
 //
-// I_Error
+// i_error
 //
 
 static boolean already_quitting = false;
 
-void I_Error(const char *error, ...)
+void i_error(const char *error, ...)
 {
   char msgbuf[512];
   va_list argptr;
@@ -264,7 +264,7 @@ void I_Error(const char *error, ...)
 
   if (already_quitting)
     {
-      fprintf(stderr, "Warning: recursive call to I_Error detected.\n");
+      fprintf(stderr, "Warning: recursive call to i_error detected.\n");
       exit(-1);
     }
   else
@@ -329,10 +329,10 @@ void I_Error(const char *error, ...)
 }
 
 //
-// I_Realloc
+// i_realloc
 //
 
-void *I_Realloc(void *ptr, size_t size)
+void *i_realloc(void *ptr, size_t size)
 {
   void *new_ptr;
 
@@ -340,7 +340,7 @@ void *I_Realloc(void *ptr, size_t size)
 
   if (size != 0 && new_ptr == NULL)
     {
-      I_Error("I_Realloc: failed on reallocation of %zu bytes", size);
+      i_error("i_realloc: failed on reallocation of %zu bytes", size);
     }
 
   return new_ptr;

@@ -60,7 +60,7 @@
 
 #define MASTER_RESOLVE_PERIOD 8 * 60 * 60 /* 8 hours */
 
-#define NET_SV_ExpandTicNum(b) NET_ExpandTicNum(recvwindow_start, (b))
+#define NET_SV_ExpandTicNum(b) net_expand_tic_num(recvwindow_start, (b))
 
 /****************************************************************************
  * Private Types
@@ -215,7 +215,7 @@ static void net_sv_disconnect_client(net_client_t *client)
 {
   if (client->active)
     {
-      NET_Conn_Disconnect(&client->connection);
+      net_conn_disconnect(&client->connection);
     }
 }
 
@@ -242,10 +242,10 @@ static void net_sv_send_console_message(net_client_t *client, const char *s,
   vsnprintf(buf, sizeof(buf), s, args);
   va_end(args);
 
-  packet = NET_Conn_NewReliable(&client->connection,
+  packet = net_conn_new_reliable(&client->connection,
                                 NET_PACKET_TYPE_CONSOLE_MESSAGE);
 
-  NET_WriteString(packet, buf);
+  net_write_string(packet, buf);
 }
 
 /* Send a message to all clients */
@@ -484,7 +484,7 @@ static void net_sv_send_waiting_data(net_client_t *client)
    * the 127.* loopback range):
    */
 
-  addr = NET_AddrToString(client->connection.addr);
+  addr = net_addr_to_string(client->connection.addr);
   client_range = client_address_range(addr);
 
   /* set name and address of each player: */
@@ -500,7 +500,7 @@ static void net_sv_send_waiting_data(net_client_t *client)
        * and we do reveal when a client is connected via LAN.
        */
 
-      addr = NET_AddrToString(sv_players[i]->addr);
+      addr = net_addr_to_string(sv_players[i]->addr);
       player_range = client_address_range(addr);
       if (client_range == RANGE_LOCALHOST || client_range == RANGE_PRIVATE ||
           i == wait_data.consoleplayer || player_range == RANGE_LOCALHOST)
@@ -520,14 +520,14 @@ static void net_sv_send_waiting_data(net_client_t *client)
 
   /* Construct packet: */
 
-  packet = NET_NewPacket(10);
-  NET_WriteInt16(packet, NET_PACKET_TYPE_WAITING_DATA);
+  packet = net_new_packet(10);
+  net_write_int16(packet, NET_PACKET_TYPE_WAITING_DATA);
   NET_WriteWaitData(packet, &wait_data);
 
   /* Send packet to client and free */
 
-  NET_Conn_SendPacket(&client->connection, packet);
-  NET_FreePacket(packet);
+  net_conn_send_packet(&client->connection, packet);
+  net_free_packet(packet);
 }
 
 /* Find the latest tic which has been acknowledged as received by
@@ -640,13 +640,13 @@ static void net_sv_send_reject(net_addr_t *addr, const char *msg)
 {
   net_packet_t *packet;
 
-  net_log_info("server: sending reject to %s", NET_AddrToString(addr));
+  net_log_info("server: sending reject to %s", net_addr_to_string(addr));
 
-  packet = NET_NewPacket(10);
-  NET_WriteInt16(packet, NET_PACKET_TYPE_REJECTED);
-  NET_WriteString(packet, msg);
-  NET_SendPacket(addr, packet);
-  NET_FreePacket(packet);
+  packet = net_new_packet(10);
+  net_write_int16(packet, NET_PACKET_TYPE_REJECTED);
+  net_write_string(packet, msg);
+  net_send_packet(addr, packet);
+  net_free_packet(packet);
 }
 
 static void net_sv_init_new_client(net_client_t *client, net_addr_t *addr,
@@ -654,9 +654,9 @@ static void net_sv_init_new_client(net_client_t *client, net_addr_t *addr,
 {
   client->active = true;
   client->connect_time = i_get_time_ms();
-  NET_Conn_InitServer(&client->connection, addr, protocol);
+  net_conn_init_server(&client->connection, addr, protocol);
   client->addr = addr;
-  NET_ReferenceAddress(addr);
+  net_reference_address(addr);
   client->last_send_time = -1;
 
   /* init the ticcmd send queue */
@@ -671,7 +671,7 @@ static void net_sv_init_new_client(net_client_t *client, net_addr_t *addr,
   memset(client->sendqueue, 0xff, sizeof(client->sendqueue));
 
   net_log_info("server: initialized new client from %s",
-               NET_AddrToString(addr));
+               net_addr_to_string(addr));
 }
 
 /* parse a SYN from a client(initiating a connection) */
@@ -692,7 +692,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
 
   /* Read the magic number and check it is the expected one. */
 
-  if (!NET_ReadInt32(packet, &magic))
+  if (!net_read_int32(packet, &magic))
     {
       net_log_err("server: no magic number for SYN");
       return;
@@ -721,7 +721,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
    * common protocol (below).
    */
 
-  client_version = NET_ReadString(packet);
+  client_version = net_read_string(packet);
   if (client_version == NULL)
     {
       net_log_err("server: no version from client");
@@ -752,7 +752,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
    * and the max_players value is in a sensible range.
    */
 
-  if (!NET_ReadConnectData(packet, &data))
+  if (!net_read_connect_data(packet, &data))
     {
       net_log_err("server: failed to read connect data");
       return;
@@ -769,7 +769,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
 
   /* Read the player's name */
 
-  player_name = NET_ReadString(packet);
+  player_name = net_read_string(packet);
   if (player_name == NULL)
     {
       net_log_err("server: failed to read player name");
@@ -898,8 +898,8 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
    * and specifying the protocol that will be used for communications.
    */
 
-  reply = NET_Conn_NewReliable(&client->connection, NET_PACKET_TYPE_SYN);
-  NET_WriteString(reply, PACKAGE_STRING);
+  reply = net_conn_new_reliable(&client->connection, NET_PACKET_TYPE_SYN);
+  net_write_string(reply, PACKAGE_STRING);
   NET_WriteProtocol(reply, protocol);
 }
 
@@ -943,9 +943,9 @@ static void net_sv_parse_launch(net_packet_t *packet, net_client_t *client)
     {
       if (!client_connected(&clients[i])) continue;
 
-      launchpacket = NET_Conn_NewReliable(&clients[i].connection,
+      launchpacket = net_conn_new_reliable(&clients[i].connection,
                                           NET_PACKET_TYPE_LAUNCH);
-      NET_WriteInt8(launchpacket, num_players);
+      net_write_int8(launchpacket, num_players);
     }
 
   /* Now in launch state. */
@@ -1006,7 +1006,7 @@ static void start_game(void)
 
       clients[i].last_gamedata_time = nowtime;
 
-      startpacket = NET_Conn_NewReliable(&clients[i].connection,
+      startpacket = net_conn_new_reliable(&clients[i].connection,
                                          NET_PACKET_TYPE_GAMESTART);
 
       sv_settings.consoleplayer = clients[i].player_number;
@@ -1092,7 +1092,7 @@ static void net_sv_parse_game_start(net_packet_t *packet,
 
   if (client == net_sv_controller())
     {
-      if (!NET_ReadSettings(packet, &settings))
+      if (!net_read_settings(packet, &settings))
         {
           /* Malformed packet */
 
@@ -1102,7 +1102,7 @@ static void net_sv_parse_game_start(net_packet_t *packet,
 
       /* Check the game settings are valid */
 
-      if (!NET_ValidGameSettings(sv_gamemode, sv_gamemission, &settings))
+      if (!net_valid_game_settings(sv_gamemode, sv_gamemission, &settings))
         {
           net_log_err("server: invalid game settings");
           return;
@@ -1135,16 +1135,16 @@ static void net_sv_send_resend_request(net_client_t *client, int start,
   int index;
 
   net_log_info("server: send resend to %s for tics %d-%d",
-               NET_AddrToString(client->addr), start, end);
+               net_addr_to_string(client->addr), start, end);
 
-  packet = NET_NewPacket(20);
+  packet = net_new_packet(20);
 
-  NET_WriteInt16(packet, NET_PACKET_TYPE_GAMEDATA_RESEND);
-  NET_WriteInt32(packet, start);
-  NET_WriteInt8(packet, end - start + 1);
+  net_write_int16(packet, NET_PACKET_TYPE_GAMEDATA_RESEND);
+  net_write_int32(packet, start);
+  net_write_int8(packet, end - start + 1);
 
-  NET_Conn_SendPacket(&client->connection, packet);
-  NET_FreePacket(packet);
+  net_conn_send_packet(&client->connection, packet);
+  net_free_packet(packet);
 
   /* Store the time we send the resend request */
 
@@ -1214,7 +1214,7 @@ static void net_sv_check_resends(net_client_t *client)
 
           net_log_warn(
               "server: resend request to %s timed out for %d-%d (%p)",
-              NET_AddrToString(client->addr), recvwindow_start + resend_start,
+              net_addr_to_string(client->addr), recvwindow_start + resend_start,
               recvwindow_start + resend_end,
               &recvwindow[resend_start][player].resend_time);
           net_sv_send_resend_request(client, recvwindow_start + resend_start,
@@ -1227,7 +1227,7 @@ static void net_sv_check_resends(net_client_t *client)
   if (resend_start >= 0)
     {
       net_log_warn("server: resend request to %s timed out for %d-%d (%p)",
-                   NET_AddrToString(client->addr),
+                   net_addr_to_string(client->addr),
                    recvwindow_start + resend_start,
                    recvwindow_start + resend_end,
                    &recvwindow[resend_start][player].resend_time);
@@ -1269,8 +1269,8 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
 
   /* Read header */
 
-  if (!NET_ReadInt8(packet, &ackseq) || !NET_ReadInt8(packet, &seq) ||
-      !NET_ReadInt8(packet, &num_tics))
+  if (!net_read_int8(packet, &ackseq) || !net_read_int8(packet, &seq) ||
+      !net_read_int8(packet, &num_tics))
     {
       net_log_err("server: failed to read header");
       return;
@@ -1295,7 +1295,7 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
       net_ticdiff_t diff;
       signed int latency;
 
-      if (!NET_ReadSInt16(packet, &latency) ||
+      if (!net_read_sint16(packet, &latency) ||
           !NET_ReadTiccmdDiff(packet, &diff, sv_settings.lowres_turn))
         {
           return;
@@ -1390,7 +1390,7 @@ static void net_sv_parse_game_data_ack(net_packet_t *packet,
 
   /* Read header */
 
-  if (!NET_ReadInt8(packet, &ackseq))
+  if (!net_read_int8(packet, &ackseq))
     {
       net_log_err("server: missing acknowledgement field");
       return;
@@ -1415,14 +1415,14 @@ static void net_sv_send_tics(net_client_t *client, unsigned int start,
   net_packet_t *packet;
   unsigned int i;
 
-  packet = NET_NewPacket(500);
+  packet = net_new_packet(500);
 
-  NET_WriteInt16(packet, NET_PACKET_TYPE_GAMEDATA);
+  net_write_int16(packet, NET_PACKET_TYPE_GAMEDATA);
 
   /* Send the start tic and number of tics */
 
-  NET_WriteInt8(packet, start & 0xff);
-  NET_WriteInt8(packet, end - start + 1);
+  net_write_int8(packet, start & 0xff);
+  net_write_int8(packet, end - start + 1);
 
   /* Write the tics */
 
@@ -1434,7 +1434,7 @@ static void net_sv_send_tics(net_client_t *client, unsigned int start,
 
       if (i != cmd->seq)
         {
-          I_Error("Wanted to send %i, but %i is in its place", i, cmd->seq);
+          i_error("Wanted to send %i, but %i is in its place", i, cmd->seq);
         }
 
       /* Add command */
@@ -1444,9 +1444,9 @@ static void net_sv_send_tics(net_client_t *client, unsigned int start,
 
   /* Send packet */
 
-  NET_Conn_SendPacket(&client->connection, packet);
+  net_conn_send_packet(&client->connection, packet);
 
-  NET_FreePacket(packet);
+  net_free_packet(packet);
 }
 
 /* Parse a retransmission request from a client */
@@ -1463,7 +1463,7 @@ static void net_sv_parse_resend_request(net_packet_t *packet,
 
   /* Read the starting tic and number of tics */
 
-  if (!NET_ReadInt32(packet, &start) || !NET_ReadInt8(packet, &num_tics))
+  if (!net_read_int32(packet, &start) || !net_read_int8(packet, &num_tics))
     {
       net_log_err("server: missing fields for resend");
       return;
@@ -1506,25 +1506,25 @@ static void net_sv_parse_hole_punch(net_packet_t *packet)
   net_packet_t *sendpacket;
   net_addr_t *addr;
 
-  addr_string = NET_ReadString(packet);
+  addr_string = net_read_string(packet);
   if (addr_string == NULL)
     {
       net_log_err("server: hole punch request but no address provided");
       return;
     }
 
-  addr = NET_ResolveAddress(server_context, addr_string);
+  addr = net_resolve_address(server_context, addr_string);
   if (addr == NULL)
     {
       net_log_err("server: failed to resolve address: %s", addr_string);
       return;
     }
 
-  sendpacket = NET_NewPacket(16);
-  NET_WriteInt16(sendpacket, NET_PACKET_TYPE_NAT_HOLE_PUNCH);
-  NET_SendPacket(addr, sendpacket);
-  NET_FreePacket(sendpacket);
-  NET_ReleaseAddress(addr);
+  sendpacket = net_new_packet(16);
+  net_write_int16(sendpacket, NET_PACKET_TYPE_NAT_HOLE_PUNCH);
+  net_send_packet(addr, sendpacket);
+  net_free_packet(sendpacket);
+  net_release_address(addr);
   net_log_info("server: sent hole punch to %s", addr_string);
 }
 
@@ -1534,7 +1534,7 @@ static void net_sv_master_packet(net_packet_t *packet)
 
   /* Read the packet type */
 
-  if (!NET_ReadInt16(packet, &packet_type))
+  if (!net_read_int16(packet, &packet_type))
     {
       net_log_err("server: no packet type in master server message");
       return;
@@ -1546,7 +1546,7 @@ static void net_sv_master_packet(net_packet_t *packet)
   switch (packet_type)
     {
     case NET_MASTER_PACKET_TYPE_ADD_RESPONSE:
-      NET_Query_AddResponse(packet);
+      net_query_add_response(packet);
       break;
 
     case NET_MASTER_PACKET_TYPE_NAT_HOLE_PUNCH:
@@ -1601,12 +1601,12 @@ static void net_sv_send_query_response(net_addr_t *addr)
   /* Send it and we're done. */
 
   net_log_info("server: sending query response to %s",
-               NET_AddrToString(addr));
-  reply = NET_NewPacket(64);
-  NET_WriteInt16(reply, NET_PACKET_TYPE_QUERY_RESPONSE);
+               net_addr_to_string(addr));
+  reply = net_new_packet(64);
+  net_write_int16(reply, NET_PACKET_TYPE_QUERY_RESPONSE);
   NET_WriteQueryData(reply, &querydata);
-  NET_SendPacket(addr, reply);
-  NET_FreePacket(reply);
+  net_send_packet(addr, reply);
+  net_free_packet(reply);
 }
 
 /* Process a packet received by the server */
@@ -1630,14 +1630,14 @@ static void net_sv_packet(net_packet_t *packet, net_addr_t *addr)
 
   /* Read the packet type */
 
-  if (!NET_ReadInt16(packet, &packet_type))
+  if (!net_read_int16(packet, &packet_type))
     {
       /* no packet type */
 
       return;
     }
 
-  net_log_info("server: packet from %s; type %d", NET_AddrToString(addr),
+  net_log_info("server: packet from %s; type %d", net_addr_to_string(addr),
                packet_type & ~NET_RELIABLE_PACKET);
   net_log_packet(packet);
 
@@ -1653,7 +1653,7 @@ static void net_sv_packet(net_packet_t *packet, net_addr_t *addr)
     {
       /* Must come from a valid client; ignore otherwise */
     }
-  else if (NET_Conn_Packet(&client->connection, packet, &packet_type))
+  else if (net_conn_packet(&client->connection, packet, &packet_type))
     {
       /* Packet was eaten by the common connection code */
     }
@@ -1800,7 +1800,7 @@ static void net_sv_pump_send_queue(net_client_t *client)
   if (starttic < 0) starttic = 0;
 
   net_log_info("server: send tics %d-%d to %s", starttic, endtic,
-               NET_AddrToString(client->addr));
+               net_addr_to_string(client->addr));
   net_sv_send_tics(client, starttic, endtic);
 
   ++client->sendseq;
@@ -1853,7 +1853,7 @@ static void net_sv_check_deadlock(net_client_t *client)
   if (nowtime - client->last_gamedata_time > 1000)
     {
       net_log_warn("server: no gamedata from %s since %d - deadlock?",
-                   NET_AddrToString(client->addr),
+                   net_addr_to_string(client->addr),
                    client->last_gamedata_time);
 
       /* Search the receive window for the first tic we are expecting
@@ -1900,13 +1900,13 @@ static void net_sv_run_client(net_client_t *client)
 {
   /* Run common code */
 
-  NET_Conn_Run(&client->connection);
+  net_conn_run(&client->connection);
 
   if (client->connection.state == NET_CONN_STATE_DISCONNECTED &&
       client->connection.disconnect_reason == NET_DISCONNECT_TIMEOUT)
     {
       net_log_warn("server: client at %s timed out",
-                   NET_AddrToString(client->addr));
+                   net_addr_to_string(client->addr));
       net_sv_broadcast_message("Client '%s' timed out and disconnected",
                                client->name);
     }
@@ -1930,7 +1930,7 @@ static void net_sv_run_client(net_client_t *client)
         }
 
       free(client->name);
-      NET_ReleaseAddress(client->addr);
+      net_release_address(client->addr);
 
       /* Are there any clients left connected?  If not, return the
        * server to the waiting-for-players state.
@@ -1987,8 +1987,8 @@ static void update_master_server(void)
     {
       net_addr_t *new_addr;
 
-      new_addr = NET_Query_ResolveMaster(server_context);
-      NET_ReleaseAddress(master_server);
+      new_addr = net_query_resolve_master(server_context);
+      net_release_address(master_server);
       master_server = new_addr;
 
       master_resolve_time = now;
@@ -1998,7 +1998,7 @@ static void update_master_server(void)
 
   if (now - master_refresh_time > MASTER_REFRESH_PERIOD * 1000)
     {
-      NET_Query_AddToMaster(master_server);
+      net_query_add_to_master(master_server);
       master_refresh_time = now;
     }
 }
@@ -2012,7 +2012,7 @@ static void update_master_server(void)
 void net_sv_add_module(net_module_t *module)
 {
   module->InitServer();
-  NET_AddModule(server_context, module);
+  net_add_module(server_context, module);
 }
 
 /* Initialize server and wait for connections */
@@ -2023,7 +2023,7 @@ void net_sv_init(void)
 
   /* initialize send/receive context */
 
-  server_context = NET_NewContext();
+  server_context = net_new_context();
 
   /* no clients yet */
 
@@ -2049,7 +2049,7 @@ void net_sv_register_with_master(void)
 
   if (!m_check_parm("-privateserver"))
     {
-      master_server = NET_Query_ResolveMaster(server_context);
+      master_server = net_query_resolve_master(server_context);
     }
   else
     {
@@ -2060,7 +2060,7 @@ void net_sv_register_with_master(void)
 
   if (master_server != NULL)
     {
-      NET_Query_AddToMaster(master_server);
+      net_query_add_to_master(master_server);
       master_refresh_time = i_get_time_ms();
       master_resolve_time = master_refresh_time;
     }
@@ -2081,11 +2081,11 @@ void net_sv_run(void)
       return;
     }
 
-  while (NET_RecvPacket(server_context, &addr, &packet))
+  while (net_recv_packet(server_context, &addr, &packet))
     {
       net_sv_packet(packet, addr);
-      NET_FreePacket(packet);
-      NET_ReleaseAddress(addr);
+      net_free_packet(packet);
+      net_release_address(addr);
     }
 
   if (master_server != NULL)

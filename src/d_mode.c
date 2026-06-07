@@ -25,8 +25,8 @@
 
 static struct
 {
-  GameMission_t mission;
-  GameMode_t mode;
+  gamemission_t mission;
+  game_mode_t mode;
   int episode;
   int map;
 } valid_modes[] = {
@@ -41,7 +41,7 @@ static struct
 
 // Check that a gamemode+gamemission received over the network is valid.
 
-boolean D_ValidGameMode(GameMission_t mission, GameMode_t mode)
+boolean D_ValidGameMode(gamemission_t mission, game_mode_t mode)
 {
   int i;
 
@@ -56,7 +56,7 @@ boolean D_ValidGameMode(GameMission_t mission, GameMode_t mode)
   return false;
 }
 
-boolean D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode, int episode,
+boolean d_valid_episode_map(gamemission_t mission, game_mode_t mode, int episode,
                           int map)
 {
   int i;
@@ -93,13 +93,13 @@ boolean D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode, int episode,
 
 // Get the number of valid episodes for the specified mission/mode.
 
-int D_GetNumEpisodes(GameMission_t mission, GameMode_t mode)
+int D_GetNumEpisodes(gamemission_t mission, game_mode_t mode)
 {
   int episode;
 
   episode = 1;
 
-  while (D_ValidEpisodeMap(mission, mode, episode, 1))
+  while (d_valid_episode_map(mission, mode, episode, 1))
     {
       ++episode;
     }
@@ -111,7 +111,7 @@ int D_GetNumEpisodes(GameMission_t mission, GameMode_t mode)
 
 static struct
 {
-  GameMission_t mission;
+  gamemission_t mission;
   GameVersion_t version;
 } valid_versions[] = {
     {doom, exe_doom_1_2},     {doom, exe_doom_1_5},
@@ -124,7 +124,7 @@ static struct
     {strife, exe_strife_1_2}, {strife, exe_strife_1_31},
 };
 
-boolean D_ValidGameVersion(GameMission_t mission, GameVersion_t version)
+boolean d_valid_game_version(gamemission_t mission, GameVersion_t version)
 {
   int i;
 
@@ -150,7 +150,7 @@ boolean D_ValidGameVersion(GameMission_t mission, GameVersion_t version)
 
 // Does this mission type use ExMy form, rather than MAPxy form?
 
-boolean D_IsEpisodeMap(GameMission_t mission)
+boolean D_IsEpisodeMap(gamemission_t mission)
 {
   switch (mission)
     {
@@ -171,7 +171,7 @@ boolean D_IsEpisodeMap(GameMission_t mission)
     }
 }
 
-const char *d_game_mission_string(GameMission_t mission)
+const char *d_game_mission_string(gamemission_t mission)
 {
   switch (mission)
     {
@@ -199,7 +199,7 @@ const char *d_game_mission_string(GameMission_t mission)
     }
 }
 
-const char *D_GameModeString(GameMode_t mode)
+const char *D_GameModeString(game_mode_t mode)
 {
   switch (mode)
     {

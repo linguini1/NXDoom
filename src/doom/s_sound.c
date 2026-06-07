@@ -511,7 +511,7 @@ void s_start_sound(void *origin_p, int sfx_id)
 
   if (sfx_id < 1 || sfx_id > NUMSFX)
     {
-      I_Error("Bad sfx #: %d", sfx_id);
+      i_error("Bad sfx #: %d", sfx_id);
     }
 
   sfx = &s_sfx[sfx_id];
@@ -694,7 +694,7 @@ void s_set_music_volume(int volume)
 {
   if (volume < 0 || volume > 127)
     {
-      I_Error("Attempt to set music volume at %d", volume);
+      i_error("Attempt to set music volume at %d", volume);
     }
 
   i_set_music_volume(volume);
@@ -704,7 +704,7 @@ void s_set_sfx_volume(int volume)
 {
   if (volume < 0 || volume > 127)
     {
-      I_Error("Attempt to set sfx volume at %d", volume);
+      i_error("Attempt to set sfx volume at %d", volume);
     }
 
   g_snd_sfx_volume = volume;
@@ -734,7 +734,7 @@ void s_change_music(int musicnum, int looping)
 
   if (musicnum <= mus_None || musicnum >= NUMMUSIC)
     {
-      I_Error("Bad music number %d", musicnum);
+      i_error("Bad music number %d", musicnum);
     }
   else
     {

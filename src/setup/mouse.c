@@ -69,10 +69,10 @@ static void AddMouseControl(TXT_UNCAST_ARG(table), const char *label,
   TXT_CAST_ARG(txt_table_t, table);
   txt_mouse_input_t *mouse_input;
 
-  TXT_AddWidget(table, txt_new_label(label));
+  txt_add_widget(table, txt_new_label(label));
 
-  mouse_input = TXT_NewMouseInput(var);
-  TXT_AddWidget(table, mouse_input);
+  mouse_input = txt_new_mouse_input(var);
+  txt_add_widget(table, mouse_input);
 
   txt_signal_connect(mouse_input, "set", MouseSetCallback, var);
 }
@@ -86,7 +86,7 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 
   txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-  txt_add_widgets(window, buttons_table = TXT_NewTable(4), NULL);
+  txt_add_widgets(window, buttons_table = txt_new_table(4), NULL);
 
   txt_set_column_widths(buttons_table, 16, 11, 16, 10);
 
@@ -118,7 +118,7 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
 
   window = txt_new_window("Mouse configuration");
 
-  TXT_SetTableColumns(window, 2);
+  txt_set_table_columns(window, 2);
 
   txt_set_window_action(window, TXT_HORIZ_CENTER, TestConfigAction());
   txt_set_window_help_url(window, WINDOW_HELP_URL);
@@ -126,7 +126,7 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
   txt_add_widgets(
       window, txt_new_check_box("Enable mouse", &usemouse),
       TXT_TABLE_OVERFLOW_RIGHT,
-      TXT_NewInvertedCheckBox("Allow vertical mouse movement", &novert),
+      txt_new_inverted_checkbox("Allow vertical mouse movement", &novert),
       TXT_TABLE_OVERFLOW_RIGHT,
       txt_new_check_box("Grab mouse in windowed mode", &grabmouse),
       TXT_TABLE_OVERFLOW_RIGHT,
@@ -134,22 +134,22 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
       TXT_TABLE_OVERFLOW_RIGHT,
 
       txt_new_separator("Mouse motion"), txt_new_label("Speed"),
-      TXT_NewSpinControl(&mouseSensitivity, 1, 256),
+      txt_newspin_control(&mouseSensitivity, 1, 256),
       txt_new_label("Acceleration"),
-      TXT_NewFloatSpinControl(&mouse_acceleration, 1.0, 5.0),
+      txt_new_float_spincontrol(&mouse_acceleration, 1.0, 5.0),
       txt_new_label("Acceleration threshold"),
-      TXT_NewSpinControl(&mouse_threshold, 0, 32),
+      txt_newspin_control(&mouse_threshold, 0, 32),
 
       txt_new_separator("Buttons"), NULL);
 
   AddMouseControl(window, "Fire/Attack", &mousebfire);
   AddMouseControl(window, "Use", &mousebuse);
 
-  TXT_AddWidget(window,
-                TXT_NewButton2("More controls...", ConfigExtraButtons, NULL));
+  txt_add_widget(window,
+                txt_new_button2("More controls...", ConfigExtraButtons, NULL));
 }
 
-void BindMouseVariables(void)
+void bind_mouse_variables(void)
 {
   m_bind_int_variable("use_mouse", &usemouse);
   m_bind_int_variable("novert", &novert);

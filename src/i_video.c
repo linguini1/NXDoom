@@ -621,7 +621,7 @@ static void limit_texture_size(int *w_upscale, int *h_upscale)
 
   if (SDL_GetRendererInfo(renderer, &rinfo) != 0)
     {
-      I_Error("CreateUpscaledTexture: SDL_GetRendererInfo() call failed: %s",
+      i_error("CreateUpscaledTexture: SDL_GetRendererInfo() call failed: %s",
               SDL_GetError());
     }
 
@@ -637,7 +637,7 @@ static void limit_texture_size(int *w_upscale, int *h_upscale)
   if ((*w_upscale < 1 && rinfo.max_texture_width > 0) ||
       (*h_upscale < 1 && rinfo.max_texture_height > 0))
     {
-      I_Error("CreateUpscaledTexture: Can't create a texture big enough for "
+      i_error("CreateUpscaledTexture: Can't create a texture big enough for "
               "the whole screen! Maximum texture size %dx%d",
               rinfo.max_texture_width, rinfo.max_texture_height);
     }
@@ -651,7 +651,7 @@ static void limit_texture_size(int *w_upscale, int *h_upscale)
 
   if (max_scaling_buffer_pixels < SCREENWIDTH * SCREENHEIGHT)
     {
-      I_Error("CreateUpscaledTexture: max_scaling_buffer_pixels too small "
+      i_error("CreateUpscaledTexture: max_scaling_buffer_pixels too small "
               "to create a texture buffer: %d < %d",
               max_scaling_buffer_pixels, SCREENWIDTH * SCREENHEIGHT);
     }
@@ -698,7 +698,7 @@ static void create_upscaled_texture(boolean force)
 
   if (SDL_GetRendererOutputSize(renderer, &w, &h) != 0)
     {
-      I_Error("Failed to get renderer output size: %s", SDL_GetError());
+      i_error("Failed to get renderer output size: %s", SDL_GetError());
     }
 
   w = fbstate.vinfo.xres;
@@ -846,7 +846,7 @@ static void set_video_mode(void)
 
       if (screen == NULL)
         {
-          I_Error("Error creating window for video startup: %s",
+          i_error("Error creating window for video startup: %s",
                   SDL_GetError());
         }
 
@@ -864,7 +864,7 @@ static void set_video_mode(void)
 
   if (SDL_GetCurrentDisplayMode(video_display, &mode) != 0)
     {
-      I_Error("Could not get display mode for video display #%d: %s",
+      i_error("Could not get display mode for video display #%d: %s",
               video_display, SDL_GetError());
     }
 
@@ -914,7 +914,7 @@ static void set_video_mode(void)
 
   if (renderer == NULL)
     {
-      I_Error("Error creating renderer for screen window: %s",
+      i_error("Error creating renderer for screen window: %s",
               SDL_GetError());
     }
 
@@ -1525,7 +1525,7 @@ void i_init_graphics(void)
   g_graphics_state.fd = open(CONFIG_GAMES_NXDOOM_FBPATH, O_RDWR);
   if (g_graphics_state.fd < 0)
     {
-      I_Error("Failed to open frame buffer: %d", errno);
+      i_error("Failed to open frame buffer: %d", errno);
     }
 
   /* Get frame buffer characteristics */
@@ -1535,7 +1535,7 @@ void i_init_graphics(void)
   if (err < 0)
     {
       close(g_graphics_state.fd);
-      I_Error("Failed to get video info: %d", errno);
+      i_error("Failed to get video info: %d", errno);
     }
 
   /* Here, we check the dimensions of the frame buffer. If we have enough
@@ -1547,13 +1547,13 @@ void i_init_graphics(void)
 
   if (g_graphics_state.vinfo.xres < SCREENWIDTH)
     {
-      I_Error("Resolution width of %u px < minimum of %u px\n",
+      i_error("Resolution width of %u px < minimum of %u px\n",
               g_graphics_state.vinfo.xres, SCREENWIDTH);
     }
 
   if (g_graphics_state.vinfo.yres < SCREENHEIGHT)
     {
-      I_Error("Resolution height of %u px < minimum of %u px\n",
+      i_error("Resolution height of %u px < minimum of %u px\n",
               g_graphics_state.vinfo.yres, SCREENHEIGHT);
     }
 
@@ -1566,7 +1566,7 @@ void i_init_graphics(void)
   if (ioctl(g_graphics_state.fd, FBIOGET_PLANEINFO,
             (unsigned long)((uintptr_t)&g_graphics_state.pinfo)) < 0)
     {
-      I_Error("ioctl(FBIOGET_PLANEINFO) failed: %d\n", errno);
+      i_error("ioctl(FBIOGET_PLANEINFO) failed: %d\n", errno);
     }
 
   /* Initialize frame buffer memory for actual rendering */
@@ -1576,7 +1576,7 @@ void i_init_graphics(void)
            MAP_SHARED | MAP_FILE, g_graphics_state.fd, 0);
   if (g_graphics_state.fbmem == MAP_FAILED)
     {
-      I_Error("mmap() of frame buffer failed: %d\n", errno);
+      i_error("mmap() of frame buffer failed: %d\n", errno);
     }
 
   /* Create an 8-bit depth screen buffer for DOOM to render to */
@@ -1584,7 +1584,7 @@ void i_init_graphics(void)
   g_graphics_state.scrnbuf = malloc(SCREENWIDTH * SCREENHEIGHT);
   if (g_graphics_state.scrnbuf == NULL)
     {
-      I_Error("Couldn't allocate screen buffer: %d\n", errno);
+      i_error("Couldn't allocate screen buffer: %d\n", errno);
     }
 
   /* Create the game window; this may switch graphic modes depending

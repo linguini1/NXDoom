@@ -1,25 +1,35 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_window.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
 
 #ifndef TXT_WINDOW_H
 #define TXT_WINDOW_H
 
-/**
- * @file txt_window.h
- *
- * Windows.
- */
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_table.h"
+#include "txt_widget.h"
+
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
 
 /**
  * A window.
@@ -28,7 +38,7 @@
  * (@ref txt_table_t) containing a single column.
  *
  * Windows can be created using @ref txt_new_window and closed using
- * @ref TXT_CloseWindow.  When a window is closed, it emits the
+ * @ref txt_close_window.  When a window is closed, it emits the
  * "closed" signal.
  *
  * In addition to the widgets within a window, windows also have
@@ -42,53 +52,60 @@
 
 typedef struct txt_window_s txt_window_t;
 
-#include "txt_table.h"
-#include "txt_widget.h"
 #include "txt_window_action.h"
 
-// Callback function for window key presses
+/* Callback function for window key presses */
 
-typedef int (*TxtWindowKeyPress)(txt_window_t *window, int key,
+typedef int (*txt_window_keypress_t)(txt_window_t *window, int key,
                                  void *user_data);
-typedef int (*TxtWindowMousePress)(txt_window_t *window, int x, int y, int b,
-                                   void *user_data);
+typedef int (*txt_window_mouse_press_t)(txt_window_t *window, int x, int y,
+                                        int b, void *user_data);
 
 struct txt_window_s
 {
-  // Base class: all windows are tables with one column.
+  /* Base class: all windows are tables with one column. */
 
   txt_table_t table;
 
-  // Window title
+  /* Window title */
 
   char *title;
 
-  // Screen coordinates of the window
+  /* Screen coordinates of the window */
 
   txt_vert_align_t vert_align;
   txt_horiz_align_t horiz_align;
-  int x, y;
+  int x;
+  int y;
 
-  // Actions that appear in the box at the bottom of the window
+  /* Actions that appear in the box at the bottom of the window */
 
   txt_widget_t *actions[3];
 
-  // Callback functions to invoke when keys/mouse buttons are pressed
+  /* Callback functions to invoke when keys/mouse buttons are pressed */
 
-  TxtWindowKeyPress key_listener;
+  txt_window_keypress_t key_listener;
   void *key_listener_data;
-  TxtWindowMousePress mouse_listener;
+  txt_window_mouse_press_t mouse_listener;
   void *mouse_listener_data;
 
-  // These are set automatically when the window is drawn
+  /* These are set automatically when the window is drawn */
 
-  int window_x, window_y;
-  unsigned int window_w, window_h;
+  int window_x;
+  int window_y;
+  unsigned int window_w;
+  unsigned int window_h;
 
-  // URL of a webpage with help about this window. If set, a help key
-  // indicator is shown while this window is active.
+  /* URL of a webpage with help about this window. If set, a help key
+   * indicator is shown while this window is active.
+   */
+
   const char *help_url;
 };
+
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
 
 /**
  * Open a new window.
@@ -107,7 +124,7 @@ txt_window_t *txt_new_window(const char *title);
  * @param window       Tine window to close.
  */
 
-void TXT_CloseWindow(txt_window_t *window);
+void txt_close_window(txt_window_t *window);
 
 /**
  * Set the position of a window on the screen.
@@ -169,8 +186,9 @@ void txt_set_window_action(txt_window_t *window, txt_horiz_align_t position,
  *                      function.
  */
 
-void TXT_SetKeyListener(txt_window_t *window, TxtWindowKeyPress key_listener,
-                        void *user_data);
+void txt_set_key_listener(txt_window_t *window,
+                          txt_window_keypress_t key_listener,
+                          void *user_data);
 
 /**
  * Set a callback function to be invoked whenever a mouse button is pressed
@@ -182,15 +200,16 @@ void TXT_SetKeyListener(txt_window_t *window, TxtWindowKeyPress key_listener,
  *                        function.
  */
 
-void TXT_SetMouseListener(txt_window_t *window,
-                          TxtWindowMousePress mouse_listener,
-                          void *user_data);
+void txt_set_mouse_listener(txt_window_t *window,
+                            txt_window_mouse_press_t mouse_listener,
+                            void *user_data);
 
 /**
  * Open a window displaying a message.
  *
  * @param title           Title of the window (UTF-8 format).
- * @param message         The message to display in the window (UTF-8 format).
+ * @param message         The message to display in the window
+ *                        (UTF-8 format).
  * @return                The new window.
  */
 
@@ -212,6 +231,6 @@ void txt_set_window_help_url(txt_window_t *window, const char *help_url);
  * @param window          The window.
  */
 
-void TXT_OpenWindowHelpURL(txt_window_t *window);
+void txt_open_window_help_url(txt_window_t *window);
 
-#endif /* #ifndef TXT_WINDOW_H */
+#endif /* TXT_WINDOW_H */

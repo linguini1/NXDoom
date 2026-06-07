@@ -1,19 +1,28 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//      Network packet manipulation (net_packet_t)
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/net_packet.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *      Network packet manipulation (net_packet_t)
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include "net_packet.h"
 #include "m_misc.h"
@@ -21,9 +30,17 @@
 #include <ctype.h>
 #include <string.h>
 
-static int total_packet_memory = 0;
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
 
-net_packet_t *NET_NewPacket(int initial_size)
+static int g_total_packet_memory = 0;
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+net_packet_t *net_new_packet(int initial_size)
 {
   net_packet_t *packet;
 
@@ -36,40 +53,42 @@ net_packet_t *NET_NewPacket(int initial_size)
   packet->len = 0;
   packet->pos = 0;
 
-  total_packet_memory += sizeof(net_packet_t) + initial_size;
+  g_total_packet_memory += sizeof(net_packet_t) + initial_size;
 
-  // printf("total packet memory: %i bytes\n", total_packet_memory);
-  // printf("%p: allocated\n", packet);
+  /* printf("total packet memory: %i bytes\n", total_packet_memory);
+   * printf("%p: allocated\n", packet);
+   */
 
   return packet;
 }
 
-// duplicates an existing packet
+/* duplicates an existing packet */
 
-net_packet_t *NET_PacketDup(net_packet_t *packet)
+net_packet_t *net_packet_dup(net_packet_t *packet)
 {
   net_packet_t *newpacket;
 
-  newpacket = NET_NewPacket(packet->len);
+  newpacket = net_new_packet(packet->len);
   memcpy(newpacket->data, packet->data, packet->len);
   newpacket->len = packet->len;
 
   return newpacket;
 }
 
-void NET_FreePacket(net_packet_t *packet)
+void net_free_packet(net_packet_t *packet)
 {
-  // printf("%p: destroyed\n", packet);
+  /* printf("%p: destroyed\n", packet); */
 
-  total_packet_memory -= sizeof(net_packet_t) + packet->alloced;
+  g_total_packet_memory -= sizeof(net_packet_t) + packet->alloced;
   z_free(packet->data);
   z_free(packet);
 }
 
-// Read a byte from the packet, returning true if read
-// successfully
+/* Read a byte from the packet, returning true if read
+ * successfully
+ */
 
-boolean NET_ReadInt8(net_packet_t *packet, unsigned int *data)
+boolean net_read_int8(net_packet_t *packet, unsigned int *data)
 {
   if (packet->pos + 1 > packet->len) return false;
 
@@ -80,10 +99,11 @@ boolean NET_ReadInt8(net_packet_t *packet, unsigned int *data)
   return true;
 }
 
-// Read a 16-bit integer from the packet, returning true if read
-// successfully
+/* Read a 16-bit integer from the packet, returning true if read
+ * successfully
+ */
 
-boolean NET_ReadInt16(net_packet_t *packet, unsigned int *data)
+boolean net_read_int16(net_packet_t *packet, unsigned int *data)
 {
   byte *p;
 
@@ -97,10 +117,11 @@ boolean NET_ReadInt16(net_packet_t *packet, unsigned int *data)
   return true;
 }
 
-// Read a 32-bit integer from the packet, returning true if read
-// successfully
+/* Read a 32-bit integer from the packet, returning true if read
+ * successfully
+ */
 
-boolean NET_ReadInt32(net_packet_t *packet, unsigned int *data)
+boolean net_read_int32(net_packet_t *packet, unsigned int *data)
 {
   byte *p;
 
@@ -114,11 +135,11 @@ boolean NET_ReadInt32(net_packet_t *packet, unsigned int *data)
   return true;
 }
 
-// Signed read functions
+/* Signed read functions */
 
-boolean NET_ReadSInt8(net_packet_t *packet, signed int *data)
+boolean net_read_sint8(net_packet_t *packet, signed int *data)
 {
-  if (NET_ReadInt8(packet, (unsigned int *)data))
+  if (net_read_int8(packet, (unsigned int *)data))
     {
       if (*data & (1 << 7))
         {
@@ -133,9 +154,9 @@ boolean NET_ReadSInt8(net_packet_t *packet, signed int *data)
     }
 }
 
-boolean NET_ReadSInt16(net_packet_t *packet, signed int *data)
+boolean net_read_sint16(net_packet_t *packet, signed int *data)
 {
-  if (NET_ReadInt16(packet, (unsigned int *)data))
+  if (net_read_int16(packet, (unsigned int *)data))
     {
       if (*data & (1 << 15))
         {
@@ -150,9 +171,10 @@ boolean NET_ReadSInt16(net_packet_t *packet, signed int *data)
     }
 }
 
-boolean NET_ReadSInt32(net_packet_t *packet, signed int *data)
+#if 0 /* Unused */
+static boolean net_read_sint32(net_packet_t *packet, signed int *data)
 {
-  if (NET_ReadInt32(packet, (unsigned int *)data))
+  if (net_read_int32(packet, (unsigned int *)data))
     {
       if (*data & (1U << 31))
         {
@@ -166,17 +188,19 @@ boolean NET_ReadSInt32(net_packet_t *packet, signed int *data)
       return false;
     }
 }
+#endif
 
-// Read a string from the packet.  Returns NULL if a terminating
-// NUL character was not found before the end of the packet.
+/* Read a string from the packet.  Returns NULL if a terminating
+ * NUL character was not found before the end of the packet.
+ */
 
-char *NET_ReadString(net_packet_t *packet)
+char *net_read_string(net_packet_t *packet)
 {
   char *start;
 
   start = (char *)packet->data + packet->pos;
 
-  // Search forward for a NUL character
+  /* Search forward for a NUL character */
 
   while (packet->pos < packet->len && packet->data[packet->pos] != '\0')
     {
@@ -185,40 +209,47 @@ char *NET_ReadString(net_packet_t *packet)
 
   if (packet->pos >= packet->len)
     {
-      // Reached the end of the packet
+      /* Reached the end of the packet */
 
       return NULL;
     }
 
-  // packet->data[packet->pos] == '\0': We have reached a terminating
-  // NULL.  Skip past this NULL and continue reading immediately
-  // after it.
+  /* packet->data[packet->pos] == '\0': We have reached a terminating
+   * NULL.  Skip past this NULL and continue reading immediately
+   * after it.
+   */
 
   ++packet->pos;
 
   return start;
 }
 
-// Read a string from the packet, but (potentially) modify it to strip
-// out any unprintable characters which could be malicious control codes.
-// Note that this may modify the original packet contents.
-char *NET_ReadSafeString(net_packet_t *packet)
+/* Read a string from the packet, but (potentially) modify it to strip
+ * out any unprintable characters which could be malicious control codes.
+ * Note that this may modify the original packet contents.
+ */
+
+char *net_read_safe_string(net_packet_t *packet)
 {
   char *r, *w, *result;
 
-  result = NET_ReadString(packet);
+  result = net_read_string(packet);
   if (result == NULL)
     {
       return NULL;
     }
 
-  // w is always <= r, so we never produce a longer string than the original.
+  /* w is always <= r, so we never produce a longer string than the original.
+   */
+
   w = result;
   for (r = result; *r != '\0'; ++r)
     {
-      // TODO: This is a very naive way of producing a safe string; only
-      // ASCII characters are allowed. Probably this should really support
-      // UTF-8 characters as well.
+      /* TODO: This is a very naive way of producing a safe string; only
+       * ASCII characters are allowed. Probably this should really support
+       * UTF-8 characters as well.
+       */
+
       if (isprint(*r) || *r == '\n')
         {
           *w = *r;
@@ -230,13 +261,13 @@ char *NET_ReadSafeString(net_packet_t *packet)
   return result;
 }
 
-// Dynamically increases the size of a packet
+/* Dynamically increases the size of a packet */
 
 static void NET_IncreasePacket(net_packet_t *packet)
 {
   byte *newdata;
 
-  total_packet_memory -= packet->alloced;
+  g_total_packet_memory -= packet->alloced;
 
   packet->alloced *= 2;
 
@@ -247,12 +278,12 @@ static void NET_IncreasePacket(net_packet_t *packet)
   z_free(packet->data);
   packet->data = newdata;
 
-  total_packet_memory += packet->alloced;
+  g_total_packet_memory += packet->alloced;
 }
 
-// Write a single byte to the packet
+/* Write a single byte to the packet */
 
-void NET_WriteInt8(net_packet_t *packet, unsigned int i)
+void net_write_int8(net_packet_t *packet, unsigned int i)
 {
   if (packet->len + 1 > packet->alloced) NET_IncreasePacket(packet);
 
@@ -260,9 +291,9 @@ void NET_WriteInt8(net_packet_t *packet, unsigned int i)
   packet->len += 1;
 }
 
-// Write a 16-bit integer to the packet
+/* Write a 16-bit integer to the packet */
 
-void NET_WriteInt16(net_packet_t *packet, unsigned int i)
+void net_write_int16(net_packet_t *packet, unsigned int i)
 {
   byte *p;
 
@@ -276,9 +307,9 @@ void NET_WriteInt16(net_packet_t *packet, unsigned int i)
   packet->len += 2;
 }
 
-// Write a single byte to the packet
+/* Write a single byte to the packet */
 
-void NET_WriteInt32(net_packet_t *packet, unsigned int i)
+void net_write_int32(net_packet_t *packet, unsigned int i)
 {
   byte *p;
 
@@ -294,14 +325,14 @@ void NET_WriteInt32(net_packet_t *packet, unsigned int i)
   packet->len += 4;
 }
 
-void NET_WriteString(net_packet_t *packet, const char *string)
+void net_write_string(net_packet_t *packet, const char *string)
 {
   byte *p;
   size_t string_size;
 
   string_size = strlen(string) + 1;
 
-  // Increase the packet size until large enough to hold the string
+  /* Increase the packet size until large enough to hold the string */
 
   while (packet->len + string_size > packet->alloced)
     {

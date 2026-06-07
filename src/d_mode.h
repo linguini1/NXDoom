@@ -38,7 +38,7 @@ typedef enum
   doom2f,    // Doom 2: L'Enfer sur Terre
 
   none
-} GameMission_t;
+} gamemission_t;
 
 // The "mode" allows more accurate specification of the game mode we are
 // in: eg. shareware vs. registered.  So doom1.wad and doom.wad are the
@@ -51,7 +51,7 @@ typedef enum
   commercial,  // Doom II/Hexen
   retail,      // Ultimate Doom
   indetermined // Unknown.
-} GameMode_t;
+} game_mode_t;
 
 // What version are we emulating?
 
@@ -99,13 +99,13 @@ typedef enum
   sk_nightmare
 } skill_t;
 
-boolean D_ValidGameMode(GameMission_t mission, GameMode_t mode);
-boolean D_ValidGameVersion(GameMission_t mission, GameVersion_t version);
-boolean D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode, int episode,
+boolean D_ValidGameMode(gamemission_t mission, game_mode_t mode);
+boolean d_valid_game_version(gamemission_t mission, GameVersion_t version);
+boolean d_valid_episode_map(gamemission_t mission, game_mode_t mode, int episode,
                           int map);
-int D_GetNumEpisodes(GameMission_t mission, GameMode_t mode);
-boolean D_IsEpisodeMap(GameMission_t mission);
-const char *d_game_mission_string(GameMission_t mission);
-const char *D_GameModeString(GameMode_t mode);
+int D_GetNumEpisodes(gamemission_t mission, game_mode_t mode);
+boolean D_IsEpisodeMap(gamemission_t mission);
+const char *d_game_mission_string(gamemission_t mission);
+const char *D_GameModeString(game_mode_t mode);
 
 #endif /* #ifndef __D_MODE__ */

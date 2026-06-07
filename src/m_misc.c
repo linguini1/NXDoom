@@ -184,7 +184,7 @@ int m_read_file(const char *name, byte **buffer)
   byte *buf;
 
   handle = fopen(name, "rb");
-  if (handle == NULL) I_Error("Couldn't read file %s", name);
+  if (handle == NULL) i_error("Couldn't read file %s", name);
 
   /* find the size of the file by seeking to the end and
    * reading the current position
@@ -196,7 +196,7 @@ int m_read_file(const char *name, byte **buffer)
   count = fread(buf, 1, length, handle);
   fclose(handle);
 
-  if (count < length) I_Error("Couldn't read file %s", name);
+  if (count < length) i_error("Couldn't read file %s", name);
 
   buf[length] = '\0';
   *buffer = buf;
@@ -375,7 +375,7 @@ char *m_string_duplicate(const char *orig)
 
   if (result == NULL)
     {
-      I_Error("Failed to duplicate string (length %zu)\n", strlen(orig));
+      i_error("Failed to duplicate string (length %zu)\n", strlen(orig));
     }
 
   return result;
@@ -413,7 +413,7 @@ char *m_string_replace(const char *haystack, const char *needle,
   result = malloc(result_len);
   if (result == NULL)
     {
-      I_Error("m_string_replace: Failed to allocate new string");
+      i_error("m_string_replace: Failed to allocate new string");
       return NULL;
     }
 
@@ -529,7 +529,7 @@ char *m_string_join(const char *s, ...)
 
   if (result == NULL)
     {
-      I_Error("m_string_join: Failed to allocate new string.");
+      i_error("m_string_join: Failed to allocate new string.");
       return NULL;
     }
 

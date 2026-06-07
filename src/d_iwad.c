@@ -140,7 +140,7 @@ static char *CheckDirectoryHasIWAD(const char *dir, const char *iwadname)
 // Returns the location of the IWAD if found, otherwise NULL.
 
 static char *SearchDirectoryForIWAD(const char *dir, int mask,
-                                    GameMission_t *mission)
+                                    gamemission_t *mission)
 {
   char *filename;
   size_t i;
@@ -168,10 +168,10 @@ static char *SearchDirectoryForIWAD(const char *dir, int mask,
 // When given an IWAD with the '-iwad' parameter,
 // attempt to identify it by its name.
 
-static GameMission_t IdentifyIWADByName(const char *name, int mask)
+static gamemission_t IdentifyIWADByName(const char *name, int mask)
 {
   size_t i;
-  GameMission_t mission;
+  gamemission_t mission;
 
   name = m_base_name(name);
   mission = none;
@@ -451,7 +451,7 @@ char *d_try_find_wad_by_name(const char *filename)
 // should be executed (notably loading PWADs).
 //
 
-char *D_FindIWAD(int mask, GameMission_t *mission)
+char *D_FindIWAD(int mask, gamemission_t *mission)
 {
   char *result;
   const char *iwadfile;
@@ -478,7 +478,7 @@ char *D_FindIWAD(int mask, GameMission_t *mission)
 
       if (result == NULL)
         {
-          I_Error("IWAD file '%s' not found!", iwadfile);
+          i_error("IWAD file '%s' not found!", iwadfile);
         }
 
       *mission = IdentifyIWADByName(result, mask);
@@ -502,7 +502,7 @@ char *D_FindIWAD(int mask, GameMission_t *mission)
 
 // Find all IWADs in the IWAD search path matching the given mask.
 
-const iwad_t **D_FindAllIWADs(int mask)
+const iwad_t **d_find_all_iwads(int mask)
 {
   const iwad_t **result;
   int result_len;
@@ -541,7 +541,7 @@ const iwad_t **D_FindAllIWADs(int mask)
 // Get the IWAD name used for savegames.
 //
 
-const char *D_SaveGameIWADName(GameMission_t gamemission,
+const char *D_SaveGameIWADName(gamemission_t gamemission,
                                GameVariant_t gamevariant)
 {
   size_t i;
@@ -582,7 +582,7 @@ const char *D_SaveGameIWADName(GameMission_t gamemission,
   return "unknown.wad";
 }
 
-const char *D_SuggestIWADName(GameMission_t mission, GameMode_t mode)
+const char *D_SuggestIWADName(gamemission_t mission, game_mode_t mode)
 {
   int i;
 
@@ -597,7 +597,7 @@ const char *D_SuggestIWADName(GameMission_t mission, GameMode_t mode)
   return "unknown.wad";
 }
 
-const char *d_suggest_game_name(GameMission_t mission, GameMode_t mode)
+const char *d_suggest_game_name(gamemission_t mission, game_mode_t mode)
 {
   int i;
 

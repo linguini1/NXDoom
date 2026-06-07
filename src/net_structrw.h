@@ -21,16 +21,16 @@
 #include "sha1.h"
 
 void NET_WriteConnectData(net_packet_t *packet, net_connect_data_t *data);
-boolean NET_ReadConnectData(net_packet_t *packet, net_connect_data_t *data);
+boolean net_read_connect_data(net_packet_t *packet, net_connect_data_t *data);
 
 extern void NET_WriteSettings(net_packet_t *packet,
                               net_gamesettings_t *settings);
-extern boolean NET_ReadSettings(net_packet_t *packet,
+extern boolean net_read_settings(net_packet_t *packet,
                                 net_gamesettings_t *settings);
 
 extern void NET_WriteQueryData(net_packet_t *packet,
                                net_querydata_t *querydata);
-extern boolean NET_ReadQueryData(net_packet_t *packet,
+extern boolean net_read_query_data(net_packet_t *packet,
                                  net_querydata_t *querydata);
 
 extern void NET_WriteTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff,
@@ -48,12 +48,12 @@ void NET_WriteFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd,
                          boolean lowres_turn);
 
 boolean NET_ReadSHA1Sum(net_packet_t *packet, sha1_digest_t digest);
-void NET_WriteSHA1Sum(net_packet_t *packet, sha1_digest_t digest);
+void net_write_sha1_sum(net_packet_t *packet, sha1_digest_t digest);
 
 void NET_WriteWaitData(net_packet_t *packet, net_waitdata_t *data);
 boolean NET_ReadWaitData(net_packet_t *packet, net_waitdata_t *data);
 
-boolean NET_ReadPRNGSeed(net_packet_t *packet, prng_seed_t seed);
+boolean net_read_prng_seed(net_packet_t *packet, prng_seed_t seed);
 void NET_WritePRNGSeed(net_packet_t *packet, prng_seed_t seed);
 
 // Protocol list exchange.

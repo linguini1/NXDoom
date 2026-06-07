@@ -31,7 +31,7 @@ execute_context_t *NewExecuteContext(void);
 void AddCmdLineParameter(execute_context_t *context, const char *s, ...)
     PRINTF_ATTR(2, 3);
 void PassThroughArguments(execute_context_t *context);
-int ExecuteDoom(execute_context_t *context);
+int execute_doom(execute_context_t *context);
 int FindInstalledIWADs(void);
 boolean open_folder(const char *path);
 

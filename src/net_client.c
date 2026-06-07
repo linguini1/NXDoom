@@ -56,7 +56,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#define NET_CL_ExpandTicNum(b) NET_ExpandTicNum(recvwindow_start, (b))
+#define NET_CL_ExpandTicNum(b) net_expand_tic_num(recvwindow_start, (b))
 
 #define KP 0.1
 #define KI 0.01
@@ -328,7 +328,7 @@ static void net_cl_shutdown(void)
     {
       net_client_connected = false;
 
-      NET_ReleaseAddress(server_addr);
+      net_release_address(server_addr);
 
       /* Shut down network module, etc.  To do. */
     }
@@ -338,14 +338,14 @@ static void net_cl_send_game_data_ack(void)
 {
   net_packet_t *packet;
 
-  packet = NET_NewPacket(10);
+  packet = net_new_packet(10);
 
-  NET_WriteInt16(packet, NET_PACKET_TYPE_GAMEDATA_ACK);
-  NET_WriteInt8(packet, recvwindow_start & 0xff);
+  net_write_int16(packet, NET_PACKET_TYPE_GAMEDATA_ACK);
+  net_write_int8(packet, recvwindow_start & 0xff);
 
-  NET_Conn_SendPacket(&client_connection, packet);
+  net_conn_send_packet(&client_connection, packet);
 
-  NET_FreePacket(packet);
+  net_free_packet(packet);
 
   need_to_acknowledge = false;
 }
@@ -366,16 +366,16 @@ static void net_cl_send_tics(int start, int end)
 
   /* Build a new packet to send to the server */
 
-  packet = NET_NewPacket(512);
-  NET_WriteInt16(packet, NET_PACKET_TYPE_GAMEDATA);
+  packet = net_new_packet(512);
+  net_write_int16(packet, NET_PACKET_TYPE_GAMEDATA);
 
   /* Write the start tic and number of tics.  Send only the low byte
    * of start - it can be inferred by the server.
    */
 
-  NET_WriteInt8(packet, recvwindow_start & 0xff);
-  NET_WriteInt8(packet, start & 0xff);
-  NET_WriteInt8(packet, end - start + 1);
+  net_write_int8(packet, recvwindow_start & 0xff);
+  net_write_int8(packet, start & 0xff);
+  net_write_int8(packet, end - start + 1);
 
   /* Add the tics. */
 
@@ -385,18 +385,18 @@ static void net_cl_send_tics(int start, int end)
 
       sendobj = &send_queue[i % BACKUPTICS];
 
-      NET_WriteInt16(packet, last_latency);
+      net_write_int16(packet, last_latency);
 
       NET_WriteTiccmdDiff(packet, &sendobj->cmd, settings.lowres_turn);
     }
 
   /* Send the packet */
 
-  NET_Conn_SendPacket(&client_connection, packet);
+  net_conn_send_packet(&client_connection, packet);
 
   /* All done! */
 
-  NET_FreePacket(packet);
+  net_free_packet(packet);
 
   /* Acknowledgement has been sent as part of the packet */
 
@@ -414,7 +414,7 @@ static void net_cl_parse_syn(net_packet_t *packet)
 
   net_log_info("client: processing SYN response");
 
-  server_version = NET_ReadSafeString(packet);
+  server_version = net_read_safe_string(packet);
   if (server_version == NULL)
     {
       net_log_err("client: failed to read server version");
@@ -467,7 +467,7 @@ static void net_cl_parse_reject(net_packet_t *packet)
 {
   char *msg;
 
-  msg = NET_ReadSafeString(packet);
+  msg = net_read_safe_string(packet);
   if (msg == NULL)
     {
       return;
@@ -534,7 +534,7 @@ static void net_cl_parse_launch(net_packet_t *packet)
    * progress indicator (the wait data is unreliable).
    */
 
-  if (!NET_ReadInt8(packet, &num_players))
+  if (!net_read_int8(packet, &num_players))
     {
       net_log_err("client: failed to read number of players");
       return;
@@ -549,7 +549,7 @@ static void net_cl_parse_game_start(net_packet_t *packet)
 {
   net_log_info("client: processing game start packet");
 
-  if (!NET_ReadSettings(packet, &settings))
+  if (!net_read_settings(packet, &settings))
     {
       net_log_err("client: failed to read settings");
       return;
@@ -604,12 +604,12 @@ static void net_cl_send_resend_request(int start, int end)
   unsigned int nowtime;
   int i;
 
-  packet = NET_NewPacket(64);
-  NET_WriteInt16(packet, NET_PACKET_TYPE_GAMEDATA_RESEND);
-  NET_WriteInt32(packet, start);
-  NET_WriteInt8(packet, end - start + 1);
-  NET_Conn_SendPacket(&client_connection, packet);
-  NET_FreePacket(packet);
+  packet = net_new_packet(64);
+  net_write_int16(packet, NET_PACKET_TYPE_GAMEDATA_RESEND);
+  net_write_int32(packet, start);
+  net_write_int8(packet, end - start + 1);
+  net_conn_send_packet(&client_connection, packet);
+  net_free_packet(packet);
 
   nowtime = i_get_time_ms();
 
@@ -737,7 +737,7 @@ static void net_cl_parse_game_data(net_packet_t *packet)
 
   /* Read header */
 
-  if (!NET_ReadInt8(packet, &seq) || !NET_ReadInt8(packet, &num_tics))
+  if (!net_read_int8(packet, &seq) || !net_read_int8(packet, &num_tics))
     {
       net_log_info("client: error: failed to read header");
       return;
@@ -866,7 +866,7 @@ static void net_cl_parse_resend_request(net_packet_t *packet)
       return;
     }
 
-  if (!NET_ReadInt32(packet, &start) || !NET_ReadInt8(packet, &num_tics))
+  if (!net_read_int32(packet, &start) || !net_read_int8(packet, &num_tics))
     {
       net_log_err("client: couldn't read start and num_tics");
       return;
@@ -912,7 +912,7 @@ static void net_cl_parse_console_message(net_packet_t *packet)
 {
   char *msg;
 
-  msg = NET_ReadSafeString(packet);
+  msg = net_read_safe_string(packet);
 
   if (msg == NULL)
     {
@@ -928,7 +928,7 @@ static void net_cl_parse_packet(net_packet_t *packet)
 {
   unsigned int packet_type;
 
-  if (!NET_ReadInt16(packet, &packet_type))
+  if (!net_read_int16(packet, &packet_type))
     {
       return;
     }
@@ -937,7 +937,7 @@ static void net_cl_parse_packet(net_packet_t *packet)
                packet_type & ~NET_RELIABLE_PACKET);
   net_log_packet(packet);
 
-  if (NET_Conn_Packet(&client_connection, packet, &packet_type))
+  if (net_conn_packet(&client_connection, packet, &packet_type))
     {
       /* Packet eaten by the common connection code */
     }
@@ -989,15 +989,15 @@ static void net_cl_send_syn(net_connect_data_t *data)
 
   net_log_info("client: sending SYN");
 
-  packet = NET_NewPacket(10);
-  NET_WriteInt16(packet, NET_PACKET_TYPE_SYN);
-  NET_WriteInt32(packet, NET_MAGIC_NUMBER);
-  NET_WriteString(packet, PACKAGE_STRING);
+  packet = net_new_packet(10);
+  net_write_int16(packet, NET_PACKET_TYPE_SYN);
+  net_write_int32(packet, NET_MAGIC_NUMBER);
+  net_write_string(packet, PACKAGE_STRING);
   NET_WriteProtocolList(packet);
   NET_WriteConnectData(packet, data);
-  NET_WriteString(packet, net_player_name);
-  NET_Conn_SendPacket(&client_connection, packet);
-  NET_FreePacket(packet);
+  net_write_string(packet, net_player_name);
+  net_conn_send_packet(&client_connection, packet);
+  net_free_packet(packet);
 }
 
 /****************************************************************************
@@ -1006,7 +1006,7 @@ static void net_cl_send_syn(net_connect_data_t *data)
 
 void NET_CL_LaunchGame(void)
 {
-  NET_Conn_NewReliable(&client_connection, NET_PACKET_TYPE_LAUNCH);
+  net_conn_new_reliable(&client_connection, NET_PACKET_TYPE_LAUNCH);
 }
 
 void NET_CL_StartGame(net_gamesettings_t *p_settings)
@@ -1020,7 +1020,7 @@ void NET_CL_StartGame(net_gamesettings_t *p_settings)
   /* Send packet */
 
   packet =
-      NET_Conn_NewReliable(&client_connection, NET_PACKET_TYPE_GAMESTART);
+      net_conn_new_reliable(&client_connection, NET_PACKET_TYPE_GAMESTART);
 
   NET_WriteSettings(packet, p_settings);
 }
@@ -1074,7 +1074,7 @@ void NET_CL_Run(void)
       return;
     }
 
-  while (NET_RecvPacket(client_context, &addr, &packet))
+  while (net_recv_packet(client_context, &addr, &packet))
     {
       /* only accept packets from the server */
 
@@ -1083,13 +1083,13 @@ void NET_CL_Run(void)
           net_cl_parse_packet(packet);
         }
 
-      NET_FreePacket(packet);
-      NET_ReleaseAddress(addr);
+      net_free_packet(packet);
+      net_release_address(addr);
     }
 
   /* Run the common connection code to send any packets as needed */
 
-  NET_Conn_Run(&client_connection);
+  net_conn_run(&client_connection);
 
   if (client_connection.state == NET_CONN_STATE_DISCONNECTED ||
       client_connection.state == NET_CONN_STATE_DISCONNECTED_SLEEP)
@@ -1124,7 +1124,7 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
   boolean sent_hole_punch;
 
   server_addr = addr;
-  NET_ReferenceAddress(addr);
+  net_reference_address(addr);
 
   memcpy(net_local_wad_sha1sum, data->wad_sha1sum, sizeof(sha1_digest_t));
   memcpy(net_local_deh_sha1sum, data->deh_sha1sum, sizeof(sha1_digest_t));
@@ -1132,23 +1132,23 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
 
   /* create a new network I/O context and add just the necessary module */
 
-  client_context = NET_NewContext();
+  client_context = net_new_context();
 
   /* initialize module for client mode */
 
-  if (!addr->module->InitClient())
+  if (!addr->module->init_client())
     {
       set_reject_reason("Failed to initialize client module");
       return false;
     }
 
-  NET_AddModule(client_context, addr->module);
+  net_add_module(client_context, addr->module);
 
   net_client_connected = true;
   net_client_received_wait_data = false;
   sent_hole_punch = false;
 
-  NET_Conn_InitClient(&client_connection, addr, NET_PROTOCOL_UNKNOWN);
+  net_conn_init_client(&client_connection, addr, NET_PROTOCOL_UNKNOWN);
 
   /* try to connect */
 
@@ -1179,7 +1179,7 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
       if (!sent_hole_punch && nowtime - start_time > 2000)
         {
           net_log_warn("client: no response to SYN, requesting hole punch");
-          NET_RequestHolePunch(client_context, addr);
+          net_request_hole_punch(client_context, addr);
           sent_hole_punch = true;
         }
 
@@ -1244,7 +1244,7 @@ void NET_CL_Disconnect(void)
     }
 
   net_log_info("client: beginning disconnect");
-  NET_Conn_Disconnect(&client_connection);
+  net_conn_disconnect(&client_connection);
 
   start_time = i_get_time_ms();
 

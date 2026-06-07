@@ -432,7 +432,7 @@ int DEH_LoadFile(const char *filename)
 
   if (had_error)
     {
-      I_Error("Error parsing dehacked file");
+      i_error("Error parsing dehacked file");
     }
 
   return 1;
@@ -502,7 +502,7 @@ int DEH_LoadLump(int lumpnum, boolean allow_long, boolean allow_error)
 
   if (!allow_error && had_error)
     {
-      I_Error("Error parsing dehacked lump");
+      i_error("Error parsing dehacked lump");
     }
 
   return 1;

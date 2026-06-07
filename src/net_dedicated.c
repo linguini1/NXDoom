@@ -68,7 +68,7 @@ static void check_for_client_options(void)
     {
       if (m_check_parm(not_dedicated_options[i]) > 0)
         {
-          I_Error("The command line parameter '%s' was specified to a "
+          i_error("The command line parameter '%s' was specified to a "
                   "dedicated server.\nGame parameters should be specified "
                   "to the first player to join a server, \nnot to the "
                   "server itself. ",

@@ -179,15 +179,15 @@ extern int joybflycenter;
 
 extern int dclick_use;
 
-void M_BindBaseControls(void);
-void M_BindHereticControls(void);
-void M_BindHexenControls(void);
-void M_BindStrifeControls(void);
-void M_BindWeaponControls(void);
-void M_BindMapControls(void);
-void M_BindMenuControls(void);
+void m_bind_base_controls(void);
+void m_bind_heretic_controls(void);
+void m_bind_hexen_controls(void);
+void m_bind_strife_controls(void);
+void m_bind_weapon_controls(void);
+void m_bind_map_controls(void);
+void m_bind_menu_controls(void);
 void M_BindChatControls(unsigned int num_players);
 
-void M_ApplyPlatformDefaults(void);
+void m_apply_platform_defaults(void);
 
 #endif /* #ifndef __M_CONTROLS_H__ */

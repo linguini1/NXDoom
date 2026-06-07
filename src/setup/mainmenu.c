@@ -146,7 +146,7 @@ static void do_quit(void *widget, void *dosave)
       m_save_defaults();
     }
 
-  TXT_Shutdown();
+  txt_shutdown();
 
   exit(0);
 }
@@ -163,18 +163,18 @@ static void quit_confirm(void *unused1, void *unused2)
   txt_add_widgets(window,
                   label = txt_new_label("Exiting setup.\nSave settings?"),
                   txt_new_strut(24, 0),
-                  yes_button = TXT_NewButton2("  Yes  ", DoQuit, DoQuit),
-                  no_button = TXT_NewButton2("  No   ", DoQuit, NULL), NULL);
+                  yes_button = txt_new_button2("  Yes  ", DoQuit, DoQuit),
+                  no_button = txt_new_button2("  No   ", DoQuit, NULL), NULL);
 
-  TXT_SetWidgetAlign(label, TXT_HORIZ_CENTER);
-  TXT_SetWidgetAlign(yes_button, TXT_HORIZ_CENTER);
-  TXT_SetWidgetAlign(no_button, TXT_HORIZ_CENTER);
+  txt_set_widget_align(label, TXT_HORIZ_CENTER);
+  txt_set_widget_align(yes_button, TXT_HORIZ_CENTER);
+  txt_set_widget_align(no_button, TXT_HORIZ_CENTER);
 
   /* Only an "abort" button in the middle. */
 
   txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
   txt_set_window_action(window, TXT_HORIZ_CENTER,
-                        txt_new_windowAbortAction(window));
+                        txt_new_window_abort_action(window));
   txt_set_window_action(window, TXT_HORIZ_RIGHT, NULL);
 }
 
@@ -188,13 +188,13 @@ static void launch_doom(void *unused1, void *unused2)
 
   /* Shut down textscreen GUI */
 
-  TXT_Shutdown();
+  txt_shutdown();
 
   /* Launch Doom */
 
   exec = NewExecuteContext();
   PassThroughArguments(exec);
-  ExecuteDoom(exec);
+  execute_doom(exec);
 
   exit(0);
 }
@@ -222,7 +222,7 @@ static txt_button_t *get_launch_button(void)
       break;
     }
 
-  return TXT_NewButton2(label, launch_doom, NULL);
+  return txt_new_button2(label, launch_doom, NULL);
 }
 
 /* Initialize all configuration variables, load config file, etc */
@@ -265,7 +265,7 @@ static void set_window_title(void)
   title = m_string_replace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION, "Doom",
                            get_game_title());
 
-  TXT_SetDesktopTitle(title);
+  txt_set_desktop_title(title);
 
   free(title);
 }
@@ -276,7 +276,7 @@ static void init_text_screen(void)
 {
   SetDisplayDriver();
 
-  if (!TXT_Init())
+  if (!txt_init())
     {
       fprintf(stderr, "Failed to initialize GUI\n");
       exit(-1);
@@ -286,7 +286,7 @@ static void init_text_screen(void)
    * <https://doomwiki.org/wiki/Romero_Blue>
    */
 
-  TXT_SetColor(TXT_COLOR_BLUE, 0x04, 0x14, 0x40);
+  txt_set_colour(TXT_COLOR_BLUE, 0x04, 0x14, 0x40);
 
   set_icon();
   set_window_title();
@@ -297,7 +297,7 @@ static void init_text_screen(void)
 static void run_gui(void)
 {
   init_text_screen();
-  TXT_GUIMainLoop();
+  txt_gui_mainloop();
 }
 
 static void mission_set(void)
@@ -323,36 +323,36 @@ void main_menu(void)
 
   txt_add_widgets(
       window,
-      TXT_NewButton2("Configure Display", (TxtWidgetSignalFunc)ConfigDisplay,
+      txt_new_button2("Configure Display", (txt_widget_signal_f)ConfigDisplay,
                      NULL),
-      TXT_NewButton2("Configure Sound", (TxtWidgetSignalFunc)config_sound,
+      txt_new_button2("Configure Sound", (txt_widget_signal_f)config_sound,
                      NULL),
-      TXT_NewButton2("Configure Keyboard",
-                     (TxtWidgetSignalFunc)ConfigKeyboard, NULL),
-      TXT_NewButton2("Configure Mouse", (TxtWidgetSignalFunc)ConfigMouse,
+      txt_new_button2("Configure Keyboard",
+                     (txt_widget_signal_f)ConfigKeyboard, NULL),
+      txt_new_button2("Configure Mouse", (txt_widget_signal_f)ConfigMouse,
                      NULL),
-      TXT_NewButton2("Configure Gamepad/Joystick",
-                     (TxtWidgetSignalFunc)ConfigJoystick, NULL),
-      TXT_NewButton2("Compatibility",
-                     (TxtWidgetSignalFunc)CompatibilitySettings, NULL),
+      txt_new_button2("Configure Gamepad/Joystick",
+                     (txt_widget_signal_f)ConfigJoystick, NULL),
+      txt_new_button2("Compatibility",
+                     (txt_widget_signal_f)CompatibilitySettings, NULL),
       GetLaunchButton(), txt_new_strut(0, 1),
-      TXT_NewButton2("Start a Network Game",
-                     (TxtWidgetSignalFunc)start_multi_game, NULL),
-      TXT_NewButton2("Join a Network Game",
-                     (TxtWidgetSignalFunc)join_multi_game, NULL),
-      TXT_NewButton2("Multiplayer Configuration",
-                     (TxtWidgetSignalFunc)multiplayer_config, NULL),
+      txt_new_button2("Start a Network Game",
+                     (txt_widget_signal_f)start_multi_game, NULL),
+      txt_new_button2("Join a Network Game",
+                     (txt_widget_signal_f)join_multi_game, NULL),
+      txt_new_button2("Multiplayer Configuration",
+                     (txt_widget_signal_f)multiplayer_config, NULL),
       NULL);
 
   quit_action = txt_new_window_action(KEY_ESCAPE, "Quit");
   warp_action = txt_new_window_action(KEY_F2, "Warp");
   txt_signal_connect(quit_action, "pressed", quit_confirm, NULL);
-  txt_signal_connect(warp_action, "pressed", (TxtWidgetSignalFunc)warp_menu,
+  txt_signal_connect(warp_action, "pressed", (txt_widget_signal_f)warp_menu,
                      NULL);
   txt_set_window_action(window, TXT_HORIZ_LEFT, quit_action);
   txt_set_window_action(window, TXT_HORIZ_CENTER, warp_action);
 
-  TXT_SetKeyListener(window, main_menuKeyPress, NULL);
+  txt_set_key_listener(window, main_menuKeyPress, NULL);
 }
 
 void d_doom_main(void)

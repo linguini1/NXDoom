@@ -1,16 +1,25 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/setup/txt_keyinput.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
@@ -25,28 +34,63 @@
 #include "txt_utf8.h"
 #include "txt_window.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
 #define KEY_INPUT_WIDTH 8
 
-static int KeyPressCallback(txt_window_t *window, int key,
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
+
+static void txt_key_input_size_calc(TXT_UNCAST_ARG(key_input));
+static void txt_key_input_drawer(TXT_UNCAST_ARG(key_input));
+static void txt_key_input_destructor(TXT_UNCAST_ARG(key_input));
+static int txt_key_input_key_press(TXT_UNCAST_ARG(key_input), int key);
+static void txt_key_input_mousepress(TXT_UNCAST_ARG(widget), int x, int y,
+                                     int b);
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+txt_widget_class_t txt_key_input_class =
+{
+  txt_always_selectable,
+  txt_key_input_size_calc,
+  txt_key_input_drawer,
+  txt_key_input_key_press,
+  txt_key_input_destructor,
+  txt_key_input_mousepress,
+  NULL,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static int key_press_callback(txt_window_t *window, int key,
                             TXT_UNCAST_ARG(key_input))
 {
   TXT_CAST_ARG(txt_key_input_t, key_input);
 
   if (key != KEY_ESCAPE)
     {
-      // Got the key press. Save to the variable and close the window.
+      /* Got the key press. Save to the variable and close the window. */
 
       *key_input->variable = key;
 
       if (key_input->check_conflicts)
         {
-          TXT_EmitSignal(key_input, "set");
+          txt_emit_signal(key_input, "set");
         }
 
-      TXT_CloseWindow(window);
+      txt_close_window(window);
 
-      // Return to normal input mode now that we have the key.
-      TXT_SetInputMode(TXT_INPUT_NORMAL);
+      /* Return to normal input mode now that we have the key. */
+
+      txt_set_input_mode(TXT_INPUT_NORMAL);
 
       return 1;
     }
@@ -56,47 +100,50 @@ static int KeyPressCallback(txt_window_t *window, int key,
     }
 }
 
-static void ReleaseGrab(TXT_UNCAST_ARG(window), TXT_UNCAST_ARG(unused))
+static void release_grab(TXT_UNCAST_ARG(window), TXT_UNCAST_ARG(unused))
 {
-  // SDL2-TODO: Needed?
-  // SDL_WM_GrabInput(SDL_GRAB_OFF);
+  /* SDL2-TODO: Needed?
+   * SDL_WM_GrabInput(SDL_GRAB_OFF);
+   */
 }
 
-static void OpenPromptWindow(txt_key_input_t *key_input)
+static void open_prompt_window(txt_key_input_t *key_input)
 {
   txt_window_t *window;
 
-  // Silently update when the shift button is held down.
+  /* Silently update when the shift button is held down. */
 
-  key_input->check_conflicts = !TXT_GetModifierState(TXT_MOD_SHIFT);
+  key_input->check_conflicts = !txt_get_modifier_state(TXT_MOD_SHIFT);
 
   window = txt_message_box(NULL, "Press the new key...");
 
-  TXT_SetKeyListener(window, KeyPressCallback, key_input);
+  txt_set_key_listener(window, key_press_callback, key_input);
 
-  // Switch to raw input mode while we're grabbing the key.
-  TXT_SetInputMode(TXT_INPUT_RAW);
+  /* Switch to raw input mode while we're grabbing the key. */
 
-  // Grab input while reading the key.  On Windows Mobile
-  // handheld devices, the hardware keypresses are only
-  // detected when input is grabbed.
+  txt_set_input_mode(TXT_INPUT_RAW);
 
-  // SDL2-TODO: Needed?
-  // SDL_WM_GrabInput(SDL_GRAB_ON);
-  txt_signal_connect(window, "closed", ReleaseGrab, NULL);
+  /* Grab input while reading the key.  On Windows Mobile
+   * handheld devices, the hardware keypresses are only
+   * detected when input is grabbed.
+   * SDL2-TODO: Needed?
+   * SDL_WM_GrabInput(SDL_GRAB_ON);
+   */
+
+  txt_signal_connect(window, "closed", release_grab, NULL);
 }
 
-static void TXT_KeyInputSizeCalc(TXT_UNCAST_ARG(key_input))
+static void txt_key_input_size_calc(TXT_UNCAST_ARG(key_input))
 {
   TXT_CAST_ARG(txt_key_input_t, key_input);
 
-  // All keyinputs are the same size.
+  /* All keyinputs are the same size. */
 
   key_input->widget.w = KEY_INPUT_WIDTH;
   key_input->widget.h = 1;
 }
 
-static void TXT_KeyInputDrawer(TXT_UNCAST_ARG(key_input))
+static void txt_key_input_drawer(TXT_UNCAST_ARG(key_input))
 {
   TXT_CAST_ARG(txt_key_input_t, key_input);
   char buf[20];
@@ -108,31 +155,33 @@ static void TXT_KeyInputDrawer(TXT_UNCAST_ARG(key_input))
     }
   else
     {
-      TXT_GetKeyDescription(*key_input->variable, buf, sizeof(buf));
+      txt_get_key_description(*key_input->variable, buf, sizeof(buf));
     }
 
-  TXT_SetWidgetBG(key_input);
-  TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
+  txt_set_widget_bg(key_input);
+  txt_fgcolour(TXT_COLOR_BRIGHT_WHITE);
 
-  TXT_DrawString(buf);
+  txt_draw_string(buf);
 
-  for (i = TXT_UTF8_Strlen(buf); i < KEY_INPUT_WIDTH; ++i)
+  for (i = txt_utf8_strlen(buf); i < KEY_INPUT_WIDTH; ++i)
     {
-      TXT_DrawString(" ");
+      txt_draw_string(" ");
     }
 }
 
-static void TXT_KeyInputDestructor(TXT_UNCAST_ARG(key_input)) {}
+static void txt_key_input_destructor(TXT_UNCAST_ARG(key_input))
+{
+}
 
-static int TXT_KeyInputKeyPress(TXT_UNCAST_ARG(key_input), int key)
+static int txt_key_input_key_press(TXT_UNCAST_ARG(key_input), int key)
 {
   TXT_CAST_ARG(txt_key_input_t, key_input);
 
   if (key == KEY_ENTER)
     {
-      // Open a window to prompt for the new key press
+      /* Open a window to prompt for the new key press */
 
-      OpenPromptWindow(key_input);
+      open_prompt_window(key_input);
 
       return 1;
     }
@@ -145,36 +194,30 @@ static int TXT_KeyInputKeyPress(TXT_UNCAST_ARG(key_input), int key)
   return 0;
 }
 
-static void TXT_KeyInputMousePress(TXT_UNCAST_ARG(widget), int x, int y,
+static void txt_key_input_mousepress(TXT_UNCAST_ARG(widget), int x, int y,
                                    int b)
 {
   TXT_CAST_ARG(txt_key_input_t, widget);
 
-  // Clicking is like pressing enter
+  /* Clicking is like pressing enter */
 
   if (b == TXT_MOUSE_LEFT)
     {
-      TXT_KeyInputKeyPress(widget, KEY_ENTER);
+      txt_key_input_key_press(widget, KEY_ENTER);
     }
 }
 
-txt_widget_class_t txt_key_input_class = {
-    TXT_AlwaysSelectable,
-    TXT_KeyInputSizeCalc,
-    TXT_KeyInputDrawer,
-    TXT_KeyInputKeyPress,
-    TXT_KeyInputDestructor,
-    TXT_KeyInputMousePress,
-    NULL,
-};
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
-txt_key_input_t *TXT_NewKeyInput(int *variable)
+txt_key_input_t *txt_new_key_input(int *variable)
 {
   txt_key_input_t *key_input;
 
   key_input = malloc(sizeof(txt_key_input_t));
 
-  TXT_InitWidget(key_input, &txt_key_input_class);
+  txt_init_widget(key_input, &txt_key_input_class);
   key_input->variable = variable;
 
   return key_input;

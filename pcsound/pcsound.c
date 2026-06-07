@@ -1,19 +1,28 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//    PC speaker interface.
-//
+/****************************************************************************
+ * apps/games/NXDoom/pcsound/pcsound.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *    PC speaker interface.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,55 +32,68 @@
 #include "pcsound.h"
 #include "pcsound_internal.h"
 
-static pcsound_driver_t *drivers[] = {
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+static pcsound_driver_t *g_drivers[] =
+{
 #ifdef HAVE_LINUX_KD_H
-    &pcsound_linux_driver,
-#endif
-#ifdef HAVE_BSD_SPEAKER
-    &pcsound_bsd_driver,
+  &pcsound_linux_driver,
 #endif
 #ifndef DISABLE_SDL2MIXER
-    &pcsound_sdl_driver,
-#endif // DISABLE_SDL2MIXER
-    NULL,
+  &pcsound_sdl_driver,
+#endif /* DISABLE_SDL2MIXER */
+  NULL,
 };
 
-static pcsound_driver_t *pcsound_driver = NULL;
+static pcsound_driver_t *g_pcsound_driver = NULL;
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
 
 int pcsound_sample_rate;
 
-void PCSound_SetSampleRate(int rate) { pcsound_sample_rate = rate; }
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
-int PCSound_Init(pcsound_callback_func callback_func)
+void pc_sound_set_sample_rate(int rate)
+{
+  pcsound_sample_rate = rate;
+}
+
+int pc_sound_init(pcsound_callback_func callback_func)
 {
   char *driver_name;
   int i;
 
-  if (pcsound_driver != NULL)
+  if (g_pcsound_driver != NULL)
     {
       return 1;
     }
 
-  // Check if the environment variable is set
+  /* Check if the environment variable is set */
 
   driver_name = getenv("PCSOUND_DRIVER");
 
   if (driver_name != NULL)
     {
-      for (i = 0; drivers[i] != NULL; ++i)
+      for (i = 0; g_drivers[i] != NULL; ++i)
         {
-          if (!strcmp(drivers[i]->name, driver_name))
+          if (!strcmp(g_drivers[i]->name, driver_name))
             {
-              // Found the driver!
+              /* Found the driver! */
 
-              if (drivers[i]->init_func(callback_func))
+              if (g_drivers[i]->init_func(callback_func))
                 {
-                  pcsound_driver = drivers[i];
+                  g_pcsound_driver = g_drivers[i];
                 }
               else
                 {
                   printf("Failed to initialize PC sound driver: %s\n",
-                         drivers[i]->name);
+                         g_drivers[i]->name);
                   break;
                 }
             }
@@ -79,21 +101,21 @@ int PCSound_Init(pcsound_callback_func callback_func)
     }
   else
     {
-      // Try all drivers until we find a working one
+      /* Try all drivers until we find a working one */
 
-      for (i = 0; drivers[i] != NULL; ++i)
+      for (i = 0; g_drivers[i] != NULL; ++i)
         {
-          if (drivers[i]->init_func(callback_func))
+          if (g_drivers[i]->init_func(callback_func))
             {
-              pcsound_driver = drivers[i];
+              g_pcsound_driver = g_drivers[i];
               break;
             }
         }
     }
 
-  if (pcsound_driver != NULL)
+  if (g_pcsound_driver != NULL)
     {
-      printf("Using PC sound driver: %s\n", pcsound_driver->name);
+      printf("Using PC sound driver: %s\n", g_pcsound_driver->name);
       return 1;
     }
   else
@@ -103,8 +125,8 @@ int PCSound_Init(pcsound_callback_func callback_func)
     }
 }
 
-void PCSound_Shutdown(void)
+void pc_sound_shutdown(void)
 {
-  pcsound_driver->shutdown_func();
-  pcsound_driver = NULL;
+  g_pcsound_driver->shutdown_func();
+  g_pcsound_driver = NULL;
 }

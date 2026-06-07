@@ -251,7 +251,7 @@ void v_copy_rect(int srcx, int srcy, pixel_t *source, int width, int height,
       destx + width > SCREENWIDTH || desty < 0 ||
       desty + height > SCREENHEIGHT)
     {
-      I_Error("Bad v_copy_rect");
+      i_error("Bad v_copy_rect");
     }
 #endif
 
@@ -313,7 +313,7 @@ void v_draw_patch(int x, int y, patch_t *patch)
   if (x < 0 || x + SHORT(patch->width) > SCREENWIDTH || y < 0 ||
       y + SHORT(patch->height) > SCREENHEIGHT)
     {
-      I_Error("Bad V_DrawPatch");
+      i_error("Bad V_DrawPatch");
     }
 #endif
 
@@ -376,7 +376,7 @@ void v_draw_patch_flipped(int x, int y, patch_t *patch)
   if (x < 0 || x + SHORT(patch->width) > SCREENWIDTH || y < 0 ||
       y + SHORT(patch->height) > SCREENHEIGHT)
     {
-      I_Error("Bad v_draw_patch_flipped");
+      i_error("Bad v_draw_patch_flipped");
     }
 #endif
 
@@ -440,7 +440,7 @@ void v_draw_tl_patch(int x, int y, patch_t *patch)
   if (x < 0 || x + SHORT(patch->width) > SCREENWIDTH || y < 0 ||
       y + SHORT(patch->height) > SCREENHEIGHT)
     {
-      I_Error("Bad v_draw_tl_patch");
+      i_error("Bad v_draw_tl_patch");
     }
 
   col = 0;
@@ -539,7 +539,7 @@ void v_draw_alt_tl_patch(int x, int y, patch_t *patch)
   if (x < 0 || x + SHORT(patch->width) > SCREENWIDTH || y < 0 ||
       y + SHORT(patch->height) > SCREENHEIGHT)
     {
-      I_Error("Bad v_draw_alt_tl_patch");
+      i_error("Bad v_draw_alt_tl_patch");
     }
 
   col = 0;
@@ -591,7 +591,7 @@ void v_draw_shadowed_patch(int x, int y, patch_t *patch)
   if (x < 0 || x + SHORT(patch->width) > SCREENWIDTH || y < 0 ||
       y + SHORT(patch->height) > SCREENHEIGHT)
     {
-      I_Error("Bad v_draw_shadowed_patch");
+      i_error("Bad v_draw_shadowed_patch");
     }
 
   col = 0;
@@ -652,7 +652,7 @@ void v_draw_block(int x, int y, int width, int height, pixel_t *src)
 #ifdef RANGECHECK
   if (x < 0 || x + width > SCREENWIDTH || y < 0 || y + height > SCREENHEIGHT)
     {
-      I_Error("Bad v_draw_block");
+      i_error("Bad v_draw_block");
     }
 #endif
 
@@ -958,12 +958,12 @@ void v_screenshot(const char *format)
 #ifdef HAVE_LIBPNG
       if (png_screenshots)
         {
-          I_Error("v_screenshot: Couldn't create a PNG");
+          i_error("v_screenshot: Couldn't create a PNG");
         }
       else
 #endif
         {
-          I_Error("v_screenshot: Couldn't create a PCX");
+          i_error("v_screenshot: Couldn't create a PCX");
         }
     }
 

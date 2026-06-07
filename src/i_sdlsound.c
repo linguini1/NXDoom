@@ -303,7 +303,7 @@ static void unlock_allocated_sound(allocated_sound_t *snd)
 {
   if (snd->use_count <= 0)
     {
-      I_Error("Sound effect released more times than it was locked...");
+      i_error("Sound effect released more times than it was locked...");
     }
 
   --snd->use_count;
@@ -1065,7 +1065,7 @@ static int get_slice_size(void)
   return 1024;
 }
 
-static boolean i_sdl_init_sound(GameMission_t mission)
+static boolean i_sdl_init_sound(gamemission_t mission)
 {
   int i;
 
@@ -1100,7 +1100,7 @@ static boolean i_sdl_init_sound(GameMission_t mission)
     {
       if (src_conversion_mode() < 0)
         {
-          I_Error("I_SDL_InitSound: Invalid value for use_libsamplerate: %i",
+          i_error("I_SDL_InitSound: Invalid value for use_libsamplerate: %i",
                   use_libsamplerate);
         }
 

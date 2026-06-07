@@ -61,7 +61,7 @@ struct _net_module_s
 {
   // Initialize this module for use as a client
 
-  boolean (*InitClient)(void);
+  boolean (*init_client)(void);
 
   // Initialize this module for use as a server
 

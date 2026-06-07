@@ -63,7 +63,7 @@
 typedef struct
 {
   const char *label;
-  GameMission_t mission;
+  gamemission_t mission;
   int mask;
   const char *name;
   const char *config_file;
@@ -75,9 +75,10 @@ typedef struct
  * Private Data
  ****************************************************************************/
 
-static const iwad_t **iwads;
+static const iwad_t **g_iwads;
 
-static mission_config_t mission_configs[] = {
+static mission_config_t g_mission_configs[] =
+{
     {
         "Doom",
         doom,
@@ -116,25 +117,25 @@ static mission_config_t mission_configs[] = {
     },
 };
 
-static GameSelectCallback game_selected_callback;
+static game_select_callback g_game_selected_callback;
 
 /* Miscellaneous variables that aren't used in setup. */
 
-static int showMessages = 1;
-static int screenblocks = 9;
-static int detailLevel = 0;
-static char *savedir = NULL;
-static char *executable = NULL;
-static const char *game_title = "Doom";
-static char *back_flat = "F_PAVE01";
-static int comport = 0;
-static char *nickname = NULL;
+static int g_show_messages = 1;
+static int g_screenblocks = 9;
+static int g_detail_level = 0;
+static char *g_savedir = NULL;
+static char *g_executable = NULL;
+static const char *g_game_title = "Doom";
+static char *g_back_flat = "F_PAVE01";
+static int g_comport = 0;
+static char *g_nickname = NULL;
 
 /****************************************************************************
  * Public Data
  ****************************************************************************/
 
-GameMission_t gamemission;
+gamemission_t gamemission;
 
 /****************************************************************************
  * Private Functions
@@ -144,26 +145,26 @@ static void bind_misc_variables(void)
 {
   if (gamemission == doom)
     {
-      m_bind_int_variable("detaillevel", &detailLevel);
-      m_bind_int_variable("show_messages", &showMessages);
+      m_bind_int_variable("detaillevel", &g_detail_level);
+      m_bind_int_variable("show_messages", &g_show_messages);
     }
 
   if (gamemission == hexen)
     {
-      m_bind_string_variable("savedir", &savedir);
-      m_bind_int_variable("messageson", &showMessages);
+      m_bind_string_variable("savedir", &g_savedir);
+      m_bind_int_variable("messageson", &g_show_messages);
 
       /* Hexen has a variable to control the savegame directory that is used.
        */
 
-      savedir = m_get_save_game_dir("hexen.wad");
+      g_savedir = m_get_save_game_dir("hexen.wad");
 
       /* On Windows, hexndata\ is the default. */
 
-      if (!strcmp(savedir, ""))
+      if (!strcmp(g_savedir, ""))
         {
-          free(savedir);
-          savedir = "hexndata" DIR_SEPARATOR_S;
+          free(g_savedir);
+          g_savedir = "hexndata" DIR_SEPARATOR_S;
         }
     }
 
@@ -171,17 +172,17 @@ static void bind_misc_variables(void)
     {
       /* Strife has a different default value than the other games */
 
-      screenblocks = 10;
+      g_screenblocks = 10;
 
-      m_bind_string_variable("back_flat", &back_flat);
-      m_bind_string_variable("nickname", &nickname);
+      m_bind_string_variable("back_flat", &g_back_flat);
+      m_bind_string_variable("nickname", &g_nickname);
 
-      m_bind_int_variable("screensize", &screenblocks);
-      m_bind_int_variable("comport", &comport);
+      m_bind_int_variable("screensize", &g_screenblocks);
+      m_bind_int_variable("comport", &g_comport);
     }
   else
     {
-      m_bind_int_variable("screenblocks", &screenblocks);
+      m_bind_int_variable("screenblocks", &g_screenblocks);
     }
 }
 
@@ -197,17 +198,17 @@ static void set_executable(mission_config_t *config)
 {
   char *extension;
 
-  free(executable);
+  free(g_executable);
   extension = "";
-  executable = m_string_join(config->executable, extension, NULL);
+  g_executable = m_string_join(config->executable, extension, NULL);
 }
 
 static void set_mission(mission_config_t *config)
 {
-  iwads = D_FindAllIWADs(config->mask);
+  g_iwads = d_find_all_iwads(config->mask);
   gamemission = config->mission;
   set_executable(config);
-  game_title = config->label;
+  g_game_title = config->label;
   m_set_config_filenames(config->config_file, config->extra_config_file);
 }
 
@@ -215,11 +216,11 @@ static mission_config_t *get_mission_for_name(const char *name)
 {
   int i;
 
-  for (i = 0; i < arrlen(mission_configs); ++i)
+  for (i = 0; i < arrlen(g_mission_configs); ++i)
     {
-      if (!strcmp(mission_configs[i].name, name))
+      if (!strcmp(g_mission_configs[i].name, name))
         {
-          return &mission_configs[i];
+          return &g_mission_configs[i];
         }
     }
 
@@ -235,7 +236,7 @@ static mission_config_t *get_mission_for_name(const char *name)
  *
  ****************************************************************************/
 
-static boolean check_executable_name(GameSelectCallback callback)
+static boolean check_executable_name(game_select_callback callback)
 {
   mission_config_t *config;
   const char *exe_name;
@@ -243,9 +244,9 @@ static boolean check_executable_name(GameSelectCallback callback)
 
   exe_name = m_get_executable_name();
 
-  for (i = 0; i < arrlen(mission_configs); ++i)
+  for (i = 0; i < arrlen(g_mission_configs); ++i)
     {
-      config = &mission_configs[i];
+      config = &g_mission_configs[i];
 
       if (strstr(exe_name, config->name) != NULL)
         {
@@ -263,10 +264,10 @@ static void game_selected(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(config))
   TXT_CAST_ARG(mission_config_t, config);
 
   set_mission(config);
-  game_selected_callback();
+  g_game_selected_callback();
 }
 
-static void open_game_select_dialog(GameSelectCallback callback)
+static void open_game_select_dialog(game_select_callback callback)
 {
   mission_config_t *mission = NULL;
   txt_window_t *window;
@@ -276,38 +277,38 @@ static void open_game_select_dialog(GameSelectCallback callback)
 
   window = txt_new_window("Select game");
 
-  TXT_AddWidget(window, txt_new_label("Select a game to configure:\n"));
+  txt_add_widget(window, txt_new_label("Select a game to configure:\n"));
   num_games = 0;
 
   /* Add a button for each game. */
 
-  for (i = 0; i < arrlen(mission_configs); ++i)
+  for (i = 0; i < arrlen(g_mission_configs); ++i)
     {
       /* Do we have any IWADs for this game installed?
        * If so, add a button.
        */
 
-      iwads = D_FindAllIWADs(mission_configs[i].mask);
+      iwads = d_find_all_iwads(g_mission_configs[i].mask);
 
       if (iwads[0] != NULL)
         {
-          mission = &mission_configs[i];
-          TXT_AddWidget(window,
-                        TXT_NewButton2(mission_configs[i].label, GameSelected,
-                                       &mission_configs[i]));
+          mission = &g_mission_configs[i];
+          txt_add_widget(window, txt_new_button2(g_mission_configs[i].label,
+                                                 game_selected,
+                                                 &g_mission_configs[i]));
           ++num_games;
         }
 
       free(iwads);
     }
 
-  TXT_AddWidget(window, txt_new_strut(0, 1));
+  txt_add_widget(window, txt_new_strut(0, 1));
 
   /* No IWADs found at all?  Fall back to doom, then. */
 
   if (num_games == 0)
     {
-      TXT_CloseWindow(window);
+      txt_close_window(window);
       set_mission(DEFAULT_MISSION);
       callback();
       return;
@@ -317,13 +318,13 @@ static void open_game_select_dialog(GameSelectCallback callback)
 
   if (num_games == 1)
     {
-      TXT_CloseWindow(window);
+      txt_close_window(window);
       set_mission(mission);
       callback();
       return;
     }
 
-  game_selected_callback = callback;
+  g_game_selected_callback = callback;
 }
 
 /****************************************************************************
@@ -340,43 +341,43 @@ static void open_game_select_dialog(GameSelectCallback callback)
 
 void init_bindings(void)
 {
-  M_ApplyPlatformDefaults();
+  m_apply_platform_defaults();
 
   /* Keyboard, mouse, joystick controls */
 
-  M_BindBaseControls();
-  M_BindWeaponControls();
-  M_BindMapControls();
-  M_BindMenuControls();
+  m_bind_base_controls();
+  m_bind_weapon_controls();
+  m_bind_map_controls();
+  m_bind_menu_controls();
 
   if (gamemission == heretic || gamemission == hexen)
     {
-      M_BindHereticControls();
+      m_bind_heretic_controls();
     }
 
   if (gamemission == hexen)
     {
-      M_BindHexenControls();
+      m_bind_hexen_controls();
     }
 
   if (gamemission == strife)
     {
-      M_BindStrifeControls();
+      m_bind_strife_controls();
     }
 
   /* All other variables */
 
-  BindCompatibilityVariables();
-  BindDisplayVariables();
-  BindJoystickVariables();
-  BindKeyboardVariables();
-  BindMouseVariables();
+  bind_compatibility_variables();
+  bind_display_variables();
+  bind_joystick_variables();
+  bind_keyboard_variables();
+  bind_mouse_variables();
   bind_sound_variables();
   bind_misc_variables();
   bind_multiple_variables();
 }
 
-void setup_mission(GameSelectCallback callback)
+void setup_mission(game_select_callback callback)
 {
   mission_config_t *config;
   const char *mission_name;
@@ -396,20 +397,29 @@ void setup_mission(GameSelectCallback callback)
 
       if (config == NULL)
         {
-          I_Error("Invalid parameter - '%s'", mission_name);
+          i_error("Invalid parameter - '%s'", mission_name);
         }
 
       set_mission(config);
       callback();
     }
-  else if (!CheckExecutableName(callback))
+  else if (!check_executable_name(callback))
     {
       open_game_select_dialog(callback);
     }
 }
 
-const char *get_executable_name(void) { return executable; }
+const char *get_executable_name(void)
+{
+  return g_executable;
+}
 
-const char *get_game_title(void) { return game_title; }
+const char *get_game_title(void)
+{
+  return g_game_title;
+}
 
-const iwad_t **get_iwads(void) { return iwads; }
+const iwad_t **get_iwads(void)
+{
+  return g_iwads;
+}

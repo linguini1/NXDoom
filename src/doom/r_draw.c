@@ -107,7 +107,7 @@ void R_DrawColumn(void)
 
 #ifdef RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
-    I_Error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+    i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
 #endif
 
   // Framebuffer destination address.
@@ -211,7 +211,7 @@ void R_DrawColumnLow(void)
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
 
-      I_Error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
     //	dccount++;
 #endif
@@ -280,7 +280,7 @@ void R_DrawFuzzColumn(void)
 #ifdef RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      I_Error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
 #endif
 
@@ -332,7 +332,7 @@ void R_DrawFuzzColumnLow(void)
 #ifdef RANGECHECK
   if ((unsigned)x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      I_Error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
 #endif
 
@@ -385,7 +385,7 @@ void R_DrawTranslatedColumn(void)
 #ifdef RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      I_Error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
 
 #endif
@@ -430,7 +430,7 @@ void R_DrawTranslatedColumnLow(void)
 #ifdef RANGECHECK
   if ((unsigned)x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      I_Error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, x);
+      i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, x);
     }
 
 #endif
@@ -535,7 +535,7 @@ void R_DrawSpan(void)
   if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= SCREENWIDTH ||
       (unsigned)ds_y > SCREENHEIGHT)
     {
-      I_Error("R_DrawSpan: %i to %i at %i", ds_x1, ds_x2, ds_y);
+      i_error("R_DrawSpan: %i to %i at %i", ds_x1, ds_x2, ds_y);
     }
 //	dscount++;
 #endif
@@ -656,7 +656,7 @@ void R_DrawSpanLow(void)
   if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= SCREENWIDTH ||
       (unsigned)ds_y > SCREENHEIGHT)
     {
-      I_Error("R_DrawSpan: %i to %i at %i", ds_x1, ds_x2, ds_y);
+      i_error("R_DrawSpan: %i to %i at %i", ds_x1, ds_x2, ds_y);
     }
 //	dscount++;
 #endif

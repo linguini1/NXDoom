@@ -1,19 +1,27 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// Routines for selecting files.
-//
+/****************************************************************************
+ * apps/games/NXDoom/textscreen/txt_fileselect.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Routines for selecting files.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <ctype.h>
 #include <errno.h>
@@ -33,6 +41,20 @@
 #include "txt_main.h"
 #include "txt_widget.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* Linux version: invoke the Zenity command line program to pop up a
+ * dialog box. This avoids adding Gtk+ as a compile dependency.
+ */
+
+#define ZENITY_BINARY "/usr/bin/zenity"
+
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
+
 struct txt_fileselect_s
 {
   txt_widget_t widget;
@@ -42,15 +64,53 @@ struct txt_fileselect_s
   const char **extensions;
 };
 
-// Dummy value to select a directory.
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
 
-const char *TXT_DIRECTORY[] = {"__directory__", NULL};
+static void txt_file_select_size_calc(TXT_UNCAST_ARG(fileselect));
+static void txt_file_select_drawer(TXT_UNCAST_ARG(fileselect));
+static int txt_file_select_keypress(TXT_UNCAST_ARG(fileselect), int key);
+static void txt_file_select_destructor(TXT_UNCAST_ARG(fileselect));
+static void txt_file_select_mousepress(TXT_UNCAST_ARG(fileselect), int x,
+                                       int y, int b);
+static void txt_file_select_focused(TXT_UNCAST_ARG(fileselect), int focused);
 
-static char *ExecReadOutput(char **argv)
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+/* Dummy value to select a directory. */
+
+const char *TXT_DIRECTORY[] =
+{
+  "__directory__",
+  NULL,
+};
+
+txt_widget_class_t txt_fileselect_class =
+{
+  txt_always_selectable,
+  txt_file_select_size_calc,
+  txt_file_select_drawer,
+  txt_file_select_keypress,
+  txt_file_select_destructor,
+  txt_file_select_mousepress,
+  NULL,
+  txt_file_select_focused,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static char *exec_read_output(char **argv)
 {
   char *result;
   int completed;
-  int pid, status, result_len;
+  int pid;
+  int status;
+  int result_len;
   int pipefd[2];
 
   if (pipe(pipefd) != 0)
@@ -69,9 +129,10 @@ static char *ExecReadOutput(char **argv)
 
   fcntl(pipefd[0], F_SETFL, O_NONBLOCK);
 
-  // Read program output into 'result' string.
-  // Wait until the program has completed and (if it was successful)
-  // a full line has been read.
+  /* Read program output into 'result' string.
+   * Wait until the program has completed and (if it was successful)
+   * a full line has been read.
+   */
 
   result = NULL;
   result_len = 0;
@@ -105,6 +166,7 @@ static char *ExecReadOutput(char **argv)
             {
               break;
             }
+
           result = new_result;
           memcpy(result + result_len, buf, bytes);
           result_len += bytes;
@@ -112,14 +174,14 @@ static char *ExecReadOutput(char **argv)
         }
 
       usleep(100 * 1000);
-      TXT_Sleep(1);
-      TXT_UpdateScreen();
+      txt_sleep(1);
+      txt_update_screen();
     }
 
   close(pipefd[0]);
   close(pipefd[1]);
 
-  // Must have a success exit code.
+  /* Must have a success exit code. */
 
   if (WEXITSTATUS(status) != 0)
     {
@@ -127,7 +189,7 @@ static char *ExecReadOutput(char **argv)
       result = NULL;
     }
 
-  // Strip off newline from the end.
+  /* Strip off newline from the end. */
 
   if (result != NULL && result[result_len - 1] == '\n')
     {
@@ -137,12 +199,7 @@ static char *ExecReadOutput(char **argv)
   return result;
 }
 
-// Linux version: invoke the Zenity command line program to pop up a
-// dialog box. This avoids adding Gtk+ as a compile dependency.
-
-#define ZENITY_BINARY "/usr/bin/zenity"
-
-static unsigned int NumExtensions(const char **extensions)
+static unsigned int num_extensions(const char **extensions)
 {
   unsigned int result = 0;
 
@@ -155,23 +212,22 @@ static unsigned int NumExtensions(const char **extensions)
   return result;
 }
 
-static int ZenityAvailable(void) { return 0; }
+/* ExpandExtension
+ * given an extension (like wad)
+ * return a pointer to a string that is a case-insensitive
+ * pattern representation (like [Ww][Aa][Dd])
+ */
 
-int TXT_CanSelectFiles(void) { return ZenityAvailable(); }
-
-//
-// ExpandExtension
-// given an extension (like wad)
-// return a pointer to a string that is a case-insensitive
-// pattern representation (like [Ww][Aa][Dd])
-//
-static char *ExpandExtension(const char *orig)
+static char *expand_extension(const char *orig)
 {
-  int oldlen, newlen, i;
-  char *c, *newext = NULL;
+  int oldlen;
+  int newlen;
+  int i;
+  char *c;
+  char *newext = NULL;
 
   oldlen = strlen(orig);
-  newlen = oldlen * 4; // pathological case: 'w' => '[Ww]'
+  newlen = oldlen * 4; /* pathological case: 'w' => '[Ww]' */
   newext = malloc(newlen + 1);
 
   if (newext == NULL)
@@ -180,6 +236,7 @@ static char *ExpandExtension(const char *orig)
     }
 
   c = newext;
+
   for (i = 0; i < oldlen; ++i)
     {
       if (isalpha(orig[i]))
@@ -194,204 +251,92 @@ static char *ExpandExtension(const char *orig)
           *c++ = orig[i];
         }
     }
+
   *c = '\0';
   return newext;
 }
 
-char *TXT_SelectFile(const char *window_title, const char **extensions)
+static char *txt_select_file(const char *window_title,
+                             const char **extensions)
 {
-  unsigned int i;
-  size_t len;
-  char *result;
-  char **argv;
-  int argc;
-
-  if (!ZenityAvailable())
-    {
-      return NULL;
-    }
-
-  argv = calloc(5 + NumExtensions(extensions), sizeof(char *));
-  argv[0] = strdup(ZENITY_BINARY);
-  argv[1] = strdup("--file-selection");
-  argc = 2;
-
-  if (window_title != NULL)
-    {
-      len = 10 + strlen(window_title);
-      argv[argc] = malloc(len);
-      TXT_snprintf(argv[argc], len, "--title=%s", window_title);
-      ++argc;
-    }
-
-  if (extensions == TXT_DIRECTORY)
-    {
-      argv[argc] = strdup("--directory");
-      ++argc;
-    }
-  else if (extensions != NULL)
-    {
-      for (i = 0; extensions[i] != NULL; ++i)
-        {
-          char *newext = ExpandExtension(extensions[i]);
-          if (newext)
-            {
-              len = 30 + strlen(extensions[i]) + strlen(newext);
-              argv[argc] = malloc(len);
-              TXT_snprintf(argv[argc], len, "--file-filter=.%s | *.%s",
-                           extensions[i], newext);
-              ++argc;
-              free(newext);
-            }
-        }
-
-      argv[argc] = strdup("--file-filter=*.* | *.*");
-      ++argc;
-    }
-
-  argv[argc] = NULL;
-
-  result = ExecReadOutput(argv);
-
-  for (i = 0; i < argc; ++i)
-    {
-      free(argv[i]);
-    }
-
-  free(argv);
-
-  return result;
+  return NULL;
 }
 
-static void TXT_FileSelectSizeCalc(TXT_UNCAST_ARG(fileselect))
+static void txt_file_select_size_calc(TXT_UNCAST_ARG(fileselect))
 {
   TXT_CAST_ARG(txt_fileselect_t, fileselect);
 
-  // Calculate widget size, but override the width to always
-  // be the configured size.
+  /* Calculate widget size, but override the width to always
+   * be the configured size.
+   */
 
-  TXT_CalcWidgetSize(fileselect->inputbox);
+  txt_calc_widget_size(fileselect->inputbox);
   fileselect->widget.w = fileselect->size;
   fileselect->widget.h = fileselect->inputbox->widget.h;
 }
 
-static void TXT_FileSelectDrawer(TXT_UNCAST_ARG(fileselect))
+static void txt_file_select_drawer(TXT_UNCAST_ARG(fileselect))
 {
   TXT_CAST_ARG(txt_fileselect_t, fileselect);
 
-  // Input box widget inherits all the properties of the
-  // file selector.
+  /* Input box widget inherits all the properties of the
+   * file selector.
+   */
 
   fileselect->inputbox->widget.x = fileselect->widget.x + 2;
   fileselect->inputbox->widget.y = fileselect->widget.y;
   fileselect->inputbox->widget.w = fileselect->widget.w - 2;
   fileselect->inputbox->widget.h = fileselect->widget.h;
 
-  // Triple bar symbol gives a distinguishing look to the file selector.
-  TXT_DrawCodePageString("\xf0 ");
-  TXT_BGColor(TXT_COLOR_BLACK, 0);
-  TXT_DrawWidget(fileselect->inputbox);
+  /* Triple bar symbol gives a distinguishing look to the file selector. */
+
+  txt_draw_code_page_string("\xf0 ");
+  txt_bgcolour(TXT_COLOR_BLACK, 0);
+  txt_draw_widget(fileselect->inputbox);
 }
 
-static void TXT_FileSelectDestructor(TXT_UNCAST_ARG(fileselect))
+static void txt_file_select_destructor(TXT_UNCAST_ARG(fileselect))
 {
   TXT_CAST_ARG(txt_fileselect_t, fileselect);
 
-  TXT_DestroyWidget(fileselect->inputbox);
+  txt_destroy_widget(fileselect->inputbox);
 }
 
-static int DoSelectFile(txt_fileselect_t *fileselect)
+static int txt_file_select_keypress(TXT_UNCAST_ARG(fileselect), int key)
 {
-  char *path;
-  char **var;
-
-  if (TXT_CanSelectFiles())
-    {
-      path = TXT_SelectFile(fileselect->prompt, fileselect->extensions);
-
-      // Update inputbox variable.
-      // If cancel was pressed (ie. NULL was returned by TXT_SelectFile)
-      // then reset to empty string, not NULL).
-
-      if (path == NULL)
-        {
-          path = strdup("");
-        }
-
-      var = fileselect->inputbox->value;
-      free(*var);
-      *var = path;
-      return 1;
-    }
-
-  return 0;
+  TXT_CAST_ARG(txt_fileselect_t, fileselect);
+  return txt_widget_key_press(fileselect->inputbox, key);
 }
 
-static int TXT_FileSelectKeyPress(TXT_UNCAST_ARG(fileselect), int key)
+static void txt_file_select_mousepress(TXT_UNCAST_ARG(fileselect), int x,
+                                       int y, int b)
+{
+  TXT_CAST_ARG(txt_fileselect_t, fileselect);
+  txt_widget_mouse_press(fileselect->inputbox, x, y, b);
+}
+
+static void txt_file_select_focused(TXT_UNCAST_ARG(fileselect), int focused)
 {
   TXT_CAST_ARG(txt_fileselect_t, fileselect);
 
-  // When the enter key is pressed, pop up a file selection dialog,
-  // if file selectors work. Allow holding down 'alt' to override
-  // use of the native file selector, so the user can just type a path.
-
-  if (!fileselect->inputbox->editing && !TXT_GetModifierState(TXT_MOD_ALT) &&
-      key == KEY_ENTER)
-    {
-      if (DoSelectFile(fileselect))
-        {
-          return 1;
-        }
-    }
-
-  return TXT_WidgetKeyPress(fileselect->inputbox, key);
+  txt_set_widget_focus(fileselect->inputbox, focused);
 }
 
-static void TXT_FileSelectMousePress(TXT_UNCAST_ARG(fileselect), int x, int y,
-                                     int b)
+/* If the (inner) inputbox widget is changed, emit a change to the
+ * outer (fileselect) widget.
+ */
+
+static void input_box_changed(TXT_UNCAST_ARG(widget),
+                              TXT_UNCAST_ARG(fileselect))
 {
   TXT_CAST_ARG(txt_fileselect_t, fileselect);
 
-  if (!fileselect->inputbox->editing && !TXT_GetModifierState(TXT_MOD_ALT) &&
-      b == TXT_MOUSE_LEFT)
-    {
-      if (DoSelectFile(fileselect))
-        {
-          return;
-        }
-    }
-
-  TXT_WidgetMousePress(fileselect->inputbox, x, y, b);
+  txt_emit_signal(&fileselect->widget, "changed");
 }
 
-static void TXT_FileSelectFocused(TXT_UNCAST_ARG(fileselect), int focused)
-{
-  TXT_CAST_ARG(txt_fileselect_t, fileselect);
-
-  TXT_SetWidgetFocus(fileselect->inputbox, focused);
-}
-
-txt_widget_class_t txt_fileselect_class = {
-    TXT_AlwaysSelectable,
-    TXT_FileSelectSizeCalc,
-    TXT_FileSelectDrawer,
-    TXT_FileSelectKeyPress,
-    TXT_FileSelectDestructor,
-    TXT_FileSelectMousePress,
-    NULL,
-    TXT_FileSelectFocused,
-};
-
-// If the (inner) inputbox widget is changed, emit a change to the
-// outer (fileselect) widget.
-
-static void InputBoxChanged(TXT_UNCAST_ARG(widget),
-                            TXT_UNCAST_ARG(fileselect))
-{
-  TXT_CAST_ARG(txt_fileselect_t, fileselect);
-
-  TXT_EmitSignal(&fileselect->widget, "changed");
-}
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 txt_fileselect_t *txt_new_file_selector(char **variable, int size,
                                         const char *prompt,
@@ -400,14 +345,14 @@ txt_fileselect_t *txt_new_file_selector(char **variable, int size,
   txt_fileselect_t *fileselect;
 
   fileselect = malloc(sizeof(txt_fileselect_t));
-  TXT_InitWidget(fileselect, &txt_fileselect_class);
-  fileselect->inputbox = TXT_NewInputBox(variable, 1024);
+  txt_init_widget(fileselect, &txt_fileselect_class);
+  fileselect->inputbox = txt_new_input_box(variable, 1024);
   fileselect->inputbox->widget.parent = &fileselect->widget;
   fileselect->size = size;
   fileselect->prompt = prompt;
   fileselect->extensions = extensions;
 
-  txt_signal_connect(fileselect->inputbox, "changed", InputBoxChanged,
+  txt_signal_connect(fileselect->inputbox, "changed", input_box_changed,
                      fileselect);
 
   return fileselect;

@@ -2154,7 +2154,7 @@ static default_t *get_default_for_name(const char *name)
 
   if (result == NULL)
     {
-      I_Error("Unknown configuration variable: '%s'", name);
+      i_error("Unknown configuration variable: '%s'", name);
     }
 
   return result;

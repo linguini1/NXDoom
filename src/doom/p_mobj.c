@@ -109,7 +109,7 @@ boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
 
       if (cycle_counter++ > MOBJ_CYCLE_LIMIT)
         {
-          I_Error("P_SetMobjState: Infinite state cycle detected!");
+          i_error("P_SetMobjState: Infinite state cycle detected!");
         }
     }
   while (!mobj->tics);
@@ -683,7 +683,7 @@ void P_RespawnSpecials(void)
 
   if (i >= NUMMOBJTYPES)
     {
-      I_Error("P_RespawnSpecials: Failed to find mobj type with doomednum "
+      i_error("P_RespawnSpecials: Failed to find mobj type with doomednum "
               "%d when respawning thing. This would cause a buffer overrun "
               "in vanilla Doom",
               mthing->type);
@@ -853,7 +853,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
     if (mthing->type == mobjinfo[i].doomednum) break;
 
   if (i == NUMMOBJTYPES)
-    I_Error("P_SpawnMapThing: Unknown type %i at (%i, %i)", mthing->type,
+    i_error("P_SpawnMapThing: Unknown type %i at (%i, %i)", mthing->type,
             mthing->x, mthing->y);
 
   /* don't spawn keycards and players in deathmatch */

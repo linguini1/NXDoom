@@ -17,7 +17,7 @@
 
 void ConfigDisplay(void *widget, void *user_data);
 void SetDisplayDriver(void);
-void BindDisplayVariables(void);
+void bind_display_variables(void);
 
 extern int show_endoom;
 extern int graphical_startup;

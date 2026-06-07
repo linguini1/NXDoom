@@ -209,7 +209,7 @@ static int ExecuteCommand(const char *program, const char *arg)
     }
 }
 
-int ExecuteDoom(execute_context_t *context)
+int execute_doom(execute_context_t *context)
 {
   char *response_file_arg;
   int result;
@@ -243,7 +243,7 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 
   testwindow = txt_message_box("Starting Doom", "Starting Doom to test the\n"
                                                 "settings.  Please wait.");
-  TXT_DrawDesktop();
+  txt_draw_desktop();
 
   // Save temporary configuration files with the current configuration
 
@@ -258,9 +258,9 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
   AddCmdLineParameter(exec, "-testcontrols");
   AddCmdLineParameter(exec, "-config \"%s\"", main_cfg);
   AddCmdLineParameter(exec, "-extraconfig \"%s\"", extra_cfg);
-  ExecuteDoom(exec);
+  execute_doom(exec);
 
-  TXT_CloseWindow(testwindow);
+  txt_close_window(testwindow);
 
   // Delete the temporary config files
 
