@@ -186,7 +186,7 @@ boolean P_CheckMissileRange(mobj_t *actor)
   if (!actor->info->meleestate)
     dist -= 128 * FRACUNIT; // no melee attack, so fire more
 
-  dist >>= FRACBITS;
+  dist = fixed_to_whole(dist);
 
   if (actor->type == MT_VILE)
     {
@@ -947,8 +947,8 @@ void A_Tracer(mobj_t *actor)
     }
 
   exact = actor->angle >> ANGLETOFINESHIFT;
-  actor->momx = FixedMul(actor->info->speed, finecosine[exact]);
-  actor->momy = FixedMul(actor->info->speed, finesine[exact]);
+  actor->momx = fixed_mul(actor->info->speed, finecosine[exact]);
+  actor->momy = fixed_mul(actor->info->speed, finesine[exact]);
 
   // change slope
   dist = P_AproxDistance(dest->x - actor->x, dest->y - actor->y);
@@ -1144,8 +1144,8 @@ void A_Fire(mobj_t *actor)
   an = dest->angle >> ANGLETOFINESHIFT;
 
   P_UnsetThingPosition(actor);
-  actor->x = dest->x + FixedMul(24 * FRACUNIT, finecosine[an]);
-  actor->y = dest->y + FixedMul(24 * FRACUNIT, finesine[an]);
+  actor->x = dest->x + fixed_mul(24 * FRACUNIT, finecosine[an]);
+  actor->y = dest->y + fixed_mul(24 * FRACUNIT, finesine[an]);
   actor->z = dest->z;
   P_SetThingPosition(actor);
 }
@@ -1198,8 +1198,8 @@ void A_VileAttack(mobj_t *actor)
   if (!fire) return;
 
   // move the fire between the vile and the player
-  fire->x = actor->target->x - FixedMul(24 * FRACUNIT, finecosine[an]);
-  fire->y = actor->target->y - FixedMul(24 * FRACUNIT, finesine[an]);
+  fire->x = actor->target->x - fixed_mul(24 * FRACUNIT, finecosine[an]);
+  fire->y = actor->target->y - fixed_mul(24 * FRACUNIT, finesine[an]);
   P_RadiusAttack(fire, actor, 70);
 }
 
@@ -1235,8 +1235,8 @@ void A_FatAttack1(mobj_t *actor)
   mo = P_SpawnMissile(actor, target, MT_FATSHOT);
   mo->angle += FATSPREAD;
   an = mo->angle >> ANGLETOFINESHIFT;
-  mo->momx = FixedMul(mo->info->speed, finecosine[an]);
-  mo->momy = FixedMul(mo->info->speed, finesine[an]);
+  mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
+  mo->momy = fixed_mul(mo->info->speed, finesine[an]);
 }
 
 void A_FatAttack2(mobj_t *actor)
@@ -1254,8 +1254,8 @@ void A_FatAttack2(mobj_t *actor)
   mo = P_SpawnMissile(actor, target, MT_FATSHOT);
   mo->angle -= FATSPREAD * 2;
   an = mo->angle >> ANGLETOFINESHIFT;
-  mo->momx = FixedMul(mo->info->speed, finecosine[an]);
-  mo->momy = FixedMul(mo->info->speed, finesine[an]);
+  mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
+  mo->momy = fixed_mul(mo->info->speed, finesine[an]);
 }
 
 void A_FatAttack3(mobj_t *actor)
@@ -1271,14 +1271,14 @@ void A_FatAttack3(mobj_t *actor)
   mo = P_SpawnMissile(actor, target, MT_FATSHOT);
   mo->angle -= FATSPREAD / 2;
   an = mo->angle >> ANGLETOFINESHIFT;
-  mo->momx = FixedMul(mo->info->speed, finecosine[an]);
-  mo->momy = FixedMul(mo->info->speed, finesine[an]);
+  mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
+  mo->momy = fixed_mul(mo->info->speed, finesine[an]);
 
   mo = P_SpawnMissile(actor, target, MT_FATSHOT);
   mo->angle += FATSPREAD / 2;
   an = mo->angle >> ANGLETOFINESHIFT;
-  mo->momx = FixedMul(mo->info->speed, finecosine[an]);
-  mo->momy = FixedMul(mo->info->speed, finesine[an]);
+  mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
+  mo->momy = fixed_mul(mo->info->speed, finesine[an]);
 }
 
 //
@@ -1303,8 +1303,8 @@ void A_SkullAttack(mobj_t *actor)
 #endif
   A_FaceTarget(actor);
   an = actor->angle >> ANGLETOFINESHIFT;
-  actor->momx = FixedMul(SKULLSPEED, finecosine[an]);
-  actor->momy = FixedMul(SKULLSPEED, finesine[an]);
+  actor->momx = fixed_mul(SKULLSPEED, finecosine[an]);
+  actor->momy = fixed_mul(SKULLSPEED, finesine[an]);
   dist = P_AproxDistance(dest->x - actor->x, dest->y - actor->y);
   dist = dist / SKULLSPEED;
 
@@ -1350,8 +1350,8 @@ void A_PainShootSkull(mobj_t *actor, angle_t angle)
   prestep = 4 * FRACUNIT +
             3 * (actor->info->radius + mobjinfo[MT_SKULL].radius) / 2;
 
-  x = actor->x + FixedMul(prestep, finecosine[an]);
-  y = actor->y + FixedMul(prestep, finesine[an]);
+  x = actor->x + fixed_mul(prestep, finecosine[an]);
+  y = actor->y + fixed_mul(prestep, finesine[an]);
   z = actor->z + 8 * FRACUNIT;
 
   newmobj = P_SpawnMobj(x, y, z, MT_SKULL);

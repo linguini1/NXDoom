@@ -115,8 +115,8 @@
 
 /* translates between frame-buffer and map distances */
 
-#define FTOM(x) FixedMul(((x) << FRACBITS), scale_ftom)
-#define MTOF(x) (FixedMul((x), scale_mtof) >> FRACBITS)
+#define FTOM(x) fixed_mul(whole_to_fixed((x)), scale_ftom)
+#define MTOF(x) fixed_to_whole(fixed_mul((x), scale_mtof))
 
 /* translates between frame-buffer and map coordinates */
 
@@ -331,11 +331,11 @@ void AM_getIslope(mline_t *ml, islope_t *is)
   if (!dy)
     is->islp = (dx < 0 ? -INT_MAX : INT_MAX);
   else
-    is->islp = FixedDiv(dx, dy);
+    is->islp = fixed_div(dx, dy);
   if (!dx)
     is->slp = (dy < 0 ? -INT_MAX : INT_MAX);
   else
-    is->slp = FixedDiv(dy, dx);
+    is->slp = fixed_div(dy, dx);
 }
 
 /****************************************************************************
@@ -390,8 +390,8 @@ void AM_restoreScaleAndLoc(void)
 
   /* Change the scaling multipliers */
 
-  scale_mtof = FixedDiv(f_w << FRACBITS, m_w);
-  scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+  scale_mtof = fixed_div(whole_to_fixed(f_w), m_w);
+  scale_ftom = fixed_div(FRACUNIT, scale_mtof);
 }
 
 /****************************************************************************
@@ -446,11 +446,11 @@ void AM_findMinMaxBoundaries(void)
   min_w = 2 * PLAYERRADIUS; /* const? never changed? */
   min_h = 2 * PLAYERRADIUS;
 
-  a = FixedDiv(f_w << FRACBITS, max_w);
-  b = FixedDiv(f_h << FRACBITS, max_h);
+  a = fixed_div(whole_to_fixed(f_w), max_w);
+  b = fixed_div(whole_to_fixed(f_h), max_h);
 
   min_scale_mtof = a < b ? a : b;
-  max_scale_mtof = FixedDiv(f_h << FRACBITS, 2 * PLAYERRADIUS);
+  max_scale_mtof = fixed_div(whole_to_fixed(f_h), 2 * PLAYERRADIUS);
 }
 
 /****************************************************************************
@@ -604,9 +604,9 @@ void AM_LevelInit(void)
   AM_clearMarks();
 
   AM_findMinMaxBoundaries();
-  scale_mtof = FixedDiv(min_scale_mtof, (int)(0.7 * FRACUNIT));
+  scale_mtof = fixed_div(min_scale_mtof, (int)(0.7 * FRACUNIT));
   if (scale_mtof > max_scale_mtof) scale_mtof = min_scale_mtof;
-  scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+  scale_ftom = fixed_div(FRACUNIT, scale_mtof);
 }
 
 /****************************************************************************
@@ -654,7 +654,7 @@ void AM_Start(void)
 void AM_minOutWindowScale(void)
 {
   scale_mtof = min_scale_mtof;
-  scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+  scale_ftom = fixed_div(FRACUNIT, scale_mtof);
   AM_activateNewScale();
 }
 
@@ -669,7 +669,7 @@ void AM_minOutWindowScale(void)
 void AM_maxOutWindowScale(void)
 {
   scale_mtof = max_scale_mtof;
-  scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+  scale_ftom = fixed_div(FRACUNIT, scale_mtof);
   AM_activateNewScale();
 }
 
@@ -864,8 +864,8 @@ void AM_changeWindowScale(void)
 {
   /* Change the scaling multipliers */
 
-  scale_mtof = FixedMul(scale_mtof, mtof_zoommul);
-  scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+  scale_mtof = fixed_mul(scale_mtof, mtof_zoommul);
+  scale_ftom = fixed_div(FRACUNIT, scale_mtof);
 
   if (scale_mtof < min_scale_mtof)
     AM_minOutWindowScale();
@@ -1213,16 +1213,16 @@ void AM_drawGrid(int color)
   /* Figure out start of vertical gridlines */
 
   start = m_x;
-  if ((start - bmaporgx) % (MAPBLOCKUNITS << FRACBITS))
-    start += (MAPBLOCKUNITS << FRACBITS) -
-             ((start - bmaporgx) % (MAPBLOCKUNITS << FRACBITS));
+  if ((start - bmaporgx) % whole_to_fixed(MAPBLOCKUNITS))
+    start += whole_to_fixed(MAPBLOCKUNITS) -
+             ((start - bmaporgx) % whole_to_fixed(MAPBLOCKUNITS));
   end = m_x + m_w;
 
   /* draw vertical gridlines */
 
   ml.a.y = m_y;
   ml.b.y = m_y + m_h;
-  for (x = start; x < end; x += (MAPBLOCKUNITS << FRACBITS))
+  for (x = start; x < end; x += whole_to_fixed(MAPBLOCKUNITS))
     {
       ml.a.x = x;
       ml.b.x = x;
@@ -1232,16 +1232,16 @@ void AM_drawGrid(int color)
   /* Figure out start of horizontal gridlines */
 
   start = m_y;
-  if ((start - bmaporgy) % (MAPBLOCKUNITS << FRACBITS))
-    start += (MAPBLOCKUNITS << FRACBITS) -
-             ((start - bmaporgy) % (MAPBLOCKUNITS << FRACBITS));
+  if ((start - bmaporgy) % whole_to_fixed(MAPBLOCKUNITS))
+    start += whole_to_fixed(MAPBLOCKUNITS) -
+             ((start - bmaporgy) % whole_to_fixed(MAPBLOCKUNITS));
   end = m_y + m_h;
 
   /* draw horizontal gridlines */
 
   ml.a.x = m_x;
   ml.b.x = m_x + m_w;
-  for (y = start; y < end; y += (MAPBLOCKUNITS << FRACBITS))
+  for (y = start; y < end; y += whole_to_fixed(MAPBLOCKUNITS))
     {
       ml.a.y = y;
       ml.b.y = y;
@@ -1331,11 +1331,11 @@ void AM_rotate(fixed_t *x, fixed_t *y, angle_t a)
 {
   fixed_t tmpx;
 
-  tmpx = FixedMul(*x, finecosine[a >> ANGLETOFINESHIFT]) -
-         FixedMul(*y, finesine[a >> ANGLETOFINESHIFT]);
+  tmpx = fixed_mul(*x, finecosine[a >> ANGLETOFINESHIFT]) -
+         fixed_mul(*y, finesine[a >> ANGLETOFINESHIFT]);
 
-  *y = FixedMul(*x, finesine[a >> ANGLETOFINESHIFT]) +
-       FixedMul(*y, finecosine[a >> ANGLETOFINESHIFT]);
+  *y = fixed_mul(*x, finesine[a >> ANGLETOFINESHIFT]) +
+       fixed_mul(*y, finecosine[a >> ANGLETOFINESHIFT]);
 
   *x = tmpx;
 }
@@ -1353,8 +1353,8 @@ void AM_drawLineCharacter(mline_t *lineguy, int lineguylines, fixed_t scale,
 
       if (scale)
         {
-          l.a.x = FixedMul(scale, l.a.x);
-          l.a.y = FixedMul(scale, l.a.y);
+          l.a.x = fixed_mul(scale, l.a.x);
+          l.a.y = fixed_mul(scale, l.a.y);
         }
 
       if (angle) AM_rotate(&l.a.x, &l.a.y, angle);
@@ -1367,8 +1367,8 @@ void AM_drawLineCharacter(mline_t *lineguy, int lineguylines, fixed_t scale,
 
       if (scale)
         {
-          l.b.x = FixedMul(scale, l.b.x);
-          l.b.y = FixedMul(scale, l.b.y);
+          l.b.x = fixed_mul(scale, l.b.x);
+          l.b.y = fixed_mul(scale, l.b.y);
         }
 
       if (angle) AM_rotate(&l.b.x, &l.b.y, angle);
@@ -1430,8 +1430,8 @@ void AM_drawThings(int colors, int colorrange)
       while (t)
         {
           AM_drawLineCharacter(thintriangle_guy, arrlen(thintriangle_guy),
-                               16 << FRACBITS, t->angle, colors + lightlev,
-                               t->x, t->y);
+                               whole_to_fixed(16), t->angle,
+                               colors + lightlev, t->x, t->y);
           t = t->snext;
         }
     }

@@ -57,13 +57,13 @@ boolean PTR_SightTraverse(intercept_t *in)
 
   if (li->frontsector->floorheight != li->backsector->floorheight)
     {
-      slope = FixedDiv(openbottom - sightzstart, in->frac);
+      slope = fixed_div(openbottom - sightzstart, in->frac);
       if (slope > bottomslope) bottomslope = slope;
     }
 
   if (li->frontsector->ceilingheight != li->backsector->ceilingheight)
     {
-      slope = FixedDiv(opentop - sightzstart, in->frac);
+      slope = fixed_div(opentop - sightzstart, in->frac);
       if (slope < topslope) topslope = slope;
     }
 
@@ -104,8 +104,8 @@ int P_DivlineSide(fixed_t x, fixed_t y, divline_t *node)
   dx = (x - node->x);
   dy = (y - node->y);
 
-  left = (node->dy >> FRACBITS) * (dx >> FRACBITS);
-  right = (dy >> FRACBITS) * (node->dx >> FRACBITS);
+  left = fixed_to_whole(node->dy) * fixed_to_whole(dx);
+  right = fixed_to_whole(dy) * fixed_to_whole(node->dx);
 
   if (right < left) return 0; // front side
 
@@ -125,14 +125,14 @@ fixed_t P_InterceptVector2(divline_t *v2, divline_t *v1)
   fixed_t num;
   fixed_t den;
 
-  den = FixedMul(v1->dy >> 8, v2->dx) - FixedMul(v1->dx >> 8, v2->dy);
+  den = fixed_mul(v1->dy >> 8, v2->dx) - fixed_mul(v1->dx >> 8, v2->dy);
 
   if (den == 0) return 0;
   //	i_error ("P_InterceptVector: parallel");
 
-  num = FixedMul((v1->x - v2->x) >> 8, v1->dy) +
-        FixedMul((v2->y - v1->y) >> 8, v1->dx);
-  frac = FixedDiv(num, den);
+  num = fixed_mul((v1->x - v2->x) >> 8, v1->dy) +
+        fixed_mul((v2->y - v1->y) >> 8, v1->dx);
+  frac = fixed_div(num, den);
 
   return frac;
 }
@@ -239,13 +239,13 @@ boolean P_CrossSubsector(int num)
 
       if (front->floorheight != back->floorheight)
         {
-          slope = FixedDiv(l_openbottom - sightzstart, frac);
+          slope = fixed_div(l_openbottom - sightzstart, frac);
           if (slope > bottomslope) bottomslope = slope;
         }
 
       if (front->ceilingheight != back->ceilingheight)
         {
-          slope = FixedDiv(l_opentop - sightzstart, frac);
+          slope = fixed_div(l_opentop - sightzstart, frac);
           if (slope < topslope) topslope = slope;
         }
 

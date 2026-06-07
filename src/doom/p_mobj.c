@@ -271,8 +271,8 @@ void P_XYMovement(mobj_t *mo)
     }
   else
     {
-      mo->momx = FixedMul(mo->momx, FRICTION);
-      mo->momy = FixedMul(mo->momy, FRICTION);
+      mo->momx = fixed_mul(mo->momx, FRICTION);
+      mo->momy = fixed_mul(mo->momy, FRICTION);
     }
 }
 
@@ -432,8 +432,8 @@ void P_NightmareRespawn(mobj_t *mobj)
   mobj_t *mo;
   mapthing_t *mthing;
 
-  x = mobj->spawnpoint.x << FRACBITS;
-  y = mobj->spawnpoint.y << FRACBITS;
+  x = whole_to_fixed(mobj->spawnpoint.x);
+  y = whole_to_fixed(mobj->spawnpoint.y);
 
   /* something is occupying it's position? */
 
@@ -663,8 +663,8 @@ void P_RespawnSpecials(void)
 
   mthing = &itemrespawnque[iquetail];
 
-  x = mthing->x << FRACBITS;
-  y = mthing->y << FRACBITS;
+  x = whole_to_fixed(mthing->x);
+  y = whole_to_fixed(mthing->y);
 
   /* spawn a teleport fog at the new spot */
 
@@ -738,8 +738,8 @@ void P_SpawnPlayer(mapthing_t *mthing)
 
   if (p->playerstate == PST_REBORN) G_PlayerReborn(mthing->type - 1);
 
-  x = mthing->x << FRACBITS;
-  y = mthing->y << FRACBITS;
+  x = whole_to_fixed(mthing->x);
+  y = whole_to_fixed(mthing->y);
   z = ONFLOORZ;
   mobj = P_SpawnMobj(x, y, z, MT_PLAYER);
 
@@ -869,8 +869,8 @@ void P_SpawnMapThing(mapthing_t *mthing)
 
   /* spawn it */
 
-  x = mthing->x << FRACBITS;
-  y = mthing->y << FRACBITS;
+  x = whole_to_fixed(mthing->x);
+  y = whole_to_fixed(mthing->y);
 
   if (mobjinfo[i].flags & MF_SPAWNCEILING)
     z = ONCEILINGZ;
@@ -1009,8 +1009,8 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 
   th->angle = an;
   an >>= ANGLETOFINESHIFT;
-  th->momx = FixedMul(th->info->speed, finecosine[an]);
-  th->momy = FixedMul(th->info->speed, finesine[an]);
+  th->momx = fixed_mul(th->info->speed, finecosine[an]);
+  th->momy = fixed_mul(th->info->speed, finesine[an]);
 
   dist = P_AproxDistance(dest->x - source->x, dest->y - source->y);
   dist = dist / th->info->speed;
@@ -1076,9 +1076,9 @@ void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
 
   th->target = source;
   th->angle = an;
-  th->momx = FixedMul(th->info->speed, finecosine[an >> ANGLETOFINESHIFT]);
-  th->momy = FixedMul(th->info->speed, finesine[an >> ANGLETOFINESHIFT]);
-  th->momz = FixedMul(th->info->speed, slope);
+  th->momx = fixed_mul(th->info->speed, finecosine[an >> ANGLETOFINESHIFT]);
+  th->momy = fixed_mul(th->info->speed, finesine[an >> ANGLETOFINESHIFT]);
+  th->momz = fixed_mul(th->info->speed, slope);
 
   P_CheckMissileSpawn(th);
 }

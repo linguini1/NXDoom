@@ -69,8 +69,8 @@ void P_SetPsprite(player_t *player, int position, statenum_t stnum)
       if (state->misc1)
         {
           // coordinate set
-          psp->sx = state->misc1 << FRACBITS;
-          psp->sy = state->misc2 << FRACBITS;
+          psp->sx = whole_to_fixed(state->misc1);
+          psp->sy = whole_to_fixed(state->misc2);
         }
 
       // Call action routine.
@@ -105,10 +105,10 @@ void P_CalcSwing(player_t *player)
   swing = player->bob;
 
   angle = (FINEANGLES / 70 * leveltime) & FINEMASK;
-  swingx = FixedMul(swing, finesine[angle]);
+  swingx = fixed_mul(swing, finesine[angle]);
 
   angle = (FINEANGLES / 70 * leveltime + FINEANGLES / 2) & FINEMASK;
-  swingy = -FixedMul(swingx, finesine[angle]);
+  swingy = -fixed_mul(swingx, finesine[angle]);
 }
 
 //
@@ -292,9 +292,9 @@ void A_WeaponReady(player_t *player, pspdef_t *psp)
 
   // bob the weapon based on movement speed
   angle = (128 * leveltime) & FINEMASK;
-  psp->sx = FRACUNIT + FixedMul(player->bob, finecosine[angle]);
+  psp->sx = FRACUNIT + fixed_mul(player->bob, finecosine[angle]);
   angle &= FINEANGLES / 2 - 1;
-  psp->sy = WEAPONTOP + FixedMul(player->bob, finesine[angle]);
+  psp->sy = WEAPONTOP + fixed_mul(player->bob, finesine[angle]);
 }
 
 //

@@ -45,8 +45,8 @@ void P_Thrust(player_t *player, angle_t angle, fixed_t move)
 {
   angle >>= ANGLETOFINESHIFT;
 
-  player->mo->momx += FixedMul(move, finecosine[angle]);
-  player->mo->momy += FixedMul(move, finesine[angle]);
+  player->mo->momx += fixed_mul(move, finecosine[angle]);
+  player->mo->momy += fixed_mul(move, finesine[angle]);
 }
 
 //
@@ -64,8 +64,8 @@ void P_CalcHeight(player_t *player)
   // OPTIMIZE: tablify angle
   // Note: a LUT allows for effects
   //  like a ramp with low health.
-  player->bob = FixedMul(player->mo->momx, player->mo->momx) +
-                FixedMul(player->mo->momy, player->mo->momy);
+  player->bob = fixed_mul(player->mo->momx, player->mo->momx) +
+                fixed_mul(player->mo->momy, player->mo->momy);
 
   player->bob >>= 2;
 
@@ -83,7 +83,7 @@ void P_CalcHeight(player_t *player)
     }
 
   angle = (FINEANGLES / 20 * leveltime) & FINEMASK;
-  bob = FixedMul(player->bob / 2, finesine[angle]);
+  bob = fixed_mul(player->bob / 2, finesine[angle]);
 
   // move viewheight
   if (player->playerstate == PST_LIVE)
@@ -123,7 +123,7 @@ void P_MovePlayer(player_t *player)
 
   cmd = &player->cmd;
 
-  player->mo->angle += (cmd->angleturn << FRACBITS);
+  player->mo->angle += whole_to_fixed(cmd->angleturn);
 
   // Do not let the player control movement
   //  if not onground.

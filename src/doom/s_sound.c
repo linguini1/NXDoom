@@ -67,7 +67,7 @@
 
 /* The range over which sound attenuates */
 
-#define S_ATTENUATOR ((S_CLIPPING_DIST - S_CLOSE_DIST) >> FRACBITS)
+#define S_ATTENUATOR fixed_to_whole(S_CLIPPING_DIST - S_CLOSE_DIST)
 
 /* Stereo separation */
 
@@ -280,7 +280,7 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
 
   /* stereo separation */
 
-  *sep = 128 - (FixedMul(S_STEREO_SWING, finesine[angle]) >> FRACBITS);
+  *sep = 128 - fixed_to_whole(fixed_mul(S_STEREO_SWING, finesine[angle]));
 
   /* volume calculation */
 
@@ -296,7 +296,7 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
         }
 
       *vol = 15 + ((g_snd_sfx_volume - 15) *
-                   ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) /
+                   fixed_to_whole(S_CLIPPING_DIST - approx_dist)) /
                       S_ATTENUATOR;
     }
   else
@@ -304,7 +304,7 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
       /* distance effect */
 
       *vol =
-          (g_snd_sfx_volume * ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) /
+          (g_snd_sfx_volume * fixed_to_whole(S_CLIPPING_DIST - approx_dist)) /
           S_ATTENUATOR;
     }
 

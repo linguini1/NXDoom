@@ -186,8 +186,8 @@ int r_point_on_side(fixed_t x, fixed_t y, node_t *node)
       return 0;
     }
 
-  left = FixedMul(node->dy >> FRACBITS, dx);
-  right = FixedMul(dy, node->dx >> FRACBITS);
+  left = fixed_mul(fixed_to_whole(node->dy), dx);
+  right = fixed_mul(dy, fixed_to_whole(node->dx));
 
   if (right < left)
     {
@@ -245,8 +245,8 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
       return 0;
     }
 
-  left = FixedMul(ldy >> FRACBITS, dx);
-  right = FixedMul(dy, ldx >> FRACBITS);
+  left = fixed_mul(fixed_to_whole(ldy), dx);
+  right = fixed_mul(dy, fixed_to_whole(ldx));
 
   if (right < left)
     {
@@ -379,7 +379,7 @@ fixed_t R_PointToDist(fixed_t x, fixed_t y)
 
   if (dx != 0)
     {
-      frac = FixedDiv(dy, dx);
+      frac = fixed_div(dy, dx);
     }
   else
     {
@@ -388,7 +388,7 @@ fixed_t R_PointToDist(fixed_t x, fixed_t y)
 
   angle = (tantoangle[frac >> DBITS] + ANG90) >> ANGLETOFINESHIFT;
 
-  dist = FixedDiv(dx, finesine[angle]); /* use as cosine */
+  dist = fixed_div(dx, finesine[angle]); /* use as cosine */
 
   return dist;
 }
@@ -444,10 +444,10 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
     fixed_t		cosv;
 	
     sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];	
-    dist = FixedDiv (rw_distance, sinv);
+    dist = fixed_div (rw_distance, sinv);
     cosv = finecosine[(viewangle-visangle)>>ANGLETOFINESHIFT];
-    z = abs(FixedMul (dist, cosv));
-    scale = FixedDiv(projection, z);
+    z = abs(fixed_mul (dist, cosv));
+    scale = fixed_div(projection, z);
     return scale;
 }
 #endif
@@ -459,12 +459,12 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
 
   sinea = finesine[anglea >> ANGLETOFINESHIFT];
   sineb = finesine[angleb >> ANGLETOFINESHIFT];
-  num = FixedMul(projection, sineb) << detailshift;
-  den = FixedMul(rw_distance, sinea);
+  num = fixed_mul(projection, sineb) << detailshift;
+  den = fixed_mul(rw_distance, sinea);
 
-  if (den > num >> FRACBITS)
+  if (den > fixed_to_whole(num))
     {
-      scale = FixedDiv(num, den);
+      scale = fixed_div(num, den);
 
       if (scale > 64 * FRACUNIT)
         scale = 64 * FRACUNIT;
@@ -534,7 +534,7 @@ void R_InitTextureMapping(void)
    */
 
   focallength =
-      FixedDiv(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
+      fixed_div(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
 
   for (i = 0; i < FINEANGLES / 2; i++)
     {
@@ -544,8 +544,8 @@ void R_InitTextureMapping(void)
         t = viewwidth + 1;
       else
         {
-          t = FixedMul(finetangent[i], focallength);
-          t = (centerxfrac - t + FRACUNIT - 1) >> FRACBITS;
+          t = fixed_mul(finetangent[i], focallength);
+          t = fixed_to_whole(centerxfrac - t + FRACUNIT - 1);
 
           if (t < -1)
             t = -1;
@@ -572,7 +572,7 @@ void R_InitTextureMapping(void)
 
   for (i = 0; i < FINEANGLES / 2; i++)
     {
-      t = FixedMul(finetangent[i], focallength);
+      t = fixed_mul(finetangent[i], focallength);
       t = centerx - t;
 
       if (viewangletox[i] == -1)
@@ -610,7 +610,7 @@ void R_InitLightTables(void)
       for (j = 0; j < MAXLIGHTZ; j++)
         {
           scale =
-              FixedDiv((SCREENWIDTH / 2 * FRACUNIT), (j + 1) << LIGHTZSHIFT);
+              fixed_div((SCREENWIDTH / 2 * FRACUNIT), (j + 1) << LIGHTZSHIFT);
           scale >>= LIGHTSCALESHIFT;
           level = startmap - scale / DISTMAP;
 
@@ -670,8 +670,8 @@ void R_ExecuteSetViewSize(void)
 
   centery = viewheight / 2;
   centerx = viewwidth / 2;
-  centerxfrac = centerx << FRACBITS;
-  centeryfrac = centery << FRACBITS;
+  centerxfrac = whole_to_fixed(centerx);
+  centeryfrac = whole_to_fixed(centery);
   projection = centerxfrac;
 
   if (!detailshift)
@@ -707,15 +707,15 @@ void R_ExecuteSetViewSize(void)
 
   for (i = 0; i < viewheight; i++)
     {
-      dy = ((i - viewheight / 2) << FRACBITS) + FRACUNIT / 2;
+      dy = whole_to_fixed(i - viewheight / 2) + FRACUNIT / 2;
       dy = abs(dy);
-      yslope[i] = FixedDiv((viewwidth << detailshift) / 2 * FRACUNIT, dy);
+      yslope[i] = fixed_div((viewwidth << detailshift) / 2 * FRACUNIT, dy);
     }
 
   for (i = 0; i < viewwidth; i++)
     {
       cosadj = abs(finecosine[xtoviewangle[i] >> ANGLETOFINESHIFT]);
-      distscale[i] = FixedDiv(FRACUNIT, cosadj);
+      distscale[i] = fixed_div(FRACUNIT, cosadj);
     }
 
   /* Calculate the light levels to use for each level / scale combination. */

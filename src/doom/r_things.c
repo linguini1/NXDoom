@@ -323,8 +323,8 @@ void R_DrawMaskedColumn(column_t *column)
       topscreen = sprtopscreen + spryscale * column->topdelta;
       bottomscreen = topscreen + spryscale * column->length;
 
-      dc_yl = (topscreen + FRACUNIT - 1) >> FRACBITS;
-      dc_yh = (bottomscreen - 1) >> FRACBITS;
+      dc_yl = fixed_to_whole(topscreen + FRACUNIT - 1);
+      dc_yh = fixed_to_whole(bottomscreen - 1);
 
       if (dc_yh >= mfloorclip[dc_x]) dc_yh = mfloorclip[dc_x] - 1;
       if (dc_yl <= mceilingclip[dc_x]) dc_yl = mceilingclip[dc_x] + 1;
@@ -332,7 +332,7 @@ void R_DrawMaskedColumn(column_t *column)
       if (dc_yl <= dc_yh)
         {
           dc_source = (byte *)column + 3;
-          dc_texturemid = basetexturemid - (column->topdelta << FRACBITS);
+          dc_texturemid = basetexturemid - whole_to_fixed(column->topdelta);
           // dc_source = (byte *)column + 3 - column->topdelta;
 
           // Drawn by either R_DrawColumn
@@ -377,11 +377,11 @@ void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
   dc_texturemid = vis->texturemid;
   frac = vis->startfrac;
   spryscale = vis->scale;
-  sprtopscreen = centeryfrac - FixedMul(dc_texturemid, spryscale);
+  sprtopscreen = centeryfrac - fixed_mul(dc_texturemid, spryscale);
 
   for (dc_x = vis->x1; dc_x <= vis->x2; dc_x++, frac += vis->xiscale)
     {
-      texturecolumn = frac >> FRACBITS;
+      texturecolumn = fixed_to_whole(frac);
 #ifdef RANGECHECK
       if (texturecolumn < 0 || texturecolumn >= SHORT(patch->width))
         i_error("R_DrawSpriteRange: bad texturecolumn");
@@ -433,18 +433,18 @@ void R_ProjectSprite(mobj_t *thing)
   tr_x = thing->x - viewx;
   tr_y = thing->y - viewy;
 
-  gxt = FixedMul(tr_x, viewcos);
-  gyt = -FixedMul(tr_y, viewsin);
+  gxt = fixed_mul(tr_x, viewcos);
+  gyt = -fixed_mul(tr_y, viewsin);
 
   tz = gxt - gyt;
 
   // thing is behind view plane?
   if (tz < MINZ) return;
 
-  xscale = FixedDiv(projection, tz);
+  xscale = fixed_div(projection, tz);
 
-  gxt = -FixedMul(tr_x, viewsin);
-  gyt = FixedMul(tr_y, viewcos);
+  gxt = -fixed_mul(tr_x, viewsin);
+  gyt = fixed_mul(tr_y, viewcos);
   tx = -(gyt + gxt);
 
   // too far off the side?
@@ -480,13 +480,13 @@ void R_ProjectSprite(mobj_t *thing)
 
   // calculate edges of the shape
   tx -= spriteoffset[lump];
-  x1 = (centerxfrac + FixedMul(tx, xscale)) >> FRACBITS;
+  x1 = fixed_to_whole(centerxfrac + fixed_mul(tx, xscale));
 
   // off the right side?
   if (x1 > viewwidth) return;
 
   tx += spritewidth[lump];
-  x2 = ((centerxfrac + FixedMul(tx, xscale)) >> FRACBITS) - 1;
+  x2 = fixed_to_whole(centerxfrac + fixed_mul(tx, xscale)) - 1;
 
   // off the left side
   if (x2 < 0) return;
@@ -502,7 +502,7 @@ void R_ProjectSprite(mobj_t *thing)
   vis->texturemid = vis->gzt - viewz;
   vis->x1 = x1 < 0 ? 0 : x1;
   vis->x2 = x2 >= viewwidth ? viewwidth - 1 : x2;
-  iscale = FixedDiv(FRACUNIT, xscale);
+  iscale = fixed_div(FRACUNIT, xscale);
 
   if (flip)
     {
@@ -613,13 +613,13 @@ void R_DrawPSprite(pspdef_t *psp)
   tx = psp->sx - (SCREENWIDTH / 2) * FRACUNIT;
 
   tx -= spriteoffset[lump];
-  x1 = (centerxfrac + FixedMul(tx, pspritescale)) >> FRACBITS;
+  x1 = fixed_to_whole(centerxfrac + fixed_mul(tx, pspritescale));
 
   // off the right side
   if (x1 > viewwidth) return;
 
   tx += spritewidth[lump];
-  x2 = ((centerxfrac + FixedMul(tx, pspritescale)) >> FRACBITS) - 1;
+  x2 = fixed_to_whole(centerxfrac + fixed_mul(tx, pspritescale)) - 1;
 
   // off the left side
   if (x2 < 0) return;
@@ -627,7 +627,7 @@ void R_DrawPSprite(pspdef_t *psp)
   // store information in a vissprite
   vis = &avis;
   vis->mobjflags = 0;
-  vis->texturemid = (BASEYCENTER << FRACBITS) + FRACUNIT / 2 -
+  vis->texturemid = whole_to_fixed(BASEYCENTER) + FRACUNIT / 2 -
                     (psp->sy - spritetopoffset[lump]);
   vis->x1 = x1 < 0 ? 0 : x1;
   vis->x2 = x2 >= viewwidth ? viewwidth - 1 : x2;

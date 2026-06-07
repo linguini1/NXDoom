@@ -609,7 +609,7 @@ void R_InitTextures(void)
         j <<= 1;
 
       texturewidthmask[i] = j - 1;
-      textureheight[i] = texture->height << FRACBITS;
+      textureheight[i] = whole_to_fixed(texture->height);
     }
 
   z_free(patchlookup);
@@ -684,9 +684,9 @@ void R_InitSpriteLumps(void)
       if (!(i & 63)) printf(".");
 
       patch = w_cache_lump_num(firstspritelump + i, PU_CACHE);
-      spritewidth[i] = SHORT(patch->width) << FRACBITS;
-      spriteoffset[i] = SHORT(patch->leftoffset) << FRACBITS;
-      spritetopoffset[i] = SHORT(patch->topoffset) << FRACBITS;
+      spritewidth[i] = whole_to_fixed(SHORT(patch->width));
+      spriteoffset[i] = whole_to_fixed(SHORT(patch->leftoffset));
+      spritetopoffset[i] = whole_to_fixed(SHORT(patch->topoffset));
     }
 }
 

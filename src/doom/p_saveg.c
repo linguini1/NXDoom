@@ -1470,8 +1470,8 @@ void P_ArchiveWorld(void)
   // do sectors
   for (i = 0, sec = sectors; i < numsectors; i++, sec++)
     {
-      saveg_write16(sec->floorheight >> FRACBITS);
-      saveg_write16(sec->ceilingheight >> FRACBITS);
+      saveg_write16(fixed_to_whole(sec->floorheight));
+      saveg_write16(fixed_to_whole(sec->ceilingheight));
       saveg_write16(sec->floorpic);
       saveg_write16(sec->ceilingpic);
       saveg_write16(sec->lightlevel);
@@ -1491,8 +1491,8 @@ void P_ArchiveWorld(void)
 
           si = &sides[li->sidenum[j]];
 
-          saveg_write16(si->textureoffset >> FRACBITS);
-          saveg_write16(si->rowoffset >> FRACBITS);
+          saveg_write16(fixed_to_whole(si->textureoffset));
+          saveg_write16(fixed_to_whole(si->rowoffset));
           saveg_write16(si->toptexture);
           saveg_write16(si->bottomtexture);
           saveg_write16(si->midtexture);
@@ -1514,8 +1514,8 @@ void P_UnArchiveWorld(void)
   // do sectors
   for (i = 0, sec = sectors; i < numsectors; i++, sec++)
     {
-      sec->floorheight = saveg_read16() << FRACBITS;
-      sec->ceilingheight = saveg_read16() << FRACBITS;
+      sec->floorheight = whole_to_fixed(saveg_read16());
+      sec->ceilingheight = whole_to_fixed(saveg_read16());
       sec->floorpic = saveg_read16();
       sec->ceilingpic = saveg_read16();
       sec->lightlevel = saveg_read16();
@@ -1535,8 +1535,8 @@ void P_UnArchiveWorld(void)
         {
           if (li->sidenum[j] == -1) continue;
           si = &sides[li->sidenum[j]];
-          si->textureoffset = saveg_read16() << FRACBITS;
-          si->rowoffset = saveg_read16() << FRACBITS;
+          si->textureoffset = whole_to_fixed(saveg_read16());
+          si->rowoffset = whole_to_fixed(saveg_read16());
           si->toptexture = saveg_read16();
           si->bottomtexture = saveg_read16();
           si->midtexture = saveg_read16();

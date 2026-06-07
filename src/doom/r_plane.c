@@ -120,9 +120,9 @@ void R_MapPlane(int y, int x1, int x2)
   if (planeheight != cachedheight[y])
     {
       cachedheight[y] = planeheight;
-      distance = cacheddistance[y] = FixedMul(planeheight, yslope[y]);
-      ds_xstep = cachedxstep[y] = FixedMul(distance, basexscale);
-      ds_ystep = cachedystep[y] = FixedMul(distance, baseyscale);
+      distance = cacheddistance[y] = fixed_mul(planeheight, yslope[y]);
+      ds_xstep = cachedxstep[y] = fixed_mul(distance, basexscale);
+      ds_ystep = cachedystep[y] = fixed_mul(distance, baseyscale);
     }
   else
     {
@@ -131,10 +131,10 @@ void R_MapPlane(int y, int x1, int x2)
       ds_ystep = cachedystep[y];
     }
 
-  length = FixedMul(distance, distscale[x1]);
+  length = fixed_mul(distance, distscale[x1]);
   angle = (viewangle + xtoviewangle[x1]) >> ANGLETOFINESHIFT;
-  ds_xfrac = viewx + FixedMul(finecosine[angle], length);
-  ds_yfrac = -viewy - FixedMul(finesine[angle], length);
+  ds_xfrac = viewx + fixed_mul(finecosine[angle], length);
+  ds_yfrac = -viewy - fixed_mul(finesine[angle], length);
 
   if (fixedcolormap)
     ds_colormap = fixedcolormap;
@@ -181,8 +181,8 @@ void R_ClearPlanes(void)
   angle = (viewangle - ANG90) >> ANGLETOFINESHIFT;
 
   // scale will be unit scale at SCREENWIDTH/2 distance
-  basexscale = FixedDiv(finecosine[angle], centerxfrac);
-  baseyscale = -FixedDiv(finesine[angle], centerxfrac);
+  basexscale = fixed_div(finecosine[angle], centerxfrac);
+  baseyscale = -fixed_div(finesine[angle], centerxfrac);
 }
 
 //

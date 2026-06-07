@@ -763,10 +763,10 @@ void P_HitSlideLine(line_t *ld)
   deltaangle >>= ANGLETOFINESHIFT;
 
   movelen = P_AproxDistance(tmxmove, tmymove);
-  newlen = FixedMul(movelen, finecosine[deltaangle]);
+  newlen = fixed_mul(movelen, finecosine[deltaangle]);
 
-  tmxmove = FixedMul(newlen, finecosine[lineangle]);
-  tmymove = FixedMul(newlen, finesine[lineangle]);
+  tmxmove = fixed_mul(newlen, finecosine[lineangle]);
+  tmymove = fixed_mul(newlen, finesine[lineangle]);
 }
 
 /* PTR_SlideTraverse */
@@ -896,8 +896,8 @@ retry:
   bestslidefrac -= 0x800;
   if (bestslidefrac > 0)
     {
-      newx = FixedMul(mo->momx, bestslidefrac);
-      newy = FixedMul(mo->momy, bestslidefrac);
+      newx = fixed_mul(mo->momx, bestslidefrac);
+      newy = fixed_mul(mo->momy, bestslidefrac);
 
       if (!P_TryMove(mo, mo->x + newx, mo->y + newy)) goto stairstep;
     }
@@ -912,8 +912,8 @@ retry:
 
   if (bestslidefrac <= 0) return;
 
-  tmxmove = FixedMul(mo->momx, bestslidefrac);
-  tmymove = FixedMul(mo->momy, bestslidefrac);
+  tmxmove = fixed_mul(mo->momx, bestslidefrac);
+  tmymove = fixed_mul(mo->momy, bestslidefrac);
 
   P_HitSlideLine(bestslideline); /* clip the moves */
 
@@ -954,19 +954,19 @@ boolean PTR_AimTraverse(intercept_t *in)
 
       if (openbottom >= opentop) return false; /* stop */
 
-      dist = FixedMul(attackrange, in->frac);
+      dist = fixed_mul(attackrange, in->frac);
 
       if (li->backsector == NULL ||
           li->frontsector->floorheight != li->backsector->floorheight)
         {
-          slope = FixedDiv(openbottom - shootz, dist);
+          slope = fixed_div(openbottom - shootz, dist);
           if (slope > bottomslope) bottomslope = slope;
         }
 
       if (li->backsector == NULL ||
           li->frontsector->ceilingheight != li->backsector->ceilingheight)
         {
-          slope = FixedDiv(opentop - shootz, dist);
+          slope = fixed_div(opentop - shootz, dist);
           if (slope < topslope) topslope = slope;
         }
 
@@ -984,12 +984,12 @@ boolean PTR_AimTraverse(intercept_t *in)
 
   /* check angles to see if the thing can be aimed at */
 
-  dist = FixedMul(attackrange, in->frac);
-  thingtopslope = FixedDiv(th->z + th->height - shootz, dist);
+  dist = fixed_mul(attackrange, in->frac);
+  thingtopslope = fixed_div(th->z + th->height - shootz, dist);
 
   if (thingtopslope < bottomslope) return true; /* shot over the thing */
 
-  thingbottomslope = FixedDiv(th->z - shootz, dist);
+  thingbottomslope = fixed_div(th->z - shootz, dist);
 
   if (thingbottomslope > topslope) return true; /* shot under the thing */
 
@@ -1035,7 +1035,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       P_LineOpening(li);
 
-      dist = FixedMul(attackrange, in->frac);
+      dist = fixed_mul(attackrange, in->frac);
 
       /* e6y: emulation of missed back side on two-sided lines.
        * backsector can be NULL when emulating missing back side.
@@ -1043,23 +1043,23 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       if (li->backsector == NULL)
         {
-          slope = FixedDiv(openbottom - shootz, dist);
+          slope = fixed_div(openbottom - shootz, dist);
           if (slope > aimslope) goto hitline;
 
-          slope = FixedDiv(opentop - shootz, dist);
+          slope = fixed_div(opentop - shootz, dist);
           if (slope < aimslope) goto hitline;
         }
       else
         {
           if (li->frontsector->floorheight != li->backsector->floorheight)
             {
-              slope = FixedDiv(openbottom - shootz, dist);
+              slope = fixed_div(openbottom - shootz, dist);
               if (slope > aimslope) goto hitline;
             }
 
           if (li->frontsector->ceilingheight != li->backsector->ceilingheight)
             {
-              slope = FixedDiv(opentop - shootz, dist);
+              slope = fixed_div(opentop - shootz, dist);
               if (slope < aimslope) goto hitline;
             }
         }
@@ -1074,10 +1074,10 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       /* position a bit closer */
 
-      frac = in->frac - FixedDiv(4 * FRACUNIT, attackrange);
-      x = trace.x + FixedMul(trace.dx, frac);
-      y = trace.y + FixedMul(trace.dy, frac);
-      z = shootz + FixedMul(aimslope, FixedMul(frac, attackrange));
+      frac = in->frac - fixed_div(4 * FRACUNIT, attackrange);
+      x = trace.x + fixed_mul(trace.dx, frac);
+      y = trace.y + fixed_mul(trace.dy, frac);
+      z = shootz + fixed_mul(aimslope, fixed_mul(frac, attackrange));
 
       if (li->frontsector->ceilingpic == skyflatnum)
         {
@@ -1109,22 +1109,22 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
   /* check angles to see if the thing can be aimed at */
 
-  dist = FixedMul(attackrange, in->frac);
-  thingtopslope = FixedDiv(th->z + th->height - shootz, dist);
+  dist = fixed_mul(attackrange, in->frac);
+  thingtopslope = fixed_div(th->z + th->height - shootz, dist);
 
   if (thingtopslope < aimslope) return true; /* shot over the thing  */
 
-  thingbottomslope = FixedDiv(th->z - shootz, dist);
+  thingbottomslope = fixed_div(th->z - shootz, dist);
 
   if (thingbottomslope > aimslope) return true; /* shot under the thing */
 
   /* hit thing position a bit closer */
 
-  frac = in->frac - FixedDiv(10 * FRACUNIT, attackrange);
+  frac = in->frac - fixed_div(10 * FRACUNIT, attackrange);
 
-  x = trace.x + FixedMul(trace.dx, frac);
-  y = trace.y + FixedMul(trace.dy, frac);
-  z = shootz + FixedMul(aimslope, FixedMul(frac, attackrange));
+  x = trace.x + fixed_mul(trace.dx, frac);
+  y = trace.y + fixed_mul(trace.dy, frac);
+  z = shootz + fixed_mul(aimslope, fixed_mul(frac, attackrange));
 
   /* Spawn bullet puffs or blod spots,
    * depending on target type.
@@ -1154,8 +1154,8 @@ fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance)
   angle >>= ANGLETOFINESHIFT;
   shootthing = t1;
 
-  x2 = t1->x + (distance >> FRACBITS) * finecosine[angle];
-  y2 = t1->y + (distance >> FRACBITS) * finesine[angle];
+  x2 = t1->x + fixed_to_whole(distance) * finecosine[angle];
+  y2 = t1->y + fixed_to_whole(distance) * finesine[angle];
   shootz = t1->z + (t1->height >> 1) + 8 * FRACUNIT;
 
   /* can't shoot outside view angles */
@@ -1188,8 +1188,8 @@ void P_LineAttack(mobj_t *t1, angle_t angle, fixed_t distance, fixed_t slope,
   angle >>= ANGLETOFINESHIFT;
   shootthing = t1;
   la_damage = damage;
-  x2 = t1->x + (distance >> FRACBITS) * finecosine[angle];
-  y2 = t1->y + (distance >> FRACBITS) * finesine[angle];
+  x2 = t1->x + fixed_to_whole(distance) * finecosine[angle];
+  y2 = t1->y + fixed_to_whole(distance) * finesine[angle];
   shootz = t1->z + (t1->height >> 1) + 8 * FRACUNIT;
   attackrange = distance;
   aimslope = slope;
@@ -1250,8 +1250,8 @@ void P_UseLines(player_t *player)
 
   x1 = player->mo->x;
   y1 = player->mo->y;
-  x2 = x1 + (USERANGE >> FRACBITS) * finecosine[angle];
-  y2 = y1 + (USERANGE >> FRACBITS) * finesine[angle];
+  x2 = x1 + fixed_to_whole(USERANGE) * finecosine[angle];
+  y2 = y1 + fixed_to_whole(USERANGE) * finesine[angle];
 
   P_PathTraverse(x1, y1, x2, y2, PT_ADDLINES, PTR_UseTraverse);
 }
@@ -1279,7 +1279,7 @@ boolean PIT_RadiusAttack(mobj_t *thing)
   dy = abs(thing->y - bombspot->y);
 
   dist = dx > dy ? dx : dy;
-  dist = (dist - thing->radius) >> FRACBITS;
+  dist = fixed_to_whole(dist - thing->radius);
 
   if (dist < 0) dist = 0;
 
@@ -1311,7 +1311,7 @@ void P_RadiusAttack(mobj_t *spot, mobj_t *source, int damage)
 
   fixed_t dist;
 
-  dist = (damage + MAXRADIUS) << FRACBITS;
+  dist = whole_to_fixed(damage + MAXRADIUS);
   yh = (spot->y + dist - bmaporgy) >> MAPBLOCKSHIFT;
   yl = (spot->y - dist - bmaporgy) >> MAPBLOCKSHIFT;
   xh = (spot->x + dist - bmaporgx) >> MAPBLOCKSHIFT;

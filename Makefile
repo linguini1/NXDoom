@@ -48,7 +48,6 @@ BASESRCS =        \
   m_cheat.c       \
   m_config.c      \
   m_controls.c    \
-  m_fixed.c       \
   net_client.c    \
   net_common.c    \
   net_dedicated.c \

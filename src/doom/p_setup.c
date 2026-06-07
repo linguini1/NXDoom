@@ -134,8 +134,8 @@ void P_LoadVertexes(int lump)
   // internal representation as fixed.
   for (i = 0; i < numvertexes; i++, li++, ml++)
     {
-      li->x = SHORT(ml->x) << FRACBITS;
-      li->y = SHORT(ml->y) << FRACBITS;
+      li->x = whole_to_fixed(SHORT(ml->x));
+      li->y = whole_to_fixed(SHORT(ml->y));
     }
 
   // Free buffer memory.
@@ -187,8 +187,8 @@ void P_LoadSegs(int lump)
       li->v1 = &vertexes[SHORT(ml->v1)];
       li->v2 = &vertexes[SHORT(ml->v2)];
 
-      li->angle = (SHORT(ml->angle)) << FRACBITS;
-      li->offset = (SHORT(ml->offset)) << FRACBITS;
+      li->angle = whole_to_fixed(SHORT(ml->angle));
+      li->offset = whole_to_fixed(SHORT(ml->offset));
       linedef_int = SHORT(ml->linedef);
       ldef = &lines[linedef_int];
       li->linedef = ldef;
@@ -279,8 +279,8 @@ void P_LoadSectors(int lump)
   ss = sectors;
   for (i = 0; i < numsectors; i++, ss++, ms++)
     {
-      ss->floorheight = SHORT(ms->floorheight) << FRACBITS;
-      ss->ceilingheight = SHORT(ms->ceilingheight) << FRACBITS;
+      ss->floorheight = whole_to_fixed(SHORT(ms->floorheight));
+      ss->ceilingheight = whole_to_fixed(SHORT(ms->ceilingheight));
       ss->floorpic = R_FlatNumForName(ms->floorpic);
       ss->ceilingpic = R_FlatNumForName(ms->ceilingpic);
       ss->lightlevel = SHORT(ms->lightlevel);
@@ -313,15 +313,15 @@ void P_LoadNodes(int lump)
 
   for (i = 0; i < numnodes; i++, no++, mn++)
     {
-      no->x = SHORT(mn->x) << FRACBITS;
-      no->y = SHORT(mn->y) << FRACBITS;
-      no->dx = SHORT(mn->dx) << FRACBITS;
-      no->dy = SHORT(mn->dy) << FRACBITS;
+      no->x = whole_to_fixed(SHORT(mn->x));
+      no->y = whole_to_fixed(SHORT(mn->y));
+      no->dx = whole_to_fixed(SHORT(mn->dx));
+      no->dy = whole_to_fixed(SHORT(mn->dy));
       for (j = 0; j < 2; j++)
         {
           no->children[j] = SHORT(mn->children[j]);
           for (k = 0; k < 4; k++)
-            no->bbox[j][k] = SHORT(mn->bbox[j][k]) << FRACBITS;
+            no->bbox[j][k] = whole_to_fixed(SHORT(mn->bbox[j][k]));
         }
     }
 
@@ -432,7 +432,7 @@ void P_LoadLineDefs(int lump)
         ld->slopetype = ST_HORIZONTAL;
       else
         {
-          if (FixedDiv(ld->dy, ld->dx) > 0)
+          if (fixed_div(ld->dy, ld->dx) > 0)
             ld->slopetype = ST_POSITIVE;
           else
             ld->slopetype = ST_NEGATIVE;
@@ -496,8 +496,8 @@ void P_LoadSideDefs(int lump)
   sd = sides;
   for (i = 0; i < numsides; i++, msd++, sd++)
     {
-      sd->textureoffset = SHORT(msd->textureoffset) << FRACBITS;
-      sd->rowoffset = SHORT(msd->rowoffset) << FRACBITS;
+      sd->textureoffset = whole_to_fixed(SHORT(msd->textureoffset));
+      sd->rowoffset = whole_to_fixed(SHORT(msd->rowoffset));
       sd->toptexture = R_TextureNumForName(msd->toptexture);
       sd->bottomtexture = R_TextureNumForName(msd->bottomtexture);
       sd->midtexture = R_TextureNumForName(msd->midtexture);
@@ -532,8 +532,8 @@ void P_LoadBlockMap(int lump)
 
   // Read the header
 
-  bmaporgx = blockmaplump[0] << FRACBITS;
-  bmaporgy = blockmaplump[1] << FRACBITS;
+  bmaporgx = whole_to_fixed(blockmaplump[0]);
+  bmaporgy = whole_to_fixed(blockmaplump[1]);
   bmapwidth = blockmaplump[2];
   bmapheight = blockmaplump[3];
 

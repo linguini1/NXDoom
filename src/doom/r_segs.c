@@ -153,7 +153,7 @@ void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
               dc_colormap = walllights[index];
             }
 
-          sprtopscreen = centeryfrac - FixedMul(dc_texturemid, spryscale);
+          sprtopscreen = centeryfrac - fixed_mul(dc_texturemid, spryscale);
           dc_iscale = 0xffffffffu / (unsigned)spryscale;
 
           // draw the texture
@@ -234,8 +234,8 @@ void R_RenderSegLoop(void)
           // calculate texture offset
           angle = (rw_centerangle + xtoviewangle[rw_x]) >> ANGLETOFINESHIFT;
           texturecolumn =
-              rw_offset - FixedMul(finetangent[angle], rw_distance);
-          texturecolumn >>= FRACBITS;
+              rw_offset - fixed_mul(finetangent[angle], rw_distance);
+          texturecolumn = fixed_to_whole(texturecolumn);
           // calculate lighting
           index = rw_scale >> LIGHTSCALESHIFT;
 
@@ -370,7 +370,7 @@ void r_store_wall_range(int start, int stop)
   distangle = ANG90 - offsetangle;
   hyp = R_PointToDist(curline->v1->x, curline->v1->y);
   sineval = finesine[distangle >> ANGLETOFINESHIFT];
-  rw_distance = FixedMul(hyp, sineval);
+  rw_distance = fixed_mul(hyp, sineval);
 
   ds_p->x1 = rw_x = start;
   ds_p->x2 = stop;
@@ -399,9 +399,9 @@ void r_store_wall_range(int start, int stop)
 	    trx = curline->v1->x - viewx;
 	    try = curline->v1->y - viewy;
 			
-	    gxt = FixedMul(trx,viewcos); 
-	    gyt = -FixedMul(try,viewsin); 
-	    ds_p->scale1 = FixedDiv(projection, gxt-gyt)<<detailshift;
+	    gxt = fixed_mul(trx,viewcos); 
+	    gyt = -fixed_mul(try,viewsin); 
+	    ds_p->scale1 = fixed_div(projection, gxt-gyt)<<detailshift;
 	}
 #endif
       ds_p->scale2 = ds_p->scale1;
@@ -583,7 +583,7 @@ void r_store_wall_range(int start, int stop)
       if (offsetangle > ANG90) offsetangle = ANG90;
 
       sineval = finesine[offsetangle >> ANGLETOFINESHIFT];
-      rw_offset = FixedMul(hyp, sineval);
+      rw_offset = fixed_mul(hyp, sineval);
 
       if (rw_normalangle - rw_angle1 < ANG180) rw_offset = -rw_offset;
 
@@ -633,11 +633,11 @@ void r_store_wall_range(int start, int stop)
   worldtop >>= 4;
   worldbottom >>= 4;
 
-  topstep = -FixedMul(rw_scalestep, worldtop);
-  topfrac = (centeryfrac >> 4) - FixedMul(worldtop, rw_scale);
+  topstep = -fixed_mul(rw_scalestep, worldtop);
+  topfrac = (centeryfrac >> 4) - fixed_mul(worldtop, rw_scale);
 
-  bottomstep = -FixedMul(rw_scalestep, worldbottom);
-  bottomfrac = (centeryfrac >> 4) - FixedMul(worldbottom, rw_scale);
+  bottomstep = -fixed_mul(rw_scalestep, worldbottom);
+  bottomfrac = (centeryfrac >> 4) - fixed_mul(worldbottom, rw_scale);
 
   if (backsector)
     {
@@ -646,14 +646,14 @@ void r_store_wall_range(int start, int stop)
 
       if (worldhigh < worldtop)
         {
-          pixhigh = (centeryfrac >> 4) - FixedMul(worldhigh, rw_scale);
-          pixhighstep = -FixedMul(rw_scalestep, worldhigh);
+          pixhigh = (centeryfrac >> 4) - fixed_mul(worldhigh, rw_scale);
+          pixhighstep = -fixed_mul(rw_scalestep, worldhigh);
         }
 
       if (worldlow > worldbottom)
         {
-          pixlow = (centeryfrac >> 4) - FixedMul(worldlow, rw_scale);
-          pixlowstep = -FixedMul(rw_scalestep, worldlow);
+          pixlow = (centeryfrac >> 4) - fixed_mul(worldlow, rw_scale);
+          pixlowstep = -fixed_mul(rw_scalestep, worldlow);
         }
     }
 

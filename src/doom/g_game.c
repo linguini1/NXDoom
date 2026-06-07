@@ -374,7 +374,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
           joyxmove = joyxmove * joystick_move_sensitivity / 10;
           joyxmove = (joyxmove > FRACUNIT) ? FRACUNIT : joyxmove;
           joyxmove = (joyxmove < -FRACUNIT) ? -FRACUNIT : joyxmove;
-          side += FixedMul(sidemove[speed], joyxmove);
+          side += fixed_mul(sidemove[speed], joyxmove);
         }
       else if (joystick_move_sensitivity)
         {
@@ -392,9 +392,9 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
         {
           // Cubic response curve allows for finer control when stick
           // deflection is small.
-          joyxmove = FixedMul(FixedMul(joyxmove, joyxmove), joyxmove);
+          joyxmove = fixed_mul(fixed_mul(joyxmove, joyxmove), joyxmove);
           joyxmove = joyxmove * joystick_turn_sensitivity / 10;
-          cmd->angleturn -= FixedMul(angleturn[1], joyxmove);
+          cmd->angleturn -= fixed_mul(angleturn[1], joyxmove);
         }
       else if (joystick_turn_sensitivity)
         {
@@ -419,7 +419,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
       joyymove = joyymove * joystick_move_sensitivity / 10;
       joyymove = (joyymove > FRACUNIT) ? FRACUNIT : joyymove;
       joyymove = (joyymove < -FRACUNIT) ? -FRACUNIT : joyymove;
-      forward -= FixedMul(forwardmove[speed], joyymove);
+      forward -= fixed_mul(forwardmove[speed], joyymove);
     }
   else if (joystick_move_sensitivity)
     {
@@ -444,7 +444,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
       joystrafemove = joystrafemove * joystick_move_sensitivity / 10;
       joystrafemove = (joystrafemove > FRACUNIT) ? FRACUNIT : joystrafemove;
       joystrafemove = (joystrafemove < -FRACUNIT) ? -FRACUNIT : joystrafemove;
-      side += FixedMul(sidemove[speed], joystrafemove);
+      side += fixed_mul(sidemove[speed], joystrafemove);
     }
   else if (joystick_move_sensitivity)
     {
@@ -1129,14 +1129,14 @@ boolean G_CheckSpot(int playernum, mapthing_t *mthing)
     {
       // first spawn of level, before corpses
       for (i = 0; i < playernum; i++)
-        if (players[i].mo->x == mthing->x << FRACBITS &&
-            players[i].mo->y == mthing->y << FRACBITS)
+        if (players[i].mo->x == whole_to_fixed(mthing->x) &&
+            players[i].mo->y == whole_to_fixed(mthing->y))
           return false;
       return true;
     }
 
-  x = mthing->x << FRACBITS;
-  y = mthing->y << FRACBITS;
+  x = whole_to_fixed(mthing->x);
+  y = whole_to_fixed(mthing->y);
 
   if (!P_CheckPosition(players[playernum].mo, x, y)) return false;
 
