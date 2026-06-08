@@ -357,12 +357,14 @@ void F_CastTicker(void)
       castnum++;
       castdeath = false;
       if (castorder[castnum].name == NULL) castnum = 0;
+
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
       if (mobjinfo[castorder[castnum].type].seesound)
         {
-#ifdef CONFIG_GAMES_NXDOOM_SOUND
           s_start_sound(NULL, mobjinfo[castorder[castnum].type].seesound);
-#endif
         }
+#endif
+
       caststate = &states[mobjinfo[castorder[castnum].type].seestate];
       castframes = 0;
     }

@@ -29,6 +29,8 @@
  * Included Files
  ****************************************************************************/
 
+#include <stdint.h>
+
 /* Needed for action function pointer handling. */
 
 #include "d_think.h"
@@ -1308,31 +1310,37 @@ typedef enum
   NUMMOBJTYPES
 } mobjtype_t;
 
+/* Ranges for these members were obtained by analyzing the `mobjinfo` array at
+ * game startup.
+ */
+
 typedef struct
 {
-  int doomednum;
-  int spawnstate;
-  int spawnhealth;
-  int seestate;
-  int seesound;
-  int reactiontime;
-  int attacksound;
-  int painstate;
-  int painchance;
-  int painsound;
-  int meleestate;
-  int missilestate;
-  int deathstate;
-  int xdeathstate;
-  int deathsound;
-  int speed;
-  int radius;
-  int height;
-  int mass;
-  int damage;
-  int activesound;
-  int flags;
-  int raisestate;
+  uint32_t flags;        /* 0 to 33557510 */
+  uint32_t radius;       /* 393216 to 8388608 */
+  uint32_t height;       /* 524288 to 7208960 */
+  uint32_t mass;         /* 50 to 10000000 */
+  uint32_t speed;        /* 0 to 1638400 */
+  int16_t doomednum;     /* -1 to 3006 */
+  uint16_t spawnhealth;  /* 20 to 4000 */
+  uint16_t spawnstate;   /* 0 to 963 */
+  uint16_t seestate;     /* 0 to 785 */
+  uint16_t painstate;    /* 0 to 779 */
+  uint16_t painchance;   /* 0 to 256 */
+  uint16_t meleestate;   /* 0 to 566 */
+  uint16_t missilestate; /* 0 to 736 */
+  uint16_t deathstate;   /* 0 to 808 */
+  uint16_t xdeathstate;  /* 0 to 749 */
+  uint16_t raisestate;   /* 0 to 758 */
+  uint8_t damage;        /* 0 to 100 */
+  uint8_t reactiontime;  /* 0 to 8 */
+#ifdef CONFIG_GAMES_NXDOOM_SOUND
+  uint8_t seesound;    /* 0 to 107 */
+  uint8_t attacksound; /* 0 to 52 */
+  uint8_t painsound;   /* 0 to 103 */
+  uint8_t deathsound;  /* 0 to 104 */
+  uint8_t activesound; /* 0 to 105 */
+#endif
 } mobjinfo_t;
 
 /****************************************************************************
@@ -1341,6 +1349,14 @@ typedef struct
 
 extern state_t states[NUMSTATES];
 extern const char *sprnames[];
+
+/* Size before opt: 0000000000012604
+ * Size after opt with sound: 0000000000007124
+ * Size after opt without sound: 0000000000006028
+ *
+ * Best improvement: 6576 bytes
+ * Best improvement: 6.42KB
+ */
 
 extern mobjinfo_t mobjinfo[NUMMOBJTYPES];
 
