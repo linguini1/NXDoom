@@ -1154,19 +1154,39 @@ typedef enum
   NUMSTATES
 } statenum_t;
 
-typedef struct
+/* Tightly packed to save space! */
+
+begin_packed_struct typedef struct
 {
+  actionf_t action; /* void (*action) (); */
   spritenum_t sprite;
-  int frame;
-  int tics;
-
-  /* void (*action) (); */
-
-  actionf_t action;
   statenum_t nextstate;
+
+  uint16_t frame; /* 0 to 32796 */
+
+  /* NOTE: I have changed this to an uint8_t to use the smallest range
+   * possible. It seems to me that logic which compares `tics == -1` will check
+   * 255 against -1, and seeing as the compiler knows this is a uint8_t, it
+   * should all work fine (0xfffffff to 0xff is not a stretch). However, I leave
+   * this note in case I haven't thought this through enough.
+   */
+
+  uint8_t tics;   /* -1 to 181 */
+
+  /* NOTE: as far as I can tell, these fields are never used. They are set to
+   * zero in the state lookup table, and the only other place directly
+   * referencing them is P_SetPsprite, which uses them seemingly as a fixed
+   * point number to set some other coordinates later. However, in my
+   * gameplay, the check for `if (state->misc1)` never evaluates to true.
+   * Therefore, in my quest to save memory in one of the games largest lookup
+   * tables, I am removing these fields.
+   */
+
+#if 0
   int misc1;
   int misc2;
-} state_t;
+#endif
+} state_t end_packed_struct;
 
 typedef enum
 {
@@ -1314,7 +1334,7 @@ typedef enum
  * game startup.
  */
 
-typedef struct
+begin_packed_struct typedef struct
 {
   uint32_t flags;        /* 0 to 33557510 */
   uint32_t radius;       /* 393216 to 8388608 */
@@ -1341,7 +1361,7 @@ typedef struct
   uint8_t deathsound;  /* 0 to 104 */
   uint8_t activesound; /* 0 to 105 */
 #endif
-} mobjinfo_t;
+} mobjinfo_t end_packed_struct;
 
 /****************************************************************************
  * Public Data

@@ -32,8 +32,10 @@ DEH_MAPPING("Sprite number", sprite)
 DEH_MAPPING("Sprite subnumber", frame)
 DEH_MAPPING("Duration", tics)
 DEH_MAPPING("Next frame", nextstate)
+#if 0
 DEH_MAPPING("Unknown 1", misc1)
 DEH_MAPPING("Unknown 2", misc2)
+#endif
 DEH_UNSUPPORTED_MAPPING("Codep frame")
 DEH_END_MAPPING
 
