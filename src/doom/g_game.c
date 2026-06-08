@@ -145,7 +145,7 @@ int testcontrols_mousespeed;
 
 wbstartstruct_t wminfo; // parms for world map / intermission
 
-byte consistancy[MAXPLAYERS][BACKUPTICS];
+byte consistancy[MAXPLAYERS][CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
 #define MAXPLMOVE (forwardmove[1])
 
@@ -328,7 +328,7 @@ void g_build_ticcmd(ticcmd_t *cmd, int maketic)
 
   memset(cmd, 0, sizeof(ticcmd_t));
 
-  cmd->consistancy = consistancy[consoleplayer][maketic % BACKUPTICS];
+  cmd->consistancy = consistancy[consoleplayer][maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
   strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] ||
            joybuttons[joybstrafe];
@@ -915,7 +915,7 @@ void g_ticker(void)
 
   // get commands, check consistancy,
   // and build new consistancy check
-  buf = (gametic / ticdup) % BACKUPTICS;
+  buf = (gametic / ticdup) % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS;
 
   for (i = 0; i < MAXPLAYERS; i++)
     {
@@ -953,7 +953,7 @@ void g_ticker(void)
 
           if (netgame && !netdemo && !(gametic % ticdup))
             {
-              if (gametic > BACKUPTICS &&
+              if (gametic > CONFIG_GAMES_NXDOOM_NET_BACKUPTICS &&
                   consistancy[i][buf] != cmd->consistancy)
                 {
                   i_error("consistency failure (%i should be %i)",

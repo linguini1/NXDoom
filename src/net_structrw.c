@@ -117,7 +117,7 @@ boolean net_read_settings(net_packet_t *packet, net_gamesettings_t *settings)
       return false;
     }
 
-  for (i = 0; i < settings->num_players && i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < settings->num_players && i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (!net_read_int8(packet, (unsigned int *)&settings->player_classes[i]))
         {
@@ -383,14 +383,14 @@ boolean NET_ReadFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd,
       return false;
     }
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       cmd->playeringame[i] = (bitfield & (1 << i)) != 0;
     }
 
   // Read cmds
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (cmd->playeringame[i])
         {
@@ -419,7 +419,7 @@ void NET_WriteFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd,
 
   bitfield = 0;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (cmd->playeringame[i])
         {
@@ -431,7 +431,7 @@ void NET_WriteFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd,
 
   // Write player ticcmds
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (cmd->playeringame[i])
         {
@@ -451,7 +451,7 @@ void NET_WriteWaitData(net_packet_t *packet, net_waitdata_t *data)
   net_write_int8(packet, data->is_controller);
   net_write_int8(packet, data->consoleplayer);
 
-  for (i = 0; i < data->num_players && i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < data->num_players && i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       net_write_string(packet, data->player_names[i]);
       net_write_string(packet, data->player_addrs[i]);
@@ -477,25 +477,25 @@ boolean NET_ReadWaitData(net_packet_t *packet, net_waitdata_t *data)
       return false;
     }
 
-  for (i = 0; i < data->num_players && i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < data->num_players && i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       s = net_read_string(packet);
 
-      if (s == NULL || strlen(s) >= MAXPLAYERNAME)
+      if (s == NULL || strlen(s) >= CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME)
         {
           return false;
         }
 
-      m_str_copy(data->player_names[i], s, MAXPLAYERNAME);
+      m_str_copy(data->player_names[i], s, CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME);
 
       s = net_read_string(packet);
 
-      if (s == NULL || strlen(s) >= MAXPLAYERNAME)
+      if (s == NULL || strlen(s) >= CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME)
         {
           return false;
         }
 
-      m_str_copy(data->player_addrs[i], s, MAXPLAYERNAME);
+      m_str_copy(data->player_addrs[i], s, CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME);
     }
 
   return NET_ReadSHA1Sum(packet, data->wad_sha1sum) &&

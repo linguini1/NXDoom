@@ -119,7 +119,7 @@ typedef struct
    */
 
   int sendseq;
-  net_full_ticcmd_t sendqueue[BACKUPTICS];
+  net_full_ticcmd_t sendqueue[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
   /* Latest acknowledged by the client */
 
@@ -182,7 +182,7 @@ typedef enum
 static net_server_state_t server_state;
 static boolean server_initialized = false;
 static net_client_t clients[MAXNETNODES];
-static net_client_t *sv_players[NET_MAXPLAYERS];
+static net_client_t *sv_players[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 static net_context_t *server_context;
 static unsigned int sv_gamemode;
 static unsigned int sv_gamemission;
@@ -197,7 +197,7 @@ static unsigned int master_resolve_time;
 /* receive window */
 
 static unsigned int recvwindow_start;
-static net_client_recv_t recvwindow[BACKUPTICS][NET_MAXPLAYERS];
+static net_client_recv_t recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS][CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 
 /****************************************************************************
  * Private Function Prototypes
@@ -297,7 +297,7 @@ static void net_sv_assign_players(void)
         }
     }
 
-  for (; pl < NET_MAXPLAYERS; ++pl)
+  for (; pl < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++pl)
     {
       sv_players[pl] = NULL;
     }
@@ -312,7 +312,7 @@ static int net_sv_num_players(void)
 
   result = 0;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (sv_players[i] != NULL && client_connected(sv_players[i]))
         {
@@ -356,7 +356,7 @@ static int net_sv_max_players(void)
         }
     }
 
-  return NET_MAXPLAYERS;
+  return CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS;
 }
 
 /* Returns the number of drones currently connected. */
@@ -492,7 +492,7 @@ static void net_sv_send_waiting_data(net_client_t *client)
   for (i = 0; i < wait_data.num_players; ++i)
     {
       m_str_copy(wait_data.player_names[i], sv_players[i]->name,
-                 MAXPLAYERNAME);
+                 CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME);
 
       /* For privacy, only local clients or those on a LAN get to see
        * addresses. Public clients only get to see their own address,
@@ -505,15 +505,15 @@ static void net_sv_send_waiting_data(net_client_t *client)
       if (client_range == RANGE_LOCALHOST || client_range == RANGE_PRIVATE ||
           i == wait_data.consoleplayer || player_range == RANGE_LOCALHOST)
         {
-          m_str_copy(wait_data.player_addrs[i], addr, MAXPLAYERNAME);
+          m_str_copy(wait_data.player_addrs[i], addr, CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME);
         }
       else if (player_range == RANGE_PRIVATE)
         {
-          snprintf(wait_data.player_addrs[i], MAXPLAYERNAME, "[LAN player]");
+          snprintf(wait_data.player_addrs[i], CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME, "[LAN player]");
         }
       else
         {
-          snprintf(wait_data.player_addrs[i], MAXPLAYERNAME,
+          snprintf(wait_data.player_addrs[i], CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME,
                    "[address hidden]");
         }
     }
@@ -581,7 +581,7 @@ static void net_sv_advance_window(void)
 
       should_advance = true;
 
-      for (i = 0; i < NET_MAXPLAYERS; ++i)
+      for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
         {
           if (sv_players[i] == NULL || !client_connected(sv_players[i]))
             {
@@ -608,8 +608,8 @@ static void net_sv_advance_window(void)
       /* Advance the window */
 
       memmove(recvwindow, recvwindow + 1,
-              sizeof(*recvwindow) * (BACKUPTICS - 1));
-      memset(&recvwindow[BACKUPTICS - 1], 0, sizeof(*recvwindow));
+              sizeof(*recvwindow) * (CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1));
+      memset(&recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1], 0, sizeof(*recvwindow));
       ++recvwindow_start;
       net_log_info("server: advanced receive window to %d", recvwindow_start);
     }
@@ -759,7 +759,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
     }
 
   if (!D_ValidGameMode(data.gamemission, data.gamemode) ||
-      data.max_players > NET_MAXPLAYERS)
+      data.max_players > CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS)
     {
       net_log_err("server: invalid connect data, max_players=%d, "
                   "gamemission=%d, gamemode=%d",
@@ -972,7 +972,7 @@ static void start_game(void)
 
   sv_settings.lowres_turn = false;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (sv_players[i] != NULL && sv_players[i]->recording_lowres)
         {
@@ -984,7 +984,7 @@ static void start_game(void)
 
   /* Copy player classes: */
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (sv_players[i] != NULL)
         {
@@ -1154,7 +1154,7 @@ static void net_sv_send_resend_request(net_client_t *client, int start,
     {
       index = i - recvwindow_start;
 
-      if (index >= BACKUPTICS)
+      if (index >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS)
         {
           /* Outside the range */
 
@@ -1183,7 +1183,7 @@ static void net_sv_check_resends(net_client_t *client)
   resend_start = -1;
   resend_end = -1;
 
-  for (i = 0; i < BACKUPTICS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_BACKUPTICS; ++i)
     {
       net_client_recv_t *recvobj;
       boolean need_resend;
@@ -1303,7 +1303,7 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
 
       index = seq + i - recvwindow_start;
 
-      if (index < 0 || index >= BACKUPTICS)
+      if (index < 0 || index >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS)
         {
           /* Not in range of the recv window */
 
@@ -1336,7 +1336,7 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
 
   if (resend_end <= 0) return;
 
-  if (resend_end >= BACKUPTICS) resend_end = BACKUPTICS - 1;
+  if (resend_end >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS) resend_end = CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1;
 
   index = resend_end - 1;
   resend_start = resend_end;
@@ -1430,7 +1430,7 @@ static void net_sv_send_tics(net_client_t *client, unsigned int start,
     {
       net_full_ticcmd_t *cmd;
 
-      cmd = &client->sendqueue[i % BACKUPTICS];
+      cmd = &client->sendqueue[i % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
       if (i != cmd->seq)
         {
@@ -1477,7 +1477,7 @@ static void net_sv_parse_resend_request(net_packet_t *packet,
     {
       net_full_ticcmd_t *cmd;
 
-      cmd = &client->sendqueue[i % BACKUPTICS];
+      cmd = &client->sendqueue[i % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
       if (i != cmd->seq)
         {
@@ -1704,7 +1704,7 @@ static void net_sv_pump_send_queue(net_client_t *client)
 
   recv_index = client->sendseq - recvwindow_start;
 
-  if (recv_index < 0 || recv_index >= BACKUPTICS)
+  if (recv_index < 0 || recv_index >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS)
     {
       return;
     }
@@ -1715,7 +1715,7 @@ static void net_sv_pump_send_queue(net_client_t *client)
 
   num_players = 0;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (sv_players[i] == client)
         {
@@ -1761,7 +1761,7 @@ static void net_sv_pump_send_queue(net_client_t *client)
 
   cmd.latency = 0;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       net_client_recv_t *recvobj;
 
@@ -1790,7 +1790,7 @@ static void net_sv_pump_send_queue(net_client_t *client)
 
   /* Add into the queue */
 
-  client->sendqueue[client->sendseq % BACKUPTICS] = cmd;
+  client->sendqueue[client->sendseq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS] = cmd;
 
   /* Transmit the new tic to the client */
 
@@ -1860,7 +1860,7 @@ static void net_sv_check_deadlock(net_client_t *client)
        * from this player.
        */
 
-      for (i = 0; i < BACKUPTICS; ++i)
+      for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_BACKUPTICS; ++i)
         {
           if (!recvwindow[i][client->player_number].active)
             {
@@ -1885,7 +1885,7 @@ static void net_sv_check_deadlock(net_client_t *client)
        * resends to break deadlock.
        */
 
-      if (i < BACKUPTICS && client->sendseq > client->acknowledged)
+      if (i < CONFIG_GAMES_NXDOOM_NET_BACKUPTICS && client->sendseq > client->acknowledged)
         {
           net_log_warn("server: also resending tics %d-%d to break deadlock",
                        client->acknowledged, client->sendseq - 1);
@@ -2117,7 +2117,7 @@ void net_sv_run(void)
     case SERVER_IN_GAME:
       net_sv_advance_window();
 
-      for (i = 0; i < NET_MAXPLAYERS; ++i)
+      for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
         {
           if (sv_players[i] != NULL && client_connected(sv_players[i]))
             {

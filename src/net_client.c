@@ -138,13 +138,13 @@ static ticcmd_t last_ticcmd;
 
 /* Buffer of ticcmd diffs being sent to the server */
 
-static net_server_send_t send_queue[BACKUPTICS];
+static net_server_send_t send_queue[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
 /* Receive window */
 
-static ticcmd_t recvwindow_cmd_base[NET_MAXPLAYERS];
+static ticcmd_t recvwindow_cmd_base[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 static int recvwindow_start;
-static net_server_recv_t recvwindow[BACKUPTICS];
+static net_server_recv_t recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
 /* Whether we need to send an acknowledgement and
  * when gamedata was last received.
@@ -221,11 +221,11 @@ static void update_clock_sync(unsigned int seq, unsigned int remote_latency)
   int latency;
   int error;
 
-  if (seq == send_queue[seq % BACKUPTICS].seq)
+  if (seq == send_queue[seq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq)
     {
-      latency = i_get_time_ms() - send_queue[seq % BACKUPTICS].time;
+      latency = i_get_time_ms() - send_queue[seq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].time;
     }
-  else if (seq > send_queue[seq % BACKUPTICS].seq)
+  else if (seq > send_queue[seq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq)
     {
       /* We have received the ticcmd from the server before we have
        * even sent ours
@@ -268,7 +268,7 @@ static void net_cl_expand_full_ticcmd(net_full_ticcmd_t *cmd,
 
   /* Expand tic diffs for all players */
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (i == settings.consoleplayer && !drone)
         {
@@ -298,7 +298,7 @@ static void net_cl_expand_full_ticcmd(net_full_ticcmd_t *cmd,
 
 static void net_cl_advance_window(void)
 {
-  ticcmd_t ticcmds[NET_MAXPLAYERS];
+  ticcmd_t ticcmds[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 
   while (recvwindow[0].active)
     {
@@ -311,8 +311,8 @@ static void net_cl_advance_window(void)
       /* Advance the window */
 
       memmove(recvwindow, recvwindow + 1,
-              sizeof(net_server_recv_t) * (BACKUPTICS - 1));
-      memset(&recvwindow[BACKUPTICS - 1], 0, sizeof(net_server_recv_t));
+              sizeof(net_server_recv_t) * (CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1));
+      memset(&recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1], 0, sizeof(net_server_recv_t));
 
       ++recvwindow_start;
 
@@ -383,7 +383,7 @@ static void net_cl_send_tics(int start, int end)
     {
       net_server_send_t *sendobj;
 
-      sendobj = &send_queue[i % BACKUPTICS];
+      sendobj = &send_queue[i % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
       net_write_int16(packet, last_latency);
 
@@ -496,7 +496,7 @@ static void net_cl_parse_waiting_data(net_packet_t *packet)
 
   if (wait_data.num_players > wait_data.max_players ||
       wait_data.ready_players > wait_data.num_players ||
-      wait_data.max_players > NET_MAXPLAYERS)
+      wait_data.max_players > CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS)
     {
       /* insane data */
 
@@ -562,7 +562,7 @@ static void net_cl_parse_game_start(net_packet_t *packet)
       return;
     }
 
-  if (settings.num_players > NET_MAXPLAYERS ||
+  if (settings.num_players > CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS ||
       settings.consoleplayer >= (signed int)settings.num_players)
     {
       /* insane values */
@@ -621,7 +621,7 @@ static void net_cl_send_resend_request(int start, int end)
 
       index = i - recvwindow_start;
 
-      if (index < 0 || index >= BACKUPTICS) continue;
+      if (index < 0 || index >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS) continue;
 
       recvwindow[index].resend_time = nowtime;
     }
@@ -643,7 +643,7 @@ static void net_cl_check_resends(void)
   resend_start = -1;
   resend_end = -1;
 
-  for (i = 0; i < BACKUPTICS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_BACKUPTICS; ++i)
     {
       net_server_recv_t *recvobj;
       boolean need_resend;
@@ -772,7 +772,7 @@ static void net_cl_parse_game_data(net_packet_t *packet)
           return;
         }
 
-      if (index < 0 || index >= BACKUPTICS)
+      if (index < 0 || index >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS)
         {
           /* Out of range of the recv window */
 
@@ -809,7 +809,7 @@ static void net_cl_parse_game_data(net_packet_t *packet)
 
   if (resend_end <= 0) return;
 
-  if (resend_end >= BACKUPTICS) resend_end = BACKUPTICS - 1;
+  if (resend_end >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS) resend_end = CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1;
 
   index = resend_end - 1;
   resend_start = resend_end;
@@ -881,14 +881,14 @@ static void net_cl_parse_resend_request(net_packet_t *packet)
    * window of tics to only what we have.
    */
 
-  while (start <= end && (!send_queue[start % BACKUPTICS].active ||
-                          send_queue[start % BACKUPTICS].seq != start))
+  while (start <= end && (!send_queue[start % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].active ||
+                          send_queue[start % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq != start))
     {
       ++start;
     }
 
-  while (start <= end && (!send_queue[end % BACKUPTICS].active ||
-                          send_queue[end % BACKUPTICS].seq != end))
+  while (start <= end && (!send_queue[end % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].active ||
+                          send_queue[end % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq != end))
     {
       --end;
     }
@@ -1040,7 +1040,7 @@ void net_cl_send_ticcmd(ticcmd_t *ticcmd, int maketic)
 
   /* Store in the send queue */
 
-  sendobj = &send_queue[maketic % BACKUPTICS];
+  sendobj = &send_queue[maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
   sendobj->active = true;
   sendobj->seq = maketic;
   sendobj->time = i_get_time_ms();

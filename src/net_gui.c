@@ -53,8 +53,8 @@
 
 static txt_window_t *window;
 static int old_max_players;
-static txt_label_t *player_labels[NET_MAXPLAYERS];
-static txt_label_t *ip_labels[NET_MAXPLAYERS];
+static txt_label_t *player_labels[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
+static txt_label_t *ip_labels[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 static txt_label_t *drone_label;
 static txt_label_t *master_msg_label;
 static boolean had_warning;

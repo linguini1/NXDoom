@@ -30,19 +30,36 @@
 
 #define MAXNETNODES 16
 
-// The maximum number of players, multiplayer/networking.
-// This is the maximum supported by the networking code; individual games
-// have their own values for MAXPLAYERS that can be smaller.
+#ifndef CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME
 
-#define NET_MAXPLAYERS 8
+/* We don't need player names. TODO: I should be smarter about this
+ * and avoid compiling ANY networking related stuff (i.e. player name members in
+ * the structs below) at all when net stuff is not enabled.
+ */
 
-// Maximum length of a player's name.
+#define CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME (1)
+#endif /* CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME */
 
-#define MAXPLAYERNAME 30
+/* The maximum number of players, multiplayer/networking.
+ * This is the maximum supported by the networking code; individual games
+ * have their own values for MAXPLAYERS that can be smaller.
+ */
 
-// Networking and tick handling related.
+#ifndef CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS
 
-#define BACKUPTICS 128
+/* No players if not set up for networking */
+
+#define CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS (1)
+#endif /* CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS */
+
+/* Networking and tick handling related. */
+
+#ifndef CONFIG_GAMES_NXDOOM_NET_BACKUPTICS
+
+/* Surely we don't need any for a local game? */
+
+#define CONFIG_GAMES_NXDOOM_NET_BACKUPTICS (1)
+#endif /* CONFIG_GAMES_NXDOOM_NET_BACKUPTICS */
 
 typedef struct _net_module_s net_module_t;
 typedef struct _net_packet_s net_packet_t;
@@ -213,7 +230,7 @@ typedef struct
 
   // Hexen player classes:
 
-  int player_classes[NET_MAXPLAYERS];
+  int player_classes[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 
 } net_gamesettings_t;
 
@@ -238,8 +255,8 @@ typedef struct
 {
   signed int latency;
   unsigned int seq;
-  boolean playeringame[NET_MAXPLAYERS];
-  net_ticdiff_t cmds[NET_MAXPLAYERS];
+  boolean playeringame[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
+  net_ticdiff_t cmds[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 } net_full_ticcmd_t;
 
 // Data sent in response to server queries
@@ -266,8 +283,8 @@ typedef struct
   int max_players;
   int is_controller;
   int consoleplayer;
-  char player_names[NET_MAXPLAYERS][MAXPLAYERNAME];
-  char player_addrs[NET_MAXPLAYERS][MAXPLAYERNAME];
+  char player_names[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS][CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME];
+  char player_addrs[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS][CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME];
   sha1_digest_t wad_sha1sum;
   sha1_digest_t deh_sha1sum;
   int is_freedoom;

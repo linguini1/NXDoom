@@ -74,8 +74,8 @@
 
 typedef struct
 {
-  ticcmd_t cmds[NET_MAXPLAYERS];
-  boolean ingame[NET_MAXPLAYERS];
+  ticcmd_t cmds[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
+  boolean ingame[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 } ticcmd_set_t;
 
 /****************************************************************************
@@ -90,7 +90,7 @@ typedef struct
  * from all players.
  */
 
-static ticcmd_set_t ticdata[BACKUPTICS];
+static ticcmd_set_t ticdata[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
 /* The index of the next tic to be made (with a call to build_ticcmd). */
 
@@ -121,7 +121,7 @@ static loop_interface_t *loop_interface = NULL;
  * modify playeringame[] when playing back multiplayer demos.
  */
 
-static boolean local_playeringame[NET_MAXPLAYERS];
+static boolean local_playeringame[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 
 /* Requested player class "sent" to the server on connect.
  * If we are only doing a single player game then this needs to be remembered
@@ -239,8 +239,8 @@ static boolean build_new_tic(void)
     }
 #endif
 
-  ticdata[maketic % BACKUPTICS].cmds[localplayer] = cmd;
-  ticdata[maketic % BACKUPTICS].ingame[localplayer] = true;
+  ticdata[maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].cmds[localplayer] = cmd;
+  ticdata[maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].ingame[localplayer] = true;
 
   ++maketic;
 
@@ -302,7 +302,7 @@ static void old_net_sync(void)
    * if we are consistently slower, speed up time
    */
 
-  for (i = 0; i < NET_MAXPLAYERS; i++)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; i++)
     {
       if (local_playeringame[i])
         {
@@ -352,7 +352,7 @@ static boolean players_in_game(void)
 
   if (net_client_connected)
     {
-      for (i = 0; i < NET_MAXPLAYERS; ++i)
+      for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
         {
           result = result || local_playeringame[i];
         }
@@ -379,7 +379,7 @@ static void ticdup_squash(ticcmd_set_t *set)
   ticcmd_t *cmd;
   unsigned int i;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       cmd = &set->cmds[i];
       cmd->chatchar = 0;
@@ -395,7 +395,7 @@ static void single_player_clear(ticcmd_set_t *set)
 {
   unsigned int i;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (i != localplayer)
         {
@@ -534,7 +534,7 @@ void d_receive_tic(ticcmd_t *ticcmds, boolean *players_mask)
       return;
     }
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       if (!drone && i == localplayer)
         {
@@ -542,8 +542,8 @@ void d_receive_tic(ticcmd_t *ticcmds, boolean *players_mask)
         }
       else
         {
-          ticdata[recvtic % BACKUPTICS].cmds[i] = ticcmds[i];
-          ticdata[recvtic % BACKUPTICS].ingame[i] = players_mask[i];
+          ticdata[recvtic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].cmds[i] = ticcmds[i];
+          ticdata[recvtic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].ingame[i] = players_mask[i];
         }
     }
 
@@ -636,7 +636,7 @@ void d_start_net_game(net_gamesettings_t *settings,
 
   localplayer = settings->consoleplayer;
 
-  for (i = 0; i < NET_MAXPLAYERS; ++i)
+  for (i = 0; i < CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS; ++i)
     {
       local_playeringame[i] = i < settings->num_players;
     }
@@ -863,7 +863,7 @@ void try_run_tics(void)
           return;
         }
 
-      set = &ticdata[(gametic / ticdup) % BACKUPTICS];
+      set = &ticdata[(gametic / ticdup) % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
       if (!net_client_connected)
         {
