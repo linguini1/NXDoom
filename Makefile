@@ -26,7 +26,6 @@ COMMONSRCS += z_native.c # Native memory allocation
 
 DEHACKEDSRCS = deh_io.c deh_main.c deh_mapping.c deh_text.c
 
-# Used by chocolate-doom
 BASESRCS =        \
   aes_prng.c      \
   d_event.c       \
@@ -49,18 +48,6 @@ BASESRCS =        \
   m_config.c      \
   m_controls.c    \
   m_fixed.c       \
-  net_client.c    \
-  net_common.c    \
-  net_dedicated.c \
-  net_gui.c       \
-  net_io.c        \
-  net_loop.c      \
-  net_packet.c    \
-  net_petname.c   \
-  net_query.c     \
-  net_sdl.c       \
-  net_server.c    \
-  net_structrw.c  \
   p_rejectpad.c   \
   sha1.c          \
   memio.c         \
@@ -74,6 +61,20 @@ BASESRCS =        \
   w_file_stdc.c   \
   w_file_posix.c  \
   w_merge.c       \
+
+NETSRCS =         \
+  net_client.c    \
+  net_common.c    \
+  net_dedicated.c \
+  net_gui.c       \
+  net_io.c        \
+  net_loop.c      \
+  net_packet.c    \
+  net_petname.c   \
+  net_query.c     \
+  net_sdl.c       \
+  net_server.c    \
+  net_structrw.c  \
 
 DOOMSRCS =     \
   am_map.c     \
@@ -160,6 +161,11 @@ CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(COMMONSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(DEHACKEDSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(BASESRCS))
 CSRCS += $(patsubst %,$(DOOMSRCDIR)/%,$(DOOMSRCS))
+
+# Only include networking logic if enabled
+ifeq ($(CONFIG_GAMES_NXDOOM_NET),y)
+CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(NETSRCS))
+endif
 
 # Only include sound logic if enabled
 

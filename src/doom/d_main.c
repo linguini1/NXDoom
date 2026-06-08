@@ -65,11 +65,14 @@
 
 #include "am_map.h"
 #include "hu_stuff.h"
+#include "st_stuff.h"
+#include "wi_stuff.h"
+
+#ifdef CONFIG_GAMES_NXDOOM_NET
 #include "net_client.h"
 #include "net_dedicated.h"
 #include "net_query.h"
-#include "st_stuff.h"
-#include "wi_stuff.h"
+#endif
 
 #include "p_setup.h"
 #include "r_local.h"
@@ -347,7 +350,9 @@ void D_BindVariables(void)
   key_multi_msgplayer[2] = HUSTR_KEYBROWN;
   key_multi_msgplayer[3] = HUSTR_KEYRED;
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   NET_BindVariables();
+#endif
 
   m_bind_int_variable("mouse_sensitivity", &mouseSensitivity);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -385,7 +390,9 @@ boolean D_GrabMouseCallback(void)
 {
   // Drone players don't need mouse focus
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   if (drone) return false;
+#endif
 
   // when menu is active or game is paused, release the mouse
 
@@ -1310,6 +1317,7 @@ void d_doom_main(void)
   printf("z_init: Init zone memory allocation daemon. \n");
   z_init();
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   //!
   // @category net
   //
@@ -1365,6 +1373,7 @@ void d_doom_main(void)
       net_lan_query();
       exit(0);
     }
+#endif
 
   //!
   // @category game
@@ -1756,8 +1765,10 @@ void d_doom_main(void)
   i_init_music();
 #endif
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   printf("NET_Init: Init network subsystem.\n");
   NET_Init();
+#endif
 
   // Initial netgame startup. Connect to server etc.
   D_ConnectNetGame();
