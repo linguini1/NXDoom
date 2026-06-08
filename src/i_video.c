@@ -163,12 +163,6 @@ static boolean need_resize = false;
 static unsigned int last_resize_time;
 #endif
 
-/* Icon RGB data and dimensions */
-
-static const unsigned int *icon_data;
-static int icon_w;
-static int icon_h;
-
 /****************************************************************************
  * Public Data
  ****************************************************************************/
@@ -851,9 +845,6 @@ static void set_video_mode(void)
         }
 
       SDL_SetWindowMinimumSize(screen, SCREENWIDTH, actualheight);
-
-      i_init_window_title();
-      i_init_window_icon();
     }
 
   /* The SDL_RENDERER_TARGETTEXTURE flag is required to render the
@@ -1252,31 +1243,6 @@ void i_init_window_title(void)
 /****************************************************************************
  * Name: i_set_window_title
  ****************************************************************************/
-
-void i_register_window_icon(const unsigned int *icon, int width, int height)
-{
-  icon_data = icon;
-  icon_w = width;
-  icon_h = height;
-}
-
-/****************************************************************************
- * Name: i_init_window_icon
- ****************************************************************************/
-
-void i_init_window_icon(void)
-{
-#if 0
-  SDL_Surface *surface;
-
-  surface = SDL_CreateRGBSurfaceFrom((void *)icon_data, icon_w, icon_h, 32,
-                                     icon_w * 4, 0xffu << 24, 0xffu << 16,
-                                     0xffu << 8, 0xffu << 0);
-
-  SDL_SetWindowIcon(screen, surface);
-  SDL_FreeSurface(surface);
-#endif
-}
 
 void i_graphics_check_commandline(void)
 {

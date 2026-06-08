@@ -77,8 +77,6 @@
 
 #include "d_main.h"
 
-#include "doom_icon.c"
-
 //
 // D-DoomLoop()
 // Not a globally visible function,
@@ -478,7 +476,6 @@ void D_DoomLoop(void)
   i_set_window_title(gamedescription);
   i_graphics_check_commandline();
   i_set_grab_mouse_callback(D_GrabMouseCallback);
-  i_register_window_icon(doom_icon_data, doom_icon_w, doom_icon_h);
   i_init_graphics();
   EnableLoadingDisk();
 

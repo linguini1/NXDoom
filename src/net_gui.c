@@ -439,8 +439,6 @@ void NET_WaitForLaunch(void)
 
   txt_set_colour(TXT_COLOR_BLUE, 0x04, 0x14, 0x40);
 
-  i_init_window_icon();
-
   parse_command_line_args();
   open_wait_dialog();
   had_warning = false;
