@@ -103,4 +103,16 @@ config GAMES_NXDOOM_KBDPATH
 
 endif # GAMES_NXDOOM_KEYBOARD
 
+comment "Optimizations"
+
+config GAMES_NXDOOM_MAXVISPLANES
+	int "Maximum number of visplanes"
+	default 96
+	---help---
+		DOOM allocates a static number of 'visplanes' to use for gameplay. The
+		original ChocolateDOOM source uses 128 of these. They take a significant
+		amount of memory, so you may reduce the number. However, too few planes
+		may cause 'visplane overflow' errors, which is more common in complex
+		levels.
+
 endif # GAMES_NXDOOM

@@ -39,8 +39,8 @@ planefunction_t ceilingfunc;
 //
 
 // Here comes the obnoxious "visplane".
-#define MAXVISPLANES 128
-visplane_t visplanes[MAXVISPLANES];
+
+visplane_t visplanes[CONFIG_GAMES_NXDOOM_MAXVISPLANES];
 visplane_t *lastvisplane;
 visplane_t *floorplane;
 visplane_t *ceilingplane;
@@ -209,7 +209,7 @@ visplane_t *r_find_plane(fixed_t height, int picnum, int lightlevel)
 
   if (check < lastvisplane) return check;
 
-  if (lastvisplane - visplanes == MAXVISPLANES)
+  if (lastvisplane - visplanes == CONFIG_GAMES_NXDOOM_MAXVISPLANES)
     i_error("r_find_plane: no more visplanes");
 
   lastvisplane++;
@@ -275,7 +275,7 @@ visplane_t *R_CheckPlane(visplane_t *pl, int start, int stop)
   lastvisplane->picnum = pl->picnum;
   lastvisplane->lightlevel = pl->lightlevel;
 
-  if (lastvisplane - visplanes == MAXVISPLANES)
+  if (lastvisplane - visplanes == CONFIG_GAMES_NXDOOM_MAXVISPLANES)
     i_error("R_CheckPlane: no more visplanes");
 
   pl = lastvisplane++;
@@ -332,7 +332,7 @@ void R_DrawPlanes(void)
   if (ds_p - drawsegs > MAXDRAWSEGS)
     i_error("R_DrawPlanes: drawsegs overflow (%td)", ds_p - drawsegs);
 
-  if (lastvisplane - visplanes > MAXVISPLANES)
+  if (lastvisplane - visplanes > CONFIG_GAMES_NXDOOM_MAXVISPLANES)
     i_error("R_DrawPlanes: visplane overflow (%td)",
             lastvisplane - visplanes);
 
