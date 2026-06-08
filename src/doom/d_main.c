@@ -401,6 +401,7 @@ static void d_bind_variables(void)
 
 static void d_endoom(void)
 {
+#ifdef CONFIG_GAMES_NXDOOM_ENDOOM
   byte *endoom;
 
   /* Don't show ENDOOM if we have it disabled, or we're running
@@ -417,6 +418,9 @@ static void d_endoom(void)
   endoom = w_cache_lump_name(("ENDOOM"), PU_STATIC);
 
   i_endoom(endoom);
+#else
+  return;
+#endif
 }
 
 static boolean is_french_iwad(void)

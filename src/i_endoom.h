@@ -28,10 +28,13 @@
  * Public Function Prototypes
  ****************************************************************************/
 
+#ifdef CONFIG_GAMES_NXDOOM_ENDOOM
+
 /* Display the Endoom screen on shutdown.  Pass a pointer to the
  * ENDOOM lump.
  */
 
 void i_endoom(byte *data);
+#endif
 
 #endif /* __I_ENDOOM__ */

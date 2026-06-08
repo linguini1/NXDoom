@@ -35,7 +35,6 @@ BASESRCS =        \
   deh_str.c       \
   gusconf.c       \
   i_cdmus.c       \
-  i_endoom.c      \
   i_flmusic.c     \
   i_glob.c        \
   i_input.c       \
@@ -61,6 +60,12 @@ BASESRCS =        \
   w_file_stdc.c   \
   w_file_posix.c  \
   w_merge.c       \
+
+# Only add ENDOOM stuff if the user wants it
+
+ifeq ($(CONFIG_GAMES_NXDOOM_ENDOOM),y)
+BASESRCS += i_endoom.c
+endif
 
 NETSRCS =         \
   net_client.c    \
@@ -156,13 +161,30 @@ TXTSCREENSRCS =       \
   txt_window.c        \
   txt_window_action.c 
 
-CSRCS += $(patsubst %,$(TEXTSCREENSRCDIR)/%,$(TXTSCREENSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(COMMONSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(DEHACKEDSRCS))
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(BASESRCS))
 CSRCS += $(patsubst %,$(DOOMSRCDIR)/%,$(DOOMSRCS))
 
+# Textscreen stuff only needs to be included for networking stuff
+# or if the user wants to see ENDOOM
+
+ifeq ($(CONFIG_GAMES_NXDOOM_ENDOOM),y)
+ADDTXTSCREEN = y
+endif
+
+ifeq ($(CONFIG_GAMES_NXDOOM_NET),y)
+ADDTXTSCREEN = y
+endif
+
+# Only include textscreen code if needed
+
+ifeq ($(ADDTXTSCREEN),y)
+CSRCS += $(patsubst %,$(TEXTSCREENSRCDIR)/%,$(TXTSCREENSRCS))
+endif
+
 # Only include networking logic if enabled
+
 ifeq ($(CONFIG_GAMES_NXDOOM_NET),y)
 CSRCS += $(patsubst %,$(COMMONSRCDIR)/%,$(NETSRCS))
 endif

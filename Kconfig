@@ -50,6 +50,12 @@ config GAMES_NXDOOM_PREFDIR
 	---help---
 		Directory where DOOM WAD files are stored.
 
+config GAMES_NXDOOM_ENDOOM
+	bool "Show ENDOOM"
+	default n
+	---help---
+		Show the ENDOOM screen (https://www.doomwiki.org/wiki/ENDOOM).
+
 comment "Networking options"
 
 config GAMES_NXDOOM_NET
