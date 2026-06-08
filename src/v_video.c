@@ -56,12 +56,6 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-/* TODO: There are separate RANGECHECK defines for different games, but this
- * is common code. Fix this.
- */
-
-#define RANGECHECK
-
 #define MOUSE_SPEED_BOX_WIDTH 120
 #define MOUSE_SPEED_BOX_HEIGHT 9
 #define MOUSE_SPEED_BOX_X (SCREENWIDTH - MOUSE_SPEED_BOX_WIDTH - 10)
@@ -245,7 +239,7 @@ void v_copy_rect(int srcx, int srcy, pixel_t *source, int width, int height,
   pixel_t *src;
   pixel_t *dest;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (srcx < 0 || srcx + width > SCREENWIDTH || srcy < 0 ||
       srcy + height > SCREENHEIGHT || destx < 0 ||
       destx + width > SCREENWIDTH || desty < 0 ||
@@ -309,7 +303,7 @@ void v_draw_patch(int x, int y, patch_t *patch)
       if (!patchclip_callback(patch, x, y)) return;
     }
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (x < 0 || x + SHORT(patch->width) > SCREENWIDTH || y < 0 ||
       y + SHORT(patch->height) > SCREENHEIGHT)
     {
@@ -372,7 +366,7 @@ void v_draw_patch_flipped(int x, int y, patch_t *patch)
       if (!patchclip_callback(patch, x, y)) return;
     }
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (x < 0 || x + SHORT(patch->width) > SCREENWIDTH || y < 0 ||
       y + SHORT(patch->height) > SCREENHEIGHT)
     {
@@ -649,7 +643,7 @@ void v_draw_block(int x, int y, int width, int height, pixel_t *src)
 {
   pixel_t *dest;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (x < 0 || x + width > SCREENWIDTH || y < 0 || y + height > SCREENHEIGHT)
     {
       i_error("Bad v_draw_block");

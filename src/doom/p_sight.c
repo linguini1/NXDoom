@@ -160,7 +160,7 @@ boolean P_CrossSubsector(int num)
   fixed_t frac;
   fixed_t slope;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (num >= numsubsectors)
     i_error("P_CrossSubsector: ss %i with numss = %i", num, numsubsectors);
 #endif

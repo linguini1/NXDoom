@@ -110,7 +110,7 @@ void R_MapPlane(int y, int x1, int x2)
   fixed_t length;
   unsigned index;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (x2 < x1 || x1 < 0 || x2 >= viewwidth || y > viewheight)
     {
       i_error("R_MapPlane: %i, %i at %i", x1, x2, y);
@@ -328,7 +328,7 @@ void R_DrawPlanes(void)
   int angle;
   int lumpnum;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (ds_p - drawsegs > MAXDRAWSEGS)
     i_error("R_DrawPlanes: drawsegs overflow (%td)", ds_p - drawsegs);
 

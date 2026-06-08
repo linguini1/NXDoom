@@ -134,4 +134,11 @@ config GAMES_NXDOOM_MAXVISSPRITES
 		memory, so you may reduce the number. However, too few will cause
 		overflow errors.
 
+config GAMES_NXDOOM_RANGECHECK
+	bool "Perform range checks"
+	default y
+	---help---
+		The ChocolateDOOM source includes the ability to optionally exclude
+		range checking on some array operations.
+
 endif # GAMES_NXDOOM

@@ -105,7 +105,7 @@ void R_DrawColumn(void)
   // Zero length, column does not exceed a pixel.
   if (count < 0) return;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
 #endif
@@ -207,7 +207,7 @@ void R_DrawColumnLow(void)
   // Zero length.
   if (count < 0) return;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
 
@@ -277,7 +277,7 @@ void R_DrawFuzzColumn(void)
   // Zero length.
   if (count < 0) return;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
       i_error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
@@ -329,7 +329,7 @@ void R_DrawFuzzColumnLow(void)
 
   x = dc_x << 1;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
       i_error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
@@ -382,7 +382,7 @@ void R_DrawTranslatedColumn(void)
   count = dc_yh - dc_yl;
   if (count < 0) return;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
       i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
@@ -427,7 +427,7 @@ void R_DrawTranslatedColumnLow(void)
   // low detail, need to scale by 2
   x = dc_x << 1;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
       i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, x);
@@ -531,7 +531,7 @@ void R_DrawSpan(void)
   int spot;
   unsigned int xtemp, ytemp;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= SCREENWIDTH ||
       (unsigned)ds_y > SCREENHEIGHT)
     {
@@ -652,7 +652,7 @@ void R_DrawSpanLow(void)
   int count;
   int spot;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= SCREENWIDTH ||
       (unsigned)ds_y > SCREENHEIGHT)
     {

@@ -382,7 +382,7 @@ void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
   for (dc_x = vis->x1; dc_x <= vis->x2; dc_x++, frac += vis->xiscale)
     {
       texturecolumn = frac >> FRACBITS;
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
       if (texturecolumn < 0 || texturecolumn >= SHORT(patch->width))
         i_error("R_DrawSpriteRange: bad texturecolumn");
 #endif
@@ -451,12 +451,12 @@ void R_ProjectSprite(mobj_t *thing)
   if (abs(tx) > (tz << 2)) return;
 
   // decide which patch to use for sprite relative to player
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned int)thing->sprite >= (unsigned int)numsprites)
     i_error("R_ProjectSprite: invalid sprite number %i ", thing->sprite);
 #endif
   sprdef = &sprites[thing->sprite];
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((thing->frame & FF_FRAMEMASK) >= sprdef->numframes)
     i_error("R_ProjectSprite: invalid sprite frame %i : %i ", thing->sprite,
             thing->frame);
@@ -594,12 +594,12 @@ void R_DrawPSprite(pspdef_t *psp)
   vissprite_t avis;
 
   // decide which patch to use
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)psp->state->sprite >= (unsigned int)numsprites)
     i_error("R_ProjectSprite: invalid sprite number %i ", psp->state->sprite);
 #endif
   sprdef = &sprites[psp->state->sprite];
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((psp->state->frame & FF_FRAMEMASK) >= sprdef->numframes)
     i_error("R_ProjectSprite: invalid sprite frame %i : %i ",
             psp->state->sprite, psp->state->frame);

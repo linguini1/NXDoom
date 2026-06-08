@@ -466,7 +466,7 @@ static void r_subsector(int num)
   seg_t *line;
   subsector_t *sub;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (num >= numsubsectors)
     i_error("R_Subsector: ss %i with numss = %i", num, numsubsectors);
 #endif

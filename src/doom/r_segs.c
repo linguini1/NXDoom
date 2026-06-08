@@ -350,7 +350,7 @@ void r_store_wall_range(int start, int stop)
   // don't overflow and crash
   if (ds_p == &drawsegs[MAXDRAWSEGS]) return;
 
-#ifdef RANGECHECK
+#ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (start >= viewwidth || start > stop)
     i_error("Bad R_RenderWallRange: %i to %i", start, stop);
 #endif
