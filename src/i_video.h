@@ -125,8 +125,6 @@ void i_display_fps_dots(boolean dots_on);
 void i_bind_video_variables(void);
 
 void i_init_window_title(void);
-void i_register_window_icon(const unsigned int *icon, int width, int height);
-void i_init_window_icon(void);
 
 /****************************************************************************
  * Name: i_start_frame

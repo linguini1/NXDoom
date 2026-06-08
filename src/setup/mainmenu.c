@@ -37,7 +37,6 @@
 #include "z_zone.h"
 
 #include "mode.h"
-#include "setup_icon.c"
 
 #include "compatibility.h"
 #include "display.h"
@@ -244,20 +243,6 @@ static void init_config(void)
   m_set_music_pack_dir();
 }
 
-/* Application icon */
-
-static void set_icon(void)
-{
-  SDL_Surface *surface;
-
-  surface = SDL_CreateRGBSurfaceFrom(
-      (void *)setup_icon_data, setup_icon_w, setup_icon_h, 32,
-      setup_icon_w * 4, 0xffu << 24, 0xffu << 16, 0xffu << 8, 0xffu << 0);
-
-  SDL_SetWindowIcon(TXT_SDLWindow, surface);
-  SDL_FreeSurface(surface);
-}
-
 static void set_window_title(void)
 {
   char *title;
@@ -288,7 +273,6 @@ static void init_text_screen(void)
 
   txt_set_colour(TXT_COLOR_BLUE, 0x04, 0x14, 0x40);
 
-  set_icon();
   set_window_title();
 }
 

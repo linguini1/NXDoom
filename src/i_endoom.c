@@ -60,7 +60,6 @@ void I_Endoom(byte *endoom_data)
   txt_set_window_title(PACKAGE_STRING);
 
   /* SDL2-TODO i_init_window_title();
-   * SDL2-TODO i_init_window_icon();
    */
 
   /* Write the data to the screen memory */
