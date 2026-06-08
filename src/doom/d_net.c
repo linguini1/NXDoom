@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/d_net.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	DOOM Network game communication and protocol,
- *	all OS independend parts.
- */
+ *  DOOM Network game communication and protocol, all OS independent parts.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -41,6 +45,24 @@
 #include "d_loop.h"
 
 /****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
+
+static void run_tic(ticcmd_t *cmds, boolean *ingame);
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+static loop_interface_t g_doom_loop_interface =
+{
+  D_ProcessEvents,
+  G_BuildTiccmd,
+  run_tic,
+  M_Ticker,
+};
+
+/****************************************************************************
  * Public Data
  ****************************************************************************/
 
@@ -51,14 +73,14 @@ ticcmd_t *netcmds;
  ****************************************************************************/
 
 /****************************************************************************
- * Name: PlayerQuitGame
+ * Name: player_quit_game
  *
  * Description:
  *  Called when a player leaves the game
  *
  ****************************************************************************/
 
-static void PlayerQuitGame(player_t *player)
+static void player_quit_game(player_t *player)
 {
   static char exitmsg[80];
   unsigned int player_num;
@@ -84,7 +106,7 @@ static void PlayerQuitGame(player_t *player)
     }
 }
 
-static void RunTic(ticcmd_t *cmds, boolean *ingame)
+static void run_tic(ticcmd_t *cmds, boolean *ingame)
 {
   unsigned int i;
 
@@ -94,7 +116,7 @@ static void RunTic(ticcmd_t *cmds, boolean *ingame)
     {
       if (!demoplayback && playeringame[i] && !ingame[i])
         {
-          PlayerQuitGame(&players[i]);
+          player_quit_game(&players[i]);
         }
     }
 
@@ -109,11 +131,8 @@ static void RunTic(ticcmd_t *cmds, boolean *ingame)
   G_Ticker();
 }
 
-static loop_interface_t doom_loop_interface = {D_ProcessEvents, G_BuildTiccmd,
-                                               RunTic, M_Ticker};
-
 /****************************************************************************
- * Name: LoadGameSettings
+ * Name: Load_Game_Settings
  *
  * Description:
  *  Load game settings from the specified structure and
@@ -121,7 +140,7 @@ static loop_interface_t doom_loop_interface = {D_ProcessEvents, G_BuildTiccmd,
  *
  ****************************************************************************/
 
-static void LoadGameSettings(net_gamesettings_t *settings)
+static void load_game_settings(net_gamesettings_t *settings)
 {
   unsigned int i;
 
@@ -150,7 +169,7 @@ static void LoadGameSettings(net_gamesettings_t *settings)
 }
 
 /****************************************************************************
- * Name: SaveGameSettings
+ * Name: save_game_settings
  *
  * Description:
  *  Save the game settings from global variables to the specified
@@ -158,7 +177,7 @@ static void LoadGameSettings(net_gamesettings_t *settings)
  *
  ****************************************************************************/
 
-static void SaveGameSettings(net_gamesettings_t *settings)
+static void save_game_settings(net_gamesettings_t *settings)
 {
   /* Fill in game settings structure with appropriate parameters
    * for the new game
@@ -180,7 +199,7 @@ static void SaveGameSettings(net_gamesettings_t *settings)
       m_parm_exists("-shorttics");
 }
 
-static void InitConnectData(net_connect_data_t *connect_data)
+static void init_connect_data(net_connect_data_t *connect_data)
 {
   boolean shorttics;
 
@@ -246,9 +265,10 @@ void D_ConnectNetGame(void)
 {
   net_connect_data_t connect_data;
 
-  InitConnectData(&connect_data);
+  init_connect_data(&connect_data);
   netgame = D_InitNetGame(&connect_data);
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   /* @category net
    *
    * Start the game playing as though in a netgame with a single
@@ -260,6 +280,7 @@ void D_ConnectNetGame(void)
     {
       netgame = true;
     }
+#endif
 }
 
 /****************************************************************************
@@ -279,11 +300,11 @@ void D_CheckNetGame(void)
       autostart = true;
     }
 
-  D_RegisterLoopCallbacks(&doom_loop_interface);
+  D_RegisterLoopCallbacks(&g_doom_loop_interface);
 
-  SaveGameSettings(&settings);
+  save_game_settings(&settings);
   D_StartNetGame(&settings, NULL);
-  LoadGameSettings(&settings);
+  load_game_settings(&settings);
 
   printf("startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",
          startskill, deathmatch, startmap, startepisode);

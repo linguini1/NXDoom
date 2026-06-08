@@ -30,6 +30,7 @@
 #include "m_argv.h"
 #include "m_fixed.h"
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
 #include "net_client.h"
 #include "net_gui.h"
 #include "net_io.h"
@@ -37,6 +38,7 @@
 #include "net_query.h"
 #include "net_sdl.h"
 #include "net_server.h"
+#endif
 
 // The complete set of data for a particular tic.
 
@@ -117,6 +119,11 @@ static boolean local_playeringame[NET_MAXPLAYERS];
 
 static int player_class;
 
+#ifndef CONFIG_GAMES_NXDOOM_NET
+static boolean net_client_connected = false;
+static boolean drone = false;
+#endif
+
 // 35 fps clock adjusted by offsetms milliseconds
 
 static int GetAdjustedTime(void)
@@ -177,10 +184,12 @@ static boolean BuildNewTic(void)
   memset(&cmd, 0, sizeof(ticcmd_t));
   loop_interface->BuildTiccmd(&cmd, maketic);
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   if (net_client_connected)
     {
       NET_CL_SendTiccmd(&cmd, maketic);
     }
+#endif
 
   ticdata[maketic % BACKUPTICS].cmds[localplayer] = cmd;
   ticdata[maketic % BACKUPTICS].ingame[localplayer] = true;
@@ -210,8 +219,10 @@ void NetUpdate(void)
 
   // Run network subsystems
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   NET_CL_Run();
   net_sv_run();
+#endif
 
   // check time
   nowtime = GetAdjustedTime() / ticdup;
@@ -300,6 +311,7 @@ void D_StartGameLoop(void) { lasttime = GetAdjustedTime() / ticdup; }
 // Block until the game start message is received from the server.
 //
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
 static void BlockUntilStart(net_gamesettings_t *settings,
                             netgame_startup_callback_t callback)
 {
@@ -322,6 +334,7 @@ static void BlockUntilStart(net_gamesettings_t *settings,
       usleep(100000);
     }
 }
+#endif
 
 void D_StartNetGame(net_gamesettings_t *settings,
                     netgame_startup_callback_t callback)
@@ -373,6 +386,7 @@ void D_StartNetGame(net_gamesettings_t *settings,
   else
     settings->ticdup = 1;
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   if (net_client_connected)
     {
       // Send our game settings and block until game start is received
@@ -390,6 +404,7 @@ void D_StartNetGame(net_gamesettings_t *settings,
     {
       settings->consoleplayer = 0;
     }
+#endif
 
   // Set the local player and playeringame[] values.
 
@@ -419,6 +434,7 @@ void D_StartNetGame(net_gamesettings_t *settings,
 
 boolean D_InitNetGame(net_connect_data_t *connect_data)
 {
+#ifdef CONFIG_GAMES_NXDOOM_NET
   boolean result = false;
   net_addr_t *addr = NULL;
   int i;
@@ -426,9 +442,11 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
   // Call D_QuitNetGame on exit:
 
   i_at_exit(D_QuitNetGame, true);
+#endif
 
   player_class = connect_data->player_class;
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
   //!
   // @category net
   //
@@ -514,8 +532,11 @@ boolean D_InitNetGame(net_connect_data_t *connect_data)
     }
 
   return result;
+#endif
+  return false;
 }
 
+#ifdef CONFIG_GAMES_NXDOOM_NET
 //
 // D_QuitNetGame
 // Called before quitting to leave a net game
@@ -526,6 +547,7 @@ void D_QuitNetGame(void)
   net_sv_shutdown();
   NET_CL_Disconnect();
 }
+#endif
 
 static int GetLowTic(void)
 {
