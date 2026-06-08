@@ -66,7 +66,7 @@ static void ChecksumAddLump(sha1_context_t *sha1_context, lumpinfo_t *lump)
   SHA1_UpdateInt32(sha1_context, lump->size);
 }
 
-void W_Checksum(sha1_digest_t digest)
+void w_checksum(sha1_digest_t digest)
 {
   sha1_context_t sha1_context;
   unsigned int i;

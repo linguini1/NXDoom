@@ -51,7 +51,7 @@ extern boolean devparm; // DEBUG: launched with -devparm
 //
 extern game_mode_t gamemode;
 extern gamemission_t gamemission;
-extern GameVersion_t gameversion;
+extern game_version_t gameversion;
 extern GameVariant_t gamevariant;
 
 // Convenience macro.
@@ -222,7 +222,7 @@ extern boolean precache;
 //  to force a wipe on the next draw
 extern gamestate_t wipegamestate;
 
-extern int mouseSensitivity;
+extern int g_mouse_sensitivity;
 
 extern int bodyqueslot;
 

@@ -82,10 +82,10 @@ fixed_t cachedxstep[SCREENHEIGHT];
 fixed_t cachedystep[SCREENHEIGHT];
 
 //
-// R_InitPlanes
+// r_initPlanes
 // Only at game startup.
 //
-void R_InitPlanes(void)
+void r_initPlanes(void)
 {
   // Doh!
 }

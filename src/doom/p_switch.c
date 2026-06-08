@@ -91,10 +91,10 @@ int numswitches;
 button_t buttonlist[MAXBUTTONS];
 
 //
-// P_InitSwitchList
+// p_initSwitchList
 // Only called at game initialization.
 //
-void P_InitSwitchList(void)
+void p_initSwitchList(void)
 {
   int i, slindex, episode;
 

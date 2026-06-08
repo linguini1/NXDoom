@@ -427,7 +427,7 @@ static void check_auto_latch(void)
  * Public Functions
  ****************************************************************************/
 
-void NET_WaitForLaunch(void)
+void net_wait_for_launch(void)
 {
   if (!txt_init())
     {
@@ -453,7 +453,7 @@ void NET_WaitForLaunch(void)
       txt_dispatch_events();
       txt_draw_desktop();
 
-      NET_CL_Run();
+      net_cl_run();
       net_sv_run();
 
       if (!net_client_connected)

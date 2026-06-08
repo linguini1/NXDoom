@@ -29,32 +29,32 @@
 //
 void G_DeathMatchSpawnPlayer(int playernum);
 
-void G_InitNew(skill_t skill, int episode, int map);
+void g_init_new(skill_t skill, int episode, int map);
 
-// Can be called by the startup code or M_Responder.
+// Can be called by the startup code or m_responder.
 // A normal game starts at map 1,
 // but a warp test can start elsewhere
 void g_deferred_init_new(skill_t skill, int episode, int map);
 
-void G_DeferedPlayDemo(const char *demo);
+void g_defered_play_demo(const char *demo);
 
-// Can be called by the startup code or M_Responder,
+// Can be called by the startup code or m_responder,
 // calls P_SetupLevel or W_EnterWorld.
-void G_LoadGame(char *name);
+void g_load_game(char *name);
 
 void G_DoLoadGame(void);
 
-// Called by M_Responder.
+// Called by m_responder.
 void G_SaveGame(int slot, char *description);
 
 // Only called by startup code.
-void G_RecordDemo(const char *name);
+void g_record_demo(const char *name);
 
-void G_BeginRecording(void);
+void g_begin_recording(void);
 
 void G_PlayDemo(char *name);
-void G_TimeDemo(char *name);
-boolean G_CheckDemoStatus(void);
+void g_time_demo(char *name);
+boolean g_check_demo_status(void);
 
 void G_ExitLevel(void);
 void G_SecretExitLevel(void);
@@ -63,15 +63,15 @@ void g_world_done(void);
 
 // Read current data from inputs and build a player movement command.
 
-void G_BuildTiccmd(ticcmd_t *cmd, int maketic);
+void g_build_ticcmd(ticcmd_t *cmd, int maketic);
 
-void G_Ticker(void);
-boolean G_Responder(event_t *ev);
+void g_ticker(void);
+boolean g_responder(event_t *ev);
 
 void G_ScreenShot(void);
 
 void G_DrawMouseSpeedBox(void);
-int G_VanillaVersionCode(void);
+int g_vanilla_version_code(void);
 
 extern int vanilla_savegame_limit;
 extern int vanilla_demo_limit;

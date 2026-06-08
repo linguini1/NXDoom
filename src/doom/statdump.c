@@ -292,7 +292,7 @@ static void PrintStats(FILE *stream, const wbstartstruct_t *stats)
   fprintf(stream, "\n");
 }
 
-void StatCopy(const wbstartstruct_t *stats)
+void stat_copy(const wbstartstruct_t *stats)
 {
   if (m_parm_exists("-statdump") && num_captured_stats < MAX_CAPTURES)
     {
@@ -302,7 +302,7 @@ void StatCopy(const wbstartstruct_t *stats)
     }
 }
 
-void StatDump(void)
+void stat_dump(void)
 {
   FILE *dumpfile;
   int i;

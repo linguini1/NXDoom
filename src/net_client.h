@@ -55,16 +55,16 @@ extern boolean drone;
  * Public Function Prototypes
  ****************************************************************************/
 
-boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data);
-void NET_CL_Disconnect(void);
-void NET_CL_Run(void);
+boolean net_cl_connect(net_addr_t *addr, net_connect_data_t *data);
+void net_cl_disconnect(void);
+void net_cl_run(void);
 void NET_CL_Init(void);
 void NET_CL_LaunchGame(void);
-void NET_CL_StartGame(net_gamesettings_t *settings);
-void NET_CL_SendTiccmd(ticcmd_t *ticcmd, int maketic);
-boolean NET_CL_GetSettings(net_gamesettings_t *_settings);
-void NET_Init(void);
+void net_cl_start_game(net_gamesettings_t *settings);
+void net_cl_send_ticcmd(ticcmd_t *ticcmd, int maketic);
+boolean net_cl_get_settings(net_gamesettings_t *_settings);
+void net_init(void);
 
-void NET_BindVariables(void);
+void net_bind_variables(void);
 
 #endif /* NET_CLIENT_H */

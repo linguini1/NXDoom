@@ -61,7 +61,7 @@ net_addr_t *net_resolve_address(net_context_t *context, const char *addr)
 
   for (i = 0; i < context->num_modules; ++i)
     {
-      result = context->modules[i]->ResolveAddress(addr);
+      result = context->modules[i]->resolve_address(addr);
 
       if (result != NULL)
         {

@@ -36,9 +36,9 @@ int leveltime;
 thinker_t thinkercap;
 
 //
-// P_InitThinkers
+// p_initThinkers
 //
-void P_InitThinkers(void) { thinkercap.prev = thinkercap.next = &thinkercap; }
+void p_initThinkers(void) { thinkercap.prev = thinkercap.next = &thinkercap; }
 
 //
 // P_AddThinker

@@ -29,16 +29,16 @@
 #define DEH_VANILLA_NUMSTATES 966
 #define DEH_VANILLA_NUMSFX 107
 
-void DEH_ParseCommandLine(void);
-int DEH_LoadFile(const char *filename);
-void DEH_AutoLoadPatches(const char *path);
-int DEH_LoadLump(int lumpnum, boolean allow_long, boolean allow_error);
-int DEH_LoadLumpByName(const char *name, boolean allow_long,
+void deh_parse_command_line(void);
+int deh_loadfile(const char *filename);
+void deh_auto_load_patches(const char *path);
+int deh_load_lump(int lumpnum, boolean allow_long, boolean allow_error);
+int deh_load_lump_by_name(const char *name, boolean allow_long,
                        boolean allow_error);
 
 boolean DEH_ParseAssignment(char *line, char **variable_name, char **value);
 
-void DEH_Checksum(sha1_digest_t digest);
+void deh_checksum(sha1_digest_t digest);
 
 extern boolean deh_allow_extended_strings;
 extern boolean deh_allow_long_strings;

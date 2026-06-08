@@ -430,7 +430,7 @@ void m_bind_menu_controls(void)
   m_bind_int_variable("key_spy", &key_spy);
 }
 
-void M_BindChatControls(unsigned int num_players)
+void m_bind_chat_controls(unsigned int num_players)
 {
   char name[32];  // haleyjd: 20 not large enough - Thank you, come again!
   unsigned int i; // haleyjd: signedness conflict

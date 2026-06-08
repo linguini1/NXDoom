@@ -112,7 +112,7 @@ int D_GetNumEpisodes(gamemission_t mission, game_mode_t mode)
 static struct
 {
   gamemission_t mission;
-  GameVersion_t version;
+  game_version_t version;
 } valid_versions[] = {
     {doom, exe_doom_1_2},     {doom, exe_doom_1_5},
     {doom, exe_doom_1_666},   {doom, exe_doom_1_7},
@@ -124,7 +124,7 @@ static struct
     {strife, exe_strife_1_2}, {strife, exe_strife_1_31},
 };
 
-boolean d_valid_game_version(gamemission_t mission, GameVersion_t version)
+boolean d_valid_game_version(gamemission_t mission, game_version_t version)
 {
   int i;
 

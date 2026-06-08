@@ -63,13 +63,13 @@
 //
 // defaulted values
 //
-int mouseSensitivity = 5;
+int g_mouse_sensitivity = 5;
 
 // Show messages has default, 0 = off, 1 = on
-int showMessages = 1;
+int g_show_messages = 1;
 
 // Blocky mode, has default, 0 = high, 1 = normal
-int detailLevel = 0;
+int g_detail_level = 0;
 int screenblocks = 9;
 
 // temp for screenblocks (0-9)
@@ -403,7 +403,7 @@ void M_ReadSaveStrings(void)
   for (i = 0; i < load_end; i++)
     {
       int retval;
-      m_str_copy(name, P_SaveGameFile(i), sizeof(name));
+      m_str_copy(name, p_save_game_file(i), sizeof(name));
 
       handle = fopen(name, "rb");
       if (handle == NULL)
@@ -461,9 +461,9 @@ void M_LoadSelect(int choice)
 {
   char name[256];
 
-  m_str_copy(name, P_SaveGameFile(choice), sizeof(name));
+  m_str_copy(name, p_save_game_file(choice), sizeof(name));
 
-  G_LoadGame(name);
+  g_load_game(name);
   M_ClearMenus();
 }
 
@@ -504,7 +504,7 @@ void M_DrawSave(void)
 }
 
 //
-// M_Responder calls this when user is finished
+// m_responder calls this when user is finished
 //
 void M_DoSave(int slot)
 {
@@ -546,7 +546,7 @@ static void SetDefaultSaveName(int slot)
 }
 
 //
-// User wants to save. Start string input for M_Responder
+// User wants to save. Start string input for m_responder
 //
 void M_SaveSelect(int choice)
 {
@@ -839,14 +839,14 @@ void M_DrawOptions(void)
 
   v_draw_patch_direct(
       OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * detail,
-      w_cache_lump_name((detailNames[detailLevel]), PU_CACHE));
+      w_cache_lump_name((detailNames[g_detail_level]), PU_CACHE));
 
   v_draw_patch_direct(OptionsDef.x + 120,
                       OptionsDef.y + LINEHEIGHT * messages,
-                      w_cache_lump_name((msgNames[showMessages]), PU_CACHE));
+                      w_cache_lump_name((msgNames[g_show_messages]), PU_CACHE));
 
   M_DrawThermo(OptionsDef.x, OptionsDef.y + LINEHEIGHT * (mousesens + 1), 10,
-               mouseSensitivity);
+               g_mouse_sensitivity);
 
   M_DrawThermo(OptionsDef.x, OptionsDef.y + LINEHEIGHT * (scrnsize + 1), 9,
                screenSize);
@@ -861,9 +861,9 @@ void M_ChangeMessages(int choice)
 {
   // warning: unused parameter `int choice'
   choice = 0;
-  showMessages = 1 - showMessages;
+  g_show_messages = 1 - g_show_messages;
 
-  if (!showMessages)
+  if (!g_show_messages)
     players[consoleplayer].message = (MSGOFF);
   else
     players[consoleplayer].message = (MSGON);
@@ -880,7 +880,7 @@ void M_EndGameResponse(int key)
 
   currentMenu->lastOn = itemOn;
   M_ClearMenus();
-  D_StartTitle();
+  d_start_title();
 }
 
 void M_EndGame(int choice)
@@ -984,10 +984,10 @@ void M_ChangeSensitivity(int choice)
   switch (choice)
     {
     case 0:
-      if (mouseSensitivity) mouseSensitivity--;
+      if (g_mouse_sensitivity) g_mouse_sensitivity--;
       break;
     case 1:
-      if (mouseSensitivity < 9) mouseSensitivity++;
+      if (g_mouse_sensitivity < 9) g_mouse_sensitivity++;
       break;
     }
 }
@@ -995,11 +995,11 @@ void M_ChangeSensitivity(int choice)
 void M_ChangeDetail(int choice)
 {
   choice = 0;
-  detailLevel = 1 - detailLevel;
+  g_detail_level = 1 - g_detail_level;
 
-  R_SetViewSize(screenblocks, detailLevel);
+  R_SetViewSize(screenblocks, g_detail_level);
 
-  if (!detailLevel)
+  if (!g_detail_level)
     players[consoleplayer].message = (DETAILHI);
   else
     players[consoleplayer].message = (DETAILLO);
@@ -1025,7 +1025,7 @@ void M_SizeDisplay(int choice)
       break;
     }
 
-  R_SetViewSize(screenblocks, detailLevel);
+  R_SetViewSize(screenblocks, g_detail_level);
 }
 
 //
@@ -1152,9 +1152,9 @@ static boolean IsNullKey(int key)
 //
 
 //
-// M_Responder
+// m_responder
 //
-boolean M_Responder(event_t *ev)
+boolean m_responder(event_t *ev)
 {
   int ch;
   int key;
@@ -1796,11 +1796,11 @@ static void M_DrawOPLDev(void)
 #endif
 
 //
-// M_Drawer
+// m_drawer
 // Called after the view has been rendered,
 // but before it has been blitted.
 //
-void M_Drawer(void)
+void m_drawer(void)
 {
   static short x;
   static short y;
@@ -1903,9 +1903,9 @@ void M_SetupNextMenu(menu_t *menudef)
 }
 
 //
-// M_Ticker
+// m_ticker
 //
-void M_Ticker(void)
+void m_ticker(void)
 {
   if (--skullAnimCounter <= 0)
     {
@@ -1915,9 +1915,9 @@ void M_Ticker(void)
 }
 
 //
-// M_Init
+// m_init
 //
-void M_Init(void)
+void m_init(void)
 {
   currentMenu = &MainDef;
   menuactive = 0;

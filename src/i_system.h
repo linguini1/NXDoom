@@ -44,7 +44,7 @@ boolean I_ConsoleStdout(void);
 // for normal input.
 ticcmd_t *I_BaseTiccmd(void);
 
-// Called by M_Responder when quit is selected.
+// Called by m_responder when quit is selected.
 // Clean exit, displays sell blurb.
 void I_Quit(void) NORETURN;
 
@@ -68,14 +68,14 @@ void I_BindVariables(void);
 
 // Print startup banner copyright message.
 
-void I_PrintStartupBanner(const char *gamedescription);
+void i_print_startup_banner(const char *gamedescription);
 
 // Print a centered text banner displaying the given string.
 
-void I_PrintBanner(const char *text);
+void i_print_banner(const char *text);
 
 // Print a dividing line for startup banners.
 
-void I_PrintDivider(void);
+void i_print_divider(void);
 
 #endif

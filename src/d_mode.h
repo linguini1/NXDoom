@@ -75,7 +75,7 @@ typedef enum
   exe_hexen_1_1r2, // Hexen 1.1 (alternate exe)
   exe_strife_1_2,  // Strife v1.2
   exe_strife_1_31  // Strife v1.31
-} GameVersion_t;
+} game_version_t;
 
 // What IWAD variant are we using?
 
@@ -100,7 +100,7 @@ typedef enum
 } skill_t;
 
 boolean D_ValidGameMode(gamemission_t mission, game_mode_t mode);
-boolean d_valid_game_version(gamemission_t mission, GameVersion_t version);
+boolean d_valid_game_version(gamemission_t mission, game_version_t version);
 boolean d_valid_episode_map(gamemission_t mission, game_mode_t mode, int episode,
                           int map);
 int D_GetNumEpisodes(gamemission_t mission, game_mode_t mode);

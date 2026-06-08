@@ -40,14 +40,14 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Name: I_Endoom
+ * Name: i_endoom
  *
  * Description:
  *  Displays the text mode ending screen after the game quits
  *
  ****************************************************************************/
 
-void I_Endoom(byte *endoom_data)
+void i_endoom(byte *endoom_data)
 {
   unsigned char *screendata;
   int y;

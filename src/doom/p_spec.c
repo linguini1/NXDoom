@@ -74,7 +74,7 @@ typedef struct
 #define MAXANIMS 32
 
 //
-// P_InitPicAnims
+// p_initPicAnims
 //
 
 // Floor/ceiling animation sequences,
@@ -133,7 +133,7 @@ anim_t *lastanim;
 short numlinespecials;
 line_t *linespeciallist[MAXLINEANIMS1_2];
 
-void P_InitPicAnims(void)
+void p_initPicAnims(void)
 {
   int i;
 
@@ -166,7 +166,7 @@ void P_InitPicAnims(void)
       lastanim->numpics = lastanim->picnum - lastanim->basepic + 1;
 
       if (lastanim->numpics < 2)
-        i_error("P_InitPicAnims: bad cycle from %s to %s", startname,
+        i_error("p_initPicAnims: bad cycle from %s to %s", startname,
                 endname);
 
       lastanim->speed = animdefs[i].speed;
@@ -1407,5 +1407,5 @@ void P_SpawnSpecials(void)
     memset(&buttonlist[i], 0, sizeof(button_t));
 
   // UNUSED: no horizonal sliders.
-  //	P_InitSlidingDoorFrames();
+  //	p_initSlidingDoorFrames();
 }

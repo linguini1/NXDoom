@@ -194,7 +194,7 @@ int wipe_exitMelt(int width, int height, int ticks)
   return 0;
 }
 
-int wipe_StartScreen(int x, int y, int width, int height)
+int wipe_start_screen(int x, int y, int width, int height)
 {
   wipe_scr_start = z_malloc(
       SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_start), PU_STATIC, NULL);
@@ -202,7 +202,7 @@ int wipe_StartScreen(int x, int y, int width, int height)
   return 0;
 }
 
-int wipe_EndScreen(int x, int y, int width, int height)
+int wipe_endscreen(int x, int y, int width, int height)
 {
   wipe_scr_end = z_malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end),
                           PU_STATIC, NULL);
@@ -211,7 +211,7 @@ int wipe_EndScreen(int x, int y, int width, int height)
   return 0;
 }
 
-int wipe_ScreenWipe(int wipeno, int x, int y, int width, int height,
+int wipe_screen_wipe(int wipeno, int x, int y, int width, int height,
                     int ticks)
 {
   int rc;

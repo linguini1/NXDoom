@@ -1173,7 +1173,7 @@ void bind_multiple_variables(void)
   switch (gamemission)
     {
     case doom:
-      M_BindChatControls(4);
+      m_bind_chat_controls(4);
       key_multi_msgplayer[0] = 'g';
       key_multi_msgplayer[1] = 'i';
       key_multi_msgplayer[2] = 'b';
@@ -1181,7 +1181,7 @@ void bind_multiple_variables(void)
       break;
 
     case heretic:
-      M_BindChatControls(4);
+      m_bind_chat_controls(4);
       key_multi_msgplayer[0] = 'g';
       key_multi_msgplayer[1] = 'y';
       key_multi_msgplayer[2] = 'r';
@@ -1189,7 +1189,7 @@ void bind_multiple_variables(void)
       break;
 
     case hexen:
-      M_BindChatControls(8);
+      m_bind_chat_controls(8);
       key_multi_msgplayer[0] = 'b';
       key_multi_msgplayer[1] = 'r';
       key_multi_msgplayer[2] = 'y';

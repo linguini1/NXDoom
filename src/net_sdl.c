@@ -318,7 +318,7 @@ void NET_SDL_AddrToString(net_addr_t *addr, char *buffer, int buffer_len)
     }
 }
 
-net_addr_t *NET_SDL_ResolveAddress(const char *address)
+net_addr_t *NET_SDL_resolve_address(const char *address)
 {
   IPaddress ip;
   char *addr_hostname;
@@ -360,7 +360,7 @@ net_addr_t *NET_SDL_ResolveAddress(const char *address)
 net_module_t net_sdl_module = {
     NET_SDL_init_client,     NET_SDL_InitServer,   NET_SDL_SendPacket,
     NET_SDL_RecvPacket,     NET_SDL_AddrToString, NET_SDL_FreeAddress,
-    NET_SDL_ResolveAddress,
+    NET_SDL_resolve_address,
 };
 
 #else // DISABLE_SDL2NET
@@ -385,12 +385,12 @@ static void NET_NULL_AddrToString(net_addr_t *addr, char *buffer,
 
 static void NET_NULL_FreeAddress(net_addr_t *addr) {}
 
-net_addr_t *NET_NULL_ResolveAddress(const char *address) { return NULL; }
+net_addr_t *NET_NULL_resolve_address(const char *address) { return NULL; }
 
 net_module_t net_sdl_module = {
     NET_NULL_init_client,     NET_NULL_InitServer,   NET_NULL_SendPacket,
     NET_NULL_RecvPacket,     NET_NULL_AddrToString, NET_NULL_FreeAddress,
-    NET_NULL_ResolveAddress,
+    NET_NULL_resolve_address,
 };
 
 #endif // DISABLE_SDL2NET

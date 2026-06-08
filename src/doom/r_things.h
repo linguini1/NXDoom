@@ -46,7 +46,7 @@ void R_SortVisSprites(void);
 void r_add_sprites(sector_t *sec);
 void R_AddPSprites(void);
 void R_DrawSprites(void);
-void R_InitSprites(const char **namelist);
+void r_initSprites(const char **namelist);
 void R_ClearSprites(void);
 void R_DrawMasked(void);
 

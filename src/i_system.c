@@ -157,7 +157,7 @@ byte *I_ZoneBase(int *size)
   return zonemem;
 }
 
-void I_PrintBanner(const char *msg)
+void i_print_banner(const char *msg)
 {
   int i;
   int spaces = 35 - (strlen(msg) / 2);
@@ -168,7 +168,7 @@ void I_PrintBanner(const char *msg)
   puts(msg);
 }
 
-void I_PrintDivider(void)
+void i_print_divider(void)
 {
   int i;
 
@@ -180,11 +180,11 @@ void I_PrintDivider(void)
   putchar('\n');
 }
 
-void I_PrintStartupBanner(const char *gamedescription)
+void i_print_startup_banner(const char *gamedescription)
 {
-  I_PrintDivider();
-  I_PrintBanner(gamedescription);
-  I_PrintDivider();
+  i_print_divider();
+  i_print_banner(gamedescription);
+  i_print_divider();
 
   printf(
       " " PACKAGE_NAME
@@ -195,7 +195,7 @@ void I_PrintStartupBanner(const char *gamedescription)
       " copies under certain conditions. See the source for more "
       "information.\n");
 
-  I_PrintDivider();
+  i_print_divider();
 }
 
 //
@@ -214,12 +214,12 @@ void I_Init (void)
 {
     i_check_is_screensaver();
     i_init_timer();
-    I_InitJoystick();
+    i_init_joystick();
 }
 void I_BindVariables(void)
 {
     i_bind_video_variables();
-    I_bind_joystick_variables();
+    i_bind_joystick_variables();
     i_bind_sound_variables();
 }
 */

@@ -721,7 +721,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
   z_free_tags(PU_LEVEL, PU_PURGELEVEL - 1);
 
   // UNUSED w_profile ();
-  P_InitThinkers();
+  p_initThinkers();
 
   // if working with a devlopment map, reload it
   w_reload();
@@ -794,11 +794,11 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 }
 
 //
-// P_Init
+// p_init
 //
-void P_Init(void)
+void p_init(void)
 {
-  P_InitSwitchList();
-  P_InitPicAnims();
-  R_InitSprites(sprnames);
+  p_initSwitchList();
+  p_initPicAnims();
+  r_initSprites(sprnames);
 }

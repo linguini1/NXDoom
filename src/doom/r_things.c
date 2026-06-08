@@ -80,7 +80,7 @@ const char *spritename;
 
 //
 // R_InstallSpriteLump
-// Local function for R_InitSprites.
+// Local function for r_initSprites.
 //
 void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation,
                          boolean flipped)
@@ -98,12 +98,12 @@ void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation,
     {
       // the lump should be used for all rotations
       if (sprtemp[frame].rotate == false)
-        i_error("R_InitSprites: Sprite %s frame %c has "
+        i_error("r_initSprites: Sprite %s frame %c has "
                 "multip rot=0 lump",
                 spritename, 'A' + frame);
 
       if (sprtemp[frame].rotate == true)
-        i_error("R_InitSprites: Sprite %s frame %c has rotations "
+        i_error("r_initSprites: Sprite %s frame %c has rotations "
                 "and a rot=0 lump",
                 spritename, 'A' + frame);
 
@@ -118,7 +118,7 @@ void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation,
 
   // the lump is only used for one rotation
   if (sprtemp[frame].rotate == false)
-    i_error("R_InitSprites: Sprite %s frame %c has rotations "
+    i_error("r_initSprites: Sprite %s frame %c has rotations "
             "and a rot=0 lump",
             spritename, 'A' + frame);
 
@@ -127,7 +127,7 @@ void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation,
   // make 0 based
   rotation--;
   if (sprtemp[frame].lump[rotation] != -1)
-    i_error("R_InitSprites: Sprite %s : %c : %c "
+    i_error("r_initSprites: Sprite %s : %c : %c "
             "has two lumps mapped to it",
             spritename, 'A' + frame, '1' + rotation);
 
@@ -136,7 +136,7 @@ void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation,
 }
 
 //
-// R_InitSpriteDefs
+// r_initSpriteDefs
 // Pass a null terminated list of sprite names
 //  (4 chars exactly) to be used.
 // Builds the sprite rotation matrixes to account
@@ -150,7 +150,7 @@ void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation,
 //  letter/number appended.
 // The rotation character can be 0 to signify no rotations.
 //
-void R_InitSpriteDefs(const char **namelist)
+void r_initSpriteDefs(const char **namelist)
 {
   const char **check;
   int i;
@@ -225,7 +225,7 @@ void R_InitSpriteDefs(const char **namelist)
             {
             case -1:
               // no rotations were found for that frame at all
-              i_error("R_InitSprites: No patches found "
+              i_error("r_initSprites: No patches found "
                       "for %s frame %c",
                       spritename, frame + 'A');
               break;
@@ -238,7 +238,7 @@ void R_InitSpriteDefs(const char **namelist)
               // must have all 8 frames
               for (rotation = 0; rotation < 8; rotation++)
                 if (sprtemp[frame].lump[rotation] == -1)
-                  i_error("R_InitSprites: Sprite %s frame %c "
+                  i_error("r_initSprites: Sprite %s frame %c "
                           "is missing rotations",
                           spritename, frame + 'A');
               break;
@@ -262,10 +262,10 @@ vissprite_t *vissprite_p;
 int newvissprite;
 
 //
-// R_InitSprites
+// r_initSprites
 // Called at program start.
 //
-void R_InitSprites(const char **namelist)
+void r_initSprites(const char **namelist)
 {
   int i;
 
@@ -274,7 +274,7 @@ void R_InitSprites(const char **namelist)
       negonearray[i] = -1;
     }
 
-  R_InitSpriteDefs(namelist);
+  r_initSpriteDefs(namelist);
 }
 
 //

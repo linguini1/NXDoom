@@ -111,14 +111,14 @@ void R_AddPointToBox(int x, int y, fixed_t *box);
 //
 
 // Called by G_Drawer.
-void R_RenderPlayerView(player_t *player);
+void r_render_player_view(player_t *player);
 
 // Called by startup code.
-void R_Init(void);
+void r_init(void);
 
-// Called by M_Responder.
+// Called by m_responder.
 void R_SetViewSize(int blocks, int detail);
 
-void R_ExecuteSetViewSize(void);
+void r_execute_set_view_size(void);
 
 #endif

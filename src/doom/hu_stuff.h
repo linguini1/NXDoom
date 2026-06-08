@@ -71,14 +71,14 @@ extern boolean chat_on;
 
 /* HEADS UP TEXT */
 
-void HU_Init(void);
+void hu_init(void);
 void HU_Start(void);
 
 boolean HU_Responder(event_t *ev);
 
 void HU_Ticker(void);
-void HU_Drawer(void);
+void hu_drawer(void);
 char HU_dequeueChatChar(void);
-void HU_Erase(void);
+void hu_erase(void);
 
 #endif /* __HU_STUFF_H__ */

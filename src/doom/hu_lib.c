@@ -110,7 +110,7 @@ void HUlib_drawTextLine(hu_textline_t *l, boolean drawcursor)
     }
 }
 
-// sorta called by HU_Erase and just better darn get things straight
+// sorta called by hu_erase and just better darn get things straight
 void HUlib_eraseTextLine(hu_textline_t *l)
 {
   int lh;

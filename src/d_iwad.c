@@ -372,7 +372,7 @@ static void BuildIWADDirList(void)
 // Searches WAD search paths for an WAD with a specific filename.
 //
 
-char *D_FindWADByName(const char *name)
+char *d_find_wad_by_name(const char *name)
 {
   char *path;
   char *probe;
@@ -432,7 +432,7 @@ char *d_try_find_wad_by_name(const char *filename)
 {
   char *result;
 
-  result = D_FindWADByName(filename);
+  result = d_find_wad_by_name(filename);
 
   if (result != NULL)
     {
@@ -451,7 +451,7 @@ char *d_try_find_wad_by_name(const char *filename)
 // should be executed (notably loading PWADs).
 //
 
-char *D_FindIWAD(int mask, gamemission_t *mission)
+char *d_find_iwad(int mask, gamemission_t *mission)
 {
   char *result;
   const char *iwadfile;
@@ -474,7 +474,7 @@ char *D_FindIWAD(int mask, gamemission_t *mission)
 
       iwadfile = myargv[iwadparm + 1];
 
-      result = D_FindWADByName(iwadfile);
+      result = d_find_wad_by_name(iwadfile);
 
       if (result == NULL)
         {
@@ -521,7 +521,7 @@ const iwad_t **d_find_all_iwads(int mask)
           continue;
         }
 
-      filename = D_FindWADByName(iwads[i].name);
+      filename = d_find_wad_by_name(iwads[i].name);
 
       if (filename != NULL)
         {
@@ -541,7 +541,7 @@ const iwad_t **d_find_all_iwads(int mask)
 // Get the IWAD name used for savegames.
 //
 
-const char *D_SaveGameIWADName(gamemission_t gamemission,
+const char *d_save_game_iwad_name(gamemission_t gamemission,
                                GameVariant_t gamevariant)
 {
   size_t i;

@@ -2181,7 +2181,7 @@ void net_sv_shutdown(void)
 
       /* Run the client code in case this is a loopback client. */
 
-      NET_CL_Run();
+      net_cl_run();
       net_sv_run();
 
       /* Don't hog the CPU */
