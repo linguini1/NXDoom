@@ -329,7 +329,7 @@ void R_DrawPlanes(void)
   int lumpnum;
 
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
-  if (ds_p - drawsegs > MAXDRAWSEGS)
+  if (ds_p - drawsegs > CONFIG_GAMES_NXDOOM_MAXDRAWSEGS)
     i_error("R_DrawPlanes: drawsegs overflow (%td)", ds_p - drawsegs);
 
   if (lastvisplane - visplanes > CONFIG_GAMES_NXDOOM_MAXVISPLANES)

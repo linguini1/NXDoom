@@ -78,7 +78,7 @@ line_t *linedef;
 sector_t *frontsector;
 sector_t *backsector;
 
-drawseg_t drawsegs[MAXDRAWSEGS];
+drawseg_t drawsegs[CONFIG_GAMES_NXDOOM_MAXDRAWSEGS];
 drawseg_t *ds_p;
 
 /* newend is one past the last valid seg */

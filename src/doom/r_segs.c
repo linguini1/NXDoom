@@ -348,7 +348,7 @@ void r_store_wall_range(int start, int stop)
   int lightnum;
 
   // don't overflow and crash
-  if (ds_p == &drawsegs[MAXDRAWSEGS]) return;
+  if (ds_p == &drawsegs[CONFIG_GAMES_NXDOOM_MAXDRAWSEGS]) return;
 
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (start >= viewwidth || start > stop)
