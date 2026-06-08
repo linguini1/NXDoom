@@ -27,7 +27,7 @@
 #include "net_server.h"
 #include "z_zone.h"
 
-void NET_CL_Run(void)
+void net_cl_run(void)
 {
   // No client present :-)
   //

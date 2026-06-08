@@ -710,9 +710,9 @@ static void F_ArtScreenDrawer(void)
 }
 
 //
-// F_Drawer
+// f_drawer
 //
-void F_Drawer(void)
+void f_drawer(void)
 {
   switch (finalestage)
     {

@@ -578,7 +578,7 @@ void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
 
 slideframe_t slideFrames[MAXSLIDEDOORS];
 
-void P_InitSlidingDoorFrames(void)
+void p_initSlidingDoorFrames(void)
 {
     int		i;
     int		f1;

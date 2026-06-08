@@ -89,7 +89,7 @@ void G_DoVictory(void);
 void G_DoWorldDone(void);
 void G_DoSaveGame(void);
 
-// Gamestate the last time G_Ticker was called.
+// Gamestate the last time g_ticker was called.
 
 gamestate_t oldgamestate;
 
@@ -311,12 +311,12 @@ static int G_NextWeapon(int direction)
 }
 
 //
-// G_BuildTiccmd
+// g_build_ticcmd
 // Builds a ticcmd from all of the available inputs
 // or reads it from the demo buffer.
 // If recording a demo, write it out
 //
-void G_BuildTiccmd(ticcmd_t *cmd, int maketic)
+void g_build_ticcmd(ticcmd_t *cmd, int maketic)
 {
   int i;
   boolean strafe;
@@ -747,10 +747,10 @@ static void SetMouseButtons(unsigned int buttons_mask)
 }
 
 //
-// G_Responder
+// g_responder
 // Get info needed to make ticcmd_ts for the players.
 //
-boolean G_Responder(event_t *ev)
+boolean g_responder(event_t *ev)
 {
   // allow spy mode changes even during the demo
   if (gamestate == GS_LEVEL && ev->type == ev_keydown &&
@@ -841,8 +841,8 @@ boolean G_Responder(event_t *ev)
 
     case ev_mouse:
       SetMouseButtons(ev->data1);
-      mousex = ev->data2 * (mouseSensitivity + 5) / 10;
-      mousey = ev->data3 * (mouseSensitivity + 5) / 10;
+      mousex = ev->data2 * (g_mouse_sensitivity + 5) / 10;
+      mousey = ev->data3 * (g_mouse_sensitivity + 5) / 10;
       return true; // eat events
 
     case ev_joystick:
@@ -860,10 +860,10 @@ boolean G_Responder(event_t *ev)
 }
 
 //
-// G_Ticker
+// g_ticker
 // Make ticcmd_ts for the players.
 //
-void G_Ticker(void)
+void g_ticker(void)
 {
   int i;
   int buf;
@@ -1030,7 +1030,7 @@ void G_Ticker(void)
       break;
 
     case GS_DEMOSCREEN:
-      D_PageTicker();
+      d_page_ticker();
       break;
     }
 }
@@ -1507,7 +1507,7 @@ void G_DoCompleted(void)
   viewactive = false;
   automapactive = false;
 
-  StatCopy(&wminfo);
+  stat_copy(&wminfo);
 
   wi_start(&wminfo);
 }
@@ -1554,7 +1554,7 @@ void G_DoWorldDone(void)
 
 char savename[256];
 
-void G_LoadGame(char *name)
+void g_load_game(char *name)
 {
   m_str_copy(savename, name, sizeof(savename));
   gameaction = ga_loadgame;
@@ -1584,7 +1584,7 @@ void G_DoLoadGame(void)
   savedleveltime = leveltime;
 
   // load a base level
-  G_InitNew(gameskill, gameepisode, gamemap);
+  g_init_new(gameskill, gameepisode, gamemap);
 
   leveltime = savedleveltime;
 
@@ -1598,10 +1598,10 @@ void G_DoLoadGame(void)
 
   fclose(save_stream);
 
-  if (setsizeneeded) R_ExecuteSetViewSize();
+  if (setsizeneeded) r_execute_set_view_size();
 
   // draw the pattern into the back screen
-  R_FillBackScreen();
+  r_fill_back_screen();
 }
 
 //
@@ -1624,7 +1624,7 @@ void G_DoSaveGame(void)
 
   recovery_savegame_file = NULL;
   temp_savegame_file = P_TempSaveGameFile();
-  savegame_file = P_SaveGameFile(savegameslot);
+  savegame_file = p_save_game_file(savegameslot);
 
   // Open the savegame file for writing.  We write to a temporary file
   // and then rename it at the end if it was successfully written.
@@ -1690,11 +1690,11 @@ void G_DoSaveGame(void)
   players[consoleplayer].message = (GGSAVED);
 
   // draw the pattern into the back screen
-  R_FillBackScreen();
+  r_fill_back_screen();
 }
 
 //
-// G_InitNew
+// g_init_new
 // Can be called by the startup code or the menu task,
 // consoleplayer, displayplayer, playeringame[] should be set.
 //
@@ -1721,11 +1721,11 @@ void G_DoNewGame(void)
   fastparm = false;
   nomonsters = false;
   consoleplayer = 0;
-  G_InitNew(d_skill, d_episode, d_map);
+  g_init_new(d_skill, d_episode, d_map);
   gameaction = ga_nothing;
 }
 
-void G_InitNew(skill_t skill, int episode, int map)
+void g_init_new(skill_t skill, int episode, int map)
 {
   const char *skytexturename;
   int i;
@@ -1890,7 +1890,7 @@ void G_ReadDemoTiccmd(ticcmd_t *cmd)
   if (*demo_p == DEMOMARKER)
     {
       // end of demo data stream
-      G_CheckDemoStatus();
+      g_check_demo_status();
       return;
     }
   cmd->forwardmove = ((signed char)*demo_p++);
@@ -1948,7 +1948,7 @@ void G_WriteDemoTiccmd(ticcmd_t *cmd)
   byte *demo_start;
 
   if (gamekeydown[key_demo_quit]) // press q to end demo recording
-    G_CheckDemoStatus();
+    g_check_demo_status();
 
   demo_start = demo_p;
 
@@ -1977,7 +1977,7 @@ void G_WriteDemoTiccmd(ticcmd_t *cmd)
       if (vanilla_demo_limit)
         {
           // no more space
-          G_CheckDemoStatus();
+          g_check_demo_status();
           return;
         }
       else
@@ -1993,9 +1993,9 @@ void G_WriteDemoTiccmd(ticcmd_t *cmd)
 }
 
 //
-// G_RecordDemo
+// g_record_demo
 //
-void G_RecordDemo(const char *name)
+void g_record_demo(const char *name)
 {
   size_t demoname_size;
   int i;
@@ -2024,7 +2024,7 @@ void G_RecordDemo(const char *name)
 }
 
 // Get the demo version code appropriate for the version set in gameversion.
-int G_VanillaVersionCode(void)
+int g_vanilla_version_code(void)
 {
   switch (gameversion)
     {
@@ -2040,7 +2040,7 @@ int G_VanillaVersionCode(void)
     }
 }
 
-void G_BeginRecording(void)
+void g_begin_recording(void)
 {
   int i;
 
@@ -2053,7 +2053,7 @@ void G_BeginRecording(void)
   //
 
   longtics =
-      D_NonVanillaRecord(m_parm_exists("-longtics"), "Doom 1.91 demo format");
+      d_non_vanilla_record(m_parm_exists("-longtics"), "Doom 1.91 demo format");
 
   // If not recording a longtics demo, record in low res
   lowres_turn = !longtics;
@@ -2064,7 +2064,7 @@ void G_BeginRecording(void)
     }
   else if (gameversion > exe_doom_1_2)
     {
-      *demo_p++ = G_VanillaVersionCode();
+      *demo_p++ = g_vanilla_version_code();
     }
 
   *demo_p++ = gameskill;
@@ -2089,7 +2089,7 @@ void G_BeginRecording(void)
 
 static const char *defdemoname;
 
-void G_DeferedPlayDemo(const char *name)
+void g_defered_play_demo(const char *name)
 {
   defdemoname = name;
   gameaction = ga_playdemo;
@@ -2160,12 +2160,12 @@ void G_DoPlayDemo(void)
 
   // Longtics demos use the modified format that is generated by cph's
   // hacked "v1.91" doom exe. This is a non-vanilla extension.
-  if (D_NonVanillaPlayback(demoversion == DOOM_191_VERSION, lumpnum,
+  if (d_non_vanilla_playback(demoversion == DOOM_191_VERSION, lumpnum,
                            "Doom 1.91 demo format"))
     {
       longtics = true;
     }
-  else if (demoversion != G_VanillaVersionCode() &&
+  else if (demoversion != g_vanilla_version_code() &&
            !(gameversion <= exe_doom_1_2 && olddemo))
     {
       const char *message = "Demo is from a different game version!\n"
@@ -2177,7 +2177,7 @@ void G_DoPlayDemo(void)
                             "/info/patches.php\n"
                             "    This appears to be %s.";
 
-      i_error(message, demoversion, G_VanillaVersionCode(),
+      i_error(message, demoversion, g_vanilla_version_code(),
               DemoVersionDescription(demoversion));
     }
 
@@ -2213,7 +2213,7 @@ void G_DoPlayDemo(void)
 
   // don't spend a lot of time in loadlevel
   precache = false;
-  G_InitNew(skill, episode, map);
+  g_init_new(skill, episode, map);
   precache = true;
   starttime = i_get_time();
 
@@ -2222,9 +2222,9 @@ void G_DoPlayDemo(void)
 }
 
 //
-// G_TimeDemo
+// g_time_demo
 //
-void G_TimeDemo(char *name)
+void g_time_demo(char *name)
 {
   //!
   // @category video
@@ -2245,14 +2245,14 @@ void G_TimeDemo(char *name)
 /*
 ===================
 =
-= G_CheckDemoStatus
+= g_check_demo_status
 =
 = Called after a death or level completion to allow demos to be cleaned up
 = Returns true if a new demo loop action will take place
 ===================
 */
 
-boolean G_CheckDemoStatus(void)
+boolean g_check_demo_status(void)
 {
   int endtime;
 
@@ -2289,7 +2289,7 @@ boolean G_CheckDemoStatus(void)
       if (singledemo)
         I_Quit();
       else
-        D_AdvanceDemo();
+        d_advance_demo();
 
       return true;
     }

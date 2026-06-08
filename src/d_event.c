@@ -40,7 +40,7 @@ void D_PostEvent(event_t *ev)
 
 // Read an event from the queue.
 
-event_t *D_PopEvent(void)
+event_t *d_pop_event(void)
 {
   event_t *result;
 

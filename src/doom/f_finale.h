@@ -32,7 +32,7 @@ boolean F_Responder(event_t *ev);
 void F_Ticker(void);
 
 // Called by main loop.
-void F_Drawer(void);
+void f_drawer(void);
 
 void F_StartFinale(void);
 

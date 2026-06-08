@@ -172,7 +172,7 @@ const char *mapnames_commercial[] = {
     // so include blank names instead of spilling over
     "", "", ""};
 
-void HU_Init(void)
+void hu_init(void)
 {
 
   uint8_t i;
@@ -258,7 +258,7 @@ void HU_Start(void)
   headsupactive = true;
 }
 
-void HU_Drawer(void)
+void hu_drawer(void)
 {
 
   HUlib_drawSText(&w_message);
@@ -266,7 +266,7 @@ void HU_Drawer(void)
   if (automapactive) HUlib_drawTextLine(&w_title, false);
 }
 
-void HU_Erase(void)
+void hu_erase(void)
 {
 
   HUlib_eraseSText(&w_message);
@@ -287,7 +287,7 @@ void HU_Ticker(void)
       message_nottobefuckedwith = false;
     }
 
-  if (showMessages || message_dontfuckwithme)
+  if (g_show_messages || message_dontfuckwithme)
     {
 
       // display message if necessary

@@ -186,7 +186,7 @@ void m_bind_strife_controls(void);
 void m_bind_weapon_controls(void);
 void m_bind_map_controls(void);
 void m_bind_menu_controls(void);
-void M_BindChatControls(unsigned int num_players);
+void m_bind_chat_controls(unsigned int num_players);
 
 void m_apply_platform_defaults(void);
 

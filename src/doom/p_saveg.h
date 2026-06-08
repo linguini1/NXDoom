@@ -34,7 +34,7 @@ char *P_TempSaveGameFile(void);
 
 // filename to use for a savegame slot
 
-char *P_SaveGameFile(int slot);
+char *p_save_game_file(int slot);
 
 // Savegame file header read/write functions
 

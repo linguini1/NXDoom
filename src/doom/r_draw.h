@@ -71,16 +71,16 @@ void R_DrawSpan(void);
 // Low resolution mode, 160x200?
 void R_DrawSpanLow(void);
 
-void R_InitBuffer(int width, int height);
+void r_initBuffer(int width, int height);
 
 // Initialize color translation tables,
 //  for player rendering etc.
-void R_InitTranslationTables(void);
+void r_initTranslationTables(void);
 
 // Rendering function.
-void R_FillBackScreen(void);
+void r_fill_back_screen(void);
 
 // If the view size is not full screen, draws a border around it.
-void R_DrawViewBorder(void);
+void r_draw_view_border(void);
 
 #endif

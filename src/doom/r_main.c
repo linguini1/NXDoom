@@ -394,10 +394,10 @@ fixed_t R_PointToDist(fixed_t x, fixed_t y)
 }
 
 /****************************************************************************
- * Name: R_InitPointToAngle
+ * Name: r_initPointToAngle
  ****************************************************************************/
 
-void R_InitPointToAngle(void)
+void r_initPointToAngle(void)
 {
   /* UNUSED - now getting from tables.c */
 #if 0
@@ -478,10 +478,10 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
 }
 
 /****************************************************************************
- * Name: R_InitTables
+ * Name: r_initTables
  ****************************************************************************/
 
-void R_InitTables(void)
+void r_initTables(void)
 {
   /* UNUSED: now getting from tables.c */
 
@@ -515,10 +515,10 @@ void R_InitTables(void)
 }
 
 /****************************************************************************
- * Name: R_InitTextureMapping
+ * Name: r_initTextureMapping
  ****************************************************************************/
 
-void R_InitTextureMapping(void)
+void r_initTextureMapping(void)
 {
   int i;
   int x;
@@ -585,7 +585,7 @@ void R_InitTextureMapping(void)
 }
 
 /****************************************************************************
- * Name: R_InitLightTables
+ * Name: r_initLightTables
  *
  * Description:
  *  Only inits the zlight table, because the scalelight table changes with
@@ -593,7 +593,7 @@ void R_InitTextureMapping(void)
  *
  ****************************************************************************/
 
-void R_InitLightTables(void)
+void r_initLightTables(void)
 {
   int i;
   int j;
@@ -640,10 +640,10 @@ void R_SetViewSize(int blocks, int detail)
 }
 
 /****************************************************************************
- * Name: R_ExecuteSetViewSize
+ * Name: r_execute_set_view_size
  ****************************************************************************/
 
-void R_ExecuteSetViewSize(void)
+void r_execute_set_view_size(void)
 {
   fixed_t cosadj;
   fixed_t dy;
@@ -689,9 +689,9 @@ void R_ExecuteSetViewSize(void)
       spanfunc = R_DrawSpanLow;
     }
 
-  R_InitBuffer(scaledviewwidth, viewheight);
+  r_initBuffer(scaledviewwidth, viewheight);
 
-  R_InitTextureMapping();
+  r_initTextureMapping();
 
   /* psprite scales */
 
@@ -738,28 +738,28 @@ void R_ExecuteSetViewSize(void)
 }
 
 /****************************************************************************
- * Name: R_Init
+ * Name: r_init
  ****************************************************************************/
 
-void R_Init(void)
+void r_init(void)
 {
-  R_InitData();
+  r_initData();
   printf(".");
-  R_InitPointToAngle();
+  r_initPointToAngle();
   printf(".");
-  R_InitTables();
+  r_initTables();
 
-  /* viewwidth / viewheight / detailLevel are set by the defaults */
+  /* viewwidth / viewheight / g_detail_level are set by the defaults */
 
   printf(".");
 
-  R_SetViewSize(screenblocks, detailLevel);
-  R_InitPlanes();
+  R_SetViewSize(screenblocks, g_detail_level);
+  r_initPlanes();
   printf(".");
-  R_InitLightTables();
+  r_initLightTables();
   printf(".");
   r_init_sky_map();
-  R_InitTranslationTables();
+  r_initTranslationTables();
   printf(".");
 
   framecount = 0;
@@ -829,10 +829,10 @@ void R_SetupFrame(player_t *player)
 }
 
 /****************************************************************************
- * Name: R_RenderPlayerView
+ * Name: r_render_player_view
  ****************************************************************************/
 
-void R_RenderPlayerView(player_t *player)
+void r_render_player_view(player_t *player)
 {
   R_SetupFrame(player);
 
@@ -845,7 +845,7 @@ void R_RenderPlayerView(player_t *player)
 
   /* check for new console commands. */
 
-  NetUpdate();
+  net_update();
 
   /* The head node is the last node output. */
 
@@ -853,17 +853,17 @@ void R_RenderPlayerView(player_t *player)
 
   /* Check for new console commands. */
 
-  NetUpdate();
+  net_update();
 
   R_DrawPlanes();
 
   /* Check for new console commands. */
 
-  NetUpdate();
+  net_update();
 
   R_DrawMasked();
 
   /* Check for new console commands. */
 
-  NetUpdate();
+  net_update();
 }

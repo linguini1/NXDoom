@@ -54,7 +54,7 @@ char *P_TempSaveGameFile(void)
 
 // Get the filename of the save game file to use for the specified slot.
 
-char *P_SaveGameFile(int slot)
+char *p_save_game_file(int slot)
 {
   static char *filename = NULL;
   static size_t filename_size = 0;
@@ -1342,7 +1342,7 @@ void P_WriteSaveGameHeader(char *description)
     saveg_write8(0);
 
   memset(name, 0, sizeof(name));
-  snprintf(name, sizeof(name), "version %i", G_VanillaVersionCode());
+  snprintf(name, sizeof(name), "version %i", g_vanilla_version_code());
 
   for (i = 0; i < VERSIONSIZE; ++i)
     saveg_write8(name[i]);
@@ -1379,7 +1379,7 @@ boolean P_ReadSaveGameHeader(void)
     read_vcheck[i] = saveg_read8();
 
   memset(vcheck, 0, sizeof(vcheck));
-  snprintf(vcheck, sizeof(vcheck), "version %i", G_VanillaVersionCode());
+  snprintf(vcheck, sizeof(vcheck), "version %i", g_vanilla_version_code());
   if (strcmp(read_vcheck, vcheck) != 0) return false; // bad version
 
   gameskill = saveg_read8();
@@ -1603,7 +1603,7 @@ void P_UnArchiveThinkers(void)
 
       currentthinker = next;
     }
-  P_InitThinkers();
+  p_initThinkers();
 
   // read in saved thinkers
   while (1)

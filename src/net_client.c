@@ -207,7 +207,7 @@ unsigned int net_local_is_freedoom;
 
 /* Called when we become disconnected from the server */
 
-static void net_cl_disconnected(void) { D_ReceiveTic(NULL, NULL); }
+static void net_cl_disconnected(void) { d_receive_tic(NULL, NULL); }
 
 /* Called when a packet is received from the server containing game
  * data. This updates the clock synchronization variable (offsetms)
@@ -306,7 +306,7 @@ static void net_cl_advance_window(void)
 
       net_cl_expand_full_ticcmd(&recvwindow[0].cmd, recvwindow_start,
                                 ticcmds);
-      D_ReceiveTic(ticcmds, recvwindow[0].cmd.playeringame);
+      d_receive_tic(ticcmds, recvwindow[0].cmd.playeringame);
 
       /* Advance the window */
 
@@ -1009,7 +1009,7 @@ void NET_CL_LaunchGame(void)
   net_conn_new_reliable(&client_connection, NET_PACKET_TYPE_LAUNCH);
 }
 
-void NET_CL_StartGame(net_gamesettings_t *p_settings)
+void net_cl_start_game(net_gamesettings_t *p_settings)
 {
   net_packet_t *packet;
 
@@ -1027,7 +1027,7 @@ void NET_CL_StartGame(net_gamesettings_t *p_settings)
 
 /* Add a new ticcmd to the send queue */
 
-void NET_CL_SendTiccmd(ticcmd_t *ticcmd, int maketic)
+void net_cl_send_ticcmd(ticcmd_t *ticcmd, int maketic)
 {
   net_ticdiff_t diff;
   net_server_send_t *sendobj;
@@ -1064,7 +1064,7 @@ void NET_CL_SendTiccmd(ticcmd_t *ticcmd, int maketic)
  * needed
  */
 
-void NET_CL_Run(void)
+void net_cl_run(void)
 {
   net_addr_t *addr;
   net_packet_t *packet;
@@ -1117,7 +1117,7 @@ void NET_CL_Run(void)
 
 /* Connect to a server */
 
-boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
+boolean net_cl_connect(net_addr_t *addr, net_connect_data_t *data)
 {
   int start_time;
   int last_send_time;
@@ -1185,7 +1185,7 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
 
       /* run client code */
 
-      NET_CL_Run();
+      net_cl_run();
 
       /* run the server, just in case we are doing a loopback connect */
 
@@ -1220,7 +1220,7 @@ boolean NET_CL_Connect(net_addr_t *addr, net_connect_data_t *data)
 
 /* read game settings received from server */
 
-boolean NET_CL_GetSettings(net_gamesettings_t *_settings)
+boolean net_cl_get_settings(net_gamesettings_t *_settings)
 {
   if (client_state != CLIENT_STATE_IN_GAME)
     {
@@ -1234,7 +1234,7 @@ boolean NET_CL_GetSettings(net_gamesettings_t *_settings)
 
 /* disconnect from the server */
 
-void NET_CL_Disconnect(void)
+void net_cl_disconnect(void)
 {
   int start_time;
 
@@ -1258,12 +1258,12 @@ void NET_CL_Disconnect(void)
           net_log_err("client: no acknowledgement of disconnect received");
           client_state = CLIENT_STATE_WAITING_START;
 
-          fprintf(stderr, "NET_CL_Disconnect: Timeout while disconnecting "
+          fprintf(stderr, "net_cl_disconnect: Timeout while disconnecting "
                           "from server\n");
           break;
         }
 
-      NET_CL_Run();
+      net_cl_run();
       net_sv_run();
 
       usleep(1000);
@@ -1287,9 +1287,9 @@ void NET_CL_Init(void)
     }
 }
 
-void NET_Init(void) { NET_CL_Init(); }
+void net_init(void) { NET_CL_Init(); }
 
-void NET_BindVariables(void)
+void net_bind_variables(void)
 {
   m_bind_string_variable("player_name", &net_player_name);
 }

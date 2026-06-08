@@ -71,7 +71,7 @@ void v_set_patch_clip_callback(vpatchclipfunc_t func);
  * Name: v_init
  *
  * Description:
- *  Allocates buffer screens, call before R_Init.
+ *  Allocates buffer screens, call before r_init.
  *
  ****************************************************************************/
 

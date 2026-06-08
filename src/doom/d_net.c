@@ -22,7 +22,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Pre-processor Definitions
+ * Included Files
  ****************************************************************************/
 
 #include <stdlib.h>
@@ -56,10 +56,10 @@ static void run_tic(ticcmd_t *cmds, boolean *ingame);
 
 static loop_interface_t g_doom_loop_interface =
 {
-  D_ProcessEvents,
-  G_BuildTiccmd,
+  d_process_events,
+  g_build_ticcmd,
   run_tic,
-  M_Ticker,
+  m_ticker,
 };
 
 /****************************************************************************
@@ -102,7 +102,7 @@ static void player_quit_game(player_t *player)
 
   if (demorecording)
     {
-      G_CheckDemoStatus();
+      g_check_demo_status();
     }
 }
 
@@ -126,9 +126,9 @@ static void run_tic(ticcmd_t *cmds, boolean *ingame)
    * run a tic.
    */
 
-  if (advancedemo) D_DoAdvanceDemo();
+  if (advancedemo) d_do_advance_demo();
 
-  G_Ticker();
+  g_ticker();
 }
 
 /****************************************************************************
@@ -249,8 +249,8 @@ static void init_connect_data(net_connect_data_t *connect_data)
 
   /* Read checksums of our WAD directory and dehacked information */
 
-  W_Checksum(connect_data->wad_sha1sum);
-  DEH_Checksum(connect_data->deh_sha1sum);
+  w_checksum(connect_data->wad_sha1sum);
+  deh_checksum(connect_data->deh_sha1sum);
 
   /* Are we playing with the Freedoom IWAD? */
 
@@ -261,12 +261,12 @@ static void init_connect_data(net_connect_data_t *connect_data)
  * Public Functions
  ****************************************************************************/
 
-void D_ConnectNetGame(void)
+void d_connect_net_game(void)
 {
   net_connect_data_t connect_data;
 
   init_connect_data(&connect_data);
-  netgame = D_InitNetGame(&connect_data);
+  netgame = d_init_net_game(&connect_data);
 
 #ifdef CONFIG_GAMES_NXDOOM_NET
   /* @category net
@@ -284,14 +284,14 @@ void D_ConnectNetGame(void)
 }
 
 /****************************************************************************
- * Name: D_CheckNetGame
+ * Name: d_check_net_game
  *
  * Description:
  *  Works out player numbers among the net participants
  *
  ****************************************************************************/
 
-void D_CheckNetGame(void)
+void d_check_net_game(void)
 {
   net_gamesettings_t settings;
 
@@ -300,10 +300,10 @@ void D_CheckNetGame(void)
       autostart = true;
     }
 
-  D_RegisterLoopCallbacks(&g_doom_loop_interface);
+  d_register_loop_callbacks(&g_doom_loop_interface);
 
   save_game_settings(&settings);
-  D_StartNetGame(&settings, NULL);
+  d_start_net_game(&settings, NULL);
   load_game_settings(&settings);
 
   printf("startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",

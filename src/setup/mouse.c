@@ -29,7 +29,7 @@
 
 static int usemouse = 1;
 
-static int mouseSensitivity = 5;
+static int g_mouse_sensitivity = 5;
 static float mouse_acceleration = 2.0;
 static int mouse_threshold = 10;
 static int grabmouse = 1;
@@ -134,7 +134,7 @@ void ConfigMouse(TXT_UNCAST_ARG(widget), void *user_data)
       TXT_TABLE_OVERFLOW_RIGHT,
 
       txt_new_separator("Mouse motion"), txt_new_label("Speed"),
-      txt_newspin_control(&mouseSensitivity, 1, 256),
+      txt_newspin_control(&g_mouse_sensitivity, 1, 256),
       txt_new_label("Acceleration"),
       txt_new_float_spincontrol(&mouse_acceleration, 1.0, 5.0),
       txt_new_label("Acceleration threshold"),
@@ -154,7 +154,7 @@ void bind_mouse_variables(void)
   m_bind_int_variable("use_mouse", &usemouse);
   m_bind_int_variable("novert", &novert);
   m_bind_int_variable("grabmouse", &grabmouse);
-  m_bind_int_variable("mouse_sensitivity", &mouseSensitivity);
+  m_bind_int_variable("mouse_sensitivity", &g_mouse_sensitivity);
   m_bind_int_variable("mouse_threshold", &mouse_threshold);
   m_bind_float_variable("mouse_acceleration", &mouse_acceleration);
 }

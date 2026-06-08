@@ -461,13 +461,13 @@ void R_DrawTranslatedColumnLow(void)
 }
 
 //
-// R_InitTranslationTables
+// r_initTranslationTables
 // Creates the translation tables to map
 //  the green color ramp to gray, brown, red.
 // Assumes a given structure of the PLAYPAL.
 // Could be read from a lump instead.
 //
-void R_InitTranslationTables(void)
+void r_initTranslationTables(void)
 {
   int i;
 
@@ -690,13 +690,13 @@ void R_DrawSpanLow(void)
 }
 
 //
-// R_InitBuffer
+// r_initBuffer
 // Creats lookup tables that avoid
 //  multiplies and other hazzles
 //  for getting the framebuffer address
 //  of a pixel to draw.
 //
-void R_InitBuffer(int width, int height)
+void r_initBuffer(int width, int height)
 {
   int i;
 
@@ -721,12 +721,12 @@ void R_InitBuffer(int width, int height)
 }
 
 //
-// R_FillBackScreen
+// r_fill_back_screen
 // Fills the back screen with a pattern
 //  for variable screen sizes
 // Also draws a beveled edge.
 //
-void R_FillBackScreen(void)
+void r_fill_back_screen(void)
 {
   byte *src;
   pixel_t *dest;
@@ -844,11 +844,11 @@ void R_VideoErase(unsigned ofs, int count)
 }
 
 //
-// R_DrawViewBorder
+// r_draw_view_border
 // Draws the border around the view
 //  for different size windows?
 //
-void R_DrawViewBorder(void)
+void r_draw_view_border(void)
 {
   int top;
   int side;

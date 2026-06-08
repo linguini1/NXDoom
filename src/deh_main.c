@@ -337,7 +337,7 @@ static void deh_parse_context(deh_context_t *context)
  * Public Functions
  ****************************************************************************/
 
-void DEH_Checksum(sha1_digest_t digest)
+void deh_checksum(sha1_digest_t digest)
 {
   sha1_context_t sha1_context;
   unsigned int i;
@@ -395,7 +395,7 @@ boolean DEH_ParseAssignment(char *line, char **variable_name, char **value)
 
 /* Parses a dehacked file */
 
-int DEH_LoadFile(const char *filename)
+int deh_loadfile(const char *filename)
 {
   deh_context_t *context;
   boolean had_error;
@@ -420,7 +420,7 @@ int DEH_LoadFile(const char *filename)
 
   if (context == NULL)
     {
-      fprintf(stderr, "DEH_LoadFile: Unable to open %s\n", filename);
+      fprintf(stderr, "deh_loadfile: Unable to open %s\n", filename);
       return 0;
     }
 
@@ -440,7 +440,7 @@ int DEH_LoadFile(const char *filename)
 
 /* Load all dehacked patches from the given directory. */
 
-void DEH_AutoLoadPatches(const char *path)
+void deh_auto_load_patches(const char *path)
 {
   const char *filename;
   glob_t *glob;
@@ -456,7 +456,7 @@ void DEH_AutoLoadPatches(const char *path)
         }
 
       printf(" [autoload]");
-      DEH_LoadFile(filename);
+      deh_loadfile(filename);
     }
 
   i_end_glob(glob);
@@ -466,7 +466,7 @@ void DEH_AutoLoadPatches(const char *path)
  * If allow_long is set, allow long strings and cheats just for this lump.
  */
 
-int DEH_LoadLump(int lumpnum, boolean allow_long, boolean allow_error)
+int deh_load_lump(int lumpnum, boolean allow_long, boolean allow_error)
 {
   deh_context_t *context;
   boolean had_error;
@@ -486,7 +486,7 @@ int DEH_LoadLump(int lumpnum, boolean allow_long, boolean allow_error)
 
   if (context == NULL)
     {
-      fprintf(stderr, "DEH_LoadFile: Unable to open lump %i\n", lumpnum);
+      fprintf(stderr, "deh_loadfile: Unable to open lump %i\n", lumpnum);
       return 0;
     }
 
@@ -508,7 +508,7 @@ int DEH_LoadLump(int lumpnum, boolean allow_long, boolean allow_error)
   return 1;
 }
 
-int DEH_LoadLumpByName(const char *name, boolean allow_long,
+int deh_load_lump_by_name(const char *name, boolean allow_long,
                        boolean allow_error)
 {
   int lumpnum;
@@ -517,16 +517,16 @@ int DEH_LoadLumpByName(const char *name, boolean allow_long,
 
   if (lumpnum == -1)
     {
-      fprintf(stderr, "DEH_LoadLumpByName: '%s' lump not found\n", name);
+      fprintf(stderr, "deh_load_lump_by_name: '%s' lump not found\n", name);
       return 0;
     }
 
-  return DEH_LoadLump(lumpnum, allow_long, allow_error);
+  return deh_load_lump(lumpnum, allow_long, allow_error);
 }
 
 /* Check the command line for -deh argument, and others. */
 
-void DEH_ParseCommandLine(void)
+void deh_parse_command_line(void)
 {
   char *filename;
   int p;
@@ -546,7 +546,7 @@ void DEH_ParseCommandLine(void)
       while (p < myargc && myargv[p][0] != '-')
         {
           filename = d_try_find_wad_by_name(myargv[p]);
-          DEH_LoadFile(filename);
+          deh_loadfile(filename);
           free(filename);
           ++p;
         }

@@ -27,7 +27,7 @@
 byte *R_GetColumn(int tex, int col);
 
 // I/O, setting up the stuff.
-void R_InitData(void);
+void r_initData(void);
 void R_PrecacheLevel(void);
 
 // Retrieval.

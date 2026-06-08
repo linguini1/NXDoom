@@ -35,6 +35,6 @@
  * Public Function Prototypes
  ****************************************************************************/
 
-extern void NET_WaitForLaunch(void);
+extern void net_wait_for_launch(void);
 
 #endif /* NET_GUI_H */

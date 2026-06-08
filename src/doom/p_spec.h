@@ -32,7 +32,7 @@ extern int levelTimeCount;
 #define MO_TELEPORTMAN 14
 
 // at game start
-void P_InitPicAnims(void);
+void p_initPicAnims(void);
 
 // at map load
 void P_SpawnSpecials(void);
@@ -183,7 +183,7 @@ extern button_t buttonlist[MAXBUTTONS];
 
 void P_ChangeSwitchTexture(line_t *line, int useAgain);
 
-void P_InitSwitchList(void);
+void p_initSwitchList(void);
 
 //
 // P_PLATS
@@ -362,7 +362,7 @@ typedef struct
 // how many diff. types of anims
 #define MAXSLIDEDOORS 5                            
 
-void P_InitSlidingDoorFrames(void);
+void p_initSlidingDoorFrames(void);
 
 void
 EV_SlidingDoor

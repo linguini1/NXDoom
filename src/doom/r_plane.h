@@ -35,7 +35,7 @@ extern short ceilingclip[SCREENWIDTH];
 extern fixed_t yslope[SCREENHEIGHT];
 extern fixed_t distscale[SCREENWIDTH];
 
-void R_InitPlanes(void);
+void r_initPlanes(void);
 void R_ClearPlanes(void);
 
 void R_MapPlane(int y, int x1, int x2);

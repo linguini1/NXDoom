@@ -38,7 +38,7 @@
  * Name: i_get_time
  *
  * Description:
- *  Called by D_DoomLoop.
+ *  Called by d_doomloop.
  *
  * Returns:
  *  The current time in tics.

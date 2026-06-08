@@ -441,7 +441,7 @@ byte *R_GetColumn(int tex, int col)
 }
 
 /****************************************************************************
- * Name: R_InitTextures
+ * Name: r_initTextures
  *
  * Description:
  *  Initializes the texture list
@@ -449,7 +449,7 @@ byte *R_GetColumn(int tex, int col)
  *
  ****************************************************************************/
 
-void R_InitTextures(void)
+void r_initTextures(void)
 {
   maptexture_t *mtexture;
   texture_t *texture;
@@ -571,7 +571,7 @@ void R_InitTextures(void)
 
       offset = LONG(*directory);
 
-      if (offset > maxoff) i_error("R_InitTextures: bad texture directory");
+      if (offset > maxoff) i_error("r_initTextures: bad texture directory");
 
       mtexture = (maptexture_t *)((byte *)maptex + offset);
 
@@ -595,7 +595,7 @@ void R_InitTextures(void)
           patch->patch = patchlookup[SHORT(mpatch->patch)];
           if (patch->patch == -1)
             {
-              i_error("R_InitTextures: Missing patch in texture %s",
+              i_error("r_initTextures: Missing patch in texture %s",
                       texture->name);
             }
         }
@@ -634,10 +634,10 @@ void R_InitTextures(void)
 }
 
 /****************************************************************************
- * Name: R_InitFlats
+ * Name: r_initFlats
  ****************************************************************************/
 
-void R_InitFlats(void)
+void r_initFlats(void)
 {
   int i;
 
@@ -655,7 +655,7 @@ void R_InitFlats(void)
 }
 
 /****************************************************************************
- * Name: R_InitSpriteLumps
+ * Name: r_initSpriteLumps
  *
  * Description:
  *  Finds the width and hoffset of all sprites in the wad,
@@ -664,7 +664,7 @@ void R_InitFlats(void)
  *
  ****************************************************************************/
 
-void R_InitSpriteLumps(void)
+void r_initSpriteLumps(void)
 {
   int i;
   patch_t *patch;
@@ -691,10 +691,10 @@ void R_InitSpriteLumps(void)
 }
 
 /****************************************************************************
- * Name: R_InitColormaps
+ * Name: r_initColormaps
  ****************************************************************************/
 
-void R_InitColormaps(void)
+void r_initColormaps(void)
 {
   int lump;
 
@@ -705,7 +705,7 @@ void R_InitColormaps(void)
 }
 
 /****************************************************************************
- * Name: R_InitData
+ * Name: r_initData
  *
  * Description:
  *  Locates all the lumps that will be used by all views
@@ -713,15 +713,15 @@ void R_InitColormaps(void)
  *
  ****************************************************************************/
 
-void R_InitData(void)
+void r_initData(void)
 {
-  R_InitTextures();
+  r_initTextures();
   printf(".");
-  R_InitFlats();
+  r_initFlats();
   printf(".");
-  R_InitSpriteLumps();
+  r_initSpriteLumps();
   printf(".");
-  R_InitColormaps();
+  r_initColormaps();
 }
 
 /****************************************************************************

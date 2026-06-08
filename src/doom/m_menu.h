@@ -29,28 +29,28 @@
 // Even when the menu is not displayed,
 // this can resize the view and change game parameters.
 // Does all the real work of the menu interaction.
-boolean M_Responder(event_t *ev);
+boolean m_responder(event_t *ev);
 
 // Called by main loop,
 // only used for menu (skull cursor) animation.
-void M_Ticker(void);
+void m_ticker(void);
 
 // Called by main loop,
 // draws the menus directly into the screen buffer.
-void M_Drawer(void);
+void m_drawer(void);
 
 // Called by d_doom_main,
 // loads the config file.
-void M_Init(void);
+void m_init(void);
 
 // Called by intro code to force menu up upon a keypress,
 // does nothing if menu is already up.
 void M_StartControlPanel(void);
 
-extern int detailLevel;
+extern int g_detail_level;
 extern int screenblocks;
 
 extern boolean inhelpscreens;
-extern int showMessages;
+extern int g_show_messages;
 
 #endif
