@@ -110,7 +110,7 @@ static void DEH_ThingParseLine(deh_context_t *context, char *line, void *tag)
   DEH_SetMapping(context, &thing_mapping, mobj, variable_name, ivalue);
 }
 
-static void DEH_ThingSHA1Sum(sha1_context_t *context)
+static void DEH_ThingSHA1Sum(SHA1_CTX *context)
 {
   int i;
 

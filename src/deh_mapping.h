@@ -79,7 +79,7 @@ boolean DEH_SetMapping(deh_context_t *context, deh_mapping_t *mapping,
                        void *structptr, char *name, int value);
 boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
                              void *structptr, char *name, char *value);
-void DEH_StructSHA1Sum(sha1_context_t *context, deh_mapping_t *mapping,
+void DEH_StructSHA1Sum(SHA1_CTX *context, deh_mapping_t *mapping,
                        void *structptr);
 
 #endif /* #ifndef DEH_MAPPING_H */

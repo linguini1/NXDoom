@@ -206,13 +206,13 @@ static void DEH_MiscParseLine(deh_context_t *context, char *line, void *tag)
   DEH_Warning(context, "Unknown Misc variable '%s'", variable_name);
 }
 
-static void DEH_MiscSHA1Sum(sha1_context_t *context)
+static void DEH_MiscSHA1Sum(SHA1_CTX *context)
 {
   unsigned int i;
 
   for (i = 0; i < arrlen(misc_settings); ++i)
     {
-      SHA1_UpdateInt32(context, *misc_settings[i].value);
+      sha1_updateint32(context, *misc_settings[i].value);
     }
 }
 

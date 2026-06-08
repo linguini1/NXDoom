@@ -155,7 +155,7 @@ boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
   return true;
 }
 
-void DEH_StructSHA1Sum(sha1_context_t *context, deh_mapping_t *mapping,
+void DEH_StructSHA1Sum(SHA1_CTX *context, deh_mapping_t *mapping,
                        void *structptr)
 {
   int i;
@@ -182,13 +182,13 @@ void DEH_StructSHA1Sum(sha1_context_t *context, deh_mapping_t *mapping,
       switch (entry->size)
         {
         case 1:
-          SHA1_UpdateInt32(context, *((uint8_t *)location));
+          sha1_updateint32(context, *((uint8_t *)location));
           break;
         case 2:
-          SHA1_UpdateInt32(context, *((uint16_t *)location));
+          sha1_updateint32(context, *((uint16_t *)location));
           break;
         case 4:
-          SHA1_UpdateInt32(context, *((uint32_t *)location));
+          sha1_updateint32(context, *((uint32_t *)location));
           break;
         default:
           i_error("Unknown dehacked mapping field type for '%s' (BUG)",

@@ -120,13 +120,13 @@ static void DEH_PointerParseLine(deh_context_t *context, char *line,
     }
 }
 
-static void DEH_PointerSHA1Sum(sha1_context_t *context)
+static void DEH_PointerSHA1Sum(SHA1_CTX *context)
 {
   int i;
 
   for (i = 0; i < NUMSTATES; ++i)
     {
-      SHA1_UpdateInt32(context, CodePointerIndex(&states[i].action));
+      sha1_updateint32(context, CodePointerIndex(&states[i].action));
     }
 }
 

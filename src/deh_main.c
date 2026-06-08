@@ -339,10 +339,10 @@ static void deh_parse_context(deh_context_t *context)
 
 void deh_checksum(sha1_digest_t digest)
 {
-  sha1_context_t sha1_context;
+  SHA1_CTX sha1_context;
   unsigned int i;
 
-  SHA1_Init(&sha1_context);
+  sha1init(&sha1_context);
 
   for (i = 0; deh_section_types[i] != NULL; ++i)
     {
@@ -352,7 +352,7 @@ void deh_checksum(sha1_digest_t digest)
         }
     }
 
-  SHA1_Final(digest, &sha1_context);
+  sha1final(digest, &sha1_context);
 }
 
 /* This pattern is used a lot of times in different sections,

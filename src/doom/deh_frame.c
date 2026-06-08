@@ -141,7 +141,7 @@ static void DEH_FrameParseLine(deh_context_t *context, char *line, void *tag)
     }
 }
 
-static void DEH_FrameSHA1Sum(sha1_context_t *context)
+static void DEH_FrameSHA1Sum(SHA1_CTX *context)
 {
   int i;
 

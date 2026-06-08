@@ -78,7 +78,7 @@ static void DEH_WeaponParseLine(deh_context_t *context, char *line, void *tag)
   DEH_SetMapping(context, &weapon_mapping, weapon, variable_name, ivalue);
 }
 
-static void DEH_WeaponSHA1Sum(sha1_context_t *context)
+static void DEH_WeaponSHA1Sum(SHA1_CTX *context)
 {
   int i;
 

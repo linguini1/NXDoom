@@ -48,7 +48,6 @@ BASESRCS =        \
   m_controls.c    \
   m_fixed.c       \
   p_rejectpad.c   \
-  sha1.c          \
   memio.c         \
   tables.c        \
   v_diskicon.c    \

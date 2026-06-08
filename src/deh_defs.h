@@ -27,7 +27,7 @@ typedef void *(*deh_section_start_t)(deh_context_t *context, char *line);
 typedef void (*deh_section_end_t)(deh_context_t *context, void *tag);
 typedef void (*deh_line_parser_t)(deh_context_t *context, char *line,
                                   void *tag);
-typedef void (*deh_sha1_hash_t)(sha1_context_t *context);
+typedef void (*deh_sha1_hash_t)(SHA1_CTX *context);
 
 struct deh_section_s
 {

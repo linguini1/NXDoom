@@ -55,23 +55,26 @@ static int GetFileNumber(wad_file_t *handle)
   return result;
 }
 
-static void ChecksumAddLump(sha1_context_t *sha1_context, lumpinfo_t *lump)
+static void ChecksumAddLump(SHA1_CTX *sha1_context, lumpinfo_t *lump)
 {
   char buf[9];
+  int fileno;
+
+  fileno = GetFileNumber(lump->wad_file);
 
   m_str_copy(buf, lump->name, sizeof(buf));
-  SHA1_UpdateString(sha1_context, buf);
-  SHA1_UpdateInt32(sha1_context, GetFileNumber(lump->wad_file));
-  SHA1_UpdateInt32(sha1_context, lump->position);
-  SHA1_UpdateInt32(sha1_context, lump->size);
+  sha1_updatestring(sha1_context, buf);
+  sha1_updateint32(sha1_context, fileno);
+  sha1_updateint32(sha1_context, lump->position);
+  sha1_updateint32(sha1_context, lump->size);
 }
 
 void w_checksum(sha1_digest_t digest)
 {
-  sha1_context_t sha1_context;
+  SHA1_CTX sha1_context;
   unsigned int i;
 
-  SHA1_Init(&sha1_context);
+  sha1init(&sha1_context);
 
   num_open_wadfiles = 0;
 
@@ -83,5 +86,5 @@ void w_checksum(sha1_digest_t digest)
       ChecksumAddLump(&sha1_context, lumpinfo[i]);
     }
 
-  SHA1_Final(digest, &sha1_context);
+  sha1final(digest, &sha1_context);
 }

@@ -79,14 +79,14 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
     }
 }
 
-static void DEH_AmmoSHA1Hash(sha1_context_t *context)
+static void DEH_AmmoSHA1Hash(SHA1_CTX *context)
 {
   int i;
 
   for (i = 0; i < NUMAMMO; ++i)
     {
-      SHA1_UpdateInt32(context, clipammo[i]);
-      SHA1_UpdateInt32(context, maxammo[i]);
+      sha1_updateint32(context, clipammo[i]);
+      sha1_updateint32(context, maxammo[i]);
     }
 }
 
