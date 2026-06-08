@@ -55,14 +55,6 @@
 #define CONFIG_VARIABLE_STRING(name)                                         \
   CONFIG_VARIABLE_GENERIC(name, DEFAULT_STRING)
 
-#define MUSIC_PACK_README                                                    \
-  "Extract music packs into this directory in .flac or .ogg format;\n"       \
-  "they will be automatically loaded based on filename to replace the\n"     \
-  "in-game music with high quality versions.\n\n"                            \
-  "For more information check here:\n\n"                                     \
-  "  "                                                                       \
-  "<https:/*www.chocolate-doom.org/wiki/index.php/Digital_music_packs>\n\n"
-
 /****************************************************************************
  * Private Types
  ****************************************************************************/
@@ -2381,7 +2373,8 @@ void m_set_config_dir(const char *dir)
 void m_set_music_pack_dir(void)
 {
   const char *current_path;
-  char *prefdir, *music_pack_path, *readme_path;
+  char *prefdir;
+  char *music_pack_path;
 
   current_path = m_get_string_variable("music_pack_path");
 
@@ -2397,15 +2390,6 @@ void m_set_music_pack_dir(void)
   m_make_directory(music_pack_path);
   m_set_variable("music_pack_path", music_pack_path);
 
-  /* We write a README file with some basic instructions on how to use
-   * the directory.
-   */
-
-  readme_path =
-      m_string_join(music_pack_path, DIR_SEPARATOR_S, "README.txt", NULL);
-  m_write_file(readme_path, MUSIC_PACK_README, strlen(MUSIC_PACK_README));
-
-  free(readme_path);
   free(music_pack_path);
 }
 
