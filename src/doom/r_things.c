@@ -257,7 +257,7 @@ void r_initSpriteDefs(const char **namelist)
 //
 // GAME FUNCTIONS
 //
-vissprite_t vissprites[MAXVISSPRITES];
+vissprite_t vissprites[CONFIG_GAMES_NXDOOM_MAXVISSPRITES];
 vissprite_t *vissprite_p;
 int newvissprite;
 
@@ -290,7 +290,7 @@ vissprite_t overflowsprite;
 
 vissprite_t *R_NewVisSprite(void)
 {
-  if (vissprite_p == &vissprites[MAXVISSPRITES]) return &overflowsprite;
+  if (vissprite_p == &vissprites[CONFIG_GAMES_NXDOOM_MAXVISSPRITES]) return &overflowsprite;
 
   vissprite_p++;
   return vissprite_p - 1;
