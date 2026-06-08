@@ -115,4 +115,14 @@ config GAMES_NXDOOM_MAXVISPLANES
 		may cause 'visplane overflow' errors, which is more common in complex
 		levels.
 
+config GAMES_NXDOOM_MAXOPENINGS
+	int "Maximum number of openings"
+	default 32
+	---help---
+		DOOM allocates a static number of 'openings' to use for gameplay. These
+		are defined as multiples of the SCREENWIDTH (320). The original
+		ChocolateDOOM source uses 64 as the multiplier. They take a signifcant
+		amount of memory, so may reduce the number. However, too few openings
+		will cause 'opening overflow' errors.
+
 endif # GAMES_NXDOOM

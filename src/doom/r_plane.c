@@ -46,7 +46,7 @@ visplane_t *floorplane;
 visplane_t *ceilingplane;
 
 // ?
-#define MAXOPENINGS SCREENWIDTH * 64
+#define MAXOPENINGS (SCREENWIDTH * CONFIG_GAMES_NXDOOM_MAXOPENINGS)
 short openings[MAXOPENINGS];
 short *lastopening;
 
