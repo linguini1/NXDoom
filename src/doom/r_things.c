@@ -441,7 +441,7 @@ void R_ProjectSprite(mobj_t *thing)
   // thing is behind view plane?
   if (tz < MINZ) return;
 
-  xscale = FixedDiv(projection, tz);
+  xscale = fixed_div(projection, tz);
 
   gxt = -fixed_mul(tr_x, viewsin);
   gyt = fixed_mul(tr_y, viewcos);
@@ -502,7 +502,7 @@ void R_ProjectSprite(mobj_t *thing)
   vis->texturemid = vis->gzt - viewz;
   vis->x1 = x1 < 0 ? 0 : x1;
   vis->x2 = x2 >= viewwidth ? viewwidth - 1 : x2;
-  iscale = FixedDiv(FRACUNIT, xscale);
+  iscale = fixed_div(FRACUNIT, xscale);
 
   if (flip)
     {

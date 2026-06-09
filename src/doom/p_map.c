@@ -959,14 +959,14 @@ boolean PTR_AimTraverse(intercept_t *in)
       if (li->backsector == NULL ||
           li->frontsector->floorheight != li->backsector->floorheight)
         {
-          slope = FixedDiv(openbottom - shootz, dist);
+          slope = fixed_div(openbottom - shootz, dist);
           if (slope > bottomslope) bottomslope = slope;
         }
 
       if (li->backsector == NULL ||
           li->frontsector->ceilingheight != li->backsector->ceilingheight)
         {
-          slope = FixedDiv(opentop - shootz, dist);
+          slope = fixed_div(opentop - shootz, dist);
           if (slope < topslope) topslope = slope;
         }
 
@@ -985,11 +985,11 @@ boolean PTR_AimTraverse(intercept_t *in)
   /* check angles to see if the thing can be aimed at */
 
   dist = fixed_mul(attackrange, in->frac);
-  thingtopslope = FixedDiv(th->z + th->height - shootz, dist);
+  thingtopslope = fixed_div(th->z + th->height - shootz, dist);
 
   if (thingtopslope < bottomslope) return true; /* shot over the thing */
 
-  thingbottomslope = FixedDiv(th->z - shootz, dist);
+  thingbottomslope = fixed_div(th->z - shootz, dist);
 
   if (thingbottomslope > topslope) return true; /* shot under the thing */
 
@@ -1043,23 +1043,23 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       if (li->backsector == NULL)
         {
-          slope = FixedDiv(openbottom - shootz, dist);
+          slope = fixed_div(openbottom - shootz, dist);
           if (slope > aimslope) goto hitline;
 
-          slope = FixedDiv(opentop - shootz, dist);
+          slope = fixed_div(opentop - shootz, dist);
           if (slope < aimslope) goto hitline;
         }
       else
         {
           if (li->frontsector->floorheight != li->backsector->floorheight)
             {
-              slope = FixedDiv(openbottom - shootz, dist);
+              slope = fixed_div(openbottom - shootz, dist);
               if (slope > aimslope) goto hitline;
             }
 
           if (li->frontsector->ceilingheight != li->backsector->ceilingheight)
             {
-              slope = FixedDiv(opentop - shootz, dist);
+              slope = fixed_div(opentop - shootz, dist);
               if (slope < aimslope) goto hitline;
             }
         }
@@ -1074,7 +1074,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       /* position a bit closer */
 
-      frac = in->frac - FixedDiv(4 * FRACUNIT, attackrange);
+      frac = in->frac - fixed_div(4 * FRACUNIT, attackrange);
       x = trace.x + fixed_mul(trace.dx, frac);
       y = trace.y + fixed_mul(trace.dy, frac);
       z = shootz + fixed_mul(aimslope, fixed_mul(frac, attackrange));
@@ -1110,17 +1110,17 @@ boolean PTR_ShootTraverse(intercept_t *in)
   /* check angles to see if the thing can be aimed at */
 
   dist = fixed_mul(attackrange, in->frac);
-  thingtopslope = FixedDiv(th->z + th->height - shootz, dist);
+  thingtopslope = fixed_div(th->z + th->height - shootz, dist);
 
   if (thingtopslope < aimslope) return true; /* shot over the thing  */
 
-  thingbottomslope = FixedDiv(th->z - shootz, dist);
+  thingbottomslope = fixed_div(th->z - shootz, dist);
 
   if (thingbottomslope > aimslope) return true; /* shot under the thing */
 
   /* hit thing position a bit closer */
 
-  frac = in->frac - FixedDiv(10 * FRACUNIT, attackrange);
+  frac = in->frac - fixed_div(10 * FRACUNIT, attackrange);
 
   x = trace.x + fixed_mul(trace.dx, frac);
   y = trace.y + fixed_mul(trace.dy, frac);

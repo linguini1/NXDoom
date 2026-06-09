@@ -379,7 +379,7 @@ fixed_t R_PointToDist(fixed_t x, fixed_t y)
 
   if (dx != 0)
     {
-      frac = FixedDiv(dy, dx);
+      frac = fixed_div(dy, dx);
     }
   else
     {
@@ -388,7 +388,7 @@ fixed_t R_PointToDist(fixed_t x, fixed_t y)
 
   angle = (tantoangle[frac >> DBITS] + ANG90) >> ANGLETOFINESHIFT;
 
-  dist = FixedDiv(dx, finesine[angle]); /* use as cosine */
+  dist = fixed_div(dx, finesine[angle]); /* use as cosine */
 
   return dist;
 }
@@ -444,10 +444,10 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
     fixed_t		cosv;
 	
     sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];	
-    dist = FixedDiv (rw_distance, sinv);
+    dist = fixed_div (rw_distance, sinv);
     cosv = finecosine[(viewangle-visangle)>>ANGLETOFINESHIFT];
     z = abs(fixed_mul (dist, cosv));
-    scale = FixedDiv(projection, z);
+    scale = fixed_div(projection, z);
     return scale;
 }
 #endif
@@ -464,7 +464,7 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
 
   if (den > num >> FRACBITS)
     {
-      scale = FixedDiv(num, den);
+      scale = fixed_div(num, den);
 
       if (scale > 64 * FRACUNIT)
         scale = 64 * FRACUNIT;
@@ -534,7 +534,7 @@ void r_initTextureMapping(void)
    */
 
   focallength =
-      FixedDiv(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
+      fixed_div(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
 
   for (i = 0; i < FINEANGLES / 2; i++)
     {
@@ -610,7 +610,7 @@ void r_initLightTables(void)
       for (j = 0; j < MAXLIGHTZ; j++)
         {
           scale =
-              FixedDiv((SCREENWIDTH / 2 * FRACUNIT), (j + 1) << LIGHTZSHIFT);
+              fixed_div((SCREENWIDTH / 2 * FRACUNIT), (j + 1) << LIGHTZSHIFT);
           scale >>= LIGHTSCALESHIFT;
           level = startmap - scale / DISTMAP;
 
@@ -709,13 +709,13 @@ void r_execute_set_view_size(void)
     {
       dy = ((i - viewheight / 2) << FRACBITS) + FRACUNIT / 2;
       dy = abs(dy);
-      yslope[i] = FixedDiv((viewwidth << detailshift) / 2 * FRACUNIT, dy);
+      yslope[i] = fixed_div((viewwidth << detailshift) / 2 * FRACUNIT, dy);
     }
 
   for (i = 0; i < viewwidth; i++)
     {
       cosadj = abs(finecosine[xtoviewangle[i] >> ANGLETOFINESHIFT]);
-      distscale[i] = FixedDiv(FRACUNIT, cosadj);
+      distscale[i] = fixed_div(FRACUNIT, cosadj);
     }
 
   /* Calculate the light levels to use for each level / scale combination. */

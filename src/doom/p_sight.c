@@ -57,13 +57,13 @@ boolean PTR_SightTraverse(intercept_t *in)
 
   if (li->frontsector->floorheight != li->backsector->floorheight)
     {
-      slope = FixedDiv(openbottom - sightzstart, in->frac);
+      slope = fixed_div(openbottom - sightzstart, in->frac);
       if (slope > bottomslope) bottomslope = slope;
     }
 
   if (li->frontsector->ceilingheight != li->backsector->ceilingheight)
     {
-      slope = FixedDiv(opentop - sightzstart, in->frac);
+      slope = fixed_div(opentop - sightzstart, in->frac);
       if (slope < topslope) topslope = slope;
     }
 
@@ -132,7 +132,7 @@ fixed_t P_InterceptVector2(divline_t *v2, divline_t *v1)
 
   num = fixed_mul((v1->x - v2->x) >> 8, v1->dy) +
         fixed_mul((v2->y - v1->y) >> 8, v1->dx);
-  frac = FixedDiv(num, den);
+  frac = fixed_div(num, den);
 
   return frac;
 }
@@ -239,13 +239,13 @@ boolean P_CrossSubsector(int num)
 
       if (front->floorheight != back->floorheight)
         {
-          slope = FixedDiv(l_openbottom - sightzstart, frac);
+          slope = fixed_div(l_openbottom - sightzstart, frac);
           if (slope > bottomslope) bottomslope = slope;
         }
 
       if (front->ceilingheight != back->ceilingheight)
         {
-          slope = FixedDiv(l_opentop - sightzstart, frac);
+          slope = fixed_div(l_opentop - sightzstart, frac);
           if (slope < topslope) topslope = slope;
         }
 

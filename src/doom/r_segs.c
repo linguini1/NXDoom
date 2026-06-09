@@ -401,7 +401,7 @@ void r_store_wall_range(int start, int stop)
 			
 	    gxt = fixed_mul(trx,viewcos); 
 	    gyt = -fixed_mul(try,viewsin); 
-	    ds_p->scale1 = FixedDiv(projection, gxt-gyt)<<detailshift;
+	    ds_p->scale1 = fixed_div(projection, gxt-gyt)<<detailshift;
 	}
 #endif
       ds_p->scale2 = ds_p->scale1;
