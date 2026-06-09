@@ -749,7 +749,7 @@ int r_flat_num_for_name(const char *name)
 }
 
 /****************************************************************************
- * Name: R_CheckTextureNumForName
+ * Name: r_check_texture_num_for_name
  *
  * Description:
  *  Check whether texture is available.
@@ -757,7 +757,7 @@ int r_flat_num_for_name(const char *name)
  *
  ****************************************************************************/
 
-int R_CheckTextureNumForName(const char *name)
+int r_check_texture_num_for_name(const char *name)
 {
   texture_t *texture;
   int key;
@@ -784,7 +784,7 @@ int R_CheckTextureNumForName(const char *name)
  * Name: r_texture_num_for_name
  *
  * Description:
- *  Calls R_CheckTextureNumForName, aborts with error message.
+ *  Calls r_check_texture_num_for_name, aborts with error message.
  *
  ****************************************************************************/
 
@@ -792,7 +792,7 @@ int r_texture_num_for_name(const char *name)
 {
   int i;
 
-  i = R_CheckTextureNumForName(name);
+  i = r_check_texture_num_for_name(name);
 
   if (i == -1)
     {
@@ -802,14 +802,14 @@ int r_texture_num_for_name(const char *name)
 }
 
 /****************************************************************************
- * Name: R_PrecacheLevel
+ * Name: r_precache_level
  *
  * Description:
  *  Preloads all relevant graphics for the level.
  *
  ****************************************************************************/
 
-void R_PrecacheLevel(void)
+void r_precache_level(void)
 {
   char *flatpresent;
   char *texturepresent;

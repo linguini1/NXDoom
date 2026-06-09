@@ -149,7 +149,7 @@ void p_initPicAnims(void)
       if (animdefs[i].istexture)
         {
           // different episode ?
-          if (R_CheckTextureNumForName(startname) == -1) continue;
+          if (r_check_texture_num_for_name(startname) == -1) continue;
 
           lastanim->picnum = r_texture_num_for_name(endname);
           lastanim->basepic = r_texture_num_for_name(startname);

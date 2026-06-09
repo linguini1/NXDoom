@@ -788,7 +788,7 @@ void p_setup_level(int episode, int map, int playermask, skill_t skill)
   //	UNUSED P_ConnectSubsectors ();
 
   // preload graphics
-  if (precache) R_PrecacheLevel();
+  if (precache) r_precache_level();
 
   // printf ("free memory: 0x%x\n", z_free_memory());
 }
