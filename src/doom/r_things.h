@@ -28,7 +28,7 @@ extern vissprite_t vsprsortedhead;
 extern short negonearray[SCREENWIDTH];
 extern short screenheightarray[SCREENWIDTH];
 
-// vars for R_DrawMaskedColumn
+// vars for r_draw_maskedColumn
 extern short *mfloorclip;
 extern short *mceilingclip;
 extern fixed_t spryscale;
@@ -37,7 +37,7 @@ extern fixed_t sprtopscreen;
 extern fixed_t pspritescale;
 extern fixed_t pspriteiscale;
 
-void R_DrawMaskedColumn(column_t *column);
+void r_draw_maskedColumn(column_t *column);
 
 void R_SortVisSprites(void);
 
@@ -45,8 +45,8 @@ void r_add_sprites(sector_t *sec);
 void R_AddPSprites(void);
 void R_DrawSprites(void);
 void r_initSprites(const char **namelist);
-void R_ClearSprites(void);
-void R_DrawMasked(void);
+void r_clear_sprites(void);
+void r_draw_masked(void);
 
 void R_ClipVisSprite(vissprite_t *vis, int xl, int xh);
 

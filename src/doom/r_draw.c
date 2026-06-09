@@ -70,7 +70,7 @@ byte translations[3][256];
 static pixel_t *background_buffer = NULL;
 
 //
-// R_DrawColumn
+// r_draw_column
 // Source is the top of the column to scale.
 //
 lighttable_t *dc_colormap;
@@ -93,7 +93,7 @@ int dccount;
 // Thus a special case loop for very fast rendering can
 //  be used. It has also been used with Wolfenstein 3D.
 //
-void R_DrawColumn(void)
+void r_draw_column(void)
 {
   int count;
   pixel_t *dest;
@@ -107,7 +107,7 @@ void R_DrawColumn(void)
 
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
-    i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+    i_error("r_draw_column: %i to %i at %i", dc_yl, dc_yh, dc_x);
 #endif
 
   // Framebuffer destination address.
@@ -138,7 +138,7 @@ void R_DrawColumn(void)
 // UNUSED.
 // Loop unrolled.
 #if 0
-void R_DrawColumn (void) 
+void r_draw_column (void) 
 { 
     int			count; 
     byte*		source;
@@ -193,7 +193,7 @@ void R_DrawColumn (void)
 }
 #endif
 
-void R_DrawColumnLow(void)
+void r_draw_column_low(void)
 {
   int count;
   pixel_t *dest;
@@ -211,7 +211,7 @@ void R_DrawColumnLow(void)
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
 
-      i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("r_draw_column: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
     //	dccount++;
 #endif
@@ -261,7 +261,7 @@ int fuzzpos = 0;
 //  could create the SHADOW effect,
 //  i.e. spectres and invisible players.
 //
-void R_DrawFuzzColumn(void)
+void r_draw_fuzz_column(void)
 {
   int count;
   pixel_t *dest;
@@ -280,7 +280,7 @@ void R_DrawFuzzColumn(void)
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      i_error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("r_draw_fuzz_column: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
 #endif
 
@@ -307,7 +307,7 @@ void R_DrawFuzzColumn(void)
 
 // low detail mode version
 
-void R_DrawFuzzColumnLow(void)
+void r_draw_fuzz_column_low(void)
 {
   int count;
   pixel_t *dest;
@@ -332,7 +332,7 @@ void R_DrawFuzzColumnLow(void)
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      i_error("R_DrawFuzzColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("r_draw_fuzz_column: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
 #endif
 
@@ -361,7 +361,7 @@ void R_DrawFuzzColumnLow(void)
 }
 
 //
-// R_DrawTranslatedColumn
+// r_draw_translated_column
 // Used to draw player sprites
 //  with the green colorramp mapped to others.
 // Could be used with different translation
@@ -372,7 +372,7 @@ void R_DrawFuzzColumnLow(void)
 byte *dc_translation;
 byte *translationtables;
 
-void R_DrawTranslatedColumn(void)
+void r_draw_translated_column(void)
 {
   int count;
   pixel_t *dest;
@@ -385,7 +385,7 @@ void R_DrawTranslatedColumn(void)
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+      i_error("r_draw_column: %i to %i at %i", dc_yl, dc_yh, dc_x);
     }
 
 #endif
@@ -412,7 +412,7 @@ void R_DrawTranslatedColumn(void)
   while (count--);
 }
 
-void R_DrawTranslatedColumnLow(void)
+void r_draw_translated_column_low(void)
 {
   int count;
   pixel_t *dest;
@@ -430,7 +430,7 @@ void R_DrawTranslatedColumnLow(void)
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if ((unsigned)x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
     {
-      i_error("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, x);
+      i_error("r_draw_column: %i to %i at %i", dc_yl, dc_yh, x);
     }
 
 #endif
@@ -461,13 +461,13 @@ void R_DrawTranslatedColumnLow(void)
 }
 
 //
-// r_initTranslationTables
+// r_init_translation_table
 // Creates the translation tables to map
 //  the green color ramp to gray, brown, red.
 // Assumes a given structure of the PLAYPAL.
 // Could be read from a lump instead.
 //
-void r_initTranslationTables(void)
+void r_init_translation_table(void)
 {
   int i;
 
@@ -493,7 +493,7 @@ void r_initTranslationTables(void)
 }
 
 //
-// R_DrawSpan
+// r_draw_span
 // With DOOM style restrictions on view orientation,
 //  the floors and ceilings consist of horizontal slices
 //  or spans with constant z depth.
@@ -523,7 +523,7 @@ int dscount;
 
 //
 // Draws the actual span.
-void R_DrawSpan(void)
+void r_draw_span(void)
 {
   unsigned int position, step;
   pixel_t *dest;
@@ -535,7 +535,7 @@ void R_DrawSpan(void)
   if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= SCREENWIDTH ||
       (unsigned)ds_y > SCREENHEIGHT)
     {
-      i_error("R_DrawSpan: %i to %i at %i", ds_x1, ds_x2, ds_y);
+      i_error("r_draw_span: %i to %i at %i", ds_x1, ds_x2, ds_y);
     }
 //	dscount++;
 #endif
@@ -572,7 +572,7 @@ void R_DrawSpan(void)
 // UNUSED.
 // Loop unrolled by 4.
 #if 0
-void R_DrawSpan (void) 
+void r_draw_span (void) 
 { 
     unsigned	position, step;
 
@@ -644,7 +644,7 @@ void R_DrawSpan (void)
 //
 // Again..
 //
-void R_DrawSpanLow(void)
+void r_draw_span_low(void)
 {
   unsigned int position, step;
   unsigned int xtemp, ytemp;
@@ -656,7 +656,7 @@ void R_DrawSpanLow(void)
   if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= SCREENWIDTH ||
       (unsigned)ds_y > SCREENHEIGHT)
     {
-      i_error("R_DrawSpan: %i to %i at %i", ds_x1, ds_x2, ds_y);
+      i_error("r_draw_span: %i to %i at %i", ds_x1, ds_x2, ds_y);
     }
 //	dscount++;
 #endif
@@ -690,13 +690,13 @@ void R_DrawSpanLow(void)
 }
 
 //
-// r_initBuffer
+// r_init_buffer
 // Creats lookup tables that avoid
 //  multiplies and other hazzles
 //  for getting the framebuffer address
 //  of a pixel to draw.
 //
-void r_initBuffer(int width, int height)
+void r_init_buffer(int width, int height)
 {
   int i;
 

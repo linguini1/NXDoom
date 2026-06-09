@@ -234,14 +234,14 @@ static void GenerateTextureHashTable(void)
  */
 
 /****************************************************************************
- * Name: R_DrawColumnInCache
+ * Name: r_draw_columnInCache
  *
  * Description:
  *  Clip and draw a column from a patch into a cached post.
  *
  ****************************************************************************/
 
-void R_DrawColumnInCache(column_t *patch, byte *cache, int originy,
+void r_draw_columnInCache(column_t *patch, byte *cache, int originy,
                          int cacheheight)
 {
   int count;
@@ -322,7 +322,7 @@ void R_GenerateComposite(int texnum)
 
           patchcol = (column_t *)((byte *)realpatch +
                                   LONG(realpatch->columnofs[x - x1]));
-          R_DrawColumnInCache(patchcol, block + colofs[x], patch->originy,
+          r_draw_columnInCache(patchcol, block + colofs[x], patch->originy,
                               texture->height);
         }
     }
@@ -705,7 +705,7 @@ void r_initColormaps(void)
 }
 
 /****************************************************************************
- * Name: r_initData
+ * Name: r_init_data
  *
  * Description:
  *  Locates all the lumps that will be used by all views
@@ -713,7 +713,7 @@ void r_initColormaps(void)
  *
  ****************************************************************************/
 
-void r_initData(void)
+void r_init_data(void)
 {
   r_initTextures();
   printf(".");

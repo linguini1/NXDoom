@@ -34,8 +34,8 @@
 #define MINZ (FRACUNIT * 4)
 #define BASEYCENTER (SCREENHEIGHT / 2)
 
-// void R_DrawColumn (void);
-// void R_DrawFuzzColumn (void);
+// void r_draw_column (void);
+// void r_draw_fuzz_column (void);
 
 typedef struct
 {
@@ -278,10 +278,10 @@ void r_initSprites(const char **namelist)
 }
 
 //
-// R_ClearSprites
+// r_clear_sprites
 // Called at frame start.
 //
-void R_ClearSprites(void) { vissprite_p = vissprites; }
+void r_clear_sprites(void) { vissprite_p = vissprites; }
 
 //
 // R_NewVisSprite
@@ -297,7 +297,7 @@ vissprite_t *R_NewVisSprite(void)
 }
 
 //
-// R_DrawMaskedColumn
+// r_draw_maskedColumn
 // Used for sprites and masked mid textures.
 // Masked means: partly transparent, i.e. stored
 //  in posts/runs of opaque pixels.
@@ -308,7 +308,7 @@ short *mceilingclip;
 fixed_t spryscale;
 fixed_t sprtopscreen;
 
-void R_DrawMaskedColumn(column_t *column)
+void r_draw_maskedColumn(column_t *column)
 {
   int topscreen;
   int bottomscreen;
@@ -335,8 +335,8 @@ void R_DrawMaskedColumn(column_t *column)
           dc_texturemid = basetexturemid - (column->topdelta << FRACBITS);
           // dc_source = (byte *)column + 3 - column->topdelta;
 
-          // Drawn by either R_DrawColumn
-          //  or (SHADOW) R_DrawFuzzColumn.
+          // Drawn by either r_draw_column
+          //  or (SHADOW) r_draw_fuzz_column.
           colfunc();
         }
       column = (column_t *)((byte *)column + column->length + 4);
@@ -388,7 +388,7 @@ void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
 #endif
       column =
           (column_t *)((byte *)patch + LONG(patch->columnofs[texturecolumn]));
-      R_DrawMaskedColumn(column);
+      r_draw_maskedColumn(column);
     }
 
   colfunc = basecolfunc;
@@ -807,7 +807,7 @@ void R_DrawSprite(vissprite_t *spr)
 
       if (scale < spr->scale ||
           (lowscale < spr->scale &&
-           !R_PointOnSegSide(spr->gx, spr->gy, ds->curline)))
+           !r_point_on_seg_side(spr->gx, spr->gy, ds->curline)))
         {
           // masked mid texture?
           if (ds->maskedtexturecol) R_RenderMaskedSegRange(ds, r1, r2);
@@ -861,9 +861,9 @@ void R_DrawSprite(vissprite_t *spr)
 }
 
 //
-// R_DrawMasked
+// r_draw_masked
 //
-void R_DrawMasked(void)
+void r_draw_masked(void)
 {
   vissprite_t *spr;
   drawseg_t *ds;

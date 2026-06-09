@@ -82,10 +82,10 @@ fixed_t cachedxstep[SCREENHEIGHT];
 fixed_t cachedystep[SCREENHEIGHT];
 
 //
-// r_initPlanes
+// r_init_planes
 // Only at game startup.
 //
-void r_initPlanes(void)
+void r_init_planes(void)
 {
   // Doh!
 }
@@ -156,10 +156,10 @@ void R_MapPlane(int y, int x1, int x2)
 }
 
 //
-// R_ClearPlanes
+// r_clear_planes
 // At begining of frame.
 //
-void R_ClearPlanes(void)
+void r_clear_planes(void)
 {
   int i;
   angle_t angle;
@@ -316,10 +316,10 @@ void R_MakeSpans(int x, int t1, int b1, int t2, int b2)
 }
 
 //
-// R_DrawPlanes
+// r_draw_planes
 // At the end of each frame.
 //
-void R_DrawPlanes(void)
+void r_draw_planes(void)
 {
   visplane_t *pl;
   int light;
@@ -330,14 +330,14 @@ void R_DrawPlanes(void)
 
 #ifdef CONFIG_GAMES_NXDOOM_RANGECHECK
   if (ds_p - drawsegs > CONFIG_GAMES_NXDOOM_MAXDRAWSEGS)
-    i_error("R_DrawPlanes: drawsegs overflow (%td)", ds_p - drawsegs);
+    i_error("r_draw_planes: drawsegs overflow (%td)", ds_p - drawsegs);
 
   if (lastvisplane - visplanes > CONFIG_GAMES_NXDOOM_MAXVISPLANES)
-    i_error("R_DrawPlanes: visplane overflow (%td)",
+    i_error("r_draw_planes: visplane overflow (%td)",
             lastvisplane - visplanes);
 
   if (lastopening - openings > MAXOPENINGS)
-    i_error("R_DrawPlanes: opening overflow (%td)", lastopening - openings);
+    i_error("r_draw_planes: opening overflow (%td)", lastopening - openings);
 #endif
 
   for (pl = visplanes; pl < lastvisplane; pl++)

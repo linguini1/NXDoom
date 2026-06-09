@@ -161,7 +161,7 @@ void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
                                                  maskedtexturecol[dc_x]) -
                              3);
 
-          R_DrawMaskedColumn(col);
+          r_draw_maskedColumn(col);
           maskedtexturecol[dc_x] = SHRT_MAX;
         }
       spryscale += rw_scalestep;
@@ -368,7 +368,7 @@ void r_store_wall_range(int start, int stop)
   if (offsetangle > ANG90) offsetangle = ANG90;
 
   distangle = ANG90 - offsetangle;
-  hyp = R_PointToDist(curline->v1->x, curline->v1->y);
+  hyp = r_point_to_dist(curline->v1->x, curline->v1->y);
   sineval = finesine[distangle >> ANGLETOFINESHIFT];
   rw_distance = fixed_mul(hyp, sineval);
 
@@ -379,11 +379,11 @@ void r_store_wall_range(int start, int stop)
 
   // calculate scale at both ends and step
   ds_p->scale1 = rw_scale =
-      R_ScaleFromGlobalAngle(viewangle + xtoviewangle[start]);
+      r_scale_from_global_angle(viewangle + xtoviewangle[start]);
 
   if (stop > start)
     {
-      ds_p->scale2 = R_ScaleFromGlobalAngle(viewangle + xtoviewangle[stop]);
+      ds_p->scale2 = r_scale_from_global_angle(viewangle + xtoviewangle[stop]);
       ds_p->scalestep = rw_scalestep =
           (ds_p->scale2 - rw_scale) / (stop - start);
     }

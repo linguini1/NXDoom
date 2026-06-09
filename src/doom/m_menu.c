@@ -997,7 +997,7 @@ void M_ChangeDetail(int choice)
   choice = 0;
   g_detail_level = 1 - g_detail_level;
 
-  R_SetViewSize(screenblocks, g_detail_level);
+  r_set_view_size(screenblocks, g_detail_level);
 
   if (!g_detail_level)
     players[consoleplayer].message = (DETAILHI);
@@ -1025,7 +1025,7 @@ void M_SizeDisplay(int choice)
       break;
     }
 
-  R_SetViewSize(screenblocks, g_detail_level);
+  r_set_view_size(screenblocks, g_detail_level);
 }
 
 //

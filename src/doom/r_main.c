@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/r_main.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,10 +17,10 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Rendering main loop and setup functions,
- *	 utility functions (BSP, geometry, trigonometry).
- *	See tables.c, too.
- */
+ *  Rendering main loop and setup functions, utility functions (BSP,
+ *  geometry, trigonometry). See tables.c, too.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -63,7 +67,8 @@ fixed_t centerxfrac;
 fixed_t centeryfrac;
 fixed_t projection;
 
-// just for profiling purposes
+/* just for profiling purposes */
+
 int framecount;
 
 int sscount;
@@ -123,24 +128,232 @@ int setblocks;
 int setdetail;
 
 /****************************************************************************
- * Public Functions
+ * Private Functions
  ****************************************************************************/
 
 /****************************************************************************
- * Name: R_AddPointToBox
+ * Name: r_add_point_to_box
  *
  * Description:
  *  Expand a given bbox so that it encloses a given point.
  *
  ****************************************************************************/
 
-void R_AddPointToBox(int x, int y, fixed_t *box)
+static void r_add_point_to_box(int x, int y, fixed_t *box)
 {
   if (x < box[BOXLEFT]) box[BOXLEFT] = x;
   if (x > box[BOXRIGHT]) box[BOXRIGHT] = x;
   if (y < box[BOXBOTTOM]) box[BOXBOTTOM] = y;
   if (y > box[BOXTOP]) box[BOXTOP] = y;
 }
+
+/****************************************************************************
+ * Name: r_setup_frame
+ ****************************************************************************/
+
+static void r_setup_frame(player_t *player)
+{
+  int i;
+
+  viewplayer = player;
+  viewx = player->mo->x;
+  viewy = player->mo->y;
+  viewangle = player->mo->angle + viewangleoffset;
+  extralight = player->extralight;
+
+  viewz = player->viewz;
+
+  viewsin = finesine[viewangle >> ANGLETOFINESHIFT];
+  viewcos = finecosine[viewangle >> ANGLETOFINESHIFT];
+
+  sscount = 0;
+
+  if (player->fixedcolormap)
+    {
+      fixedcolormap = colormaps + player->fixedcolormap * 256;
+
+      walllights = scalelightfixed;
+
+      for (i = 0; i < MAXLIGHTSCALE; i++)
+        scalelightfixed[i] = fixedcolormap;
+    }
+  else
+    fixedcolormap = 0;
+
+  framecount++;
+  validcount++;
+}
+
+/****************************************************************************
+ * Name: r_init_light_tables
+ *
+ * Description:
+ *  Only inits the zlight table, because the scalelight table changes with
+ *  view size.
+ *
+ ****************************************************************************/
+
+static void r_init_light_tables(void)
+{
+  int i;
+  int j;
+  int level;
+  int startmap;
+  int scale;
+
+  /* Calculate the light levels to use for each level / distance combination.
+   */
+
+  for (i = 0; i < LIGHTLEVELS; i++)
+    {
+      startmap = ((LIGHTLEVELS - 1 - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
+      for (j = 0; j < MAXLIGHTZ; j++)
+        {
+          scale = fixed_div((SCREENWIDTH / 2 * FRACUNIT),
+                  (j + 1) << LIGHTZSHIFT);
+          scale >>= LIGHTSCALESHIFT;
+          level = startmap - scale / DISTMAP;
+
+          if (level < 0) level = 0;
+
+          if (level >= NUMCOLORMAPS) level = NUMCOLORMAPS - 1;
+
+          zlight[i][j] = colormaps + level * 256;
+        }
+    }
+}
+
+/****************************************************************************
+ * Name: r_init_tables
+ ****************************************************************************/
+
+static void r_init_tables(void)
+{
+#if 0 /* UNUSED: now getting from tables.c */
+  int i;
+  float a;
+  float fv;
+  int t;
+
+  /* viewangle tangent table */
+
+  for (i = 0; i < FINEANGLES / 2; i++)
+    {
+      a = (i - FINEANGLES / 4 + 0.5) * PI * 2 / FINEANGLES;
+      fv = FRACUNIT * tan(a);
+      t = fv;
+      finetangent[i] = t;
+    }
+
+  /* finesine table */
+
+  for (i = 0; i < 5 * FINEANGLES / 4; i++)
+    {
+      /* OPTIMIZE: mirror... */
+
+      a = (i + 0.5) * PI * 2 / FINEANGLES;
+      t = FRACUNIT * sin(a);
+      finesine[i] = t;
+    }
+#endif
+}
+
+/****************************************************************************
+ * Name: r_init_point_to_angle
+ ****************************************************************************/
+
+static void r_init_point_to_angle(void)
+{
+#if 0 /* UNUSED - now getting from tables.c */
+  int i;
+  long t;
+  float f;
+
+  /* slope (tangent) to angle lookup */
+
+  for (i = 0; i <= SLOPERANGE; i++)
+    {
+      f = atan((float)i / SLOPERANGE) / (3.141592657 * 2);
+      t = 0xffffffff * f;
+      tantoangle[i] = t;
+    }
+#endif
+}
+
+/****************************************************************************
+ * Name: r_init_texture_mapping
+ ****************************************************************************/
+
+static void r_init_texture_mapping(void)
+{
+  int i;
+  int x;
+  int t;
+  fixed_t focallength;
+
+  /* Use tangent table to generate viewangletox:
+   *  viewangletox will give the next greatest x
+   *  after the view angle.
+   *
+   * Calc focallength
+   *  so FIELDOFVIEW angles covers SCREENWIDTH.
+   */
+
+  focallength =
+      fixed_div(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
+
+  for (i = 0; i < FINEANGLES / 2; i++)
+    {
+      if (finetangent[i] > FRACUNIT * 2)
+        t = -1;
+      else if (finetangent[i] < -FRACUNIT * 2)
+        t = viewwidth + 1;
+      else
+        {
+          t = fixed_mul(finetangent[i], focallength);
+          t = (centerxfrac - t + FRACUNIT - 1) >> FRACBITS;
+
+          if (t < -1)
+            t = -1;
+          else if (t > viewwidth + 1)
+            t = viewwidth + 1;
+        }
+
+      viewangletox[i] = t;
+    }
+
+  /* Scan viewangletox[] to generate xtoviewangle[]:
+   *  xtoviewangle will give the smallest view angle
+   *  that maps to x.
+   */
+
+  for (x = 0; x <= viewwidth; x++)
+    {
+      i = 0;
+      while (viewangletox[i] > x)
+        i++;
+      xtoviewangle[x] = (i << ANGLETOFINESHIFT) - ANG90;
+    }
+
+  /* Take out the fencepost cases from viewangletox. */
+
+  for (i = 0; i < FINEANGLES / 2; i++)
+    {
+      t = fixed_mul(finetangent[i], focallength);
+      t = centerx - t;
+
+      if (viewangletox[i] == -1)
+        viewangletox[i] = 0;
+      else if (viewangletox[i] == viewwidth + 1)
+        viewangletox[i] = viewwidth;
+    }
+
+  clipangle = xtoviewangle[0];
+}
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 /****************************************************************************
  * Name: r_point_on_side
@@ -165,6 +378,7 @@ int r_point_on_side(fixed_t x, fixed_t y, node_t *node)
 
       return node->dy < 0;
     }
+
   if (!node->dy)
     {
       if (y <= node->y) return node->dx < 0;
@@ -183,6 +397,7 @@ int r_point_on_side(fixed_t x, fixed_t y, node_t *node)
         {
           return 1; /* (left is negative) */
         }
+
       return 0;
     }
 
@@ -198,10 +413,10 @@ int r_point_on_side(fixed_t x, fixed_t y, node_t *node)
 }
 
 /****************************************************************************
- * Name: R_PointOnSegSide
+ * Name: r_point_on_seg_side
  ****************************************************************************/
 
-int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
+int r_point_on_seg_side(fixed_t x, fixed_t y, seg_t *line)
 {
   fixed_t lx;
   fixed_t ly;
@@ -224,6 +439,7 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
 
       return ldy < 0;
     }
+
   if (!ldy)
     {
       if (y <= ly) return ldx < 0;
@@ -242,6 +458,7 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
         {
           return 1; /* (left is negative) */
         }
+
       return 0;
     }
 
@@ -294,6 +511,7 @@ angle_t r_point_to_angle(fixed_t x, fixed_t y)
       else
         {
           /* y<0 */
+
           y = -y;
 
           if (x > y)
@@ -309,11 +527,13 @@ angle_t r_point_to_angle(fixed_t x, fixed_t y)
   else
     {
       /* x<0 */
+
       x = -x;
 
       if (y >= 0)
         {
           /* y>= 0 */
+
           if (x > y)
             {
               return ANG180 - 1 - tantoangle[slope_div(y, x)]; /* octant 3 */
@@ -337,6 +557,7 @@ angle_t r_point_to_angle(fixed_t x, fixed_t y)
             }
         }
     }
+
   return 0;
 }
 
@@ -353,10 +574,10 @@ angle_t r_point_to_angle2(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2)
 }
 
 /****************************************************************************
- * Name: R_PointToDist
+ * Name: r_point_to_dist
  ****************************************************************************/
 
-fixed_t R_PointToDist(fixed_t x, fixed_t y)
+fixed_t r_point_to_dist(fixed_t x, fixed_t y)
 {
   int angle;
   fixed_t dx;
@@ -394,30 +615,7 @@ fixed_t R_PointToDist(fixed_t x, fixed_t y)
 }
 
 /****************************************************************************
- * Name: r_initPointToAngle
- ****************************************************************************/
-
-void r_initPointToAngle(void)
-{
-  /* UNUSED - now getting from tables.c */
-#if 0
-    int	i;
-    long	t;
-    float	f;
-
-/* slope (tangent) to angle lookup */
-
-    for (i=0 ; i<=SLOPERANGE ; i++)
-    {
-	f = atan( (float)i/SLOPERANGE )/(3.141592657*2);
-	t = 0xffffffff*f;
-	tantoangle[i] = t;
-    }
-#endif
-}
-
-/****************************************************************************
- * Name: R_ScaleFromGlobalAngle
+ * Name: r_scale_from_global_angle
  *
  * Description:
  *  Returns the texture mapping scale for the current line (horizontal span)
@@ -425,7 +623,7 @@ void r_initPointToAngle(void)
  *
  ****************************************************************************/
 
-fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
+fixed_t r_scale_from_global_angle(angle_t visangle)
 {
   fixed_t scale;
   angle_t anglea;
@@ -435,27 +633,24 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
   fixed_t num;
   int den;
 
-  /* UNUSED */
-#if 0
-{
-    fixed_t		dist;
-    fixed_t		z;
-    fixed_t		sinv;
-    fixed_t		cosv;
-	
-    sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];	
-    dist = fixed_div (rw_distance, sinv);
-    cosv = finecosine[(viewangle-visangle)>>ANGLETOFINESHIFT];
-    z = abs(fixed_mul (dist, cosv));
-    scale = fixed_div(projection, z);
-    return scale;
-}
+#if 0 /* UNUSED */
+  fixed_t dist;
+  fixed_t z;
+  fixed_t sinv;
+  fixed_t cosv;
+
+  sinv = finesine[(visangle - rw_normalangle) >> ANGLETOFINESHIFT];
+  dist = fixed_div(rw_distance, sinv);
+  cosv = finecosine[(viewangle - visangle) >> ANGLETOFINESHIFT];
+  z = abs(fixed_mul(dist, cosv));
+  scale = fixed_div(projection, z);
+  return scale;
 #endif
 
   anglea = ANG90 + (visangle - viewangle);
   angleb = ANG90 + (visangle - rw_normalangle);
 
-  /* both sines are allways positive */
+  /* both sines are always positive */
 
   sinea = finesine[anglea >> ANGLETOFINESHIFT];
   sineb = finesine[angleb >> ANGLETOFINESHIFT];
@@ -478,161 +673,15 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
 }
 
 /****************************************************************************
- * Name: r_initTables
- ****************************************************************************/
-
-void r_initTables(void)
-{
-  /* UNUSED: now getting from tables.c */
-
-#if 0
-    int		i;
-    float	a;
-    float	fv;
-    int		t;
-    
-    /* viewangle tangent table */
-
-    for (i=0 ; i<FINEANGLES/2 ; i++)
-    {
-	a = (i-FINEANGLES/4+0.5)*PI*2/FINEANGLES;
-	fv = FRACUNIT*tan (a);
-	t = fv;
-	finetangent[i] = t;
-    }
-    
-    /* finesine table */
-
-    for (i=0 ; i<5*FINEANGLES/4 ; i++)
-    {
-	/* OPTIMIZE: mirror... */
-
-	a = (i+0.5)*PI*2/FINEANGLES;
-	t = FRACUNIT*sin (a);
-	finesine[i] = t;
-    }
-#endif
-}
-
-/****************************************************************************
- * Name: r_initTextureMapping
- ****************************************************************************/
-
-void r_initTextureMapping(void)
-{
-  int i;
-  int x;
-  int t;
-  fixed_t focallength;
-
-  /* Use tangent table to generate viewangletox:
-   *  viewangletox will give the next greatest x
-   *  after the view angle.
-   *
-   * Calc focallength
-   *  so FIELDOFVIEW angles covers SCREENWIDTH.
-   */
-
-  focallength =
-      fixed_div(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
-
-  for (i = 0; i < FINEANGLES / 2; i++)
-    {
-      if (finetangent[i] > FRACUNIT * 2)
-        t = -1;
-      else if (finetangent[i] < -FRACUNIT * 2)
-        t = viewwidth + 1;
-      else
-        {
-          t = fixed_mul(finetangent[i], focallength);
-          t = (centerxfrac - t + FRACUNIT - 1) >> FRACBITS;
-
-          if (t < -1)
-            t = -1;
-          else if (t > viewwidth + 1)
-            t = viewwidth + 1;
-        }
-      viewangletox[i] = t;
-    }
-
-  /* Scan viewangletox[] to generate xtoviewangle[]:
-   *  xtoviewangle will give the smallest view angle
-   *  that maps to x.
-   */
-
-  for (x = 0; x <= viewwidth; x++)
-    {
-      i = 0;
-      while (viewangletox[i] > x)
-        i++;
-      xtoviewangle[x] = (i << ANGLETOFINESHIFT) - ANG90;
-    }
-
-  /* Take out the fencepost cases from viewangletox. */
-
-  for (i = 0; i < FINEANGLES / 2; i++)
-    {
-      t = fixed_mul(finetangent[i], focallength);
-      t = centerx - t;
-
-      if (viewangletox[i] == -1)
-        viewangletox[i] = 0;
-      else if (viewangletox[i] == viewwidth + 1)
-        viewangletox[i] = viewwidth;
-    }
-
-  clipangle = xtoviewangle[0];
-}
-
-/****************************************************************************
- * Name: r_initLightTables
+ * Name: r_set_view_size
  *
  * Description:
- *  Only inits the zlight table, because the scalelight table changes with
- *  view size.
+ *  Do not really change anything here, because it might be in the middle
+ *  of a refresh. The change will take effect next refresh.
  *
  ****************************************************************************/
 
-void r_initLightTables(void)
-{
-  int i;
-  int j;
-  int level;
-  int startmap;
-  int scale;
-
-  /* Calculate the light levels to use for each level / distance combination.
-   */
-
-  for (i = 0; i < LIGHTLEVELS; i++)
-    {
-      startmap = ((LIGHTLEVELS - 1 - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
-      for (j = 0; j < MAXLIGHTZ; j++)
-        {
-          scale =
-              fixed_div((SCREENWIDTH / 2 * FRACUNIT), (j + 1) << LIGHTZSHIFT);
-          scale >>= LIGHTSCALESHIFT;
-          level = startmap - scale / DISTMAP;
-
-          if (level < 0) level = 0;
-
-          if (level >= NUMCOLORMAPS) level = NUMCOLORMAPS - 1;
-
-          zlight[i][j] = colormaps + level * 256;
-        }
-    }
-}
-
-/****************************************************************************
- * Name: R_SetViewSize
- *
- * Description:
- *  Do not really change anything here, because it might be in the middle of a
- * refresh. The change will take effect next refresh.
- *
- ****************************************************************************/
-
-void R_SetViewSize(int blocks, int detail)
+void r_set_view_size(int blocks, int detail)
 {
   setsizeneeded = true;
   setblocks = blocks;
@@ -676,22 +725,22 @@ void r_execute_set_view_size(void)
 
   if (!detailshift)
     {
-      colfunc = basecolfunc = R_DrawColumn;
-      fuzzcolfunc = R_DrawFuzzColumn;
-      transcolfunc = R_DrawTranslatedColumn;
-      spanfunc = R_DrawSpan;
+      colfunc = basecolfunc = r_draw_column;
+      fuzzcolfunc = r_draw_fuzz_column;
+      transcolfunc = r_draw_translated_column;
+      spanfunc = r_draw_span;
     }
   else
     {
-      colfunc = basecolfunc = R_DrawColumnLow;
-      fuzzcolfunc = R_DrawFuzzColumnLow;
-      transcolfunc = R_DrawTranslatedColumnLow;
-      spanfunc = R_DrawSpanLow;
+      colfunc = basecolfunc = r_draw_column_low;
+      fuzzcolfunc = r_draw_fuzz_column_low;
+      transcolfunc = r_draw_translated_column_low;
+      spanfunc = r_draw_span_low;
     }
 
-  r_initBuffer(scaledviewwidth, viewheight);
+  r_init_buffer(scaledviewwidth, viewheight);
 
-  r_initTextureMapping();
+  r_init_texture_mapping();
 
   /* psprite scales */
 
@@ -743,23 +792,23 @@ void r_execute_set_view_size(void)
 
 void r_init(void)
 {
-  r_initData();
+  r_init_data();
   printf(".");
-  r_initPointToAngle();
+  r_init_point_to_angle();
   printf(".");
-  r_initTables();
+  r_init_tables();
 
   /* viewwidth / viewheight / g_detail_level are set by the defaults */
 
   printf(".");
 
-  R_SetViewSize(screenblocks, g_detail_level);
-  r_initPlanes();
+  r_set_view_size(screenblocks, g_detail_level);
+  r_init_planes();
   printf(".");
-  r_initLightTables();
+  r_init_light_tables();
   printf(".");
   r_init_sky_map();
-  r_initTranslationTables();
+  r_init_translation_table();
   printf(".");
 
   framecount = 0;
@@ -792,56 +841,19 @@ subsector_t *r_point_in_subsector(fixed_t x, fixed_t y)
 }
 
 /****************************************************************************
- * Name: R_SetupFrame
- ****************************************************************************/
-
-void R_SetupFrame(player_t *player)
-{
-  int i;
-
-  viewplayer = player;
-  viewx = player->mo->x;
-  viewy = player->mo->y;
-  viewangle = player->mo->angle + viewangleoffset;
-  extralight = player->extralight;
-
-  viewz = player->viewz;
-
-  viewsin = finesine[viewangle >> ANGLETOFINESHIFT];
-  viewcos = finecosine[viewangle >> ANGLETOFINESHIFT];
-
-  sscount = 0;
-
-  if (player->fixedcolormap)
-    {
-      fixedcolormap = colormaps + player->fixedcolormap * 256;
-
-      walllights = scalelightfixed;
-
-      for (i = 0; i < MAXLIGHTSCALE; i++)
-        scalelightfixed[i] = fixedcolormap;
-    }
-  else
-    fixedcolormap = 0;
-
-  framecount++;
-  validcount++;
-}
-
-/****************************************************************************
  * Name: r_render_player_view
  ****************************************************************************/
 
 void r_render_player_view(player_t *player)
 {
-  R_SetupFrame(player);
+  r_setup_frame(player);
 
   /* Clear buffers. */
 
   r_clear_clip_segs();
   r_clear_draw_segs();
-  R_ClearPlanes();
-  R_ClearSprites();
+  r_clear_planes();
+  r_clear_sprites();
 
   /* check for new console commands. */
 
@@ -855,13 +867,13 @@ void r_render_player_view(player_t *player)
 
   net_update();
 
-  R_DrawPlanes();
+  r_draw_planes();
 
   /* Check for new console commands. */
 
   net_update();
 
-  R_DrawMasked();
+  r_draw_masked();
 
   /* Check for new console commands. */
 
