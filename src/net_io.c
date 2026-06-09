@@ -1,20 +1,29 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//     Network packet I/O.  Base layer for sending/receiving packets,
-//     through the network module system
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/net_io.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *   Network packet I/O.  Base layer for sending/receiving packets,
+ *   through the network module system
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 
@@ -23,7 +32,15 @@
 #include "net_io.h"
 #include "z_zone.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
 #define MAX_MODULES 16
+
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
 
 struct _net_context_s
 {
@@ -31,7 +48,15 @@ struct _net_context_s
   int num_modules;
 };
 
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
 net_addr_t net_broadcast_addr;
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 net_context_t *net_new_context(void)
 {
@@ -93,7 +118,7 @@ boolean net_recv_packet(net_context_t *context, net_addr_t **addr,
 {
   int i;
 
-  // check all modules for new packets
+  /* check all modules for new packets */
 
   for (i = 0; i < context->num_modules; ++i)
     {
@@ -107,8 +132,9 @@ boolean net_recv_packet(net_context_t *context, net_addr_t **addr,
   return false;
 }
 
-// Note: this prints into a static buffer, calling again overwrites
-// the first result
+/* Note: this prints into a static buffer, calling again overwrites
+ * the first result
+ */
 
 char *net_addr_to_string(net_addr_t *addr)
 {
@@ -125,8 +151,8 @@ void net_reference_address(net_addr_t *addr)
     {
       return;
     }
+
   ++addr->refcount;
-  // printf("%s: +refcount=%d\n", net_addr_to_string(addr), addr->refcount);
 }
 
 void net_release_address(net_addr_t *addr)
@@ -137,7 +163,6 @@ void net_release_address(net_addr_t *addr)
     }
 
   --addr->refcount;
-  // printf("%s: -refcount=%d\n", net_addr_to_string(addr), addr->refcount);
   if (addr->refcount <= 0)
     {
       addr->module->free_address(addr);
