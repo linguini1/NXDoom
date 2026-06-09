@@ -536,7 +536,7 @@ void I_GetEvent(void)
         case SDL_QUIT:
           if (screensaver_mode)
             {
-              I_Quit();
+              i_quit();
             }
           else
             {

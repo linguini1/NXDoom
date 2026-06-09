@@ -60,7 +60,7 @@
 
 #define MASTER_RESOLVE_PERIOD 8 * 60 * 60 /* 8 hours */
 
-#define NET_SV_ExpandTicNum(b) net_expand_tic_num(recvwindow_start, (b))
+#define net_sv_expand_ticnum(b) net_expand_tic_num(recvwindow_start, (b))
 
 /****************************************************************************
  * Private Types
@@ -197,7 +197,8 @@ static unsigned int master_resolve_time;
 /* receive window */
 
 static unsigned int recvwindow_start;
-static net_client_recv_t recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS][CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
+static net_client_recv_t recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS]
+                                   [CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 
 /****************************************************************************
  * Private Function Prototypes
@@ -505,15 +506,19 @@ static void net_sv_send_waiting_data(net_client_t *client)
       if (client_range == RANGE_LOCALHOST || client_range == RANGE_PRIVATE ||
           i == wait_data.consoleplayer || player_range == RANGE_LOCALHOST)
         {
-          m_str_copy(wait_data.player_addrs[i], addr, CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME);
+          m_str_copy(wait_data.player_addrs[i], addr,
+                     CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME);
         }
       else if (player_range == RANGE_PRIVATE)
         {
-          snprintf(wait_data.player_addrs[i], CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME, "[LAN player]");
+          snprintf(wait_data.player_addrs[i],
+                   CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME,
+                   "[LAN player]");
         }
       else
         {
-          snprintf(wait_data.player_addrs[i], CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME,
+          snprintf(wait_data.player_addrs[i],
+                   CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME,
                    "[address hidden]");
         }
     }
@@ -522,7 +527,7 @@ static void net_sv_send_waiting_data(net_client_t *client)
 
   packet = net_new_packet(10);
   net_write_int16(packet, NET_PACKET_TYPE_WAITING_DATA);
-  NET_WriteWaitData(packet, &wait_data);
+  net_write_wait_data(packet, &wait_data);
 
   /* Send packet to client and free */
 
@@ -608,10 +613,13 @@ static void net_sv_advance_window(void)
       /* Advance the window */
 
       memmove(recvwindow, recvwindow + 1,
-              sizeof(*recvwindow) * (CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1));
-      memset(&recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1], 0, sizeof(*recvwindow));
+              sizeof(*recvwindow) *
+              (CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1));
+      memset(&recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1],
+             0, sizeof(*recvwindow));
       ++recvwindow_start;
-      net_log_info("server: advanced receive window to %d", recvwindow_start);
+      net_log_info("server: advanced receive window to %d",
+              recvwindow_start);
     }
 }
 
@@ -733,7 +741,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
    * common accepted protocol.
    */
 
-  protocol = NET_ReadProtocolList(packet);
+  protocol = net_read_protocol_list(packet);
   if (protocol == NET_PROTOCOL_UNKNOWN)
     {
       char reject_msg[256];
@@ -758,7 +766,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
       return;
     }
 
-  if (!D_ValidGameMode(data.gamemission, data.gamemode) ||
+  if (!d_valid_game_mode(data.gamemission, data.gamemode) ||
       data.max_players > CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS)
     {
       net_log_err("server: invalid connect data, max_players=%d, "
@@ -831,9 +839,9 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
       snprintf(msg, sizeof(msg),
                "Game mismatch: server is %s (%s), client is %s (%s)",
                d_game_mission_string(sv_gamemission),
-               D_GameModeString(sv_gamemode),
+               d_game_mode_string(sv_gamemode),
                d_game_mission_string(data.gamemission),
-               D_GameModeString(data.gamemode));
+               d_game_mode_string(data.gamemode));
 
       net_sv_send_reject(addr, msg);
       return;
@@ -900,7 +908,7 @@ static void net_sv_parse_syn(net_packet_t *packet, net_client_t *client,
 
   reply = net_conn_new_reliable(&client->connection, NET_PACKET_TYPE_SYN);
   net_write_string(reply, PACKAGE_STRING);
-  NET_WriteProtocol(reply, protocol);
+  net_write_protocol(reply, protocol);
 }
 
 /* Parse a launch packet. This is sent by the key player when the "start"
@@ -1011,7 +1019,7 @@ static void start_game(void)
 
       sv_settings.consoleplayer = clients[i].player_number;
 
-      NET_WriteSettings(startpacket, &sv_settings);
+      net_write_settings(startpacket, &sv_settings);
     }
 
   /* Change server state */
@@ -1214,9 +1222,11 @@ static void net_sv_check_resends(net_client_t *client)
 
           net_log_warn(
               "server: resend request to %s timed out for %d-%d (%p)",
-              net_addr_to_string(client->addr), recvwindow_start + resend_start,
+              net_addr_to_string(client->addr),
+              recvwindow_start + resend_start,
               recvwindow_start + resend_end,
               &recvwindow[resend_start][player].resend_time);
+
           net_sv_send_resend_request(client, recvwindow_start + resend_start,
                                      recvwindow_start + resend_end);
 
@@ -1238,7 +1248,8 @@ static void net_sv_check_resends(net_client_t *client)
 
 /* Process game data from a client */
 
-static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
+static void net_sv_parse_game_data(net_packet_t *packet,
+        net_client_t *client)
 {
   net_client_recv_t *recvobj;
   unsigned int seq;
@@ -1253,7 +1264,8 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
 
   if (server_state != SERVER_IN_GAME)
     {
-      net_log_err("server: not in game state: server_state=%d", server_state);
+      net_log_err("server: not in game state: server_state=%d",
+              server_state);
       return;
     }
 
@@ -1285,8 +1297,8 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
 
   /* Expand 8-bit values to the full sequence number */
 
-  ackseq = NET_SV_ExpandTicNum(ackseq);
-  seq = NET_SV_ExpandTicNum(seq);
+  ackseq = net_sv_expand_ticnum(ackseq);
+  seq = net_sv_expand_ticnum(seq);
 
   /* Sanity checks */
 
@@ -1296,7 +1308,7 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
       signed int latency;
 
       if (!net_read_sint16(packet, &latency) ||
-          !NET_ReadTiccmdDiff(packet, &diff, sv_settings.lowres_turn))
+          !net_read_ticcmd_diff(packet, &diff, sv_settings.lowres_turn))
         {
           return;
         }
@@ -1336,7 +1348,10 @@ static void net_sv_parse_game_data(net_packet_t *packet, net_client_t *client)
 
   if (resend_end <= 0) return;
 
-  if (resend_end >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS) resend_end = CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1;
+  if (resend_end >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS)
+    {
+      resend_end = CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1;
+    }
 
   index = resend_end - 1;
   resend_start = resend_end;
@@ -1384,7 +1399,8 @@ static void net_sv_parse_game_data_ack(net_packet_t *packet,
 
   if (server_state != SERVER_IN_GAME)
     {
-      net_log_err("server: not in game state, server_state=%d", server_state);
+      net_log_err("server: not in game state, server_state=%d",
+              server_state);
       return;
     }
 
@@ -1398,7 +1414,7 @@ static void net_sv_parse_game_data_ack(net_packet_t *packet,
 
   /* Expand 8-bit values to the full sequence number */
 
-  ackseq = NET_SV_ExpandTicNum(ackseq);
+  ackseq = net_sv_expand_ticnum(ackseq);
 
   /* Higher acknowledgement point than we already have? */
 
@@ -1439,7 +1455,7 @@ static void net_sv_send_tics(net_client_t *client, unsigned int start,
 
       /* Add command */
 
-      NET_WriteFullTiccmd(packet, cmd, sv_settings.lowres_turn);
+      net_write_full_ticcmd(packet, cmd, sv_settings.lowres_turn);
     }
 
   /* Send packet */
@@ -1604,7 +1620,7 @@ static void net_sv_send_query_response(net_addr_t *addr)
                net_addr_to_string(addr));
   reply = net_new_packet(64);
   net_write_int16(reply, NET_PACKET_TYPE_QUERY_RESPONSE);
-  NET_WriteQueryData(reply, &querydata);
+  net_write_query_data(reply, &querydata);
   net_send_packet(addr, reply);
   net_free_packet(reply);
 }
@@ -1790,7 +1806,8 @@ static void net_sv_pump_send_queue(net_client_t *client)
 
   /* Add into the queue */
 
-  client->sendqueue[client->sendseq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS] = cmd;
+  client->sendqueue[client->sendseq %
+      CONFIG_GAMES_NXDOOM_NET_BACKUPTICS] = cmd;
 
   /* Transmit the new tic to the client */
 
@@ -1885,11 +1902,13 @@ static void net_sv_check_deadlock(net_client_t *client)
        * resends to break deadlock.
        */
 
-      if (i < CONFIG_GAMES_NXDOOM_NET_BACKUPTICS && client->sendseq > client->acknowledged)
+      if (i < CONFIG_GAMES_NXDOOM_NET_BACKUPTICS &&
+          client->sendseq > client->acknowledged)
         {
           net_log_warn("server: also resending tics %d-%d to break deadlock",
                        client->acknowledged, client->sendseq - 1);
-          net_sv_send_tics(client, client->acknowledged, client->sendseq - 1);
+          net_sv_send_tics(client, client->acknowledged,
+                  client->sendseq - 1);
         }
     }
 }
@@ -2011,7 +2030,7 @@ static void update_master_server(void)
 
 void net_sv_add_module(net_module_t *module)
 {
-  module->InitServer();
+  module->init_server();
   net_add_module(server_context, module);
 }
 

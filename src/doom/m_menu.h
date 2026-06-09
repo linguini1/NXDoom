@@ -25,7 +25,7 @@
 // MENUS
 //
 // Called by main loop,
-// saves config file and calls I_Quit when user exits.
+// saves config file and calls i_quit when user exits.
 // Even when the menu is not displayed,
 // this can resize the view and change game parameters.
 // Does all the real work of the menu interaction.

@@ -27,7 +27,7 @@ void M_ClearBox(fixed_t *box)
   box[BOXBOTTOM] = box[BOXLEFT] = INT_MAX;
 }
 
-void M_AddToBox(fixed_t *box, fixed_t x, fixed_t y)
+void m_add_to_box(fixed_t *box, fixed_t x, fixed_t y)
 {
   if (x < box[BOXLEFT])
     box[BOXLEFT] = x;

@@ -35,8 +35,8 @@ typedef struct
   byte chatchar;
   byte buttons;
   // villsa [STRIFE] according to the asm,
-  // consistancy is a short, not a byte
-  byte consistancy; // checks for net game
+  // consistency is a short, not a byte
+  byte consistency; // checks for net game
 
   // villsa - Strife specific:
 

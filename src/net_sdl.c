@@ -189,7 +189,7 @@ static boolean NET_SDL_init_client(void)
   return true;
 }
 
-static boolean NET_SDL_InitServer(void)
+static boolean NET_SDL_init_server(void)
 {
   int p;
 
@@ -204,7 +204,7 @@ static boolean NET_SDL_InitServer(void)
 
   if (udpsocket == NULL)
     {
-      i_error("NET_SDL_InitServer: Unable to bind to port %i", port);
+      i_error("NET_SDL_init_server: Unable to bind to port %i", port);
     }
 
   recvpacket = SDLNet_AllocPacket(1500);
@@ -358,7 +358,7 @@ net_addr_t *NET_SDL_resolve_address(const char *address)
 // Complete module
 
 net_module_t net_sdl_module = {
-    NET_SDL_init_client,     NET_SDL_InitServer,   NET_SDL_SendPacket,
+    NET_SDL_init_client,     NET_SDL_init_server,   NET_SDL_SendPacket,
     NET_SDL_RecvPacket,     NET_SDL_AddrToString, NET_SDL_FreeAddress,
     NET_SDL_resolve_address,
 };
@@ -369,7 +369,7 @@ net_module_t net_sdl_module = {
 
 static boolean NET_NULL_init_client(void) { return false; }
 
-static boolean NET_NULL_InitServer(void) { return false; }
+static boolean NET_NULL_init_server(void) { return false; }
 
 static void NET_NULL_SendPacket(net_addr_t *addr, net_packet_t *packet) {}
 
@@ -388,7 +388,7 @@ static void NET_NULL_FreeAddress(net_addr_t *addr) {}
 net_addr_t *NET_NULL_resolve_address(const char *address) { return NULL; }
 
 net_module_t net_sdl_module = {
-    NET_NULL_init_client,     NET_NULL_InitServer,   NET_NULL_SendPacket,
+    NET_NULL_init_client,     NET_NULL_init_server,   NET_NULL_SendPacket,
     NET_NULL_RecvPacket,     NET_NULL_AddrToString, NET_NULL_FreeAddress,
     NET_NULL_resolve_address,
 };

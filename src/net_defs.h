@@ -82,7 +82,7 @@ struct _net_module_s
 
   // Initialize this module for use as a server
 
-  boolean (*InitServer)(void);
+  boolean (*init_server)(void);
 
   // Send a packet
 

@@ -145,7 +145,7 @@ int testcontrols_mousespeed;
 
 wbstartstruct_t wminfo; // parms for world map / intermission
 
-byte consistancy[MAXPLAYERS][CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
+byte consistency[MAXPLAYERS][CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
 #define MAXPLMOVE (forwardmove[1])
 
@@ -328,7 +328,7 @@ void g_build_ticcmd(ticcmd_t *cmd, int maketic)
 
   memset(cmd, 0, sizeof(ticcmd_t));
 
-  cmd->consistancy = consistancy[consoleplayer][maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
+  cmd->consistency = consistency[consoleplayer][maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
   strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] ||
            joybuttons[joybstrafe];
@@ -913,8 +913,8 @@ void g_ticker(void)
         }
     }
 
-  // get commands, check consistancy,
-  // and build new consistancy check
+  // get commands, check consistency,
+  // and build new consistency check
   buf = (gametic / ticdup) % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS;
 
   for (i = 0; i < MAXPLAYERS; i++)
@@ -954,15 +954,15 @@ void g_ticker(void)
           if (netgame && !netdemo && !(gametic % ticdup))
             {
               if (gametic > CONFIG_GAMES_NXDOOM_NET_BACKUPTICS &&
-                  consistancy[i][buf] != cmd->consistancy)
+                  consistency[i][buf] != cmd->consistency)
                 {
                   i_error("consistency failure (%i should be %i)",
-                          cmd->consistancy, consistancy[i][buf]);
+                          cmd->consistency, consistency[i][buf]);
                 }
               if (players[i].mo)
-                consistancy[i][buf] = players[i].mo->x;
+                consistency[i][buf] = players[i].mo->x;
               else
-                consistancy[i][buf] = rndindex;
+                consistency[i][buf] = rndindex;
             }
         }
     }
@@ -2287,7 +2287,7 @@ boolean g_check_demo_status(void)
       consoleplayer = 0;
 
       if (singledemo)
-        I_Quit();
+        i_quit();
       else
         d_advance_demo();
 

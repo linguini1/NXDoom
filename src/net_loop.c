@@ -154,7 +154,7 @@ static boolean net_cl_init_client(void)
 
 static boolean net_cl_init_server(void)
 {
-  i_error("NET_CL_InitServer: attempted to initialize client pipe end as a "
+  i_error("NET_CL_init_server: attempted to initialize client pipe end as a "
           "server!");
   return false;
 }

@@ -48,9 +48,6 @@
 #include "z_zone.h"
 
 #include "config.h"
-#ifdef HAVE_LIBPNG
-#include <png.h>
-#endif
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -216,6 +213,62 @@ static void draw_non_accelerating_box(int speed)
                     white);
 }
 
+static void write_pcx_file(char *filename, pixel_t *data, int width,
+                           int height, byte *palette)
+{
+  int i;
+  int length;
+  pcx_t *pcx;
+  byte *pack;
+
+  pcx = z_malloc(width * height * 2 + 1000, PU_STATIC, NULL);
+
+  pcx->manufacturer = 0x0a; /* PCX id */
+  pcx->version = 5;         /* 256 color */
+  pcx->encoding = 1;        /* uncompressed */
+  pcx->bits_per_pixel = 8;  /* 256 color */
+  pcx->xmin = 0;
+  pcx->ymin = 0;
+  pcx->xmax = SHORT(width - 1);
+  pcx->ymax = SHORT(height - 1);
+  pcx->hres = SHORT(1);
+  pcx->vres = SHORT(1);
+  memset(pcx->palette, 0, sizeof(pcx->palette));
+  pcx->reserved = 0;     /* PCX spec: reserved byte must be zero */
+  pcx->color_planes = 1; /* chunky image */
+  pcx->bytes_per_line = SHORT(width);
+  pcx->palette_type = SHORT(2); /* not a grey scale */
+  memset(pcx->filler, 0, sizeof(pcx->filler));
+
+  /* pack the image */
+
+  pack = &pcx->data;
+
+  for (i = 0; i < width * height; i++)
+    {
+      if ((*data & 0xc0) != 0xc0)
+        *pack++ = *data++;
+      else
+        {
+          *pack++ = 0xc1;
+          *pack++ = *data++;
+        }
+    }
+
+  /* write the palette */
+
+  *pack++ = 0x0c; /* palette ID byte */
+  for (i = 0; i < 768; i++)
+    *pack++ = *palette++;
+
+  /* write output file */
+
+  length = pack - (byte *)pcx;
+  m_write_file(filename, pcx, length);
+
+  z_free(pcx);
+}
+
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -228,8 +281,8 @@ void v_mark_rect(int x, int y, int width, int height)
 
   if (dest_screen == i_video_buffer)
     {
-      M_AddToBox(dirtybox, x, y);
-      M_AddToBox(dirtybox, x + width - 1, y + height - 1);
+      m_add_to_box(dirtybox, x, y);
+      m_add_to_box(dirtybox, x + width - 1, y + height - 1);
     }
 }
 
@@ -724,7 +777,8 @@ void v_draw_box(int x, int y, int w, int h, int c)
 
 void v_draw_raw_screen(pixel_t *raw)
 {
-  memcpy(dest_screen, raw, SCREENWIDTH * SCREENHEIGHT * sizeof(*dest_screen));
+  memcpy(dest_screen, raw,
+         SCREENWIDTH * SCREENHEIGHT * sizeof(*dest_screen));
 }
 
 void v_init(void)
@@ -737,186 +791,17 @@ void v_init(void)
 
 /* Set the buffer that the code draws to. */
 
-void v_use_buffer(pixel_t *buffer) { dest_screen = buffer; }
+void v_use_buffer(pixel_t *buffer)
+{
+  dest_screen = buffer;
+}
 
 /* Restore screen buffer to the i_video screen buffer. */
 
-void v_restore_buffer(void) { dest_screen = i_video_buffer; }
-
-void WritePCXfile(char *filename, pixel_t *data, int width, int height,
-                  byte *palette)
+void v_restore_buffer(void)
 {
-  int i;
-  int length;
-  pcx_t *pcx;
-  byte *pack;
-
-  pcx = z_malloc(width * height * 2 + 1000, PU_STATIC, NULL);
-
-  pcx->manufacturer = 0x0a; /* PCX id */
-  pcx->version = 5;         /* 256 color */
-  pcx->encoding = 1;        /* uncompressed */
-  pcx->bits_per_pixel = 8;  /* 256 color */
-  pcx->xmin = 0;
-  pcx->ymin = 0;
-  pcx->xmax = SHORT(width - 1);
-  pcx->ymax = SHORT(height - 1);
-  pcx->hres = SHORT(1);
-  pcx->vres = SHORT(1);
-  memset(pcx->palette, 0, sizeof(pcx->palette));
-  pcx->reserved = 0;     /* PCX spec: reserved byte must be zero */
-  pcx->color_planes = 1; /* chunky image */
-  pcx->bytes_per_line = SHORT(width);
-  pcx->palette_type = SHORT(2); /* not a grey scale */
-  memset(pcx->filler, 0, sizeof(pcx->filler));
-
-  /* pack the image */
-
-  pack = &pcx->data;
-
-  for (i = 0; i < width * height; i++)
-    {
-      if ((*data & 0xc0) != 0xc0)
-        *pack++ = *data++;
-      else
-        {
-          *pack++ = 0xc1;
-          *pack++ = *data++;
-        }
-    }
-
-  /* write the palette */
-
-  *pack++ = 0x0c; /* palette ID byte */
-  for (i = 0; i < 768; i++)
-    *pack++ = *palette++;
-
-  /* write output file */
-
-  length = pack - (byte *)pcx;
-  m_write_file(filename, pcx, length);
-
-  z_free(pcx);
+  dest_screen = i_video_buffer;
 }
-
-#ifdef HAVE_LIBPNG
-static void error_fn(png_structp p, png_const_charp s)
-{
-  printf("libpng error: %s\n", s);
-}
-
-static void warning_fn(png_structp p, png_const_charp s)
-{
-  printf("libpng warning: %s\n", s);
-}
-
-void WritePNGfile(char *filename, pixel_t *data, int width, int height,
-                  byte *palette)
-{
-  png_structp ppng;
-  png_infop pinfo;
-  png_colorp pcolor;
-  FILE *handle;
-  int i;
-  int j;
-  int w_factor;
-  int h_factor;
-  byte *rowbuf;
-
-  if (aspect_ratio_correct == 1)
-    {
-      /* scale up to accommodate aspect ratio correction */
-
-      w_factor = 5;
-      h_factor = 6;
-
-      width *= w_factor;
-      height *= h_factor;
-    }
-  else
-    {
-      w_factor = 1;
-      h_factor = 1;
-    }
-
-  handle = fopen(filename, "wb");
-  if (!handle)
-    {
-      return;
-    }
-
-  ppng = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, error_fn,
-                                 warning_fn);
-  if (!ppng)
-    {
-      fclose(handle);
-      return;
-    }
-
-  pinfo = png_create_info_struct(ppng);
-  if (!pinfo)
-    {
-      fclose(handle);
-      png_destroy_write_struct(&ppng, NULL);
-      return;
-    }
-
-  png_init_io(ppng, handle);
-
-  png_set_IHDR(ppng, pinfo, width, height, 8, PNG_COLOR_TYPE_PALETTE,
-               PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
-               PNG_FILTER_TYPE_DEFAULT);
-
-  pcolor = malloc(sizeof(*pcolor) * 256);
-  if (!pcolor)
-    {
-      fclose(handle);
-      png_destroy_write_struct(&ppng, &pinfo);
-      return;
-    }
-
-  for (i = 0; i < 256; i++)
-    {
-      pcolor[i].red = *(palette + 3 * i);
-      pcolor[i].green = *(palette + 3 * i + 1);
-      pcolor[i].blue = *(palette + 3 * i + 2);
-    }
-
-  png_set_PLTE(ppng, pinfo, pcolor, 256);
-  free(pcolor);
-
-  png_write_info(ppng, pinfo);
-
-  rowbuf = malloc(width);
-
-  if (rowbuf)
-    {
-      for (i = 0; i < SCREENHEIGHT; i++)
-        {
-          /* expand the row 5x */
-
-          for (j = 0; j < SCREENWIDTH; j++)
-            {
-              memset(rowbuf + j * w_factor, *(data + i * SCREENWIDTH + j),
-                     w_factor);
-            }
-
-          /* write the row 6 times */
-
-          for (j = 0; j < h_factor; j++)
-            {
-              png_write_row(ppng, rowbuf);
-            }
-        }
-
-      free(rowbuf);
-    }
-
-  png_write_end(ppng, pinfo);
-  png_destroy_write_struct(&ppng, &pinfo);
-  fclose(handle);
-}
-#endif
 
 void v_screenshot(const char *format)
 {
@@ -926,16 +811,7 @@ void v_screenshot(const char *format)
 
   /* find a file name to save it to */
 
-#ifdef HAVE_LIBPNG
-  if (png_screenshots)
-    {
-      ext = "png";
-    }
-  else
-#endif
-    {
-      ext = "pcx";
-    }
+  ext = "pcx";
 
   for (i = 0; i <= 99; i++)
     {
@@ -949,32 +825,13 @@ void v_screenshot(const char *format)
 
   if (i == 100)
     {
-#ifdef HAVE_LIBPNG
-      if (png_screenshots)
-        {
-          i_error("v_screenshot: Couldn't create a PNG");
-        }
-      else
-#endif
-        {
-          i_error("v_screenshot: Couldn't create a PCX");
-        }
+      i_error("v_screenshot: Couldn't create a PCX");
     }
 
-#ifdef HAVE_LIBPNG
-  if (png_screenshots)
-    {
-      WritePNGfile(lbmname, i_video_buffer, SCREENWIDTH, SCREENHEIGHT,
-                   w_cache_lump_name(("PLAYPAL"), PU_CACHE));
-    }
-  else
-#endif
-    {
-      /* save the pcx file */
+  /* save the pcx file */
 
-      WritePCXfile(lbmname, i_video_buffer, SCREENWIDTH, SCREENHEIGHT,
-                   w_cache_lump_name(("PLAYPAL"), PU_CACHE));
-    }
+  write_pcx_file(lbmname, i_video_buffer, SCREENWIDTH, SCREENHEIGHT,
+                 w_cache_lump_name(("PLAYPAL"), PU_CACHE));
 }
 
 void v_draw_mouse_speed_box(int speed)

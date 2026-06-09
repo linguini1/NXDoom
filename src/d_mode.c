@@ -41,7 +41,7 @@ static struct
 
 // Check that a gamemode+gamemission received over the network is valid.
 
-boolean D_ValidGameMode(gamemission_t mission, game_mode_t mode)
+boolean d_valid_game_mode(gamemission_t mission, game_mode_t mode)
 {
   int i;
 
@@ -199,7 +199,7 @@ const char *d_game_mission_string(gamemission_t mission)
     }
 }
 
-const char *D_GameModeString(game_mode_t mode)
+const char *d_game_mode_string(game_mode_t mode)
 {
   switch (mode)
     {

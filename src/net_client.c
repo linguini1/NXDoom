@@ -285,7 +285,7 @@ static void net_cl_expand_full_ticcmd(net_full_ticcmd_t *cmd,
            * the new ticcmd
            */
 
-          NET_TiccmdPatch(&recvwindow_cmd_base[i], diff, &ticcmds[i]);
+          net_ticcmd_patch(&recvwindow_cmd_base[i], diff, &ticcmds[i]);
 
           /* Store a copy for next time */
 
@@ -387,7 +387,7 @@ static void net_cl_send_tics(int start, int end)
 
       net_write_int16(packet, last_latency);
 
-      NET_WriteTiccmdDiff(packet, &sendobj->cmd, settings.lowres_turn);
+      net_write_ticcmd_diff(packet, &sendobj->cmd, settings.lowres_turn);
     }
 
   /* Send the packet */
@@ -421,7 +421,7 @@ static void net_cl_parse_syn(net_packet_t *packet)
       return;
     }
 
-  protocol = NET_ReadProtocol(packet);
+  protocol = net_read_protocol(packet);
   if (protocol == NET_PROTOCOL_UNKNOWN)
     {
       net_log_err("client: can't find a common protocol");
@@ -487,7 +487,7 @@ static void net_cl_parse_waiting_data(net_packet_t *packet)
 {
   net_waitdata_t wait_data;
 
-  if (!NET_ReadWaitData(packet, &wait_data))
+  if (!net_read_wait_data(packet, &wait_data))
     {
       /* Invalid packet? */
 
@@ -766,7 +766,7 @@ static void net_cl_parse_game_data(net_packet_t *packet)
 
       index = seq - recvwindow_start + i;
 
-      if (!NET_ReadFullTiccmd(packet, &cmd, settings.lowres_turn))
+      if (!net_read_full_ticcmd(packet, &cmd, settings.lowres_turn))
         {
           net_log_err("client: failed to read ticcmd %zu", i);
           return;
@@ -993,8 +993,8 @@ static void net_cl_send_syn(net_connect_data_t *data)
   net_write_int16(packet, NET_PACKET_TYPE_SYN);
   net_write_int32(packet, NET_MAGIC_NUMBER);
   net_write_string(packet, PACKAGE_STRING);
-  NET_WriteProtocolList(packet);
-  NET_WriteConnectData(packet, data);
+  net_write_protocol_list(packet);
+  net_write_connect_data(packet, data);
   net_write_string(packet, net_player_name);
   net_conn_send_packet(&client_connection, packet);
   net_free_packet(packet);
@@ -1004,7 +1004,7 @@ static void net_cl_send_syn(net_connect_data_t *data)
  * Public Functions
  ****************************************************************************/
 
-void NET_CL_LaunchGame(void)
+void net_cl_launch_game(void)
 {
   net_conn_new_reliable(&client_connection, NET_PACKET_TYPE_LAUNCH);
 }
@@ -1022,7 +1022,7 @@ void net_cl_start_game(net_gamesettings_t *p_settings)
   packet =
       net_conn_new_reliable(&client_connection, NET_PACKET_TYPE_GAMESTART);
 
-  NET_WriteSettings(packet, p_settings);
+  net_write_settings(packet, p_settings);
 }
 
 /* Add a new ticcmd to the send queue */
@@ -1036,7 +1036,7 @@ void net_cl_send_ticcmd(ticcmd_t *ticcmd, int maketic)
 
   /* Calculate the difference to the last ticcmd */
 
-  NET_TiccmdDiff(&last_ticcmd, ticcmd, &diff);
+  net_ticcmd_diff(&last_ticcmd, ticcmd, &diff);
 
   /* Store in the send queue */
 

@@ -634,8 +634,8 @@ void P_GroupLines(void)
         {
           li = sector->lines[j];
 
-          M_AddToBox(bbox, li->v1->x, li->v1->y);
-          M_AddToBox(bbox, li->v2->x, li->v2->y);
+          m_add_to_box(bbox, li->v1->x, li->v1->y);
+          m_add_to_box(bbox, li->v2->x, li->v2->y);
         }
 
       // set the degenmobj_t to the middle of the bounding box

@@ -948,7 +948,7 @@ void M_QuitResponse(int key)
 #endif
       i_wait_vbl(105);
     }
-  I_Quit();
+  i_quit();
 }
 
 static const char *M_SelectEndMessage(void)
@@ -1175,7 +1175,7 @@ boolean m_responder(event_t *ev)
           (ev->type == ev_keydown &&
            (ev->data1 == key_menu_activate || ev->data1 == key_menu_quit)))
         {
-          I_Quit();
+          i_quit();
           return true;
         }
 

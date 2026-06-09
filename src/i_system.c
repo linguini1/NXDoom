@@ -225,10 +225,10 @@ void I_BindVariables(void)
 */
 
 //
-// I_Quit
+// i_quit
 //
 
-void I_Quit(void)
+void i_quit(void)
 {
   atexit_listentry_t *entry;
 

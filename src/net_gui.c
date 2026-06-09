@@ -73,12 +73,12 @@ static int expected_nodes;
 static void escape_pressed(TXT_UNCAST_ARG(widget), void *unused)
 {
   txt_shutdown();
-  I_Quit();
+  i_quit();
 }
 
 static void start_game(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 {
-  NET_CL_LaunchGame();
+  net_cl_launch_game();
 }
 
 static void open_wait_dialog(void)
@@ -364,11 +364,12 @@ static void check_sha1_sums(void)
   else if (!correct_wad)
     {
       txt_add_widget(
-          l_window,
-          txt_new_label(
-              "Your WAD directory does not match other players in the game.\n"
-              "Check that you have loaded the exact same WAD files as other\n"
-              "players.\n"));
+        l_window,
+        txt_new_label(
+        "Your WAD directory does not match other players in the game.\n"
+        "Check that you have loaded the exact same WAD files as other\n"
+        "players.\n")
+      );
     }
 
   if (!correct_deh)

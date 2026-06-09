@@ -1,5 +1,5 @@
 /****************************************************************************
- * src/sha1.h
+ * apps/games/NXDoom/src/sha1.h
  *
  * SPDX-License-Identifer: GPLv2
  *

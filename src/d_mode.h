@@ -99,13 +99,13 @@ typedef enum
   sk_nightmare
 } skill_t;
 
-boolean D_ValidGameMode(gamemission_t mission, game_mode_t mode);
+boolean d_valid_game_mode(gamemission_t mission, game_mode_t mode);
 boolean d_valid_game_version(gamemission_t mission, game_version_t version);
 boolean d_valid_episode_map(gamemission_t mission, game_mode_t mode, int episode,
                           int map);
 int D_GetNumEpisodes(gamemission_t mission, game_mode_t mode);
 boolean D_IsEpisodeMap(gamemission_t mission);
 const char *d_game_mission_string(gamemission_t mission);
-const char *D_GameModeString(game_mode_t mode);
+const char *d_game_mode_string(game_mode_t mode);
 
 #endif /* #ifndef __D_MODE__ */
