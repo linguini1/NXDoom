@@ -86,7 +86,8 @@ drawseg_t *ds_p;
 cliprange_t *newend;
 cliprange_t solidsegs[MAXSEGS];
 
-int checkcoord[12][4] = {
+int checkcoord[12][4] =
+{
     {
         3,
         0,
@@ -520,7 +521,10 @@ static void r_subsector(int num)
  * Name: r_clear_draw_segs
  ****************************************************************************/
 
-void r_clear_draw_segs(void) { ds_p = drawsegs; }
+void r_clear_draw_segs(void)
+{
+  ds_p = drawsegs;
+}
 
 /****************************************************************************
  * Name: r_clip_solid_wall_segment
