@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/r_sky.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -17,7 +21,8 @@
  *  wall, wrapping around. A 1024 columns equal 360 degrees.
  *  The default sky map is 256 columns and repeats 4 times
  *  on a 320 screen?
- */
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
