@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/r_data.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,9 +17,10 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Preparation of data for rendering,
- *	generation of lookups, caching, retrieval by name.
- */
+ *  Preparation of data for rendering,
+ *  generation of lookups, caching, retrieval by name.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -59,20 +64,22 @@
  * and possibly other attributes.
  */
 
-typedef PACKED_STRUCT({
+begin_packed_struct typedef struct
+{
   short originx;
   short originy;
   short patch;
   short stepdir;
   short colormap;
-}) mappatch_t;
+} mappatch_t end_packed_struct;
 
 /* Texture definition.
  * A DOOM wall texture is a list of patches
  * which are to be combined in a predefined order.
  */
 
-typedef PACKED_STRUCT({
+begin_packed_struct typedef struct
+{
   char name[8];
   int masked;
   short width;
@@ -80,18 +87,16 @@ typedef PACKED_STRUCT({
   int obsolete;
   short patchcount;
   mappatch_t patches[1];
-}) maptexture_t;
+} maptexture_t end_packed_struct;
 
-/* A single patch from a texture definition,
- *  basically a rectangular area within
- *  the texture rectangle.
+/* A single patch from a texture definition, basically a rectangular area
+ * within the texture rectangle.
  */
 
 typedef struct
 {
-  /* Block origin (allways UL),
-   * which has allready accounted
-   * for the internal origin of the patch.
+  /* Block origin (always UL), which has already accounted for the internal
+   * origin of the patch.
    */
 
   short originx;
@@ -99,9 +104,8 @@ typedef struct
   int patch;
 } texpatch_t;
 
-/* A maptexturedef_t describes a rectangular texture,
- *  which is composed of one or more mappatch_t structures
- *  that arrange graphic patches.
+/* A maptexturedef_t describes a rectangular texture, which is composed of
+ * one or more mappatch_t structures that arrange graphic patches.
  */
 
 typedef struct texture_s texture_t;
@@ -109,6 +113,7 @@ typedef struct texture_s texture_t;
 struct texture_s
 {
   /* Keep name for switch changing, etc. */
+
   char name[8];
   short width;
   short height;
@@ -121,8 +126,8 @@ struct texture_s
 
   texture_t *next;
 
-  /* All the patches[patchcount]
-   *  are drawn back to front into the cached texture.
+  /* All the patches[patchcount] are drawn back to front into the cached
+   * texture.
    */
 
   short patchcount;
@@ -180,7 +185,7 @@ int spritememory;
  * Private Functions
  ****************************************************************************/
 
-static void GenerateTextureHashTable(void)
+static void generate_texture_hashtable(void)
 {
   texture_t **rover;
   int i;
@@ -199,8 +204,8 @@ static void GenerateTextureHashTable(void)
 
       textures[i]->index = i;
 
-      /* Vanilla Doom does a linear search of the texures array
-       * and stops at the first entry it finds.  If there are two
+      /* Vanilla Doom does a linear search of the textures array
+       * and stops at the first entry it finds. If there are two
        * entries with the same name, the first one in the array
        * wins. The new entry must therefore be added at the end
        * of the hash chain, so that earlier entries win.
@@ -222,123 +227,11 @@ static void GenerateTextureHashTable(void)
     }
 }
 
-/* MAPTEXTURE_T CACHING
- * When a texture is first needed,
- *  it counts the number of composite columns
- *  required in the texture and allocates space
- *  for a column directory and any new columns.
- * The directory will simply point inside other patches
- *  if there is only one patch in a given column,
- *  but any columns with multiple patches
- *  will have new column_ts generated.
- */
-
 /****************************************************************************
- * Name: r_draw_columnInCache
- *
- * Description:
- *  Clip and draw a column from a patch into a cached post.
- *
+ * Name: r_generate_lookup
  ****************************************************************************/
 
-void r_draw_columnInCache(column_t *patch, byte *cache, int originy,
-                         int cacheheight)
-{
-  int count;
-  int position;
-  byte *source;
-
-  while (patch->topdelta != 0xff)
-    {
-      source = (byte *)patch + 3;
-      count = patch->length;
-      position = originy + patch->topdelta;
-
-      if (position < 0)
-        {
-          count += position;
-          position = 0;
-        }
-
-      if (position + count > cacheheight) count = cacheheight - position;
-
-      if (count > 0) memcpy(cache + position, source, count);
-
-      patch = (column_t *)((byte *)patch + patch->length + 4);
-    }
-}
-
-/****************************************************************************
- * Name: R_GenerateComposite
- *
- * Description:
- *  Using the texture definition, the composite texture is created from the
- *  patches, and each column is cached.
- *
- ****************************************************************************/
-
-void R_GenerateComposite(int texnum)
-{
-  byte *block;
-  texture_t *texture;
-  texpatch_t *patch;
-  patch_t *realpatch;
-  int x;
-  int x1;
-  int x2;
-  int i;
-  column_t *patchcol;
-  short *collump;
-  unsigned short *colofs;
-
-  texture = textures[texnum];
-
-  block = z_malloc(texturecompositesize[texnum], PU_STATIC,
-                   &texturecomposite[texnum]);
-
-  collump = texturecolumnlump[texnum];
-  colofs = texturecolumnofs[texnum];
-
-  /* Composite the columns together. */
-
-  for (i = 0, patch = texture->patches; i < texture->patchcount; i++, patch++)
-    {
-      realpatch = w_cache_lump_num(patch->patch, PU_CACHE);
-      x1 = patch->originx;
-      x2 = x1 + SHORT(realpatch->width);
-
-      if (x1 < 0)
-        x = 0;
-      else
-        x = x1;
-
-      if (x2 > texture->width) x2 = texture->width;
-
-      for (; x < x2; x++)
-        {
-          /* Column does not have multiple patches? */
-
-          if (collump[x] >= 0) continue;
-
-          patchcol = (column_t *)((byte *)realpatch +
-                                  LONG(realpatch->columnofs[x - x1]));
-          r_draw_columnInCache(patchcol, block + colofs[x], patch->originy,
-                              texture->height);
-        }
-    }
-
-  /* Now that the texture has been built in column cache,
-   * it is purgable from zone memory.
-   */
-
-  z_change_tag(block, PU_CACHE);
-}
-
-/****************************************************************************
- * Name: R_GenerateLookup
- ****************************************************************************/
-
-void R_GenerateLookup(int texnum)
+static void r_generate_lookup(int texnum)
 {
   texture_t *texture;
   byte *patchcount; /* patchcount[texture->width] */
@@ -361,16 +254,18 @@ void R_GenerateLookup(int texnum)
   collump = texturecolumnlump[texnum];
   colofs = texturecolumnofs[texnum];
 
-  /* Now count the number of columns
-   *  that are covered by more than one patch.
-   * Fill in the lump / offset, so columns
-   *  with only a single patch are all done.
+  /* Now count the number of columns that are covered by more than one patch.
+   *
+   * Fill in the lump / offset, so columns with only a single patch are all
+   * done.
    */
 
   patchcount = (byte *)z_malloc(texture->width, PU_STATIC, &patchcount);
   memset(patchcount, 0, texture->width);
 
-  for (i = 0, patch = texture->patches; i < texture->patchcount; i++, patch++)
+  for (i = 0, patch = texture->patches;
+       i < texture->patchcount;
+       i++, patch++)
     {
       realpatch = w_cache_lump_num(patch->patch, PU_CACHE);
       x1 = patch->originx;
@@ -394,12 +289,10 @@ void R_GenerateLookup(int texnum)
     {
       if (!patchcount[x])
         {
-          printf("R_GenerateLookup: column without a patch (%s)\n",
+          printf("r_generate_lookup: column without a patch (%s)\n",
                  texture->name);
           return;
         }
-
-      /* i_error ("R_GenerateLookup: column without a patch"); */
 
       if (patchcount[x] > 1)
         {
@@ -410,7 +303,7 @@ void R_GenerateLookup(int texnum)
 
           if (texturecompositesize[texnum] > 0x10000 - texture->height)
             {
-              i_error("R_GenerateLookup: texture %i is >64k", texnum);
+              i_error("r_generate_lookup: texture %i is >64k", texnum);
             }
 
           texturecompositesize[texnum] += texture->height;
@@ -420,28 +313,19 @@ void R_GenerateLookup(int texnum)
   z_free(patchcount);
 }
 
-/****************************************************************************
- * Name: r_get_column
- ****************************************************************************/
-
-byte *r_get_column(int tex, int col)
-{
-  int lump;
-  int ofs;
-
-  col &= texturewidthmask[tex];
-  lump = texturecolumnlump[tex][col];
-  ofs = texturecolumnofs[tex][col];
-
-  if (lump > 0) return (byte *)w_cache_lump_num(lump, PU_CACHE) + ofs;
-
-  if (!texturecomposite[tex]) R_GenerateComposite(tex);
-
-  return texturecomposite[tex] + ofs;
-}
+/* MAPTEXTURE_T CACHING
+ *
+ * When a texture is first needed, it counts the number of composite columns
+ * required in the texture and allocates space for a column directory and any
+ * new columns.
+ *
+ * The directory will simply point inside other patches if there is only one
+ * patch in a given column, but any columns with multiple patches will have
+ * new column_ts generated.
+ */
 
 /****************************************************************************
- * Name: r_initTextures
+ * Name: r_init_textures
  *
  * Description:
  *  Initializes the texture list
@@ -449,7 +333,7 @@ byte *r_get_column(int tex, int col)
  *
  ****************************************************************************/
 
-void r_initTextures(void)
+static void r_init_textures(void)
 {
   maptexture_t *mtexture;
   texture_t *texture;
@@ -496,6 +380,7 @@ void r_initTextures(void)
       m_str_copy(name, name_p + i * 8, sizeof(name));
       patchlookup[i] = w_check_num_for_name(name);
     }
+
   w_release_lump_name(("PNAMES"));
 
   /* Load the map texture definitions from textures.lmp.
@@ -520,6 +405,7 @@ void r_initTextures(void)
       numtextures2 = 0;
       maxoff2 = 0;
     }
+
   numtextures = numtextures1 + numtextures2;
 
   textures = z_malloc(numtextures * sizeof(*textures), PU_STATIC, 0);
@@ -536,7 +422,7 @@ void r_initTextures(void)
   textureheight =
       z_malloc(numtextures * sizeof(*textureheight), PU_STATIC, 0);
 
-  /*	Really complex printing shit... */
+  /* Really complex printing shit... */
 
   temp1 = w_get_num_for_name(("S_START")); /* P_??????? */
   temp2 = w_get_num_for_name(("S_END")) - 1;
@@ -547,7 +433,7 @@ void r_initTextures(void)
    * the box.  If stdout is a file, don't draw the box.
    */
 
-  if (I_ConsoleStdout())
+  if (i_console_stdout())
     {
       printf("[");
       for (i = 0; i < temp3 + 9; i++)
@@ -563,7 +449,8 @@ void r_initTextures(void)
 
       if (i == numtextures1)
         {
-          // Start looking in second texture file.
+          /* Start looking in second texture file. */
+
           maptex = maptex2;
           maxoff = maxoff2;
           directory = maptex + 1;
@@ -571,13 +458,13 @@ void r_initTextures(void)
 
       offset = LONG(*directory);
 
-      if (offset > maxoff) i_error("r_initTextures: bad texture directory");
+      if (offset > maxoff) i_error("r_init_textures: bad texture directory");
 
       mtexture = (maptexture_t *)((byte *)maptex + offset);
 
       texture = textures[i] =
           z_malloc(sizeof(texture_t) +
-                       sizeof(texpatch_t) * (SHORT(mtexture->patchcount) - 1),
+                   sizeof(texpatch_t) * (SHORT(mtexture->patchcount) - 1),
                    PU_STATIC, 0);
 
       texture->width = SHORT(mtexture->width);
@@ -595,14 +482,16 @@ void r_initTextures(void)
           patch->patch = patchlookup[SHORT(mpatch->patch)];
           if (patch->patch == -1)
             {
-              i_error("r_initTextures: Missing patch in texture %s",
+              i_error("r_init_textures: Missing patch in texture %s",
                       texture->name);
             }
         }
+
       texturecolumnlump[i] = z_malloc(
           texture->width * sizeof(**texturecolumnlump), PU_STATIC, 0);
       texturecolumnofs[i] =
-          z_malloc(texture->width * sizeof(**texturecolumnofs), PU_STATIC, 0);
+          z_malloc(texture->width * sizeof(**texturecolumnofs),
+                  PU_STATIC, 0);
 
       j = 1;
       while (j * 2 <= texture->width)
@@ -620,24 +509,25 @@ void r_initTextures(void)
   /* Precalculate whatever possible. */
 
   for (i = 0; i < numtextures; i++)
-    R_GenerateLookup(i);
+    r_generate_lookup(i);
 
   /* Create translation table for global animation. */
 
   texturetranslation =
-      z_malloc((numtextures + 1) * sizeof(*texturetranslation), PU_STATIC, 0);
+      z_malloc((numtextures + 1) * sizeof(*texturetranslation),
+              PU_STATIC, 0);
 
   for (i = 0; i < numtextures; i++)
     texturetranslation[i] = i;
 
-  GenerateTextureHashTable();
+  generate_texture_hashtable();
 }
 
 /****************************************************************************
- * Name: r_initFlats
+ * Name: r_init_flats
  ****************************************************************************/
 
-void r_initFlats(void)
+static void r_init_flats(void)
 {
   int i;
 
@@ -655,7 +545,7 @@ void r_initFlats(void)
 }
 
 /****************************************************************************
- * Name: r_initSpriteLumps
+ * Name: r_init_sprite_lumps
  *
  * Description:
  *  Finds the width and hoffset of all sprites in the wad,
@@ -664,7 +554,7 @@ void r_initFlats(void)
  *
  ****************************************************************************/
 
-void r_initSpriteLumps(void)
+static void r_init_sprite_lumps(void)
 {
   int i;
   patch_t *patch;
@@ -673,7 +563,8 @@ void r_initSpriteLumps(void)
   lastspritelump = w_get_num_for_name(("S_END")) - 1;
 
   numspritelumps = lastspritelump - firstspritelump + 1;
-  spritewidth = z_malloc(numspritelumps * sizeof(*spritewidth), PU_STATIC, 0);
+  spritewidth =
+      z_malloc(numspritelumps * sizeof(*spritewidth), PU_STATIC, 0);
   spriteoffset =
       z_malloc(numspritelumps * sizeof(*spriteoffset), PU_STATIC, 0);
   spritetopoffset =
@@ -691,10 +582,10 @@ void r_initSpriteLumps(void)
 }
 
 /****************************************************************************
- * Name: r_initColormaps
+ * Name: r_init_colourmaps
  ****************************************************************************/
 
-void r_initColormaps(void)
+static void r_init_colourmaps(void)
 {
   int lump;
 
@@ -702,6 +593,133 @@ void r_initColormaps(void)
 
   lump = w_get_num_for_name(("COLORMAP"));
   colormaps = w_cache_lump_num(lump, PU_STATIC);
+}
+
+/****************************************************************************
+ * Name: r_draw_column_in_cache
+ *
+ * Description:
+ *  Clip and draw a column from a patch into a cached post.
+ *
+ ****************************************************************************/
+
+static void r_draw_column_in_cache(column_t *patch, byte *cache, int originy,
+                         int cacheheight)
+{
+  int count;
+  int position;
+  byte *source;
+
+  while (patch->topdelta != 0xff)
+    {
+      source = (byte *)patch + 3;
+      count = patch->length;
+      position = originy + patch->topdelta;
+
+      if (position < 0)
+        {
+          count += position;
+          position = 0;
+        }
+
+      if (position + count > cacheheight) count = cacheheight - position;
+
+      if (count > 0) memcpy(cache + position, source, count);
+
+      patch = (column_t *)((byte *)patch + patch->length + 4);
+    }
+}
+
+/****************************************************************************
+ * Name: r_generate_composite
+ *
+ * Description:
+ *  Using the texture definition, the composite texture is created from the
+ *  patches, and each column is cached.
+ *
+ ****************************************************************************/
+
+static void r_generate_composite(int texnum)
+{
+  byte *block;
+  texture_t *texture;
+  texpatch_t *patch;
+  patch_t *realpatch;
+  int x;
+  int x1;
+  int x2;
+  int i;
+  column_t *patchcol;
+  short *collump;
+  unsigned short *colofs;
+
+  texture = textures[texnum];
+
+  block = z_malloc(texturecompositesize[texnum], PU_STATIC,
+                   &texturecomposite[texnum]);
+
+  collump = texturecolumnlump[texnum];
+  colofs = texturecolumnofs[texnum];
+
+  /* Composite the columns together. */
+
+  for (i = 0, patch = texture->patches;
+       i < texture->patchcount;
+       i++, patch++)
+    {
+      realpatch = w_cache_lump_num(patch->patch, PU_CACHE);
+      x1 = patch->originx;
+      x2 = x1 + SHORT(realpatch->width);
+
+      if (x1 < 0)
+        x = 0;
+      else
+        x = x1;
+
+      if (x2 > texture->width) x2 = texture->width;
+
+      for (; x < x2; x++)
+        {
+          /* Column does not have multiple patches? */
+
+          if (collump[x] >= 0) continue;
+
+          patchcol = (column_t *)((byte *)realpatch +
+                                  LONG(realpatch->columnofs[x - x1]));
+          r_draw_column_in_cache(patchcol, block + colofs[x],
+                  patch->originy, texture->height);
+        }
+    }
+
+  /* Now that the texture has been built in column cache,
+   * it is purgeable from zone memory.
+   */
+
+  z_change_tag(block, PU_CACHE);
+}
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/****************************************************************************
+ * Name: r_get_column
+ ****************************************************************************/
+
+byte *r_get_column(int tex, int col)
+{
+  int lump;
+  int ofs;
+
+  col &= texturewidthmask[tex];
+  lump = texturecolumnlump[tex][col];
+  ofs = texturecolumnofs[tex][col];
+
+  if (lump > 0) return (byte *)w_cache_lump_num(lump, PU_CACHE) + ofs;
+
+  if (!texturecomposite[tex]) r_generate_composite(tex);
+
+  return texturecomposite[tex] + ofs;
 }
 
 /****************************************************************************
@@ -715,13 +733,13 @@ void r_initColormaps(void)
 
 void r_init_data(void)
 {
-  r_initTextures();
+  r_init_textures();
   printf(".");
-  r_initFlats();
+  r_init_flats();
   printf(".");
-  r_initSpriteLumps();
+  r_init_sprite_lumps();
   printf(".");
-  r_initColormaps();
+  r_init_colourmaps();
 }
 
 /****************************************************************************
@@ -745,6 +763,7 @@ int r_flat_num_for_name(const char *name)
       memcpy(namet, name, 8);
       i_error("r_flat_num_for_name: %s not found", namet);
     }
+
   return i - firstflat;
 }
 
@@ -798,6 +817,7 @@ int r_texture_num_for_name(const char *name)
     {
       i_error("r_texture_num_for_name: %s not found", name);
     }
+
   return i;
 }
 
@@ -864,11 +884,9 @@ void r_precache_level(void)
     }
 
   /* Sky texture is always present.
-   * Note that F_SKY1 is the name used to
-   *  indicate a sky floor/ceiling as a flat,
-   *  while the sky texture is stored like
-   *  a wall texture, with an episode dependend
-   *  name.
+   * Note that F_SKY1 is the name used to indicate a sky floor/ceiling as a
+   * flat, while the sky texture is stored like a wall texture, with an
+   * episode dependent name.
    */
 
   texturepresent[skytexture] = 1;
@@ -897,7 +915,7 @@ void r_precache_level(void)
 
   for (th = thinkercap.next; th != &thinkercap; th = th->next)
     {
-      if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+      if (th->function.acp1 == (actionf_p1)p_mobj_thinker)
         spritepresent[((mobj_t *)th)->sprite] = 1;
     }
 

@@ -1564,7 +1564,7 @@ void p_archive_thinkers(void)
   // save off the current thinkers
   for (th = thinkercap.next; th != &thinkercap; th = th->next)
     {
-      if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+      if (th->function.acp1 == (actionf_p1)p_mobj_thinker)
         {
           saveg_write8(tc_mobj);
           saveg_write_pad();
@@ -1596,7 +1596,7 @@ void p_unarchive_thinkers(void)
     {
       next = currentthinker->next;
 
-      if (currentthinker->function.acp1 == (actionf_p1)P_MobjThinker)
+      if (currentthinker->function.acp1 == (actionf_p1)p_mobj_thinker)
         p_remove_mobj((mobj_t *)currentthinker);
       else
         z_free(currentthinker);
@@ -1625,7 +1625,7 @@ void p_unarchive_thinkers(void)
           mobj->info = &mobjinfo[mobj->type];
           mobj->floorz = mobj->subsector->sector->floorheight;
           mobj->ceilingz = mobj->subsector->sector->ceilingheight;
-          mobj->thinker.function.acp1 = (actionf_p1)P_MobjThinker;
+          mobj->thinker.function.acp1 = (actionf_p1)p_mobj_thinker;
           P_AddThinker(&mobj->thinker);
           break;
 

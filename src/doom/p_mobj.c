@@ -485,10 +485,10 @@ void P_NightmareRespawn(mobj_t *mobj)
 }
 
 /****************************************************************************
- * Name: P_MobjThinker
+ * Name: p_mobj_thinker
  ****************************************************************************/
 
-void P_MobjThinker(mobj_t *mobj)
+void p_mobj_thinker(mobj_t *mobj)
 {
   /* momentum movement */
 
@@ -596,7 +596,7 @@ mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
   else
     mobj->z = z;
 
-  mobj->thinker.function.acp1 = (actionf_p1)P_MobjThinker;
+  mobj->thinker.function.acp1 = (actionf_p1)p_mobj_thinker;
 
   P_AddThinker(&mobj->thinker);
 

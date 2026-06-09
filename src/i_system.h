@@ -32,7 +32,7 @@ void I_Init(void);
 // for the zone management.
 byte *I_ZoneBase(int *size);
 
-boolean I_ConsoleStdout(void);
+boolean i_console_stdout(void);
 
 // Asynchronous interrupt functions should maintain private queues
 // that are read by the synchronous functions

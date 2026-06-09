@@ -199,12 +199,12 @@ void i_print_startup_banner(const char *gamedescription)
 }
 
 //
-// I_ConsoleStdout
+// i_console_stdout
 //
 // Returns true if stdout is a real console, false if it is a file
 //
 
-boolean I_ConsoleStdout(void) { return isatty(fileno(stdout)); }
+boolean i_console_stdout(void) { return isatty(fileno(stdout)); }
 
 //
 // I_Init
@@ -311,7 +311,7 @@ void i_error(const char *error, ...)
   // Pop up a GUI dialog box to show the error message, if the
   // game was not run from the console (and the user will
   // therefore be unable to otherwise see the message).
-  if (exit_gui_popup && !I_ConsoleStdout())
+  if (exit_gui_popup && !i_console_stdout())
     {
 #if 0
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
