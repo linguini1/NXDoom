@@ -1162,16 +1162,9 @@ begin_packed_struct typedef struct
   spritenum_t sprite;
   statenum_t nextstate;
 
+  int32_t tics;   /* -1 to 181 */
+
   uint16_t frame; /* 0 to 32796 */
-
-  /* NOTE: I have changed this to an uint8_t to use the smallest range
-   * possible. It seems to me that logic which compares `tics == -1` will check
-   * 255 against -1, and seeing as the compiler knows this is a uint8_t, it
-   * should all work fine (0xfffffff to 0xff is not a stretch). However, I leave
-   * this note in case I haven't thought this through enough.
-   */
-
-  uint8_t tics;   /* -1 to 181 */
 
   /* NOTE: as far as I can tell, these fields are never used. They are set to
    * zero in the state lookup table, and the only other place directly
