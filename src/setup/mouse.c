@@ -1,16 +1,25 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/setup/mouse.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdlib.h>
 
@@ -25,7 +34,15 @@
 #include "mode.h"
 #include "mouse.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
 #define WINDOW_HELP_URL "https://www.chocolate-doom.org/setup-mouse"
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
 
 static int usemouse = 1;
 
@@ -34,24 +51,35 @@ static float mouse_acceleration = 2.0;
 static int mouse_threshold = 10;
 static int grabmouse = 1;
 
-int novert = 0;
-
-static int *all_mouse_buttons[] = {
-    &mousebfire,       &mousebstrafe,      &mousebforward,
-    &mousebstrafeleft, &mousebstraferight, &mousebbackward,
-    &mousebuse,        &mousebjump,        &mousebprevweapon,
-    &mousebnextweapon, &mousebspeed,       &mousebinvleft,
-    &mousebinvright,   &mousebuseartifact, &mousebturnleft,
-    &mousebturnright,
+static int *all_mouse_buttons[] =
+{
+  &mousebfire,       &mousebstrafe,      &mousebforward,
+  &mousebstrafeleft, &mousebstraferight, &mousebbackward,
+  &mousebuse,        &mousebjump,        &mousebprevweapon,
+  &mousebnextweapon, &mousebspeed,       &mousebinvleft,
+  &mousebinvright,   &mousebuseartifact, &mousebturnleft,
+  &mousebturnright,
 };
 
-static void MouseSetCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(variable))
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+int novert = 0;
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void mouse_set_callback(TXT_UNCAST_ARG(widget),
+        TXT_UNCAST_ARG(variable))
 {
   TXT_CAST_ARG(int, variable);
   unsigned int i;
 
-  // Check if the same mouse button is used for a different action
-  // If so, set the other action(s) to -1 (unset)
+  /* Check if the same mouse button is used for a different action
+   * If so, set the other action(s) to -1 (unset)
+   */
 
   for (i = 0; i < arrlen(all_mouse_buttons); ++i)
     {
@@ -63,7 +91,7 @@ static void MouseSetCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(variable))
     }
 }
 
-static void AddMouseControl(TXT_UNCAST_ARG(table), const char *label,
+static void add_mouse_control(TXT_UNCAST_ARG(table), const char *label,
                             int *var)
 {
   TXT_CAST_ARG(txt_table_t, table);
@@ -74,10 +102,11 @@ static void AddMouseControl(TXT_UNCAST_ARG(table), const char *label,
   mouse_input = txt_new_mouse_input(var);
   txt_add_widget(table, mouse_input);
 
-  txt_signal_connect(mouse_input, "set", MouseSetCallback, var);
+  txt_signal_connect(mouse_input, "set", mouse_set_callback, var);
 }
 
-static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
+static void config_extra_buttons(TXT_UNCAST_ARG(widget),
+        TXT_UNCAST_ARG(unused))
 {
   txt_window_t *window;
   txt_table_t *buttons_table;
@@ -90,27 +119,31 @@ static void ConfigExtraButtons(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 
   txt_set_column_widths(buttons_table, 16, 11, 16, 10);
 
-  AddMouseControl(buttons_table, "Move forward", &mousebforward);
-  AddMouseControl(buttons_table, "Strafe left", &mousebstrafeleft);
-  AddMouseControl(buttons_table, "Move backward", &mousebbackward);
-  AddMouseControl(buttons_table, "Strafe right", &mousebstraferight);
-  AddMouseControl(buttons_table, "Previous weapon", &mousebprevweapon);
-  AddMouseControl(buttons_table, "Strafe on", &mousebstrafe);
-  AddMouseControl(buttons_table, "Next weapon", &mousebnextweapon);
-  AddMouseControl(buttons_table, "Run", &mousebspeed);
+  add_mouse_control(buttons_table, "Move forward", &mousebforward);
+  add_mouse_control(buttons_table, "Strafe left", &mousebstrafeleft);
+  add_mouse_control(buttons_table, "Move backward", &mousebbackward);
+  add_mouse_control(buttons_table, "Strafe right", &mousebstraferight);
+  add_mouse_control(buttons_table, "Previous weapon", &mousebprevweapon);
+  add_mouse_control(buttons_table, "Strafe on", &mousebstrafe);
+  add_mouse_control(buttons_table, "Next weapon", &mousebnextweapon);
+  add_mouse_control(buttons_table, "Run", &mousebspeed);
 
   if (gamemission == heretic || gamemission == hexen)
     {
-      AddMouseControl(buttons_table, "Inventory left", &mousebinvleft);
-      AddMouseControl(buttons_table, "Inventory right", &mousebinvright);
-      AddMouseControl(buttons_table, "Use artifact", &mousebuseartifact);
+      add_mouse_control(buttons_table, "Inventory left", &mousebinvleft);
+      add_mouse_control(buttons_table, "Inventory right", &mousebinvright);
+      add_mouse_control(buttons_table, "Use artifact", &mousebuseartifact);
     }
 
   if (gamemission == hexen || gamemission == strife)
     {
-      AddMouseControl(buttons_table, "Jump", &mousebjump);
+      add_mouse_control(buttons_table, "Jump", &mousebjump);
     }
 }
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 void config_mouse(TXT_UNCAST_ARG(widget), void *user_data)
 {
@@ -142,11 +175,11 @@ void config_mouse(TXT_UNCAST_ARG(widget), void *user_data)
 
       txt_new_separator("Buttons"), NULL);
 
-  AddMouseControl(window, "Fire/Attack", &mousebfire);
-  AddMouseControl(window, "Use", &mousebuse);
+  add_mouse_control(window, "Fire/Attack", &mousebfire);
+  add_mouse_control(window, "Use", &mousebuse);
 
-  txt_add_widget(window,
-                txt_new_button2("More controls...", ConfigExtraButtons, NULL));
+  txt_add_widget(window, txt_new_button2("More controls...",
+                                         config_extra_buttons, NULL));
 }
 
 void bind_mouse_variables(void)

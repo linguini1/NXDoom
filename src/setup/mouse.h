@@ -1,5 +1,5 @@
 /****************************************************************************
- * src/setup/mouse.h
+ * apps/games/NXDoom/src/setup/mouse.h
  *
  * SPDX-License-Identifer: GPLv2
  *
