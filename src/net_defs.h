@@ -1,22 +1,31 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//     Definitions for use in networking code.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/net_defs.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *     Definitions for use in networking code.
+ *
+ ****************************************************************************/
 
 #ifndef NET_DEFS_H
 #define NET_DEFS_H
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 
@@ -24,17 +33,22 @@
 #include "doomtype.h"
 #include "sha1.h"
 
-// Absolute maximum number of "nodes" in the game.  This is different to
-// NET_MAXPLAYERS, as there may be observers that are not participating
-// (eg. left/right monitors)
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* Absolute maximum number of "nodes" in the game.  This is different to
+ * NET_MAXPLAYERS, as there may be observers that are not participating
+ * (eg. left/right monitors)
+ */
 
 #define MAXNETNODES 16
 
 #ifndef CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME
 
 /* We don't need player names. TODO: I should be smarter about this
- * and avoid compiling ANY networking related stuff (i.e. player name members in
- * the structs below) at all when net stuff is not enabled.
+ * and avoid compiling ANY networking related stuff (i.e. player name
+ * members in the structs below) at all when net stuff is not enabled.
  */
 
 #define CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME (1)
@@ -61,6 +75,31 @@
 #define CONFIG_GAMES_NXDOOM_NET_BACKUPTICS (1)
 #endif /* CONFIG_GAMES_NXDOOM_NET_BACKUPTICS */
 
+/* Magic number sent when connecting to check this is a valid client */
+
+#define NET_MAGIC_NUMBER 1454104972U
+
+/* Old magic number used by Chocolate Doom versions before v3.0: */
+
+#define NET_OLD_MAGIC_NUMBER 3436803284U
+
+/* header field value indicating that the packet is a reliable packet */
+
+#define NET_RELIABLE_PACKET (1 << 15)
+
+#define NET_TICDIFF_FORWARD (1 << 0)
+#define NET_TICDIFF_SIDE (1 << 1)
+#define NET_TICDIFF_TURN (1 << 2)
+#define NET_TICDIFF_BUTTONS (1 << 3)
+#define NET_TICDIFF_CONSISTANCY (1 << 4)
+#define NET_TICDIFF_CHATCHAR (1 << 5)
+#define NET_TICDIFF_RAVEN (1 << 6)
+#define NET_TICDIFF_STRIFE (1 << 7)
+
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
+
 typedef struct _net_module_s net_module_t;
 typedef struct _net_packet_s net_packet_t;
 typedef struct _net_addr_s net_addr_t;
@@ -76,38 +115,39 @@ struct _net_packet_s
 
 struct _net_module_s
 {
-  // Initialize this module for use as a client
+  /* Initialize this module for use as a client */
 
   boolean (*init_client)(void);
 
-  // Initialize this module for use as a server
+  /* Initialize this module for use as a server */
 
   boolean (*init_server)(void);
 
-  // Send a packet
+  /* Send a packet */
 
-  void (*SendPacket)(net_addr_t *addr, net_packet_t *packet);
+  void (*send_packet)(net_addr_t *addr, net_packet_t *packet);
 
-  // Check for new packets to receive
-  //
-  // Returns true if packet received
+  /* Check for new packets to receive
+   *
+   * Returns true if packet received
+   */
 
-  boolean (*RecvPacket)(net_addr_t **addr, net_packet_t **packet);
+  boolean (*recv_packet)(net_addr_t **addr, net_packet_t **packet);
 
-  // Converts an address to a string
+  /* Converts an address to a string */
 
-  void (*AddrToString)(net_addr_t *addr, char *buffer, int buffer_len);
+  void (*addr_to_string)(net_addr_t *addr, char *buffer, int buffer_len);
 
-  // Free back an address when no longer in use
+  /* Free back an address when no longer in use */
 
-  void (*FreeAddress)(net_addr_t *addr);
+  void (*free_address)(net_addr_t *addr);
 
-  // Try to resolve a name to an address
+  /* Try to resolve a name to an address */
 
   net_addr_t *(*resolve_address)(const char *addr);
 };
 
-// net_addr_t
+/* net_addr_t */
 
 struct _net_addr_s
 {
@@ -116,43 +156,39 @@ struct _net_addr_s
   void *handle;
 };
 
-// Magic number sent when connecting to check this is a valid client
-#define NET_MAGIC_NUMBER 1454104972U
+/* Supported protocols. If you're developing a fork of Chocolate
+ * Doom, you can add your own entry to this list while maintaining
+ * compatibility with Chocolate Doom servers. Higher-numbered enum values
+ * will be preferred when negotiating a protocol for the client and server
+ * to use, so the order matters.
+ * NOTE: The values in this enum do not have any special value outside of
+ * the program they're compiled in. What matters is the string
+ * representation.
+ */
 
-// Old magic number used by Chocolate Doom versions before v3.0:
-#define NET_OLD_MAGIC_NUMBER 3436803284U
-
-// header field value indicating that the packet is a reliable packet
-
-#define NET_RELIABLE_PACKET (1 << 15)
-
-// Supported protocols. If you're developing a fork of Chocolate
-// Doom, you can add your own entry to this list while maintaining
-// compatibility with Chocolate Doom servers. Higher-numbered enum values
-// will be preferred when negotiating a protocol for the client and server
-// to use, so the order matters.
-// NOTE: The values in this enum do not have any special value outside of
-// the program they're compiled in. What matters is the string representation.
 typedef enum
 {
-  // Protocol introduced with Chocolate Doom v3.0. Each compatibility-
-  // breaking change to the network protocol will produce a new protocol
-  // number in this enum.
+  /* Protocol introduced with Chocolate Doom v3.0. Each compatibility-
+   * breaking change to the network protocol will produce a new protocol
+   * number in this enum.
+   */
+
   NET_PROTOCOL_CHOCOLATE_DOOM_0,
 
-  // Add your own protocol here; be sure to add a name for it to the list
-  // in net_common.c too.
+  /* Add your own protocol here; be sure to add a name for it to the list
+   * in net_common.c too.
+   */
 
   NET_NUM_PROTOCOLS,
   NET_PROTOCOL_UNKNOWN,
 } net_protocol_t;
 
-// packet types
+/* packet types */
 
 typedef enum
 {
   NET_PACKET_TYPE_SYN,
-  NET_PACKET_TYPE_ACK, // deprecated
+  NET_PACKET_TYPE_ACK, /* deprecated */
   NET_PACKET_TYPE_REJECTED,
   NET_PACKET_TYPE_KEEPALIVE,
   NET_PACKET_TYPE_WAITING_DATA,
@@ -186,7 +222,7 @@ typedef enum
   NET_MASTER_PACKET_TYPE_NAT_HOLE_PUNCH_ALL,
 } net_master_packet_type_t;
 
-// Settings specified when the client connects to the server.
+/* Settings specified when the client connects to the server. */
 
 typedef struct
 {
@@ -201,8 +237,9 @@ typedef struct
   int player_class;
 } net_connect_data_t;
 
-// Game settings sent by client to server when initiating game start,
-// and received from the server by clients when the game starts.
+/* Game settings sent by client to server when initiating game start,
+ * and received from the server by clients when the game starts.
+ */
 
 typedef struct
 {
@@ -220,28 +257,19 @@ typedef struct
   int new_sync;
   int timelimit;
   int loadgame;
-  int random; // [Strife only]
+  int random; /* [Strife only] */
 
-  // These fields are only used by the server when sending a game
-  // start message:
+  /* These fields are only used by the server when sending a game
+   * start message:
+   */
 
   int num_players;
   int consoleplayer;
 
-  // Hexen player classes:
+  /* Hexen player classes: */
 
   int player_classes[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
-
 } net_gamesettings_t;
-
-#define NET_TICDIFF_FORWARD (1 << 0)
-#define NET_TICDIFF_SIDE (1 << 1)
-#define NET_TICDIFF_TURN (1 << 2)
-#define NET_TICDIFF_BUTTONS (1 << 3)
-#define NET_TICDIFF_CONSISTANCY (1 << 4)
-#define NET_TICDIFF_CHATCHAR (1 << 5)
-#define NET_TICDIFF_RAVEN (1 << 6)
-#define NET_TICDIFF_STRIFE (1 << 7)
 
 typedef struct
 {
@@ -249,7 +277,7 @@ typedef struct
   ticcmd_t cmd;
 } net_ticdiff_t;
 
-// Complete set of ticcmds from all players
+/* Complete set of ticcmds from all players */
 
 typedef struct
 {
@@ -259,7 +287,7 @@ typedef struct
   net_ticdiff_t cmds[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS];
 } net_full_ticcmd_t;
 
-// Data sent in response to server queries
+/* Data sent in response to server queries */
 
 typedef struct
 {
@@ -273,7 +301,7 @@ typedef struct
   net_protocol_t protocol;
 } net_querydata_t;
 
-// Data sent by the server while waiting for the game to start.
+/* Data sent by the server while waiting for the game to start. */
 
 typedef struct
 {
@@ -283,11 +311,13 @@ typedef struct
   int max_players;
   int is_controller;
   int consoleplayer;
-  char player_names[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS][CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME];
-  char player_addrs[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS][CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME];
+  char player_names[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS]
+                   [CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME];
+  char player_addrs[CONFIG_GAMES_NXDOOM_NET_MAXPLAYERS]
+                   [CONFIG_GAMES_NXDOOM_NET_MAXPLAYERNAME];
   sha1_digest_t wad_sha1sum;
   sha1_digest_t deh_sha1sum;
   int is_freedoom;
 } net_waitdata_t;
 
-#endif /* #ifndef NET_DEFS_H */
+#endif /* NET_DEFS_H */
