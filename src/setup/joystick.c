@@ -1107,7 +1107,7 @@ static void NoJoystick(void)
 static void RefreshJoystickWindow(TXT_UNCAST_ARG(widget),
                                   TXT_UNCAST_ARG(unused))
 {
-  ConfigJoystick(NULL, NULL);
+  config_joystick(NULL, NULL);
 }
 
 static void CalibrateWindowClosed(TXT_UNCAST_ARG(widget),
@@ -1246,7 +1246,7 @@ static void MoreControls(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
   txt_set_widget_align(window, TXT_HORIZ_CENTER);
 }
 
-void ConfigJoystick(TXT_UNCAST_ARG(widget), void *user_data)
+void config_joystick(TXT_UNCAST_ARG(widget), void *user_data)
 {
   txt_window_t *window;
 

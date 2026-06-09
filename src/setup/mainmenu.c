@@ -56,11 +56,12 @@
  * Private Data
  ****************************************************************************/
 
-static const int cheat_sequence[] = {
-    KEY_UPARROW,   KEY_UPARROW,    KEY_DOWNARROW,
-    KEY_DOWNARROW, KEY_LEFTARROW,  KEY_RIGHTARROW,
-    KEY_LEFTARROW, KEY_RIGHTARROW, 'b',
-    'a',           KEY_ENTER,      0,
+static const int cheat_sequence[] =
+{
+  KEY_UPARROW,   KEY_UPARROW,    KEY_DOWNARROW,
+  KEY_DOWNARROW, KEY_LEFTARROW,  KEY_RIGHTARROW,
+  KEY_LEFTARROW, KEY_RIGHTARROW, 'b',
+  'a',           KEY_ENTER,      0,
 };
 
 static unsigned int cheat_sequence_index = 0;
@@ -114,7 +115,8 @@ static void sensible_defaults(void)
   png_screenshots = 1;
 }
 
-static int main_menu_key_press(txt_window_t *window, int key, void *user_data)
+static int main_menu_key_press(txt_window_t *window, int key,
+        void *user_data)
 {
   if (key == cheat_sequence[cheat_sequence_index])
     {
@@ -160,10 +162,12 @@ static void quit_confirm(void *unused1, void *unused2)
   window = txt_new_window(NULL);
 
   txt_add_widgets(window,
-                  label = txt_new_label("Exiting setup.\nSave settings?"),
-                  txt_new_strut(24, 0),
-                  yes_button = txt_new_button2("  Yes  ", DoQuit, DoQuit),
-                  no_button = txt_new_button2("  No   ", DoQuit, NULL), NULL);
+    label = txt_new_label("Exiting setup.\nSave settings?"),
+    txt_new_strut(24, 0),
+    yes_button = txt_new_button2("  Yes  ", do_quit, do_quit),
+    no_button = txt_new_button2("  No   ", do_quit, NULL),
+    NULL
+  );
 
   txt_set_widget_align(label, TXT_HORIZ_CENTER);
   txt_set_widget_align(yes_button, TXT_HORIZ_CENTER);
@@ -247,8 +251,9 @@ static void set_window_title(void)
 {
   char *title;
 
-  title = m_string_replace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION, "Doom",
-                           get_game_title());
+  title = m_string_replace(
+          PACKAGE_NAME " Setup ver " PACKAGE_VERSION, "Doom",
+          get_game_title());
 
   txt_set_desktop_title(title);
 
@@ -259,7 +264,7 @@ static void set_window_title(void)
 
 static void init_text_screen(void)
 {
-  SetDisplayDriver();
+  set_display_driver();
 
   if (!txt_init())
     {
@@ -305,27 +310,27 @@ void main_menu(void)
 
   txt_set_window_help_url(window, WINDOW_HELP_URL);
 
-  txt_add_widgets(
+  txt_add_wdgets(
       window,
-      txt_new_button2("Configure Display", (txt_widget_signal_f)ConfigDisplay,
-                     NULL),
+      txt_new_button2("Configure Display",
+                      (txt_widget_signal_f)config_display, NULL),
       txt_new_button2("Configure Sound", (txt_widget_signal_f)config_sound,
-                     NULL),
+                      NULL),
       txt_new_button2("Configure Keyboard",
-                     (txt_widget_signal_f)ConfigKeyboard, NULL),
-      txt_new_button2("Configure Mouse", (txt_widget_signal_f)ConfigMouse,
-                     NULL),
+                      (txt_widget_signal_f)config_keyboard, NULL),
+      txt_new_button2("Configure Mouse", (txt_widget_signal_f)config_mouse,
+                      NULL),
       txt_new_button2("Configure Gamepad/Joystick",
-                     (txt_widget_signal_f)ConfigJoystick, NULL),
+                      (txt_widget_signal_f)config_joystick, NULL),
       txt_new_button2("Compatibility",
-                     (txt_widget_signal_f)CompatibilitySettings, NULL),
-      GetLaunchButton(), txt_new_strut(0, 1),
+                      (txt_widget_signal_f)compatiblity_settings, NULL),
+      get_launch_button(), txt_new_strut(0, 1),
       txt_new_button2("Start a Network Game",
-                     (txt_widget_signal_f)start_multi_game, NULL),
+                      (txt_widget_signal_f)start_multi_game, NULL),
       txt_new_button2("Join a Network Game",
-                     (txt_widget_signal_f)join_multi_game, NULL),
+                      (txt_widget_signal_f)join_multi_game, NULL),
       txt_new_button2("Multiplayer Configuration",
-                     (txt_widget_signal_f)multiplayer_config, NULL),
+                      (txt_widget_signal_f)multiplayer_config, NULL),
       NULL);
 
   quit_action = txt_new_window_action(KEY_ESCAPE, "Quit");
@@ -336,12 +341,12 @@ void main_menu(void)
   txt_set_window_action(window, TXT_HORIZ_LEFT, quit_action);
   txt_set_window_action(window, TXT_HORIZ_CENTER, warp_action);
 
-  txt_set_key_listener(window, main_menuKeyPress, NULL);
+  txt_set_key_listener(window, main_menu_key_press, NULL);
 }
 
 void d_doom_main(void)
 {
-  SetupMission(mission_set);
+  setup_mission(mission_set);
 
   run_gui();
 }

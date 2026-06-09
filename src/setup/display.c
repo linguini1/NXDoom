@@ -65,7 +65,7 @@ static int system_video_env_set;
 
 // Set the SDL_VIDEODRIVER environment variable
 
-void SetDisplayDriver(void)
+void set_display_driver(void)
 {
   static int first_time = 1;
 
@@ -191,7 +191,7 @@ static void AdvancedDisplayConfig(TXT_UNCAST_ARG(widget),
   txt_signal_connect(ar_checkbox, "changed", GenerateSizesTable, sizes_table);
 }
 
-void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
+void config_display(TXT_UNCAST_ARG(widget), void *user_data)
 {
   txt_window_t *window;
   txt_table_t *sizes_table;

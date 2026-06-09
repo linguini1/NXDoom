@@ -430,7 +430,7 @@ static void OtherKeysDialog(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
   txt_add_widget(window, scrollpane);
 }
 
-void ConfigKeyboard(TXT_UNCAST_ARG(widget), void *user_data)
+void config_keyboard(TXT_UNCAST_ARG(widget), void *user_data)
 {
   txt_window_t *window;
   txt_checkbox_t *run_control;
