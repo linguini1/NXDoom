@@ -78,7 +78,7 @@ static int ArgumentNeedsEscape(const char *arg)
 // game when launching a game.  Calling this adds all arguments from
 // myargv to the output context.
 
-void PassThroughArguments(execute_context_t *context)
+void pass_through_arguments(execute_context_t *context)
 {
   int i;
 
@@ -86,16 +86,16 @@ void PassThroughArguments(execute_context_t *context)
     {
       if (ArgumentNeedsEscape(myargv[i]))
         {
-          AddCmdLineParameter(context, "\"%s\"", myargv[i]);
+          add_cmdline_parameter(context, "\"%s\"", myargv[i]);
         }
       else
         {
-          AddCmdLineParameter(context, "%s", myargv[i]);
+          add_cmdline_parameter(context, "%s", myargv[i]);
         }
     }
 }
 
-execute_context_t *NewExecuteContext(void)
+execute_context_t *new_execute_context(void)
 {
   execute_context_t *result;
 
@@ -113,7 +113,7 @@ execute_context_t *NewExecuteContext(void)
   return result;
 }
 
-void AddCmdLineParameter(execute_context_t *context, const char *s, ...)
+void add_cmdline_parameter(execute_context_t *context, const char *s, ...)
 {
   va_list args;
 
@@ -254,10 +254,10 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 
   // Run with the -testcontrols parameter
 
-  exec = NewExecuteContext();
-  AddCmdLineParameter(exec, "-testcontrols");
-  AddCmdLineParameter(exec, "-config \"%s\"", main_cfg);
-  AddCmdLineParameter(exec, "-extraconfig \"%s\"", extra_cfg);
+  exec = new_execute_context();
+  add_cmdline_parameter(exec, "-testcontrols");
+  add_cmdline_parameter(exec, "-config \"%s\"", main_cfg);
+  add_cmdline_parameter(exec, "-extraconfig \"%s\"", extra_cfg);
   execute_doom(exec);
 
   txt_close_window(testwindow);

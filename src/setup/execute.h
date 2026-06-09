@@ -27,10 +27,10 @@ typedef struct execute_context_s execute_context_t;
 #define IWAD_DOOM1 (1 << 4)    /* doom1.wad */
 #define IWAD_CHEX (1 << 5)     /* chex.wad */
 
-execute_context_t *NewExecuteContext(void);
-void AddCmdLineParameter(execute_context_t *context, const char *s, ...)
+execute_context_t *new_execute_context(void);
+void add_cmdline_parameter(execute_context_t *context, const char *s, ...)
     PRINTF_ATTR(2, 3);
-void PassThroughArguments(execute_context_t *context);
+void pass_through_arguments(execute_context_t *context);
 int execute_doom(execute_context_t *context);
 int FindInstalledIWADs(void);
 boolean open_folder(const char *path);

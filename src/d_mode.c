@@ -150,7 +150,7 @@ boolean d_valid_game_version(gamemission_t mission, game_version_t version)
 
 // Does this mission type use ExMy form, rather than MAPxy form?
 
-boolean D_IsEpisodeMap(gamemission_t mission)
+boolean d_is_episode_map(gamemission_t mission)
 {
   switch (mission)
     {

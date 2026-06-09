@@ -652,9 +652,9 @@ void txt_configure_joystick_axis(txt_joystick_axis_t *joystick_axis,
 
   joystick_axis->config_window =
       txt_new_window("Gamepad/Joystick calibration");
-  txt_add_widgets(joystick_axis->config_window, TXT_NewStrut(0, 1),
+  txt_add_widgets(joystick_axis->config_window, txt_new_strut(0, 1),
                   joystick_axis->config_label = txt_new_label(""),
-                  TXT_NewStrut(0, 1), NULL);
+                  txt_new_strut(0, 1), NULL);
 
   txt_set_window_action(joystick_axis->config_window, TXT_HORIZ_LEFT, NULL);
   txt_set_window_action(

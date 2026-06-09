@@ -191,8 +191,8 @@ static void launch_doom(void *unused1, void *unused2)
 
   /* Launch Doom */
 
-  exec = NewExecuteContext();
-  PassThroughArguments(exec);
+  exec = new_execute_context();
+  pass_through_arguments(exec);
   execute_doom(exec);
 
   exit(0);

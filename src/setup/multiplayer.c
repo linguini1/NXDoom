@@ -62,8 +62,8 @@
 
 typedef enum
 {
-  WARP_ExMy,
-  WARP_MAPxy,
+  WARP_EXMY,
+  WARP_MAPXY,
 } warptype_t;
 
 /****************************************************************************
@@ -72,11 +72,12 @@ typedef enum
 
 /* Fallback IWADs to use if no IWADs are detected. */
 
-static const iwad_t fallback_iwads[] = {
-    {"doom.wad", doom, registered, "Doom"},
-    {"heretic.wad", heretic, retail, "Heretic"},
-    {"hexen.wad", hexen, commercial, "Hexen"},
-    {"strife1.wad", strife, commercial, "Strife"},
+static const iwad_t fallback_iwads[] =
+{
+  {"doom.wad", doom, registered, "Doom"},
+  {"heretic.wad", heretic, retail, "Heretic"},
+  {"hexen.wad", hexen, commercial, "Hexen"},
+  {"strife1.wad", strife, commercial, "Strife"},
 };
 
 /* Array of IWADs found to be installed */
@@ -92,60 +93,71 @@ static int found_iwad_selected = -1;
 
 static const char *iwadfile;
 
-static const char *wad_extensions[] = {
-    "wad",
-    "lmp",
-    "deh",
-    NULL,
+static const char *wad_extensions[] =
+{
+  "wad",
+  "lmp",
+  "deh",
+  NULL,
 };
 
-static const char *doom_skills[] = {
-    "I'm too young to die.", "Hey, not too rough.", "Hurt me plenty.",
-    "Ultra-Violence.",       "NIGHTMARE!",
+static const char *doom_skills[] =
+{
+  "I'm too young to die.", "Hey, not too rough.", "Hurt me plenty.",
+  "Ultra-Violence.",       "NIGHTMARE!",
 };
 
-static const char *chex_skills[] = {
-    "Easy does it", "Not so sticky", "Gobs of goo",
-    "Extreme ooze", "SUPER SLIMEY!",
+static const char *chex_skills[] =
+{
+  "Easy does it", "Not so sticky", "Gobs of goo",
+  "Extreme ooze", "SUPER SLIMEY!",
 };
 
-static const char *heretic_skills[] = {
-    "Thou needeth a wet-nurse",    "Yellowbellies-R-us",
-    "Bringest them oneth",         "Thou art a smite-meister",
-    "Black plague possesses thee",
+static const char *heretic_skills[] =
+{
+  "Thou needeth a wet-nurse",    "Yellowbellies-R-us",
+  "Bringest them oneth",         "Thou art a smite-meister",
+  "Black plague possesses thee",
 };
 
-static const char *hexen_fighter_skills[] = {
-    "Squire", "Knight", "Warrior", "Berserker", "Titan",
+static const char *hexen_fighter_skills[] =
+{
+  "Squire", "Knight", "Warrior", "Berserker", "Titan",
 };
 
-static const char *hexen_cleric_skills[] = {
-    "Altar boy", "Acolyte", "Priest", "Cardinal", "Pope",
+static const char *hexen_cleric_skills[] =
+{
+  "Altar boy", "Acolyte", "Priest", "Cardinal", "Pope",
 };
 
-static const char *hexen_mage_skills[] = {
-    "Apprentice", "Enchanter", "Sorceror", "Warlock", "Archimage",
+static const char *hexen_mage_skills[] =
+{
+  "Apprentice", "Enchanter", "Sorcerer", "Warlock", "Archimage",
 };
 
-static const char *strife_skills[] = {
-    "Training", "Rookie", "Veteran", "Elite", "Bloodbath",
+static const char *strife_skills[] =
+{
+  "Training", "Rookie", "Veteran", "Elite", "Bloodbath",
 };
 
-static const char *character_classes[] = {
-    "Fighter",
-    "Cleric",
-    "Mage",
+static const char *character_classes[] =
+{
+  "Fighter",
+  "Cleric",
+  "Mage",
 };
 
-static const char *gamemodes[] = {
-    "Co-operative",
-    "Deathmatch",
-    "Deathmatch 2.0",
+static const char *gamemodes[] =
+{
+  "Co-operative",
+  "Deathmatch",
+  "Deathmatch 2.0",
 };
 
-static const char *strife_gamemodes[] = {
-    "Normal deathmatch",
-    "Items respawn", /* (altdeath) */
+static const char *strife_gamemodes[] =
+{
+  "Normal deathmatch",
+  "Items respawn", /* (altdeath) */
 };
 
 static char *net_player_name;
@@ -166,7 +178,7 @@ static int privateserver = 0;
 
 static txt_dropdown_list_t *skillbutton;
 static txt_button_t *warpbutton;
-static warptype_t warptype = WARP_MAPxy;
+static warptype_t warptype = WARP_MAPXY;
 static int warpepisode = 1;
 static int warpmap = 1;
 
@@ -176,6 +188,13 @@ static char *connect_address = NULL;
 
 static txt_window_t *query_window;
 static int query_servers_found;
+
+static const char *const g_defaults[] =
+{
+  HUSTR_CHATMACRO0, HUSTR_CHATMACRO1, HUSTR_CHATMACRO2, HUSTR_CHATMACRO3,
+  HUSTR_CHATMACRO4, HUSTR_CHATMACRO5, HUSTR_CHATMACRO6, HUSTR_CHATMACRO7,
+  HUSTR_CHATMACRO8, HUSTR_CHATMACRO9,
+};
 
 /****************************************************************************
  * Private Functions
@@ -206,11 +225,11 @@ static void add_wads(execute_context_t *exec)
         {
           if (!have_wads)
             {
-              AddCmdLineParameter(exec, "-merge");
+              add_cmdline_parameter(exec, "-merge");
               have_wads = 1;
             }
 
-          AddCmdLineParameter(exec, "\"%s\"", wads[i]);
+          add_cmdline_parameter(exec, "\"%s\"", wads[i]);
         }
     }
 }
@@ -223,7 +242,7 @@ static void add_extra_parameters(execute_context_t *exec)
     {
       if (extra_params[i] != NULL && strlen(extra_params[i]) > 0)
         {
-          AddCmdLineParameter(exec, "%s", extra_params[i]);
+          add_cmdline_parameter(exec, "%s", extra_params[i]);
         }
     }
 }
@@ -232,7 +251,7 @@ static void add_iwad_parameter(execute_context_t *exec)
 {
   if (iwadfile != NULL)
     {
-      AddCmdLineParameter(exec, "-iwad %s", iwadfile);
+      add_cmdline_parameter(exec, "-iwad %s", iwadfile);
     }
 }
 
@@ -245,7 +264,7 @@ static void start_game(int multiplayer)
 {
   execute_context_t *exec;
 
-  exec = NewExecuteContext();
+  exec = new_execute_context();
 
   /* Extra parameters come first, before all others; this way,
    * they can override any of the options set in the dialog.
@@ -254,63 +273,63 @@ static void start_game(int multiplayer)
   add_extra_parameters(exec);
 
   add_iwad_parameter(exec);
-  AddCmdLineParameter(exec, "-skill %i", skill + 1);
+  add_cmdline_parameter(exec, "-skill %i", skill + 1);
 
   if (gamemission == hexen)
     {
-      AddCmdLineParameter(exec, "-class %i", character_class);
+      add_cmdline_parameter(exec, "-class %i", character_class);
     }
 
   if (nomonsters)
     {
-      AddCmdLineParameter(exec, "-nomonsters");
+      add_cmdline_parameter(exec, "-nomonsters");
     }
 
   if (fast)
     {
-      AddCmdLineParameter(exec, "-fast");
+      add_cmdline_parameter(exec, "-fast");
     }
 
   if (respawn)
     {
-      AddCmdLineParameter(exec, "-respawn");
+      add_cmdline_parameter(exec, "-respawn");
     }
 
-  if (warptype == WARP_ExMy)
+  if (warptype == WARP_EXMY)
     {
       /* TODO: select IWAD based on warp type */
 
-      AddCmdLineParameter(exec, "-warp %i %i", warpepisode, warpmap);
+      add_cmdline_parameter(exec, "-warp %i %i", warpepisode, warpmap);
     }
-  else if (warptype == WARP_MAPxy)
+  else if (warptype == WARP_MAPXY)
     {
-      AddCmdLineParameter(exec, "-warp %i", warpmap);
+      add_cmdline_parameter(exec, "-warp %i", warpmap);
     }
 
   /* Multiplayer-specific options: */
 
   if (multiplayer)
     {
-      AddCmdLineParameter(exec, "-server");
-      AddCmdLineParameter(exec, "-port %i", udpport);
+      add_cmdline_parameter(exec, "-server");
+      add_cmdline_parameter(exec, "-port %i", udpport);
 
       if (deathmatch == 1)
         {
-          AddCmdLineParameter(exec, "-deathmatch");
+          add_cmdline_parameter(exec, "-deathmatch");
         }
       else if (deathmatch == 2 || strife_altdeath != 0)
         {
-          AddCmdLineParameter(exec, "-altdeath");
+          add_cmdline_parameter(exec, "-altdeath");
         }
 
       if (timer > 0)
         {
-          AddCmdLineParameter(exec, "-timer %i", timer);
+          add_cmdline_parameter(exec, "-timer %i", timer);
         }
 
       if (privateserver)
         {
-          AddCmdLineParameter(exec, "-privateserver");
+          add_cmdline_parameter(exec, "-privateserver");
         }
     }
 
@@ -319,7 +338,7 @@ static void start_game(int multiplayer)
   txt_shutdown();
 
   m_save_defaults();
-  PassThroughArguments(exec);
+  pass_through_arguments(exec);
 
   execute_doom(exec);
 
@@ -341,11 +360,11 @@ static void update_warp_button(void)
 {
   char buf[10];
 
-  if (warptype == WARP_ExMy)
+  if (warptype == WARP_EXMY)
     {
       snprintf(buf, sizeof(buf), "E%iM%i", warpepisode, warpmap);
     }
-  else if (warptype == WARP_MAPxy)
+  else if (warptype == WARP_MAPXY)
     {
       snprintf(buf, sizeof(buf), "MAP%02i", warpmap);
     }
@@ -441,9 +460,9 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
   window = txt_new_window("Select level");
   iwad = get_current_iwad();
 
-  if (warptype == WARP_ExMy)
+  if (warptype == WARP_EXMY)
     {
-      episodes = D_GetNumEpisodes(iwad->mission, iwad->mode);
+      episodes = d_get_num_episodes(iwad->mission, iwad->mode);
       txt_set_table_columns(window, episodes);
 
       /* ExMy levels */
@@ -465,10 +484,10 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
 
               snprintf(buf, sizeof(buf), " E%dM%d ", x, y);
               button = txt_new_button(buf);
-              txt_signal_connect(button, "pressed", SetExMyWarp,
+              txt_signal_connect(button, "pressed", set_ex_my_warp,
                                  (void *)(intptr_t)(x * 10 + y));
-              txt_signal_connect(button, "pressed", CloseLevelSelectDialog,
-                                 window);
+              txt_signal_connect(button, "pressed",
+                      close_level_select_dialog, window);
               txt_add_widget(window, button);
 
               if (warpepisode == x && warpmap == y)
@@ -497,10 +516,10 @@ static void level_select_dialog(TXT_UNCAST_ARG(widget),
 
           snprintf(buf, sizeof(buf), " MAP%02d ", l);
           button = txt_new_button(buf);
-          txt_signal_connect(button, "pressed", SetMAPxyWarp,
+          txt_signal_connect(button, "pressed", set_map_xy_warp,
                              (void *)(intptr_t)l);
-          txt_signal_connect(button, "pressed", CloseLevelSelectDialog,
-                             window);
+          txt_signal_connect(button, "pressed",
+                  close_level_select_dialog, window);
           txt_add_widget(window, button);
 
           if (warpmap == l)
@@ -537,13 +556,13 @@ static void update_warp_type(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
 
   /* Find the new warp type */
 
-  if (D_IsEpisodeMap(iwad->mission))
+  if (d_is_episode_map(iwad->mission))
     {
-      new_warptype = WARP_ExMy;
+      new_warptype = WARP_EXMY;
     }
   else
     {
-      new_warptype = WARP_MAPxy;
+      new_warptype = WARP_MAPXY;
     }
 
   /* Reset to E1M1 / MAP01 when the warp type is changed. */
@@ -619,7 +638,7 @@ static txt_widget_t *iwad_selector(void)
 
   if (num_iwads == 0)
     {
-      found_iwads = GetFallbackIwadList();
+      found_iwads = get_fallback_iwad_list();
       num_iwads = 1;
     }
 
@@ -635,10 +654,10 @@ static txt_widget_t *iwad_selector(void)
     {
       /* Dropdown list allowing IWAD to be selected. */
 
-      dropdown =
-          txt_new_dropdown_list(&found_iwad_selected, iwad_labels, num_iwads);
+      dropdown = txt_new_dropdown_list(&found_iwad_selected,
+              iwad_labels, num_iwads);
 
-      txt_signal_connect(dropdown, "changed", IWADSelected, NULL);
+      txt_signal_connect(dropdown, "changed", iwad_selected, NULL);
 
       result = (txt_widget_t *)dropdown;
     }
@@ -672,11 +691,11 @@ static txt_window_action_t *start_game_action(int multiplayer)
 
   if (multiplayer)
     {
-      callback = StartServerGame;
+      callback = start_server_game;
     }
   else
     {
-      callback = StartSinglePlayerGame;
+      callback = start_single_player_game;
     }
 
   txt_signal_connect(action, "pressed", callback, NULL);
@@ -719,7 +738,7 @@ static txt_window_action_t *wad_window_action(void)
   txt_window_action_t *action;
 
   action = txt_new_window_action('w', "Add WADs");
-  txt_signal_connect(action, "pressed", OpenWadsWindow, NULL);
+  txt_signal_connect(action, "pressed", open_wads_window, NULL);
 
   return action;
 }
@@ -771,36 +790,36 @@ static void start_game_menu(const char *window_title, int multiplayer)
       txt_set_window_help_url(window, LEVEL_WARP_HELP_URL);
     }
 
-  txt_set_window_action(window, TXT_HORIZ_CENTER, WadWindowAction());
+  txt_set_window_action(window, TXT_HORIZ_CENTER, wad_window_action());
   txt_set_window_action(window, TXT_HORIZ_RIGHT,
-                        StartGameAction(multiplayer));
+                        start_game_action(multiplayer));
 
   txt_add_widgets(window, txt_new_label("Game"),
-                  iwad_selector = IWADSelector(), NULL);
+                  iwad_selector = iwad_selector(), NULL);
 
   if (gamemission == hexen)
     {
       txt_dropdown_list_t *cc_dropdown;
       txt_add_widgets(window, txt_new_label("Character class "),
-                      cc_dropdown = txt_new_dropdown_list(&character_class,
-                                                        character_classes, 3),
+                      cc_dropdown = txt_new_dropdown_list(
+                          &character_class, character_classes, 3),
                       NULL);
 
       /* Update skill level dropdown when the character class is changed: */
 
-      txt_signal_connect(cc_dropdown, "changed", UpdateWarpType, NULL);
+      txt_signal_connect(cc_dropdown, "changed", update_warp_type, NULL);
     }
 
-  txt_add_widgets(window, txt_new_label("Skill"),
-                  skillbutton = txt_new_dropdown_list(&skill, doom_skills, 5),
-                  txt_new_label("Level warp"),
-                  warpbutton = txt_new_button2("?", LevelSelectDialog, NULL),
-                  NULL);
+  txt_add_widgets(
+      window, txt_new_label("Skill"),
+      skillbutton = txt_new_dropdown_list(&skill, doom_skills, 5),
+      txt_new_label("Level warp"),
+      warpbutton = txt_new_button2("?", level_select_dialog, NULL), NULL);
 
   if (multiplayer)
     {
-      txt_add_widgets(window, txt_new_label("Game type"), GameTypeDropdown(),
-                      txt_new_label("Time limit"),
+      txt_add_widgets(window, txt_new_label("Game type"),
+                      game_type_dropdown(), txt_new_label("Time limit"),
                       txt_new_horiz_box(txt_new_int_input_box(&timer, 2),
                                         txt_new_label("minutes"), NULL),
                       NULL);
@@ -817,19 +836,20 @@ static void start_game_menu(const char *window_title, int multiplayer)
   if (multiplayer)
     {
       txt_add_widgets(window, txt_new_separator("Advanced"),
-                      txt_new_label("UDP port"),
-                      txt_new_int_input_box(&udpport, 5),
-                      txt_new_inverted_checkbox("Register with master server",
-                                              &privateserver),
-                      TXT_TABLE_OVERFLOW_RIGHT, NULL);
+        txt_new_label("UDP port"),
+        txt_new_int_input_box(&udpport, 5),
+        txt_new_inverted_checkbox("Register with master server",
+                                &privateserver),
+        TXT_TABLE_OVERFLOW_RIGHT, NULL
+      );
     }
 
-  txt_add_widgets(
-      window,
-      txt_new_button2("Add extra parameters...", OpenExtraParamsWindow, NULL),
-      TXT_TABLE_OVERFLOW_RIGHT, NULL);
+  txt_add_widgets(window,
+                  txt_new_button2("Add extra parameters...",
+                                  open_extra_params_window, NULL),
+                  TXT_TABLE_OVERFLOW_RIGHT, NULL);
 
-  txt_signal_connect(iwad_selector, "changed", UpdateWarpType, NULL);
+  txt_signal_connect(iwad_selector, "changed", update_warp_type, NULL);
 
   update_warp_type(NULL, NULL);
   update_warp_button();
@@ -846,13 +866,13 @@ static void do_join_game(void *unused1, void *unused2)
       return;
     }
 
-  exec = NewExecuteContext();
+  exec = new_execute_context();
 
-  AddCmdLineParameter(exec, "-connect %s", connect_address);
+  add_cmdline_parameter(exec, "-connect %s", connect_address);
 
   if (gamemission == hexen)
     {
-      AddCmdLineParameter(exec, "-class %i", character_class);
+      add_cmdline_parameter(exec, "-class %i", character_class);
     }
 
   /* Extra parameters come first, so that they can be used to override
@@ -867,7 +887,7 @@ static void do_join_game(void *unused1, void *unused2)
 
   m_save_defaults();
 
-  PassThroughArguments(exec);
+  pass_through_arguments(exec);
 
   execute_doom(exec);
 
@@ -921,18 +941,18 @@ static void select_query_address(TXT_UNCAST_ARG(button),
 
       if (found_iwads[i] == NULL)
         {
-          txt_message_box(
-              NULL,
-              "The game on this server seems to be:\n"
-              "\n"
-              "   %s\n"
-              "\n"
-              "but the IWAD file %s is not found!\n"
-              "Without the required IWAD file, it may not be\n"
-              "possible to join this game.",
-              d_suggest_game_name(querydata->gamemission,
-                                  querydata->gamemode),
-              D_SuggestIWADName(querydata->gamemission, querydata->gamemode));
+          txt_message_box(NULL,
+                          "The game on this server seems to be:\n"
+                          "\n"
+                          "   %s\n"
+                          "\n"
+                          "but the IWAD file %s is not found!\n"
+                          "Without the required IWAD file, it may not be\n"
+                          "possible to join this game.",
+                          d_suggest_game_name(querydata->gamemission,
+                                              querydata->gamemode),
+                          d_suggest_iwad_name(querydata->gamemission,
+                                              querydata->gamemode));
         }
     }
 
@@ -982,10 +1002,10 @@ static void query_response_callback(net_addr_t *addr,
 
   m_string_concat(description, querydata->description, sizeof(description));
 
-  txt_add_widgets(
-      results_table, txt_new_label(ping_time_str),
-      txt_new_button2(net_addr_to_string(addr), SelectQueryAddress, querydata),
-      txt_new_label(description), NULL);
+  txt_add_widgets(results_table, txt_new_label(ping_time_str),
+                  txt_new_button2(net_addr_to_string(addr),
+                                  select_query_address, querydata),
+                  txt_new_label(description), NULL);
 
   ++query_servers_found;
 }
@@ -994,7 +1014,7 @@ static void query_periodic_callback(TXT_UNCAST_ARG(results_table))
 {
   TXT_CAST_ARG(txt_table_t, results_table);
 
-  if (!net_query_poll(QueryResponseCallback, results_table))
+  if (!net_query_poll(query_response_callback, results_table))
     {
       txt_set_periodic_callback(NULL, NULL, 0);
 
@@ -1021,12 +1041,13 @@ static void server_query_window(const char *title)
   query_window = txt_new_window(title);
 
   txt_add_widget(query_window,
-                txt_new_scrollpane(70, 10, results_table = txt_new_table(3)));
+                txt_new_scrollpane(70, 10,
+                    results_table = txt_new_table(3)));
 
   txt_set_column_widths(results_table, 7, 22, 40);
-  txt_set_periodic_callback(QueryPeriodicCallback, results_table, 1);
+  txt_set_periodic_callback(query_periodic_callback, results_table, 1);
 
-  txt_signal_connect(query_window, "closed", QueryWindowClosed, NULL);
+  txt_signal_connect(query_window, "closed", query_window_closed, NULL);
 }
 
 static void find_internet_server(TXT_UNCAST_ARG(widget),
@@ -1036,7 +1057,8 @@ static void find_internet_server(TXT_UNCAST_ARG(widget),
   server_query_window("Find Internet server");
 }
 
-static void find_lan_server(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(user_data))
+static void find_lan_server(TXT_UNCAST_ARG(widget),
+        TXT_UNCAST_ARG(user_data))
 {
   net_start_lan_query();
   server_query_window("Find LAN server");
@@ -1067,41 +1089,40 @@ void join_multi_game(TXT_UNCAST_ARG(widget), void *user_data)
 
   txt_set_window_help_url(window, MULTI_JOIN_HELP_URL);
 
-  txt_add_widgets(window, txt_new_label("Game"), IWADSelector(), NULL);
+  txt_add_widgets(window, txt_new_label("Game"), iwad_selector(), NULL);
 
   if (gamemission == hexen)
     {
       txt_add_widgets(
           window, txt_new_label("Character class "),
-          txt_new_dropdown_list(&character_class, character_classes, 3), NULL);
+          txt_new_dropdown_list(&character_class, character_classes, 3),
+          NULL);
     }
 
-  txt_add_widgets(
-      window, txt_new_separator("Server"),
-      txt_new_label("Connect to address: "),
-      address_box = txt_new_input_box(&connect_address, 30),
+  txt_add_widgets(window, txt_new_separator("Server"),
+                  txt_new_label("Connect to address: "),
+                  address_box = txt_new_input_box(&connect_address, 30),
 
-      txt_new_button2("Find server on Internet...", FindInternetServer, NULL),
-      TXT_TABLE_OVERFLOW_RIGHT,
-      txt_new_button2("Find server on local network...", FindLANServer, NULL),
-      TXT_TABLE_OVERFLOW_RIGHT, TXT_NewStrut(0, 1), TXT_TABLE_OVERFLOW_RIGHT,
-      txt_new_button2("Add extra parameters...", OpenExtraParamsWindow, NULL),
-      NULL);
+                  txt_new_button2("Find server on Internet...",
+                                  find_internet_server, NULL),
+                  TXT_TABLE_OVERFLOW_RIGHT,
+                  txt_new_button2("Find server on local network...",
+                                  find_lan_server, NULL),
+                  TXT_TABLE_OVERFLOW_RIGHT, txt_new_strut(0, 1),
+                  TXT_TABLE_OVERFLOW_RIGHT,
+                  txt_new_button2("Add extra parameters...",
+                                  open_extra_params_window, NULL),
+                  NULL);
 
   txt_select_widget(window, address_box);
 
-  txt_set_window_action(window, TXT_HORIZ_CENTER, WadWindowAction());
-  txt_set_window_action(window, TXT_HORIZ_RIGHT, JoinGameAction());
+  txt_set_window_action(window, TXT_HORIZ_CENTER, wad_window_action());
+  txt_set_window_action(window, TXT_HORIZ_RIGHT, join_game_action());
 }
 
 void set_chat_macro_defaults(void)
 {
   int i;
-  const char *const defaults[] = {
-      HUSTR_CHATMACRO0, HUSTR_CHATMACRO1, HUSTR_CHATMACRO2, HUSTR_CHATMACRO3,
-      HUSTR_CHATMACRO4, HUSTR_CHATMACRO5, HUSTR_CHATMACRO6, HUSTR_CHATMACRO7,
-      HUSTR_CHATMACRO8, HUSTR_CHATMACRO9,
-  };
 
   /* If the chat macros have not been set, initialize with defaults. */
 
@@ -1109,7 +1130,7 @@ void set_chat_macro_defaults(void)
     {
       if (chat_macros[i] == NULL)
         {
-          chat_macros[i] = m_string_duplicate(defaults[i]);
+          chat_macros[i] = m_string_duplicate(g_defaults[i]);
         }
     }
 }
@@ -1133,11 +1154,11 @@ void multiplayer_config(TXT_UNCAST_ARG(widget), void *user_data)
   window = txt_new_window("Multiplayer Configuration");
   txt_set_window_help_url(window, MULTI_CONFIG_HELP_URL);
 
-  txt_add_widgets(window, TXT_NewStrut(0, 1),
-                  txt_new_horiz_box(txt_new_label("Player name:  "),
-                                    txt_new_input_box(&net_player_name, 25),
-                                    NULL),
-                  TXT_NewStrut(0, 1), txt_new_separator("Chat macros"), NULL);
+  txt_add_widgets(
+      window, txt_new_strut(0, 1),
+      txt_new_horiz_box(txt_new_label("Player name:  "),
+                        txt_new_input_box(&net_player_name, 25), NULL),
+      txt_new_strut(0, 1), txt_new_separator("Chat macros"), NULL);
 
   table = txt_new_table(2);
 
@@ -1149,7 +1170,8 @@ void multiplayer_config(TXT_UNCAST_ARG(widget), void *user_data)
       txt_set_fg_colour(label, TXT_COLOR_BRIGHT_CYAN);
 
       txt_add_widgets(table, label,
-                      txt_new_input_box(&chat_macros[(i + 1) % 10], 40), NULL);
+                      txt_new_input_box(&chat_macros[(i + 1) % 10], 40),
+                      NULL);
     }
 
   txt_add_widget(window, table);

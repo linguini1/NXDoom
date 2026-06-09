@@ -582,7 +582,7 @@ const char *d_save_game_iwad_name(gamemission_t gamemission,
   return "unknown.wad";
 }
 
-const char *D_SuggestIWADName(gamemission_t mission, game_mode_t mode)
+const char *d_suggest_iwad_name(gamemission_t mission, game_mode_t mode)
 {
   int i;
 
