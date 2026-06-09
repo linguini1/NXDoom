@@ -1,5 +1,5 @@
 /****************************************************************************
- * src/setup/keyboard.h
+ * apps/games/NXDoom/src/setup/keyboard.h
  *
  * SPDX-License-Identifer: GPLv2
  *
