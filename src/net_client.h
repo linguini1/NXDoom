@@ -1,5 +1,5 @@
 /****************************************************************************
- * apps/games/NXDoom/src/net_loop.h
+ * apps/games/NXDoom/src/net_client.h
  *
  * SPDX-License-Identifier: GPLv2
  *
@@ -58,7 +58,6 @@ extern boolean drone;
 boolean net_cl_connect(net_addr_t *addr, net_connect_data_t *data);
 void net_cl_disconnect(void);
 void net_cl_run(void);
-void NET_CL_Init(void);
 void net_cl_launch_game(void);
 void net_cl_start_game(net_gamesettings_t *settings);
 void net_cl_send_ticcmd(ticcmd_t *ticcmd, int maketic);

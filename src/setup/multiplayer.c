@@ -42,8 +42,6 @@
 #include "net_io.h"
 #include "net_query.h"
 
-#include "net_petname.h"
-
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
@@ -1120,7 +1118,7 @@ void set_player_name_default(void)
 {
   if (net_player_name == NULL)
     {
-      net_player_name = NET_GetRandomPetName();
+      net_player_name = "Player";
     }
 }
 

@@ -74,7 +74,6 @@ NETSRCS =         \
   net_io.c        \
   net_loop.c      \
   net_packet.c    \
-  net_petname.c   \
   net_query.c     \
   net_sdl.c       \
   net_server.c    \

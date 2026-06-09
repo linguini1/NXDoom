@@ -45,7 +45,6 @@
 #include "net_gui.h"
 #include "net_io.h"
 #include "net_packet.h"
-#include "net_petname.h"
 #include "net_query.h"
 #include "net_server.h"
 #include "net_structrw.h"
@@ -56,7 +55,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#define NET_CL_ExpandTicNum(b) net_expand_tic_num(recvwindow_start, (b))
+#define net_cl_expand_ticnum(b) net_expand_tic_num(recvwindow_start, (b))
 
 #define KP 0.1
 #define KI 0.01
@@ -207,7 +206,10 @@ unsigned int net_local_is_freedoom;
 
 /* Called when we become disconnected from the server */
 
-static void net_cl_disconnected(void) { d_receive_tic(NULL, NULL); }
+static void net_cl_disconnected(void)
+{
+  d_receive_tic(NULL, NULL);
+}
 
 /* Called when a packet is received from the server containing game
  * data. This updates the clock synchronization variable (offsetms)
@@ -223,7 +225,8 @@ static void update_clock_sync(unsigned int seq, unsigned int remote_latency)
 
   if (seq == send_queue[seq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq)
     {
-      latency = i_get_time_ms() - send_queue[seq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].time;
+      latency = i_get_time_ms() -
+                send_queue[seq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].time;
     }
   else if (seq > send_queue[seq % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq)
     {
@@ -251,8 +254,9 @@ static void update_clock_sync(unsigned int seq, unsigned int remote_latency)
   last_error = error;
   last_latency = latency;
 
-  net_log_info("client: latency %d, remote %d -> offset=%dms, cumul_error=%d",
-               latency, remote_latency, offsetms / FRACUNIT, cumul_error);
+  net_log_info(
+    "client: latency %d, remote %d -> offset=%dms, cumul_error=%d",
+    latency, remote_latency, offsetms / FRACUNIT, cumul_error);
 }
 
 /* Expand a net_full_ticcmd_t, applying the diffs in cmd->cmds as
@@ -311,12 +315,15 @@ static void net_cl_advance_window(void)
       /* Advance the window */
 
       memmove(recvwindow, recvwindow + 1,
-              sizeof(net_server_recv_t) * (CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1));
-      memset(&recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1], 0, sizeof(net_server_recv_t));
+              sizeof(net_server_recv_t) *
+                  (CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1));
+      memset(&recvwindow[CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1], 0,
+             sizeof(net_server_recv_t));
 
       ++recvwindow_start;
 
-      net_log_info("client: advanced receive window to %d", recvwindow_start);
+      net_log_info("client: advanced receive window to %d",
+              recvwindow_start);
     }
 }
 
@@ -757,7 +764,7 @@ static void net_cl_parse_game_data(net_packet_t *packet)
 
   /* Expand byte value into the full tic number */
 
-  seq = NET_CL_ExpandTicNum(seq);
+  seq = net_cl_expand_ticnum(seq);
   net_log_info("client: got game data, seq=%d, num_tics=%d", seq, num_tics);
 
   for (i = 0; i < num_tics; ++i)
@@ -809,7 +816,10 @@ static void net_cl_parse_game_data(net_packet_t *packet)
 
   if (resend_end <= 0) return;
 
-  if (resend_end >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS) resend_end = CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1;
+  if (resend_end >= CONFIG_GAMES_NXDOOM_NET_BACKUPTICS)
+    {
+      resend_end = CONFIG_GAMES_NXDOOM_NET_BACKUPTICS - 1;
+    }
 
   index = resend_end - 1;
   resend_start = resend_end;
@@ -881,14 +891,17 @@ static void net_cl_parse_resend_request(net_packet_t *packet)
    * window of tics to only what we have.
    */
 
-  while (start <= end && (!send_queue[start % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].active ||
-                          send_queue[start % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq != start))
+  while (
+      start <= end &&
+      (!send_queue[start % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].active ||
+       send_queue[start % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq != start))
     {
       ++start;
     }
 
-  while (start <= end && (!send_queue[end % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].active ||
-                          send_queue[end % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq != end))
+  while (start <= end &&
+         (!send_queue[end % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].active ||
+          send_queue[end % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].seq != end))
     {
       --end;
     }
@@ -998,6 +1011,18 @@ static void net_cl_send_syn(net_connect_data_t *data)
   net_write_string(packet, net_player_name);
   net_conn_send_packet(&client_connection, packet);
   net_free_packet(packet);
+}
+
+static void net_cl_init(void)
+{
+  /* Try to set from the USER and USERNAME environment variables
+   * Otherwise, fallback to "Player"
+   */
+
+  if (net_player_name == NULL)
+    {
+      net_player_name = "Player";
+    }
 }
 
 /****************************************************************************
@@ -1275,19 +1300,10 @@ void net_cl_disconnect(void)
   net_cl_shutdown();
 }
 
-void NET_CL_Init(void)
+void net_init(void)
 {
-  /* Try to set from the USER and USERNAME environment variables
-   * Otherwise, fallback to "Player"
-   */
-
-  if (net_player_name == NULL)
-    {
-      net_player_name = NET_GetRandomPetName();
-    }
+  net_cl_init();
 }
-
-void net_init(void) { NET_CL_Init(); }
 
 void net_bind_variables(void)
 {
