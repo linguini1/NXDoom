@@ -1,22 +1,31 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Here is a core component: drawing the floors and ceilings,
-//	 while maintaining a per column clipping list only.
-//	Moreover, the sky areas have to be determined.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/r_plane.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  Here is a core component: drawing the floors and ceilings, while
+ *  maintaining a per column clipping list only. Moreover, the sky areas
+ *  have to be determined.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,43 +40,45 @@
 #include "r_local.h"
 #include "r_sky.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+#define MAXOPENINGS (SCREENWIDTH * CONFIG_GAMES_NXDOOM_MAXOPENINGS)
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
 planefunction_t floorfunc;
 planefunction_t ceilingfunc;
 
-//
-// opening
-//
+/* opening */
 
-// Here comes the obnoxious "visplane".
+/* Here comes the obnoxious "visplane". */
 
 visplane_t visplanes[CONFIG_GAMES_NXDOOM_MAXVISPLANES];
 visplane_t *lastvisplane;
 visplane_t *floorplane;
 visplane_t *ceilingplane;
 
-// ?
-#define MAXOPENINGS (SCREENWIDTH * CONFIG_GAMES_NXDOOM_MAXOPENINGS)
 short openings[MAXOPENINGS];
 short *lastopening;
 
-//
-// Clip values are the solid pixel bounding the range.
-//  floorclip starts out SCREENHEIGHT
-//  ceilingclip starts out -1
-//
+/* Clip values are the solid pixel bounding the range. floorclip starts out
+ * SCREENHEIGHT ceilingclip starts out -1
+ */
+
 short floorclip[SCREENWIDTH];
 short ceilingclip[SCREENWIDTH];
 
-//
-// spanstart holds the start of a plane span
-// initialized to 0 at start
-//
+/* spanstart holds the start of a plane span initialized to 0 at start */
+
 int spanstart[SCREENHEIGHT];
 int spanstop[SCREENHEIGHT];
 
-//
-// texture mapping
-//
+/* texture mapping */
+
 lighttable_t **planezlight;
 fixed_t planeheight;
 
@@ -81,29 +92,22 @@ fixed_t cacheddistance[SCREENHEIGHT];
 fixed_t cachedxstep[SCREENHEIGHT];
 fixed_t cachedystep[SCREENHEIGHT];
 
-//
-// r_init_planes
-// Only at game startup.
-//
-void r_init_planes(void)
-{
-  // Doh!
-}
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
 
-//
-// R_MapPlane
-//
-// Uses global vars:
-//  planeheight
-//  ds_source
-//  basexscale
-//  baseyscale
-//  viewx
-//  viewy
-//
-// BASIC PRIMITIVE
-//
-void R_MapPlane(int y, int x1, int x2)
+/* Uses global vars:
+ *  planeheight
+ *  ds_source
+ *  basexscale
+ *  baseyscale
+ *  viewx
+ *  viewy
+ *
+ * BASIC PRIMITIVE
+ */
+
+static void r_map_plane(int y, int x1, int x2)
 {
   angle_t angle;
   fixed_t distance;
@@ -151,20 +155,60 @@ void R_MapPlane(int y, int x1, int x2)
   ds_x1 = x1;
   ds_x2 = x2;
 
-  // high or low detail
+  /* high or low detail */
+
   spanfunc();
 }
 
-//
-// r_clear_planes
-// At begining of frame.
-//
+static void r_make_spans(int x, int t1, int b1, int t2, int b2)
+{
+  while (t1 < t2 && t1 <= b1)
+    {
+      r_map_plane(t1, spanstart[t1], x - 1);
+      t1++;
+    }
+  while (b1 > b2 && b1 >= t1)
+    {
+      r_map_plane(b1, spanstart[b1], x - 1);
+      b1--;
+    }
+
+  while (t2 < t1 && t2 <= b2)
+    {
+      spanstart[t2] = x;
+      t2++;
+    }
+  while (b2 > b1 && b2 >= t2)
+    {
+      spanstart[b2] = x;
+      b2--;
+    }
+}
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/* r_init_planes
+ * Only at game startup.
+ */
+
+void r_init_planes(void)
+{
+  /* Doh! */
+}
+
+/* r_clear_planes
+ * At beginning of frame.
+ */
+
 void r_clear_planes(void)
 {
   int i;
   angle_t angle;
 
-  // opening / clipping determination
+  /* opening / clipping determination */
+
   for (i = 0; i < viewwidth; i++)
     {
       floorclip[i] = viewheight;
@@ -174,27 +218,27 @@ void r_clear_planes(void)
   lastvisplane = visplanes;
   lastopening = openings;
 
-  // texture calculation
+  /* texture calculation */
+
   memset(cachedheight, 0, sizeof(cachedheight));
 
-  // left to right mapping
+  /* left to right mapping */
+
   angle = (viewangle - ANG90) >> ANGLETOFINESHIFT;
 
-  // scale will be unit scale at SCREENWIDTH/2 distance
+  /* scale will be unit scale at SCREENWIDTH/2 distance */
+
   basexscale = fixed_div(finecosine[angle], centerxfrac);
   baseyscale = -fixed_div(finesine[angle], centerxfrac);
 }
 
-//
-// r_find_plane
-//
 visplane_t *r_find_plane(fixed_t height, int picnum, int lightlevel)
 {
   visplane_t *check;
 
   if (picnum == skyflatnum)
     {
-      height = 0; // all skys map together
+      height = 0; /* all skys map together */
       lightlevel = 0;
     }
 
@@ -225,9 +269,6 @@ visplane_t *r_find_plane(fixed_t height, int picnum, int lightlevel)
   return check;
 }
 
-//
-// r_check_plane
-//
 visplane_t *r_check_plane(visplane_t *pl, int start, int stop)
 {
   int intrl;
@@ -259,18 +300,20 @@ visplane_t *r_check_plane(visplane_t *pl, int start, int stop)
     }
 
   for (x = intrl; x <= intrh; x++)
-    if (pl->top[x] != 0xff) break;
+    {
+      if (pl->top[x] != 0xff) break;
+    }
 
   if (x > intrh)
     {
       pl->minx = unionl;
       pl->maxx = unionh;
 
-      // use the same one
-      return pl;
+      return pl; /* use the same one */
     }
 
-  // make a new visplane
+  /* make a new visplane */
+
   lastvisplane->height = pl->height;
   lastvisplane->picnum = pl->picnum;
   lastvisplane->lightlevel = pl->lightlevel;
@@ -287,38 +330,8 @@ visplane_t *r_check_plane(visplane_t *pl, int start, int stop)
   return pl;
 }
 
-//
-// R_MakeSpans
-//
-void R_MakeSpans(int x, int t1, int b1, int t2, int b2)
-{
-  while (t1 < t2 && t1 <= b1)
-    {
-      R_MapPlane(t1, spanstart[t1], x - 1);
-      t1++;
-    }
-  while (b1 > b2 && b1 >= t1)
-    {
-      R_MapPlane(b1, spanstart[b1], x - 1);
-      b1--;
-    }
+/* At the end of each frame. */
 
-  while (t2 < t1 && t2 <= b2)
-    {
-      spanstart[t2] = x;
-      t2++;
-    }
-  while (b2 > b1 && b2 >= t2)
-    {
-      spanstart[b2] = x;
-      b2--;
-    }
-}
-
-//
-// r_draw_planes
-// At the end of each frame.
-//
 void r_draw_planes(void)
 {
   visplane_t *pl;
@@ -344,15 +357,17 @@ void r_draw_planes(void)
     {
       if (pl->minx > pl->maxx) continue;
 
-      // sky flat
+      /* sky flat */
+
       if (pl->picnum == skyflatnum)
         {
           dc_iscale = pspriteiscale >> detailshift;
 
-          // Sky is allways drawn full bright,
-          //  i.e. colormaps[0] is used.
-          // Because of this hack, sky is not affected
-          //  by INVUL inverse mapping.
+          /* Sky is always drawn full bright, i.e. colormaps[0] is used.
+           * Because of this hack, sky is not affected by INVUL inverse
+           * mapping.
+           */
+
           dc_colormap = colormaps;
           dc_texturemid = skytexturemid;
           for (x = pl->minx; x <= pl->maxx; x++)
@@ -368,10 +383,12 @@ void r_draw_planes(void)
                   colfunc();
                 }
             }
+
           continue;
         }
 
-      // regular flat
+      /* regular flat */
+
       lumpnum = firstflat + flattranslation[pl->picnum];
       ds_source = w_cache_lump_num(lumpnum, PU_STATIC);
 
@@ -391,8 +408,8 @@ void r_draw_planes(void)
 
       for (x = pl->minx; x <= stop; x++)
         {
-          R_MakeSpans(x, pl->top[x - 1], pl->bottom[x - 1], pl->top[x],
-                      pl->bottom[x]);
+          r_make_spans(x, pl->top[x - 1], pl->bottom[x - 1], pl->top[x],
+                       pl->bottom[x]);
         }
 
       w_release_lump_num(lumpnum);
