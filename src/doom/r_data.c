@@ -421,10 +421,10 @@ void R_GenerateLookup(int texnum)
 }
 
 /****************************************************************************
- * Name: R_GetColumn
+ * Name: r_get_column
  ****************************************************************************/
 
-byte *R_GetColumn(int tex, int col)
+byte *r_get_column(int tex, int col)
 {
   int lump;
   int ofs;

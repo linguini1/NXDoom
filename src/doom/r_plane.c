@@ -226,9 +226,9 @@ visplane_t *r_find_plane(fixed_t height, int picnum, int lightlevel)
 }
 
 //
-// R_CheckPlane
+// r_check_plane
 //
-visplane_t *R_CheckPlane(visplane_t *pl, int start, int stop)
+visplane_t *r_check_plane(visplane_t *pl, int start, int stop)
 {
   int intrl;
   int intrh;
@@ -276,7 +276,7 @@ visplane_t *R_CheckPlane(visplane_t *pl, int start, int stop)
   lastvisplane->lightlevel = pl->lightlevel;
 
   if (lastvisplane - visplanes == CONFIG_GAMES_NXDOOM_MAXVISPLANES)
-    i_error("R_CheckPlane: no more visplanes");
+    i_error("r_check_plane: no more visplanes");
 
   pl = lastvisplane++;
   pl->minx = start;
@@ -364,7 +364,7 @@ void r_draw_planes(void)
                 {
                   angle = (viewangle + xtoviewangle[x]) >> ANGLETOSKYSHIFT;
                   dc_x = x;
-                  dc_source = R_GetColumn(skytexture, angle);
+                  dc_source = r_get_column(skytexture, angle);
                   colfunc();
                 }
             }

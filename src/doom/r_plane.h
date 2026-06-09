@@ -46,6 +46,6 @@ void r_draw_planes(void);
 
 visplane_t *r_find_plane(fixed_t height, int picnum, int lightlevel);
 
-visplane_t *R_CheckPlane(visplane_t *pl, int start, int stop);
+visplane_t *r_check_plane(visplane_t *pl, int start, int stop);
 
 #endif
