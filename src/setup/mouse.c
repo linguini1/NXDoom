@@ -120,7 +120,7 @@ void config_mouse(TXT_UNCAST_ARG(widget), void *user_data)
 
   txt_set_table_columns(window, 2);
 
-  txt_set_window_action(window, TXT_HORIZ_CENTER, TestConfigAction());
+  txt_set_window_action(window, TXT_HORIZ_CENTER, test_config_action());
   txt_set_window_help_url(window, WINDOW_HELP_URL);
 
   txt_add_widgets(

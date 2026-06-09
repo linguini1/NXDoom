@@ -489,7 +489,7 @@ void config_keyboard(TXT_UNCAST_ARG(widget), void *user_data)
                   TXT_TABLE_EOL, NULL);
 
   txt_signal_connect(run_control, "changed", UpdateJoybSpeed, NULL);
-  txt_set_window_action(window, TXT_HORIZ_CENTER, TestConfigAction());
+  txt_set_window_action(window, TXT_HORIZ_CENTER, test_config_action());
 }
 
 void bind_keyboard_variables(void)

@@ -270,7 +270,7 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
   free(extra_cfg);
 }
 
-txt_window_action_t *TestConfigAction(void)
+txt_window_action_t *test_config_action(void)
 {
   txt_window_action_t *test_action;
 

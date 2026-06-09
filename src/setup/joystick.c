@@ -1339,7 +1339,7 @@ void config_joystick(TXT_UNCAST_ARG(widget), void *user_data)
     }
 
   txt_signal_connect(joystick_button, "pressed", CalibrateJoystick, window);
-  txt_set_window_action(window, TXT_HORIZ_CENTER, TestConfigAction());
+  txt_set_window_action(window, TXT_HORIZ_CENTER, test_config_action());
 
   InitJoystick();
   UpdateJoystickIndex();
