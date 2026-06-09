@@ -800,5 +800,5 @@ void p_init(void)
 {
   p_initSwitchList();
   p_initPicAnims();
-  r_initSprites(sprnames);
+  r_init_sprites(sprnames);
 }

@@ -80,9 +80,9 @@ lighttable_t **walllights;
 short *maskedtexturecol;
 
 //
-// R_RenderMaskedSegRange
+// r_render_masked_seg_range
 //
-void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
+void r_render_masked_seg_range(drawseg_t *ds, int x1, int x2)
 {
   unsigned index;
   column_t *col;
@@ -161,7 +161,7 @@ void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
                                                  maskedtexturecol[dc_x]) -
                              3);
 
-          r_draw_maskedColumn(col);
+          r_draw_masked_column(col);
           maskedtexturecol[dc_x] = SHRT_MAX;
         }
       spryscale += rw_scalestep;
