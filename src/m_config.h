@@ -37,7 +37,7 @@ extern const char *configdir;
 
 void m_load_defaults(void);
 void m_save_defaults(void);
-void m_save_defaultsAlternate(const char *main, const char *extra);
+void m_save_defaults_alternate(const char *main, const char *extra);
 void m_set_config_dir(const char *dir);
 void m_set_music_pack_dir(void);
 void m_bind_int_variable(const char *name, int *variable);

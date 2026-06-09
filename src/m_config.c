@@ -2172,7 +2172,7 @@ void m_save_defaults(void)
 
 /* Save defaults to alternate filenames */
 
-void m_save_defaultsAlternate(const char *main, const char *extra)
+void m_save_defaults_alternate(const char *main, const char *extra)
 {
   const char *orig_main;
   const char *orig_extra;

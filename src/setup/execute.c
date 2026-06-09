@@ -1,18 +1,27 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/setup/execute.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Code for invoking Doom
+ *
+ ****************************************************************************/
 
-// Code for invoking Doom
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <ctype.h>
 #include <stdarg.h>
@@ -34,20 +43,29 @@
 #include "m_misc.h"
 #include "mode.h"
 
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
+
 struct execute_context_s
 {
   char *response_file;
   FILE *stream;
 };
 
-// Returns the path to a temporary file of the given name, stored
-// inside the system temporary directory.
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
 
-static char *TempFile(const char *s)
+/* Returns the path to a temporary file of the given name, stored
+ * inside the system temporary directory.
+ */
+
+static char *temp_file(const char *s)
 {
   const char *tempdir;
 
-  // Check the $TMPDIR environment variable to find the location.
+  /* Check the $TMPDIR environment variable to find the location. */
 
   tempdir = getenv("TMPDIR");
 
@@ -59,7 +77,7 @@ static char *TempFile(const char *s)
   return m_string_join(tempdir, DIR_SEPARATOR_S, s, NULL);
 }
 
-static int ArgumentNeedsEscape(const char *arg)
+static int argument_needs_escape(const char *arg)
 {
   const char *p;
 
@@ -74,76 +92,11 @@ static int ArgumentNeedsEscape(const char *arg)
   return 0;
 }
 
-// Arguments passed to the setup tool should be passed through to the
-// game when launching a game.  Calling this adds all arguments from
-// myargv to the output context.
+/* Given the specified program name, get the full path to the program,
+ * assuming that it is in the same directory as this program is.
+ */
 
-void pass_through_arguments(execute_context_t *context)
-{
-  int i;
-
-  for (i = 1; i < myargc; ++i)
-    {
-      if (ArgumentNeedsEscape(myargv[i]))
-        {
-          add_cmdline_parameter(context, "\"%s\"", myargv[i]);
-        }
-      else
-        {
-          add_cmdline_parameter(context, "%s", myargv[i]);
-        }
-    }
-}
-
-execute_context_t *new_execute_context(void)
-{
-  execute_context_t *result;
-
-  result = malloc(sizeof(execute_context_t));
-
-  result->response_file = TempFile("chocolat.rsp");
-  result->stream = fopen(result->response_file, "w");
-
-  if (result->stream == NULL)
-    {
-      fprintf(stderr, "Error opening response file\n");
-      exit(-1);
-    }
-
-  return result;
-}
-
-void add_cmdline_parameter(execute_context_t *context, const char *s, ...)
-{
-  va_list args;
-
-  va_start(args, s);
-
-  vfprintf(context->stream, s, args);
-  fprintf(context->stream, "\n");
-
-  va_end(args);
-}
-
-boolean open_folder(const char *path)
-{
-#if 0
-    char *cmd;
-    int result;
-
-    cmd = m_string_join("xdg-open \"", path, "\"", NULL);
-    result = system(cmd);
-    free(cmd);
-
-    return result == 0;
-#endif
-  return 0;
-}
-
-// Given the specified program name, get the full path to the program,
-// assuming that it is in the same directory as this program is.
-
-static char *GetFullExePath(const char *program)
+static char *get_full_exe_path(const char *program)
 {
   char *result;
   char *sep;
@@ -171,7 +124,7 @@ static char *GetFullExePath(const char *program)
   return result;
 }
 
-static int ExecuteCommand(const char *program, const char *arg)
+static int execute_command(const char *program, const char *arg)
 {
   pid_t childpid;
   int result;
@@ -181,9 +134,9 @@ static int ExecuteCommand(const char *program, const char *arg)
 
   if (childpid == 0)
     {
-      // This is the child.  Execute the command.
+      /* This is the child.  Execute the command. */
 
-      argv[0] = GetFullExePath(program);
+      argv[0] = get_full_exe_path(program);
       argv[1] = arg;
       argv[2] = NULL;
 
@@ -193,8 +146,9 @@ static int ExecuteCommand(const char *program, const char *arg)
     }
   else
     {
-      // This is the parent.  Wait for the child to finish, and return
-      // the status code.
+      /* This is the parent.  Wait for the child to finish, and return
+       * the status code.
+       */
 
       waitpid(childpid, &result, 0);
 
@@ -209,32 +163,7 @@ static int ExecuteCommand(const char *program, const char *arg)
     }
 }
 
-int execute_doom(execute_context_t *context)
-{
-  char *response_file_arg;
-  int result;
-
-  fclose(context->stream);
-
-  // Build the command line
-
-  response_file_arg = m_string_join("@", context->response_file, NULL);
-
-  // Run Doom
-
-  result = ExecuteCommand(get_executable_name(), response_file_arg);
-
-  free(response_file_arg);
-
-  // Destroy context
-  remove(context->response_file);
-  free(context->response_file);
-  free(context);
-
-  return result;
-}
-
-static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
+static void test_callback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 {
   execute_context_t *exec;
   char *main_cfg;
@@ -245,14 +174,14 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
                                                 "settings.  Please wait.");
   txt_draw_desktop();
 
-  // Save temporary configuration files with the current configuration
+  /* Save temporary configuration files with the current configuration */
 
-  main_cfg = TempFile("tmp.cfg");
-  extra_cfg = TempFile("extratmp.cfg");
+  main_cfg = temp_file("tmp.cfg");
+  extra_cfg = temp_file("extratmp.cfg");
 
-  m_save_defaultsAlternate(main_cfg, extra_cfg);
+  m_save_defaults_alternate(main_cfg, extra_cfg);
 
-  // Run with the -testcontrols parameter
+  /* Run with the -testcontrols parameter */
 
   exec = new_execute_context();
   add_cmdline_parameter(exec, "-testcontrols");
@@ -262,7 +191,7 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
 
   txt_close_window(testwindow);
 
-  // Delete the temporary config files
+  /* Delete the temporary config files */
 
   remove(main_cfg);
   remove(extra_cfg);
@@ -270,12 +199,109 @@ static void TestCallback(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(data))
   free(extra_cfg);
 }
 
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/* Arguments passed to the setup tool should be passed through to the
+ * game when launching a game.  Calling this adds all arguments from
+ * myargv to the output context.
+ */
+
+void pass_through_arguments(execute_context_t *context)
+{
+  int i;
+
+  for (i = 1; i < myargc; ++i)
+    {
+      if (argument_needs_escape(myargv[i]))
+        {
+          add_cmdline_parameter(context, "\"%s\"", myargv[i]);
+        }
+      else
+        {
+          add_cmdline_parameter(context, "%s", myargv[i]);
+        }
+    }
+}
+
+execute_context_t *new_execute_context(void)
+{
+  execute_context_t *result;
+
+  result = malloc(sizeof(execute_context_t));
+
+  result->response_file = temp_file("chocolat.rsp");
+  result->stream = fopen(result->response_file, "w");
+
+  if (result->stream == NULL)
+    {
+      fprintf(stderr, "Error opening response file\n");
+      exit(-1);
+    }
+
+  return result;
+}
+
+void add_cmdline_parameter(execute_context_t *context, const char *s, ...)
+{
+  va_list args;
+
+  va_start(args, s);
+
+  vfprintf(context->stream, s, args);
+  fprintf(context->stream, "\n");
+
+  va_end(args);
+}
+
+boolean open_folder(const char *path)
+{
+#if 0
+  char *cmd;
+  int result;
+
+  cmd = m_string_join("xdg-open \"", path, "\"", NULL);
+  result = system(cmd);
+  free(cmd);
+
+  return result == 0;
+#endif
+  return 0;
+}
+
+int execute_doom(execute_context_t *context)
+{
+  char *response_file_arg;
+  int result;
+
+  fclose(context->stream);
+
+  /* Build the command line */
+
+  response_file_arg = m_string_join("@", context->response_file, NULL);
+
+  /* Run Doom */
+
+  result = execute_command(get_executable_name(), response_file_arg);
+
+  free(response_file_arg);
+
+  /* Destroy context */
+
+  remove(context->response_file);
+  free(context->response_file);
+  free(context);
+
+  return result;
+}
+
 txt_window_action_t *test_config_action(void)
 {
   txt_window_action_t *test_action;
 
   test_action = txt_new_window_action('t', "Test");
-  txt_signal_connect(test_action, "pressed", TestCallback, NULL);
+  txt_signal_connect(test_action, "pressed", test_callback, NULL);
 
   return test_action;
 }
