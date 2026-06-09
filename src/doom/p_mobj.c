@@ -68,7 +68,7 @@ int iquetail;
  * Public Function Prototypes
  ****************************************************************************/
 
-void G_PlayerReborn(int player);
+void g_player_reborn(int player);
 void P_SpawnMapThing(mapthing_t *mthing);
 
 /****************************************************************************
@@ -89,7 +89,7 @@ boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
       if (state == S_NULL)
         {
           mobj->state = (state_t *)S_NULL;
-          P_RemoveMobj(mobj);
+          p_remove_mobj(mobj);
           return false;
         }
 
@@ -127,7 +127,7 @@ void P_ExplodeMissile(mobj_t *mo)
 
   P_SetMobjState(mo, mobjinfo[mo->type].deathstate);
 
-  mo->tics -= P_Random() & 3;
+  mo->tics -= p_random() & 3;
 
   if (mo->tics < 1) mo->tics = 1;
 
@@ -216,7 +216,7 @@ void P_XYMovement(mobj_t *mo)
                    * Does not handle sky floors.
                    */
 
-                  P_RemoveMobj(mo);
+                  p_remove_mobj(mo);
                   return;
                 }
               P_ExplodeMissile(mo);
@@ -271,8 +271,8 @@ void P_XYMovement(mobj_t *mo)
     }
   else
     {
-      mo->momx = FixedMul(mo->momx, FRICTION);
-      mo->momy = FixedMul(mo->momy, FRICTION);
+      mo->momx = fixed_mul(mo->momx, FRICTION);
+      mo->momy = fixed_mul(mo->momy, FRICTION);
     }
 }
 
@@ -437,11 +437,11 @@ void P_NightmareRespawn(mobj_t *mobj)
 
   /* something is occupying it's position? */
 
-  if (!P_CheckPosition(mobj, x, y)) return; /* no respwan */
+  if (!p_check_position(mobj, x, y)) return; /* no respwan */
 
   /* spawn a teleport fog at old spot because of removal of the body? */
 
-  mo = P_SpawnMobj(mobj->x, mobj->y, mobj->subsector->sector->floorheight,
+  mo = p_spawn_mobj(mobj->x, mobj->y, mobj->subsector->sector->floorheight,
                    MT_TFOG);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -452,9 +452,9 @@ void P_NightmareRespawn(mobj_t *mobj)
 
   /* spawn a teleport fog at the new spot */
 
-  ss = R_PointInSubsector(x, y);
+  ss = r_point_in_subsector(x, y);
 
-  mo = P_SpawnMobj(x, y, ss->sector->floorheight, MT_TFOG);
+  mo = p_spawn_mobj(x, y, ss->sector->floorheight, MT_TFOG);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(mo, sfx_telept);
@@ -471,7 +471,7 @@ void P_NightmareRespawn(mobj_t *mobj)
 
   /* inherit attributes from deceased one */
 
-  mo = P_SpawnMobj(x, y, z, mobj->type);
+  mo = p_spawn_mobj(x, y, z, mobj->type);
   mo->spawnpoint = mobj->spawnpoint;
   mo->angle = ANG45 * (mthing->angle / 45);
 
@@ -481,7 +481,7 @@ void P_NightmareRespawn(mobj_t *mobj)
 
   /* remove the old monster, */
 
-  P_RemoveMobj(mobj);
+  p_remove_mobj(mobj);
 }
 
 /****************************************************************************
@@ -538,17 +538,17 @@ void P_MobjThinker(mobj_t *mobj)
 
       if (leveltime & 31) return;
 
-      if (P_Random() > 4) return;
+      if (p_random() > 4) return;
 
       P_NightmareRespawn(mobj);
     }
 }
 
 /****************************************************************************
- * Name: P_SpawnMobj
+ * Name: p_spawn_mobj
  ****************************************************************************/
 
-mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
+mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 {
   mobj_t *mobj;
   state_t *st;
@@ -569,7 +569,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 
   if (gameskill != sk_nightmare) mobj->reactiontime = info->reactiontime;
 
-  mobj->lastlook = P_Random() % MAXPLAYERS;
+  mobj->lastlook = p_random() % MAXPLAYERS;
 
   /* do not set the state with P_SetMobjState,
    * because action routines can not be called yet
@@ -604,10 +604,10 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 }
 
 /****************************************************************************
- * Name: P_RemoveMobj
+ * Name: p_remove_mobj
  ****************************************************************************/
 
-void P_RemoveMobj(mobj_t *mobj)
+void p_remove_mobj(mobj_t *mobj)
 {
   if ((mobj->flags & MF_SPECIAL) && !(mobj->flags & MF_DROPPED) &&
       (mobj->type != MT_INV) && (mobj->type != MT_INS))
@@ -668,8 +668,8 @@ void P_RespawnSpecials(void)
 
   /* spawn a teleport fog at the new spot */
 
-  ss = R_PointInSubsector(x, y);
-  mo = P_SpawnMobj(x, y, ss->sector->floorheight, MT_IFOG);
+  ss = r_point_in_subsector(x, y);
+  mo = p_spawn_mobj(x, y, ss->sector->floorheight, MT_IFOG);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(mo, sfx_itmbk);
 #endif
@@ -696,7 +696,7 @@ void P_RespawnSpecials(void)
   else
     z = ONFLOORZ;
 
-  mo = P_SpawnMobj(x, y, z, i);
+  mo = p_spawn_mobj(x, y, z, i);
   mo->spawnpoint = *mthing;
   mo->angle = ANG45 * (mthing->angle / 45);
 
@@ -706,7 +706,7 @@ void P_RespawnSpecials(void)
 }
 
 /****************************************************************************
- * Name: P_SpawnPlayer
+ * Name: p_spawn_player
  *
  * Description:
  *  Called when a player is spawned on the level.
@@ -714,7 +714,7 @@ void P_RespawnSpecials(void)
  *
  ****************************************************************************/
 
-void P_SpawnPlayer(mapthing_t *mthing)
+void p_spawn_player(mapthing_t *mthing)
 {
   player_t *p;
   fixed_t x;
@@ -736,12 +736,12 @@ void P_SpawnPlayer(mapthing_t *mthing)
 
   p = &players[mthing->type - 1];
 
-  if (p->playerstate == PST_REBORN) G_PlayerReborn(mthing->type - 1);
+  if (p->playerstate == PST_REBORN) g_player_reborn(mthing->type - 1);
 
   x = mthing->x << FRACBITS;
   y = mthing->y << FRACBITS;
   z = ONFLOORZ;
-  mobj = P_SpawnMobj(x, y, z, MT_PLAYER);
+  mobj = p_spawn_mobj(x, y, z, MT_PLAYER);
 
   /* set color translations for player sprites */
 
@@ -823,7 +823,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 
       playerstarts[mthing->type - 1] = *mthing;
       playerstartsingame[mthing->type - 1] = true;
-      if (!deathmatch) P_SpawnPlayer(mthing);
+      if (!deathmatch) p_spawn_player(mthing);
 
       return;
     }
@@ -877,10 +877,10 @@ void P_SpawnMapThing(mapthing_t *mthing)
   else
     z = ONFLOORZ;
 
-  mobj = P_SpawnMobj(x, y, z, i);
+  mobj = p_spawn_mobj(x, y, z, i);
   mobj->spawnpoint = *mthing;
 
-  if (mobj->tics > 0) mobj->tics = 1 + (P_Random() % mobj->tics);
+  if (mobj->tics > 0) mobj->tics = 1 + (p_random() % mobj->tics);
   if (mobj->flags & MF_COUNTKILL) totalkills++;
   if (mobj->flags & MF_COUNTITEM) totalitems++;
 
@@ -900,9 +900,9 @@ void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
 
   z += (P_SubRandom() << 10);
 
-  th = P_SpawnMobj(x, y, z, MT_PUFF);
+  th = p_spawn_mobj(x, y, z, MT_PUFF);
   th->momz = FRACUNIT;
-  th->tics -= P_Random() & 3;
+  th->tics -= p_random() & 3;
 
   if (th->tics < 1) th->tics = 1;
 
@@ -919,9 +919,9 @@ void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage)
   mobj_t *th;
 
   z += (P_SubRandom() << 10);
-  th = P_SpawnMobj(x, y, z, MT_BLOOD);
+  th = p_spawn_mobj(x, y, z, MT_BLOOD);
   th->momz = FRACUNIT * 2;
-  th->tics -= P_Random() & 3;
+  th->tics -= p_random() & 3;
 
   if (th->tics < 1) th->tics = 1;
 
@@ -941,7 +941,7 @@ void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage)
 
 void P_CheckMissileSpawn(mobj_t *th)
 {
-  th->tics -= P_Random() & 3;
+  th->tics -= p_random() & 3;
   if (th->tics < 1) th->tics = 1;
 
   /* move a little forward so an angle can be computed if it immediately
@@ -994,7 +994,7 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
   angle_t an;
   int dist;
 
-  th = P_SpawnMobj(source->x, source->y, source->z + 4 * 8 * FRACUNIT, type);
+  th = p_spawn_mobj(source->x, source->y, source->z + 4 * 8 * FRACUNIT, type);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   if (th->info->seesound) s_start_sound(th, th->info->seesound);
@@ -1009,8 +1009,8 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 
   th->angle = an;
   an >>= ANGLETOFINESHIFT;
-  th->momx = FixedMul(th->info->speed, finecosine[an]);
-  th->momy = FixedMul(th->info->speed, finesine[an]);
+  th->momx = fixed_mul(th->info->speed, finecosine[an]);
+  th->momy = fixed_mul(th->info->speed, finesine[an]);
 
   dist = P_AproxDistance(dest->x - source->x, dest->y - source->y);
   dist = dist / th->info->speed;
@@ -1024,14 +1024,14 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 }
 
 /****************************************************************************
- * Name: P_SpawnPlayerMissile
+ * Name: p_spawn_playerMissile
  *
  * Description:
  *  Tries to aim at a nearby monster
  *
  ****************************************************************************/
 
-void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
+void p_spawn_playerMissile(mobj_t *source, mobjtype_t type)
 {
   mobj_t *th;
   angle_t an;
@@ -1068,7 +1068,7 @@ void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
   y = source->y;
   z = source->z + 4 * 8 * FRACUNIT;
 
-  th = P_SpawnMobj(x, y, z, type);
+  th = p_spawn_mobj(x, y, z, type);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   if (th->info->seesound) s_start_sound(th, th->info->seesound);
@@ -1076,9 +1076,9 @@ void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
 
   th->target = source;
   th->angle = an;
-  th->momx = FixedMul(th->info->speed, finecosine[an >> ANGLETOFINESHIFT]);
-  th->momy = FixedMul(th->info->speed, finesine[an >> ANGLETOFINESHIFT]);
-  th->momz = FixedMul(th->info->speed, slope);
+  th->momx = fixed_mul(th->info->speed, finecosine[an >> ANGLETOFINESHIFT]);
+  th->momy = fixed_mul(th->info->speed, finesine[an >> ANGLETOFINESHIFT]);
+  th->momz = fixed_mul(th->info->speed, slope);
 
   P_CheckMissileSpawn(th);
 }

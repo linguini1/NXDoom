@@ -508,7 +508,7 @@ void M_DrawSave(void)
 //
 void M_DoSave(int slot)
 {
-  G_SaveGame(slot, savegamestrings[slot]);
+  g_save_game(slot, savegamestrings[slot]);
   M_ClearMenus();
 
   // PICK QUICKSAVE SLOT YET?
@@ -621,7 +621,7 @@ void M_QuickSave(void)
 
   if (quickSaveSlot < 0)
     {
-      M_StartControlPanel();
+      m_start_control_panel();
       M_ReadSaveStrings();
       M_SetupNextMenu(&SaveDef);
       quickSaveSlot = -2; // means to pick a slot now
@@ -1453,7 +1453,7 @@ boolean m_responder(event_t *ev)
   if ((devparm && key == key_menu_help) ||
       (key != 0 && key == key_menu_screenshot))
     {
-      G_ScreenShot();
+      g_screenshot();
       return true;
     }
 
@@ -1480,7 +1480,7 @@ boolean m_responder(event_t *ev)
         }
       else if (key == key_menu_help) // Help key
         {
-          M_StartControlPanel();
+          m_start_control_panel();
 
           if (gameversion >= exe_ultimate)
             currentMenu = &ReadDef2;
@@ -1495,7 +1495,7 @@ boolean m_responder(event_t *ev)
         }
       else if (key == key_menu_save) // Save
         {
-          M_StartControlPanel();
+          m_start_control_panel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           s_start_sound(NULL, sfx_swtchn);
 #endif
@@ -1504,7 +1504,7 @@ boolean m_responder(event_t *ev)
         }
       else if (key == key_menu_load) // Load
         {
-          M_StartControlPanel();
+          m_start_control_panel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           s_start_sound(NULL, sfx_swtchn);
 #endif
@@ -1513,7 +1513,7 @@ boolean m_responder(event_t *ev)
         }
       else if (key == key_menu_volume) // Sound Volume
         {
-          M_StartControlPanel();
+          m_start_control_panel();
           currentMenu = &SoundDef;
           itemOn = sfx_vol;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -1584,7 +1584,7 @@ boolean m_responder(event_t *ev)
     {
       if (key == key_menu_activate)
         {
-          M_StartControlPanel();
+          m_start_control_panel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           s_start_sound(NULL, sfx_swtchn);
 #endif
@@ -1746,9 +1746,9 @@ boolean m_responder(event_t *ev)
 }
 
 //
-// M_StartControlPanel
+// m_start_control_panel
 //
-void M_StartControlPanel(void)
+void m_start_control_panel(void)
 {
   // intro might call this repeatedly
   if (menuactive) return;

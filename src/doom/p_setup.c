@@ -281,8 +281,8 @@ void P_LoadSectors(int lump)
     {
       ss->floorheight = SHORT(ms->floorheight) << FRACBITS;
       ss->ceilingheight = SHORT(ms->ceilingheight) << FRACBITS;
-      ss->floorpic = R_FlatNumForName(ms->floorpic);
-      ss->ceilingpic = R_FlatNumForName(ms->ceilingpic);
+      ss->floorpic = r_flat_num_for_name(ms->floorpic);
+      ss->ceilingpic = r_flat_num_for_name(ms->ceilingpic);
       ss->lightlevel = SHORT(ms->lightlevel);
       ss->special = SHORT(ms->special);
       ss->tag = SHORT(ms->tag);
@@ -498,9 +498,9 @@ void P_LoadSideDefs(int lump)
     {
       sd->textureoffset = SHORT(msd->textureoffset) << FRACBITS;
       sd->rowoffset = SHORT(msd->rowoffset) << FRACBITS;
-      sd->toptexture = R_TextureNumForName(msd->toptexture);
-      sd->bottomtexture = R_TextureNumForName(msd->bottomtexture);
-      sd->midtexture = R_TextureNumForName(msd->midtexture);
+      sd->toptexture = r_texture_num_for_name(msd->toptexture);
+      sd->bottomtexture = r_texture_num_for_name(msd->bottomtexture);
+      sd->midtexture = r_texture_num_for_name(msd->midtexture);
       sd->sector = &sectors[SHORT(msd->sector)];
     }
 
@@ -693,9 +693,9 @@ static void P_LoadReject(int lumpnum)
 lumpinfo_t *maplumpinfo;
 
 //
-// P_SetupLevel
+// p_setup_level
 //
-void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
+void p_setup_level(int episode, int map, int playermask, skill_t skill)
 {
   int i;
   char lumpname[9];
@@ -774,7 +774,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
         if (playeringame[i])
           {
             players[i].mo = NULL;
-            G_DeathMatchSpawnPlayer(i);
+            g_death_match_spawn_player(i);
           }
     }
 

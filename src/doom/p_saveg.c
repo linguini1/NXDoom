@@ -40,7 +40,7 @@ boolean savegame_error;
 // the file has been successfully saved, it will be renamed to the
 // real file.
 
-char *P_TempSaveGameFile(void)
+char *p_temp_save_game_file(void)
 {
   static char *filename = NULL;
 
@@ -1331,7 +1331,7 @@ static void saveg_write_glow_t(glow_t *str)
 // Write the header for a savegame
 //
 
-void P_WriteSaveGameHeader(char *description)
+void p_write_save_game_header(char *description)
 {
   char name[VERSIONSIZE];
   int i;
@@ -1363,7 +1363,7 @@ void P_WriteSaveGameHeader(char *description)
 // Read the header for a savegame
 //
 
-boolean P_ReadSaveGameHeader(void)
+boolean p_read_save_game_header(void)
 {
   int i;
   byte a, b, c;
@@ -1402,7 +1402,7 @@ boolean P_ReadSaveGameHeader(void)
 // Read the end of file marker.  Returns true if read successfully.
 //
 
-boolean P_ReadSaveGameEOF(void)
+boolean p_read_save_game_eof(void)
 {
   int value;
 
@@ -1415,12 +1415,12 @@ boolean P_ReadSaveGameEOF(void)
 // Write the end of file marker
 //
 
-void P_WriteSaveGameEOF(void) { saveg_write8(SAVEGAME_EOF); }
+void p_write_save_game_eof(void) { saveg_write8(SAVEGAME_EOF); }
 
 //
-// P_ArchivePlayers
+// p_archive_players
 //
-void P_ArchivePlayers(void)
+void p_archive_players(void)
 {
   int i;
 
@@ -1435,9 +1435,9 @@ void P_ArchivePlayers(void)
 }
 
 //
-// P_UnArchivePlayers
+// p_unarchive_players
 //
-void P_UnArchivePlayers(void)
+void p_unarchive_players(void)
 {
   int i;
 
@@ -1457,9 +1457,9 @@ void P_UnArchivePlayers(void)
 }
 
 //
-// P_ArchiveWorld
+// p_archive_world
 //
-void P_ArchiveWorld(void)
+void p_archive_world(void)
 {
   int i;
   int j;
@@ -1501,9 +1501,9 @@ void P_ArchiveWorld(void)
 }
 
 //
-// P_UnArchiveWorld
+// p_unarchive_world
 //
-void P_UnArchiveWorld(void)
+void p_unarchive_world(void)
 {
   int i;
   int j;
@@ -1555,9 +1555,9 @@ typedef enum
 } thinkerclass_t;
 
 //
-// P_ArchiveThinkers
+// p_archive_thinkers
 //
-void P_ArchiveThinkers(void)
+void p_archive_thinkers(void)
 {
   thinker_t *th;
 
@@ -1573,7 +1573,7 @@ void P_ArchiveThinkers(void)
           continue;
         }
 
-      // i_error ("P_ArchiveThinkers: Unknown thinker function");
+      // i_error ("p_archive_thinkers: Unknown thinker function");
     }
 
   // add a terminating marker
@@ -1581,9 +1581,9 @@ void P_ArchiveThinkers(void)
 }
 
 //
-// P_UnArchiveThinkers
+// p_unarchive_thinkers
 //
-void P_UnArchiveThinkers(void)
+void p_unarchive_thinkers(void)
 {
   byte tclass;
   thinker_t *currentthinker;
@@ -1597,7 +1597,7 @@ void P_UnArchiveThinkers(void)
       next = currentthinker->next;
 
       if (currentthinker->function.acp1 == (actionf_p1)P_MobjThinker)
-        P_RemoveMobj((mobj_t *)currentthinker);
+        p_remove_mobj((mobj_t *)currentthinker);
       else
         z_free(currentthinker);
 
@@ -1636,7 +1636,7 @@ void P_UnArchiveThinkers(void)
 }
 
 //
-// P_ArchiveSpecials
+// p_archive_specials
 //
 enum
 {
@@ -1662,7 +1662,7 @@ enum
 // T_Glow, (glow_t: sector_t *),
 // T_PlatRaise, (plat_t: sector_t *), - active list
 //
-void P_ArchiveSpecials(void)
+void p_archive_specials(void)
 {
   thinker_t *th;
   int i;
@@ -1746,9 +1746,9 @@ void P_ArchiveSpecials(void)
 }
 
 //
-// P_UnArchiveSpecials
+// p_unarchive_specials
 //
-void P_UnArchiveSpecials(void)
+void p_unarchive_specials(void)
 {
   byte tclass;
   ceiling_t *ceiling;

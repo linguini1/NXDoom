@@ -98,10 +98,10 @@ void P_RunThinkers(void)
 }
 
 //
-// P_Ticker
+// p_ticker
 //
 
-void P_Ticker(void)
+void p_ticker(void)
 {
   int i;
 

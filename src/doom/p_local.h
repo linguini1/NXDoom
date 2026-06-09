@@ -93,9 +93,9 @@ extern int iquetail;
 
 void P_RespawnSpecials(void);
 
-mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type);
+mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type);
 
-void P_RemoveMobj(mobj_t *th);
+void p_remove_mobj(mobj_t *th);
 mobj_t *P_SubstNullMobj(mobj_t *th);
 boolean P_SetMobjState(mobj_t *mobj, statenum_t state);
 void P_MobjThinker(mobj_t *mobj);
@@ -103,7 +103,7 @@ void P_MobjThinker(mobj_t *mobj);
 void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z);
 void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage);
 mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type);
-void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type);
+void p_spawn_playerMissile(mobj_t *source, mobjtype_t type);
 
 //
 // P_ENEMY
@@ -198,7 +198,7 @@ extern line_t *ceilingline;
 extern line_t *spechit[MAXSPECIALCROSS];
 extern int numspechit;
 
-boolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y);
+boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y);
 boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y);
 boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y);
 void P_SlideMove(mobj_t *mo);

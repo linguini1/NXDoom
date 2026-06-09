@@ -725,14 +725,14 @@ void r_initData(void)
 }
 
 /****************************************************************************
- * Name: R_FlatNumForName
+ * Name: r_flat_num_for_name
  *
  * Description:
  *  Retrieval, get a flat number for a flat name.
  *
  ****************************************************************************/
 
-int R_FlatNumForName(const char *name)
+int r_flat_num_for_name(const char *name)
 {
   int i;
   char namet[9];
@@ -743,7 +743,7 @@ int R_FlatNumForName(const char *name)
     {
       namet[8] = 0;
       memcpy(namet, name, 8);
-      i_error("R_FlatNumForName: %s not found", namet);
+      i_error("r_flat_num_for_name: %s not found", namet);
     }
   return i - firstflat;
 }
@@ -781,14 +781,14 @@ int R_CheckTextureNumForName(const char *name)
 }
 
 /****************************************************************************
- * Name: R_TextureNumForName
+ * Name: r_texture_num_for_name
  *
  * Description:
  *  Calls R_CheckTextureNumForName, aborts with error message.
  *
  ****************************************************************************/
 
-int R_TextureNumForName(const char *name)
+int r_texture_num_for_name(const char *name)
 {
   int i;
 
@@ -796,7 +796,7 @@ int R_TextureNumForName(const char *name)
 
   if (i == -1)
     {
-      i_error("R_TextureNumForName: %s not found", name);
+      i_error("r_texture_num_for_name: %s not found", name);
     }
   return i;
 }

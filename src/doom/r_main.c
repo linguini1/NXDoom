@@ -186,8 +186,8 @@ int r_point_on_side(fixed_t x, fixed_t y, node_t *node)
       return 0;
     }
 
-  left = FixedMul(node->dy >> FRACBITS, dx);
-  right = FixedMul(dy, node->dx >> FRACBITS);
+  left = fixed_mul(node->dy >> FRACBITS, dx);
+  right = fixed_mul(dy, node->dx >> FRACBITS);
 
   if (right < left)
     {
@@ -245,8 +245,8 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line)
       return 0;
     }
 
-  left = FixedMul(ldy >> FRACBITS, dx);
-  right = FixedMul(dy, ldx >> FRACBITS);
+  left = fixed_mul(ldy >> FRACBITS, dx);
+  right = fixed_mul(dy, ldx >> FRACBITS);
 
   if (right < left)
     {
@@ -446,7 +446,7 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
     sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];	
     dist = FixedDiv (rw_distance, sinv);
     cosv = finecosine[(viewangle-visangle)>>ANGLETOFINESHIFT];
-    z = abs(FixedMul (dist, cosv));
+    z = abs(fixed_mul (dist, cosv));
     scale = FixedDiv(projection, z);
     return scale;
 }
@@ -459,8 +459,8 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
 
   sinea = finesine[anglea >> ANGLETOFINESHIFT];
   sineb = finesine[angleb >> ANGLETOFINESHIFT];
-  num = FixedMul(projection, sineb) << detailshift;
-  den = FixedMul(rw_distance, sinea);
+  num = fixed_mul(projection, sineb) << detailshift;
+  den = fixed_mul(rw_distance, sinea);
 
   if (den > num >> FRACBITS)
     {
@@ -544,7 +544,7 @@ void r_initTextureMapping(void)
         t = viewwidth + 1;
       else
         {
-          t = FixedMul(finetangent[i], focallength);
+          t = fixed_mul(finetangent[i], focallength);
           t = (centerxfrac - t + FRACUNIT - 1) >> FRACBITS;
 
           if (t < -1)
@@ -572,7 +572,7 @@ void r_initTextureMapping(void)
 
   for (i = 0; i < FINEANGLES / 2; i++)
     {
-      t = FixedMul(finetangent[i], focallength);
+      t = fixed_mul(finetangent[i], focallength);
       t = centerx - t;
 
       if (viewangletox[i] == -1)
@@ -766,10 +766,10 @@ void r_init(void)
 }
 
 /****************************************************************************
- * Name: R_PointInSubsector
+ * Name: r_point_in_subsector
  ****************************************************************************/
 
-subsector_t *R_PointInSubsector(fixed_t x, fixed_t y)
+subsector_t *r_point_in_subsector(fixed_t x, fixed_t y)
 {
   node_t *node;
   int side;

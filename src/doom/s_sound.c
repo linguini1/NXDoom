@@ -280,7 +280,7 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
 
   /* stereo separation */
 
-  *sep = 128 - (FixedMul(S_STEREO_SWING, finesine[angle]) >> FRACBITS);
+  *sep = 128 - (fixed_mul(S_STEREO_SWING, finesine[angle]) >> FRACBITS);
 
   /* volume calculation */
 

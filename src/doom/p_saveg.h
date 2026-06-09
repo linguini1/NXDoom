@@ -30,7 +30,7 @@
 
 // temporary filename to use while saving.
 
-char *P_TempSaveGameFile(void);
+char *p_temp_save_game_file(void);
 
 // filename to use for a savegame slot
 
@@ -38,24 +38,24 @@ char *p_save_game_file(int slot);
 
 // Savegame file header read/write functions
 
-boolean P_ReadSaveGameHeader(void);
-void P_WriteSaveGameHeader(char *description);
+boolean p_read_save_game_header(void);
+void p_write_save_game_header(char *description);
 
 // Savegame end-of-file read/write functions
 
-boolean P_ReadSaveGameEOF(void);
-void P_WriteSaveGameEOF(void);
+boolean p_read_save_game_eof(void);
+void p_write_save_game_eof(void);
 
 // Persistent storage/archiving.
 // These are the load / save game routines.
-void P_ArchivePlayers(void);
-void P_UnArchivePlayers(void);
-void P_ArchiveWorld(void);
-void P_UnArchiveWorld(void);
-void P_ArchiveThinkers(void);
-void P_UnArchiveThinkers(void);
-void P_ArchiveSpecials(void);
-void P_UnArchiveSpecials(void);
+void p_archive_players(void);
+void p_unarchive_players(void);
+void p_archive_world(void);
+void p_unarchive_world(void);
+void p_archive_thinkers(void);
+void p_unarchive_thinkers(void);
+void p_archive_specials(void);
+void p_unarchive_specials(void);
 
 extern FILE *save_stream;
 extern boolean savegame_error;

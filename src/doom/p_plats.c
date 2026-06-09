@@ -234,7 +234,7 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
           if (plat->high < sec->floorheight) plat->high = sec->floorheight;
 
           plat->wait = TICRATE * PLATWAIT;
-          plat->status = P_Random() & 1;
+          plat->status = p_random() & 1;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           s_start_sound(&sec->soundorg, sfx_pstart);

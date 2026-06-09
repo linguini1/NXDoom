@@ -289,7 +289,7 @@ boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y)
   tmbbox[BOXRIGHT] = x + tmthing->radius;
   tmbbox[BOXLEFT] = x - tmthing->radius;
 
-  newsubsec = R_PointInSubsector(x, y);
+  newsubsec = r_point_in_subsector(x, y);
   ceilingline = NULL;
 
   /* The base floor/ceiling is from the subsector
@@ -427,7 +427,7 @@ boolean PIT_CheckThing(mobj_t *thing)
 
   if (tmthing->flags & MF_SKULLFLY)
     {
-      damage = ((P_Random() % 8) + 1) * tmthing->info->damage;
+      damage = ((p_random() % 8) + 1) * tmthing->info->damage;
 
       P_DamageMobj(thing, tmthing, tmthing, damage);
 
@@ -483,7 +483,7 @@ boolean PIT_CheckThing(mobj_t *thing)
 
       /* damage / explode */
 
-      damage = ((P_Random() % 8) + 1) * tmthing->info->damage;
+      damage = ((p_random() % 8) + 1) * tmthing->info->damage;
       P_DamageMobj(thing, tmthing, tmthing->target, damage);
 
       /* don't traverse any more */
@@ -511,7 +511,7 @@ boolean PIT_CheckThing(mobj_t *thing)
 /* MOVEMENT CLIPPING */
 
 /*
- * P_CheckPosition
+ * p_check_position
  * This is purely informative, nothing is modified
  * (except things picked up).
  *
@@ -535,7 +535,7 @@ boolean PIT_CheckThing(mobj_t *thing)
  *  numspeciallines
  */
 
-boolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y)
+boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y)
 {
   int xl;
   int xh;
@@ -556,7 +556,7 @@ boolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y)
   tmbbox[BOXRIGHT] = x + tmthing->radius;
   tmbbox[BOXLEFT] = x - tmthing->radius;
 
-  newsubsec = R_PointInSubsector(x, y);
+  newsubsec = r_point_in_subsector(x, y);
   ceilingline = NULL;
 
   /* The base floor / ceiling is from the subsector
@@ -617,7 +617,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y)
   line_t *ld;
 
   floatok = false;
-  if (!P_CheckPosition(thing, x, y)) return false; /* solid wall or thing */
+  if (!p_check_position(thing, x, y)) return false; /* solid wall or thing */
 
   if (!(thing->flags & MF_NOCLIP))
     {
@@ -692,7 +692,7 @@ boolean P_ThingHeightClip(mobj_t *thing)
 
   onfloor = (thing->z == thing->floorz);
 
-  P_CheckPosition(thing, thing->x, thing->y);
+  p_check_position(thing, thing->x, thing->y);
 
   /* what about stranding a monster partially off an edge? */
 
@@ -763,10 +763,10 @@ void P_HitSlideLine(line_t *ld)
   deltaangle >>= ANGLETOFINESHIFT;
 
   movelen = P_AproxDistance(tmxmove, tmymove);
-  newlen = FixedMul(movelen, finecosine[deltaangle]);
+  newlen = fixed_mul(movelen, finecosine[deltaangle]);
 
-  tmxmove = FixedMul(newlen, finecosine[lineangle]);
-  tmymove = FixedMul(newlen, finesine[lineangle]);
+  tmxmove = fixed_mul(newlen, finecosine[lineangle]);
+  tmymove = fixed_mul(newlen, finesine[lineangle]);
 }
 
 /* PTR_SlideTraverse */
@@ -896,8 +896,8 @@ retry:
   bestslidefrac -= 0x800;
   if (bestslidefrac > 0)
     {
-      newx = FixedMul(mo->momx, bestslidefrac);
-      newy = FixedMul(mo->momy, bestslidefrac);
+      newx = fixed_mul(mo->momx, bestslidefrac);
+      newy = fixed_mul(mo->momy, bestslidefrac);
 
       if (!P_TryMove(mo, mo->x + newx, mo->y + newy)) goto stairstep;
     }
@@ -912,8 +912,8 @@ retry:
 
   if (bestslidefrac <= 0) return;
 
-  tmxmove = FixedMul(mo->momx, bestslidefrac);
-  tmymove = FixedMul(mo->momy, bestslidefrac);
+  tmxmove = fixed_mul(mo->momx, bestslidefrac);
+  tmymove = fixed_mul(mo->momy, bestslidefrac);
 
   P_HitSlideLine(bestslideline); /* clip the moves */
 
@@ -954,7 +954,7 @@ boolean PTR_AimTraverse(intercept_t *in)
 
       if (openbottom >= opentop) return false; /* stop */
 
-      dist = FixedMul(attackrange, in->frac);
+      dist = fixed_mul(attackrange, in->frac);
 
       if (li->backsector == NULL ||
           li->frontsector->floorheight != li->backsector->floorheight)
@@ -984,7 +984,7 @@ boolean PTR_AimTraverse(intercept_t *in)
 
   /* check angles to see if the thing can be aimed at */
 
-  dist = FixedMul(attackrange, in->frac);
+  dist = fixed_mul(attackrange, in->frac);
   thingtopslope = FixedDiv(th->z + th->height - shootz, dist);
 
   if (thingtopslope < bottomslope) return true; /* shot over the thing */
@@ -1035,7 +1035,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       P_LineOpening(li);
 
-      dist = FixedMul(attackrange, in->frac);
+      dist = fixed_mul(attackrange, in->frac);
 
       /* e6y: emulation of missed back side on two-sided lines.
        * backsector can be NULL when emulating missing back side.
@@ -1075,9 +1075,9 @@ boolean PTR_ShootTraverse(intercept_t *in)
       /* position a bit closer */
 
       frac = in->frac - FixedDiv(4 * FRACUNIT, attackrange);
-      x = trace.x + FixedMul(trace.dx, frac);
-      y = trace.y + FixedMul(trace.dy, frac);
-      z = shootz + FixedMul(aimslope, FixedMul(frac, attackrange));
+      x = trace.x + fixed_mul(trace.dx, frac);
+      y = trace.y + fixed_mul(trace.dy, frac);
+      z = shootz + fixed_mul(aimslope, fixed_mul(frac, attackrange));
 
       if (li->frontsector->ceilingpic == skyflatnum)
         {
@@ -1109,7 +1109,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
   /* check angles to see if the thing can be aimed at */
 
-  dist = FixedMul(attackrange, in->frac);
+  dist = fixed_mul(attackrange, in->frac);
   thingtopslope = FixedDiv(th->z + th->height - shootz, dist);
 
   if (thingtopslope < aimslope) return true; /* shot over the thing  */
@@ -1122,9 +1122,9 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
   frac = in->frac - FixedDiv(10 * FRACUNIT, attackrange);
 
-  x = trace.x + FixedMul(trace.dx, frac);
-  y = trace.y + FixedMul(trace.dy, frac);
-  z = shootz + FixedMul(aimslope, FixedMul(frac, attackrange));
+  x = trace.x + fixed_mul(trace.dx, frac);
+  y = trace.y + fixed_mul(trace.dy, frac);
+  z = shootz + fixed_mul(aimslope, fixed_mul(frac, attackrange));
 
   /* Spawn bullet puffs or blod spots,
    * depending on target type.
@@ -1355,7 +1355,7 @@ boolean PIT_ChangeSector(mobj_t *thing)
 
   if (thing->flags & MF_DROPPED)
     {
-      P_RemoveMobj(thing);
+      p_remove_mobj(thing);
 
       return true; /* keep checking */
     }
@@ -1373,7 +1373,7 @@ boolean PIT_ChangeSector(mobj_t *thing)
 
       /* spray blood in a random direction */
 
-      mo = P_SpawnMobj(thing->x, thing->y, thing->z + thing->height / 2,
+      mo = p_spawn_mobj(thing->x, thing->y, thing->z + thing->height / 2,
                        MT_BLOOD);
 
       mo->momx = P_SubRandom() << 12;

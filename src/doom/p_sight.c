@@ -125,13 +125,13 @@ fixed_t P_InterceptVector2(divline_t *v2, divline_t *v1)
   fixed_t num;
   fixed_t den;
 
-  den = FixedMul(v1->dy >> 8, v2->dx) - FixedMul(v1->dx >> 8, v2->dy);
+  den = fixed_mul(v1->dy >> 8, v2->dx) - fixed_mul(v1->dx >> 8, v2->dy);
 
   if (den == 0) return 0;
   //	i_error ("P_InterceptVector: parallel");
 
-  num = FixedMul((v1->x - v2->x) >> 8, v1->dy) +
-        FixedMul((v2->y - v1->y) >> 8, v1->dx);
+  num = fixed_mul((v1->x - v2->x) >> 8, v1->dy) +
+        fixed_mul((v2->y - v1->y) >> 8, v1->dx);
   frac = FixedDiv(num, den);
 
   return frac;

@@ -120,9 +120,9 @@ void R_MapPlane(int y, int x1, int x2)
   if (planeheight != cachedheight[y])
     {
       cachedheight[y] = planeheight;
-      distance = cacheddistance[y] = FixedMul(planeheight, yslope[y]);
-      ds_xstep = cachedxstep[y] = FixedMul(distance, basexscale);
-      ds_ystep = cachedystep[y] = FixedMul(distance, baseyscale);
+      distance = cacheddistance[y] = fixed_mul(planeheight, yslope[y]);
+      ds_xstep = cachedxstep[y] = fixed_mul(distance, basexscale);
+      ds_ystep = cachedystep[y] = fixed_mul(distance, baseyscale);
     }
   else
     {
@@ -131,10 +131,10 @@ void R_MapPlane(int y, int x1, int x2)
       ds_ystep = cachedystep[y];
     }
 
-  length = FixedMul(distance, distscale[x1]);
+  length = fixed_mul(distance, distscale[x1]);
   angle = (viewangle + xtoviewangle[x1]) >> ANGLETOFINESHIFT;
-  ds_xfrac = viewx + FixedMul(finecosine[angle], length);
-  ds_yfrac = -viewy - FixedMul(finesine[angle], length);
+  ds_xfrac = viewx + fixed_mul(finecosine[angle], length);
+  ds_yfrac = -viewy - fixed_mul(finesine[angle], length);
 
   if (fixedcolormap)
     ds_colormap = fixedcolormap;

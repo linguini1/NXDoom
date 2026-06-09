@@ -58,7 +58,7 @@ int prndindex = 0;
 
 /* Which one is deterministic? */
 
-int P_Random(void)
+int p_random(void)
 {
   prndindex = (prndindex + 1) & 0xff;
   return rndtable[prndindex];
@@ -70,12 +70,12 @@ int m_random(void)
   return rndtable[rndindex];
 }
 
-void M_ClearRandom(void) { rndindex = prndindex = 0; }
+void m_clear_random(void) { rndindex = prndindex = 0; }
 
 /* inspired by the same routine in Eternity, thanks haleyjd */
 
 int P_SubRandom(void)
 {
-  int r = P_Random();
-  return r - P_Random();
+  int r = p_random();
+  return r - p_random();
 }

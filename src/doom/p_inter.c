@@ -590,7 +590,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
     }
 
   if (special->flags & MF_COUNTITEM) player->itemcount++;
-  P_RemoveMobj(special);
+  p_remove_mobj(special);
   player->bonuscount += BONUSADD;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   if (player == &players[consoleplayer]) s_start_sound(NULL, sound);
@@ -650,7 +650,7 @@ void P_KillMobj(mobj_t *source, mobj_t *target)
     }
   else
     P_SetMobjState(target, target->info->deathstate);
-  target->tics -= P_Random() & 3;
+  target->tics -= p_random() & 3;
 
   if (target->tics < 1) target->tics = 1;
 
@@ -685,7 +685,7 @@ void P_KillMobj(mobj_t *source, mobj_t *target)
       return;
     }
 
-  mo = P_SpawnMobj(target->x, target->y, ONFLOORZ, item);
+  mo = p_spawn_mobj(target->x, target->y, ONFLOORZ, item);
   mo->flags |= MF_DROPPED; // special versions of items
 }
 
@@ -736,15 +736,15 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source,
 
       // make fall forwards sometimes
       if (damage < 40 && damage > target->health &&
-          target->z - inflictor->z > 64 * FRACUNIT && (P_Random() & 1))
+          target->z - inflictor->z > 64 * FRACUNIT && (p_random() & 1))
         {
           ang += ANG180;
           thrust *= 4;
         }
 
       ang >>= ANGLETOFINESHIFT;
-      target->momx += FixedMul(thrust, finecosine[ang]);
-      target->momy += FixedMul(thrust, finesine[ang]);
+      target->momx += fixed_mul(thrust, finecosine[ang]);
+      target->momy += fixed_mul(thrust, finesine[ang]);
     }
 
   // player specific
@@ -803,7 +803,7 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source,
       return;
     }
 
-  if ((P_Random() < target->info->painchance) &&
+  if ((p_random() < target->info->painchance) &&
       !(target->flags & MF_SKULLFLY))
     {
       target->flags |= MF_JUSTHIT; // fight back!

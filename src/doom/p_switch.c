@@ -122,9 +122,9 @@ void p_initSwitchList(void)
       if (alphSwitchList[i].episode <= episode)
         {
           switchlist[slindex++] =
-              R_TextureNumForName((alphSwitchList[i].name1));
+              r_texture_num_for_name((alphSwitchList[i].name1));
           switchlist[slindex++] =
-              R_TextureNumForName((alphSwitchList[i].name2));
+              r_texture_num_for_name((alphSwitchList[i].name2));
         }
     }
 
@@ -321,7 +321,7 @@ boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
     case 11:
       // Exit level
       P_ChangeSwitchTexture(line, 0);
-      G_ExitLevel();
+      g_exit_level();
       break;
 
     case 14:
@@ -385,7 +385,7 @@ boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
     case 51:
       // Secret EXIT
       P_ChangeSwitchTexture(line, 0);
-      G_SecretExitLevel();
+      g_secret_exit_level();
       break;
 
     case 55:

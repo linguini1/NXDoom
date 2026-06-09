@@ -151,15 +151,15 @@ void p_initPicAnims(void)
           // different episode ?
           if (R_CheckTextureNumForName(startname) == -1) continue;
 
-          lastanim->picnum = R_TextureNumForName(endname);
-          lastanim->basepic = R_TextureNumForName(startname);
+          lastanim->picnum = r_texture_num_for_name(endname);
+          lastanim->basepic = r_texture_num_for_name(startname);
         }
       else
         {
           if (w_check_num_for_name(startname) == -1) continue;
 
-          lastanim->picnum = R_FlatNumForName(endname);
-          lastanim->basepic = R_FlatNumForName(startname);
+          lastanim->picnum = r_flat_num_for_name(endname);
+          lastanim->basepic = r_flat_num_for_name(startname);
         }
 
       lastanim->istexture = animdefs[i].istexture;
@@ -621,7 +621,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 52:
       // EXIT!
-      G_ExitLevel();
+      g_exit_level();
       break;
 
     case 53:
@@ -704,7 +704,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 124:
       // Secret EXIT
-      G_SecretExitLevel();
+      g_secret_exit_level();
       break;
 
     case 125:
@@ -970,7 +970,7 @@ void P_PlayerInSpecialSector(player_t *player)
       // SUPER HELLSLIME DAMAGE
     case 4:
       // STROBE HURT
-      if (!player->powers[pw_ironfeet] || (P_Random() < 5))
+      if (!player->powers[pw_ironfeet] || (p_random() < 5))
         {
           if (!(leveltime & 0x1f)) P_DamageMobj(player->mo, NULL, NULL, 20);
         }
@@ -988,7 +988,7 @@ void P_PlayerInSpecialSector(player_t *player)
 
       if (!(leveltime & 0x1f)) P_DamageMobj(player->mo, NULL, NULL, 20);
 
-      if (player->health <= 10) G_ExitLevel();
+      if (player->health <= 10) g_exit_level();
       break;
 
     default:
@@ -1017,7 +1017,7 @@ void P_UpdateSpecials(void)
   if (levelTimer == true)
     {
       levelTimeCount--;
-      if (!levelTimeCount) G_ExitLevel();
+      if (!levelTimeCount) g_exit_level();
     }
 
   //	ANIMATE FLATS AND TEXTURES GLOBALLY

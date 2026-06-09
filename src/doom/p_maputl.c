@@ -72,8 +72,8 @@ int P_PointOnLineSide(fixed_t x, fixed_t y, line_t *line)
   dx = (x - line->v1->x);
   dy = (y - line->v1->y);
 
-  left = FixedMul(line->dy >> FRACBITS, dx);
-  right = FixedMul(dy, line->dx >> FRACBITS);
+  left = fixed_mul(line->dy >> FRACBITS, dx);
+  right = fixed_mul(dy, line->dx >> FRACBITS);
 
   if (right < left) return 0; // front side
   return 1;                   // back side
@@ -160,8 +160,8 @@ int P_PointOnDivlineSide(fixed_t x, fixed_t y, divline_t *line)
       return 0;
     }
 
-  left = FixedMul(line->dy >> 8, dx >> 8);
-  right = FixedMul(dy >> 8, line->dx >> 8);
+  left = fixed_mul(line->dy >> 8, dx >> 8);
+  right = fixed_mul(dy >> 8, line->dx >> 8);
 
   if (right < left) return 0; // front side
   return 1;                   // back side
@@ -192,13 +192,13 @@ fixed_t P_InterceptVector(divline_t *v2, divline_t *v1)
   fixed_t num;
   fixed_t den;
 
-  den = FixedMul(v1->dy >> 8, v2->dx) - FixedMul(v1->dx >> 8, v2->dy);
+  den = fixed_mul(v1->dy >> 8, v2->dx) - fixed_mul(v1->dx >> 8, v2->dy);
 
   if (den == 0) return 0;
   //	i_error ("P_InterceptVector: parallel");
 
-  num = FixedMul((v1->x - v2->x) >> 8, v1->dy) +
-        FixedMul((v2->y - v1->y) >> 8, v1->dx);
+  num = fixed_mul((v1->x - v2->x) >> 8, v1->dy) +
+        fixed_mul((v2->y - v1->y) >> 8, v1->dx);
 
   frac = FixedDiv(num, den);
 
@@ -346,7 +346,7 @@ void P_SetThingPosition(mobj_t *thing)
   mobj_t **link;
 
   // link into subsector
-  ss = R_PointInSubsector(thing->x, thing->y);
+  ss = r_point_in_subsector(thing->x, thing->y);
   thing->subsector = ss;
 
   if (!(thing->flags & MF_NOSECTOR))
@@ -824,7 +824,7 @@ boolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
       ystep = 256 * FRACUNIT;
     }
 
-  yintercept = (y1 >> MAPBTOFRAC) + FixedMul(partial, ystep);
+  yintercept = (y1 >> MAPBTOFRAC) + fixed_mul(partial, ystep);
 
   if (yt2 > yt1)
     {
@@ -844,7 +844,7 @@ boolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
       partial = FRACUNIT;
       xstep = 256 * FRACUNIT;
     }
-  xintercept = (x1 >> MAPBTOFRAC) + FixedMul(partial, xstep);
+  xintercept = (x1 >> MAPBTOFRAC) + fixed_mul(partial, xstep);
 
   // Step through map blocks.
   // Count is present to prevent a round off error

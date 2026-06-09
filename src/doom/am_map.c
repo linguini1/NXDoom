@@ -115,8 +115,8 @@
 
 /* translates between frame-buffer and map distances */
 
-#define FTOM(x) FixedMul(((x) << FRACBITS), scale_ftom)
-#define MTOF(x) (FixedMul((x), scale_mtof) >> FRACBITS)
+#define FTOM(x) fixed_mul(((x) << FRACBITS), scale_ftom)
+#define MTOF(x) (fixed_mul((x), scale_mtof) >> FRACBITS)
 
 /* translates between frame-buffer and map coordinates */
 
@@ -864,7 +864,7 @@ void AM_changeWindowScale(void)
 {
   /* Change the scaling multipliers */
 
-  scale_mtof = FixedMul(scale_mtof, mtof_zoommul);
+  scale_mtof = fixed_mul(scale_mtof, mtof_zoommul);
   scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
 
   if (scale_mtof < min_scale_mtof)
@@ -1331,11 +1331,11 @@ void AM_rotate(fixed_t *x, fixed_t *y, angle_t a)
 {
   fixed_t tmpx;
 
-  tmpx = FixedMul(*x, finecosine[a >> ANGLETOFINESHIFT]) -
-         FixedMul(*y, finesine[a >> ANGLETOFINESHIFT]);
+  tmpx = fixed_mul(*x, finecosine[a >> ANGLETOFINESHIFT]) -
+         fixed_mul(*y, finesine[a >> ANGLETOFINESHIFT]);
 
-  *y = FixedMul(*x, finesine[a >> ANGLETOFINESHIFT]) +
-       FixedMul(*y, finecosine[a >> ANGLETOFINESHIFT]);
+  *y = fixed_mul(*x, finesine[a >> ANGLETOFINESHIFT]) +
+       fixed_mul(*y, finecosine[a >> ANGLETOFINESHIFT]);
 
   *x = tmpx;
 }
@@ -1353,8 +1353,8 @@ void AM_drawLineCharacter(mline_t *lineguy, int lineguylines, fixed_t scale,
 
       if (scale)
         {
-          l.a.x = FixedMul(scale, l.a.x);
-          l.a.y = FixedMul(scale, l.a.y);
+          l.a.x = fixed_mul(scale, l.a.x);
+          l.a.y = fixed_mul(scale, l.a.y);
         }
 
       if (angle) AM_rotate(&l.a.x, &l.a.y, angle);
@@ -1367,8 +1367,8 @@ void AM_drawLineCharacter(mline_t *lineguy, int lineguylines, fixed_t scale,
 
       if (scale)
         {
-          l.b.x = FixedMul(scale, l.b.x);
-          l.b.y = FixedMul(scale, l.b.y);
+          l.b.x = fixed_mul(scale, l.b.x);
+          l.b.y = fixed_mul(scale, l.b.y);
         }
 
       if (angle) AM_rotate(&l.b.x, &l.b.y, angle);

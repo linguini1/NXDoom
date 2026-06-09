@@ -377,7 +377,7 @@ void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
   dc_texturemid = vis->texturemid;
   frac = vis->startfrac;
   spryscale = vis->scale;
-  sprtopscreen = centeryfrac - FixedMul(dc_texturemid, spryscale);
+  sprtopscreen = centeryfrac - fixed_mul(dc_texturemid, spryscale);
 
   for (dc_x = vis->x1; dc_x <= vis->x2; dc_x++, frac += vis->xiscale)
     {
@@ -433,8 +433,8 @@ void R_ProjectSprite(mobj_t *thing)
   tr_x = thing->x - viewx;
   tr_y = thing->y - viewy;
 
-  gxt = FixedMul(tr_x, viewcos);
-  gyt = -FixedMul(tr_y, viewsin);
+  gxt = fixed_mul(tr_x, viewcos);
+  gyt = -fixed_mul(tr_y, viewsin);
 
   tz = gxt - gyt;
 
@@ -443,8 +443,8 @@ void R_ProjectSprite(mobj_t *thing)
 
   xscale = FixedDiv(projection, tz);
 
-  gxt = -FixedMul(tr_x, viewsin);
-  gyt = FixedMul(tr_y, viewcos);
+  gxt = -fixed_mul(tr_x, viewsin);
+  gyt = fixed_mul(tr_y, viewcos);
   tx = -(gyt + gxt);
 
   // too far off the side?
@@ -480,13 +480,13 @@ void R_ProjectSprite(mobj_t *thing)
 
   // calculate edges of the shape
   tx -= spriteoffset[lump];
-  x1 = (centerxfrac + FixedMul(tx, xscale)) >> FRACBITS;
+  x1 = (centerxfrac + fixed_mul(tx, xscale)) >> FRACBITS;
 
   // off the right side?
   if (x1 > viewwidth) return;
 
   tx += spritewidth[lump];
-  x2 = ((centerxfrac + FixedMul(tx, xscale)) >> FRACBITS) - 1;
+  x2 = ((centerxfrac + fixed_mul(tx, xscale)) >> FRACBITS) - 1;
 
   // off the left side
   if (x2 < 0) return;
@@ -613,13 +613,13 @@ void R_DrawPSprite(pspdef_t *psp)
   tx = psp->sx - (SCREENWIDTH / 2) * FRACUNIT;
 
   tx -= spriteoffset[lump];
-  x1 = (centerxfrac + FixedMul(tx, pspritescale)) >> FRACBITS;
+  x1 = (centerxfrac + fixed_mul(tx, pspritescale)) >> FRACBITS;
 
   // off the right side
   if (x1 > viewwidth) return;
 
   tx += spritewidth[lump];
-  x2 = ((centerxfrac + FixedMul(tx, pspritescale)) >> FRACBITS) - 1;
+  x2 = ((centerxfrac + fixed_mul(tx, pspritescale)) >> FRACBITS) - 1;
 
   // off the left side
   if (x2 < 0) return;

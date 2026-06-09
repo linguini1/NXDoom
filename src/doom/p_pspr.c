@@ -107,10 +107,10 @@ void P_CalcSwing(player_t *player)
   swing = player->bob;
 
   angle = (FINEANGLES / 70 * leveltime) & FINEMASK;
-  swingx = FixedMul(swing, finesine[angle]);
+  swingx = fixed_mul(swing, finesine[angle]);
 
   angle = (FINEANGLES / 70 * leveltime + FINEANGLES / 2) & FINEMASK;
-  swingy = -FixedMul(swingx, finesine[angle]);
+  swingy = -fixed_mul(swingx, finesine[angle]);
 }
 
 //
@@ -294,9 +294,9 @@ void A_WeaponReady(player_t *player, pspdef_t *psp)
 
   // bob the weapon based on movement speed
   angle = (128 * leveltime) & FINEMASK;
-  psp->sx = FRACUNIT + FixedMul(player->bob, finecosine[angle]);
+  psp->sx = FRACUNIT + fixed_mul(player->bob, finecosine[angle]);
   angle &= FINEANGLES / 2 - 1;
-  psp->sy = WEAPONTOP + FixedMul(player->bob, finesine[angle]);
+  psp->sy = WEAPONTOP + fixed_mul(player->bob, finesine[angle]);
 }
 
 //
@@ -408,7 +408,7 @@ void A_Punch(player_t *player, pspdef_t *psp)
   int damage;
   int slope;
 
-  damage = (P_Random() % 10 + 1) << 1;
+  damage = (p_random() % 10 + 1) << 1;
 
   if (player->powers[pw_strength]) damage *= 10;
 
@@ -437,7 +437,7 @@ void A_Saw(player_t *player, pspdef_t *psp)
   int damage;
   int slope;
 
-  damage = 2 * (P_Random() % 10 + 1);
+  damage = 2 * (p_random() % 10 + 1);
   angle = player->mo->angle;
   angle += P_SubRandom() << 18;
 
@@ -500,7 +500,7 @@ static void DecreaseAmmo(player_t *player, int ammonum, int amount)
 void A_FireMissile(player_t *player, pspdef_t *psp)
 {
   DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 1);
-  P_SpawnPlayerMissile(player->mo, MT_ROCKET);
+  p_spawn_playerMissile(player->mo, MT_ROCKET);
 }
 
 //
@@ -510,7 +510,7 @@ void A_FireBFG(player_t *player, pspdef_t *psp)
 {
   DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo,
                deh_bfg_cells_per_shot);
-  P_SpawnPlayerMissile(player->mo, MT_BFG);
+  p_spawn_playerMissile(player->mo, MT_BFG);
 }
 
 //
@@ -521,9 +521,9 @@ void A_FirePlasma(player_t *player, pspdef_t *psp)
   DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 1);
 
   P_SetPsprite(player, ps_flash,
-               weaponinfo[player->readyweapon].flashstate + (P_Random() & 1));
+               weaponinfo[player->readyweapon].flashstate + (p_random() & 1));
 
-  P_SpawnPlayerMissile(player->mo, MT_PLASMA);
+  p_spawn_playerMissile(player->mo, MT_PLASMA);
 }
 
 //
@@ -561,7 +561,7 @@ void P_GunShot(mobj_t *mo, boolean accurate)
   angle_t angle;
   int damage;
 
-  damage = 5 * (P_Random() % 3 + 1);
+  damage = 5 * (p_random() % 3 + 1);
   angle = mo->angle;
 
   if (!accurate) angle += P_SubRandom() << 18;
@@ -631,7 +631,7 @@ void A_FireShotgun2(player_t *player, pspdef_t *psp)
 
   for (i = 0; i < 20; i++)
     {
-      damage = 5 * (P_Random() % 3 + 1);
+      damage = 5 * (p_random() % 3 + 1);
       angle = player->mo->angle;
       angle += P_SubRandom() << ANGLETOFINESHIFT;
       P_LineAttack(player->mo, angle, MISSILERANGE,
@@ -693,12 +693,12 @@ void A_BFGSpray(mobj_t *mo)
 
       if (!linetarget) continue;
 
-      P_SpawnMobj(linetarget->x, linetarget->y,
+      p_spawn_mobj(linetarget->x, linetarget->y,
                   linetarget->z + (linetarget->height >> 2), MT_EXTRABFG);
 
       damage = 0;
       for (j = 0; j < 15; j++)
-        damage += (P_Random() & 7) + 1;
+        damage += (p_random() & 7) + 1;
 
       P_DamageMobj(linetarget, mo->target, mo->target, damage);
     }

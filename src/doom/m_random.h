@@ -26,12 +26,12 @@
 int m_random(void);
 
 // As m_random, but used only by the play simulation.
-int P_Random(void);
+int p_random(void);
 
 // Fix randoms for demos.
-void M_ClearRandom(void);
+void m_clear_random(void);
 
-// Defined version of P_Random() - P_Random()
+// Defined version of p_random() - p_random()
 int P_SubRandom(void);
 
 #endif

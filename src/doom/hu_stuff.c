@@ -274,7 +274,7 @@ void hu_erase(void)
   HUlib_eraseTextLine(&w_title);
 }
 
-void HU_Ticker(void)
+void hu_ticker(void)
 {
 
   int i, rc;
@@ -365,7 +365,7 @@ void HU_queueChatChar(char c)
     }
 }
 
-char HU_dequeueChatChar(void)
+char hu_dequeue_chat_char(void)
 {
   char c;
 
@@ -397,7 +397,7 @@ static void StopChatInput(void)
   i_stop_text_input();
 }
 
-boolean HU_Responder(event_t *ev)
+boolean hu_responder(event_t *ev)
 {
 
   static char lastmessage[HU_MAXLINELENGTH + 1];

@@ -74,11 +74,11 @@ extern boolean chat_on;
 void hu_init(void);
 void HU_Start(void);
 
-boolean HU_Responder(event_t *ev);
+boolean hu_responder(event_t *ev);
 
-void HU_Ticker(void);
+void hu_ticker(void);
 void hu_drawer(void);
-char HU_dequeueChatChar(void);
+char hu_dequeue_chat_char(void);
 void hu_erase(void);
 
 #endif /* __HU_STUFF_H__ */

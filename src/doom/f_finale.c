@@ -105,9 +105,9 @@ boolean F_CastResponder(event_t *ev);
 void F_CastDrawer(void);
 
 //
-// F_StartFinale
+// f_start_finale
 //
-void F_StartFinale(void)
+void f_start_finale(void)
 {
   size_t i;
 
@@ -158,7 +158,7 @@ void F_StartFinale(void)
   finalecount = 0;
 }
 
-boolean F_Responder(event_t *event)
+boolean f_responder(event_t *event)
 {
   if (finalestage == F_STAGE_CAST) return F_CastResponder(event);
 
@@ -166,9 +166,9 @@ boolean F_Responder(event_t *event)
 }
 
 //
-// F_Ticker
+// f_ticker
 //
-void F_Ticker(void)
+void f_ticker(void)
 {
   size_t i;
 
