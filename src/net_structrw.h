@@ -34,7 +34,8 @@
  ****************************************************************************/
 
 void net_write_connect_data(net_packet_t *packet, net_connect_data_t *data);
-boolean net_read_connect_data(net_packet_t *packet, net_connect_data_t *data);
+boolean net_read_connect_data(net_packet_t *packet,
+        net_connect_data_t *data);
 
 extern void net_write_settings(net_packet_t *packet,
                               net_gamesettings_t *settings);
@@ -48,8 +49,8 @@ extern boolean net_read_query_data(net_packet_t *packet,
 
 extern void net_write_ticcmd_diff(net_packet_t *packet, net_ticdiff_t *diff,
                                 boolean lowres_turn);
-extern boolean net_read_ticcmd_diff(net_packet_t *packet, net_ticdiff_t *diff,
-                                  boolean lowres_turn);
+extern boolean net_read_ticcmd_diff(net_packet_t *packet,
+        net_ticdiff_t *diff, boolean lowres_turn);
 extern void net_ticcmd_diff(ticcmd_t *tic1, ticcmd_t *tic2,
                            net_ticdiff_t *diff);
 extern void net_ticcmd_patch(ticcmd_t *src, net_ticdiff_t *diff,
