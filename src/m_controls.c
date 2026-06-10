@@ -1,18 +1,27 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 1993-2008 Raven Software
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/m_controls.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 1993-2008 Raven Software
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 
@@ -22,9 +31,11 @@
 #include "m_config.h"
 #include "m_misc.h"
 
-//
-// Keyboard controls
-//
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+/* Keyboard controls */
 
 int key_right = KEY_RIGHTARROW;
 int key_left = KEY_LEFTARROW;
@@ -38,9 +49,7 @@ int key_use = ' ';
 int key_strafe = KEY_RALT;
 int key_speed = KEY_RSHIFT;
 
-//
-// Heretic keyboard controls
-//
+/* Heretic keyboard controls */
 
 int key_flyup = KEY_PGUP;
 int key_flydown = KEY_INS;
@@ -65,9 +74,7 @@ int key_arti_wings = 0;
 int key_arti_torch = 0;
 int key_arti_morph = 0;
 
-//
-// Hexen key controls
-//
+/* Hexen key controls */
 
 int key_jump = '/';
 
@@ -80,14 +87,13 @@ int key_arti_teleportother = '7';
 int key_arti_egg = '6';
 int key_arti_invulnerability = '5';
 
-//
-// Strife key controls
-//
-// haleyjd 09/01/10
-//
-
-// Note: Strife also uses key_invleft, key_invright, key_jump, key_lookup, and
-// key_lookdown, but with different default values.
+/* Strife key controls
+ *
+ * haleyjd 09/01/10
+ *
+ * Note: Strife also uses key_invleft, key_invright, key_jump, key_lookup,
+ * and key_lookdown, but with different default values.
+ */
 
 int key_usehealth = 'h';
 int key_invquery = 'q';
@@ -99,9 +105,7 @@ int key_invend = KEY_END;
 int key_invuse = KEY_ENTER;
 int key_invdrop = KEY_BACKSPACE;
 
-//
-// Mouse controls
-//
+/* Mouse controls */
 
 int mousebfire = 0;
 int mousebstrafe = 1;
@@ -128,12 +132,12 @@ int key_pause = KEY_PAUSE;
 int key_demo_quit = 'q';
 int key_spy = KEY_F12;
 
-// Multiplayer chat keys:
+/* Multiplayer chat keys: */
 
 int key_multi_msg = 't';
 int key_multi_msgplayer[8];
 
-// Weapon selection keys:
+/* Weapon selection keys: */
 
 int key_weapon1 = '1';
 int key_weapon2 = '2';
@@ -146,7 +150,7 @@ int key_weapon8 = '8';
 int key_prevweapon = 0;
 int key_nextweapon = 0;
 
-// Map control keys:
+/* Map control keys: */
 
 int key_map_north = KEY_UPARROW;
 int key_map_south = KEY_DOWNARROW;
@@ -161,7 +165,7 @@ int key_map_grid = 'g';
 int key_map_mark = 'm';
 int key_map_clearmark = 'c';
 
-// menu keys:
+/* menu keys: */
 
 int key_menu_activate = KEY_ESCAPE;
 int key_menu_up = KEY_UPARROW;
@@ -189,9 +193,7 @@ int key_menu_incscreen = KEY_EQUALS;
 int key_menu_decscreen = KEY_MINUS;
 int key_menu_screenshot = 0;
 
-//
-// Joystick controls
-//
+/* Joystick controls */
 
 int joybfire = 0;
 int joybstrafe = 1;
@@ -217,14 +219,17 @@ int joybflyup = -1;
 int joybflydown = -1;
 int joybflycenter = -1;
 
-// Control whether if a mouse button is double clicked, it acts like
-// "use" has been pressed
+/* Control whether if a mouse button is double clicked, it acts like
+ * "use" has been pressed
+ */
 
 int dclick_use = 1;
 
-//
-// Bind all of the common controls used by Doom and all other games.
-//
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/* Bind all of the common controls used by Doom and all other games. */
 
 void m_bind_base_controls(void)
 {
@@ -252,7 +257,7 @@ void m_bind_base_controls(void)
   m_bind_int_variable("joyb_menu_activate", &joybmenu);
   m_bind_int_variable("joyb_toggle_automap", &joybautomap);
 
-  // Extra controls that are not in the Vanilla versions:
+  /* Extra controls that are not in the Vanilla versions: */
 
   m_bind_int_variable("joyb_strafeleft", &joybstrafeleft);
   m_bind_int_variable("joyb_straferight", &joybstraferight);
@@ -323,10 +328,12 @@ void m_bind_hexen_controls(void)
 
 void m_bind_strife_controls(void)
 {
-  // These are shared with all games, but have different defaults:
+  /* These are shared with all games, but have different defaults: */
+
   key_message_refresh = '/';
 
-  // These keys are shared with Heretic/Hexen but have different defaults:
+  /* These keys are shared with Heretic/Hexen but have different defaults: */
+
   key_jump = 'a';
   key_lookup = KEY_PGUP;
   key_lookdown = KEY_PGDN;
@@ -339,7 +346,8 @@ void m_bind_strife_controls(void)
   m_bind_int_variable("key_inv_left", &key_invleft);
   m_bind_int_variable("key_inv_right", &key_invright);
 
-  // Custom Strife-only Keys:
+  /* Custom Strife-only Keys: */
+
   m_bind_int_variable("key_use_health", &key_usehealth);
   m_bind_int_variable("key_invquery", &key_invquery);
   m_bind_int_variable("key_mission", &key_mission);
@@ -350,15 +358,20 @@ void m_bind_strife_controls(void)
   m_bind_int_variable("key_inv_use", &key_invuse);
   m_bind_int_variable("key_inv_drop", &key_invdrop);
 
-  // Strife also supports jump on mouse and joystick, and in the exact same
-  // manner as Hexen!
+  /* Strife also supports jump on mouse and joystick, and in the exact same
+   * manner as Hexen!
+   */
+
   m_bind_int_variable("mouseb_jump", &mousebjump);
   m_bind_int_variable("joyb_jump", &joybjump);
 
-  // Subset of inventory actions common to Heretic/Hexen and Strife.
+  /* Subset of inventory actions common to Heretic/Hexen and Strife. */
+
   m_bind_int_variable("joyb_invleft", &joybinvleft);
   m_bind_int_variable("joyb_invright", &joybinvright);
-  // This is technically "invuse" in Strife, but let's reuse the value.
+
+  /* This is technically "invuse" in Strife, but let's reuse the value. */
+
   m_bind_int_variable("joyb_useartifact", &joybuseartifact);
 }
 
@@ -432,8 +445,8 @@ void m_bind_menu_controls(void)
 
 void m_bind_chat_controls(unsigned int num_players)
 {
-  char name[32];  // haleyjd: 20 not large enough - Thank you, come again!
-  unsigned int i; // haleyjd: signedness conflict
+  char name[32];  /* haleyjd: 20 not large enough - Thank you, come again! */
+  unsigned int i; /* haleyjd: signedness conflict */
 
   m_bind_int_variable("key_multi_msg", &key_multi_msg);
 
@@ -444,12 +457,11 @@ void m_bind_chat_controls(unsigned int num_players)
     }
 }
 
-//
-// Apply custom patches to the default values depending on the
-// platform we are running on.
-//
+/* Apply custom patches to the default values depending on the
+ * platform we are running on.
+ */
 
 void m_apply_platform_defaults(void)
 {
-  // no-op. Add your platform-specific patches here.
+  /* no-op. Add your platform-specific patches here. */
 }
