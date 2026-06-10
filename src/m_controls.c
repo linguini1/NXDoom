@@ -334,21 +334,21 @@ void m_bind_strife_controls(void)
   key_invright = KEY_DEL;
 
   m_bind_int_variable("key_jump", &key_jump);
-  m_bind_int_variable("key_lookUp", &key_lookup);
-  m_bind_int_variable("key_lookDown", &key_lookdown);
-  m_bind_int_variable("key_invLeft", &key_invleft);
-  m_bind_int_variable("key_invRight", &key_invright);
+  m_bind_int_variable("key_look_up", &key_lookup);
+  m_bind_int_variable("key_look_down", &key_lookdown);
+  m_bind_int_variable("key_inv_left", &key_invleft);
+  m_bind_int_variable("key_inv_right", &key_invright);
 
   // Custom Strife-only Keys:
-  m_bind_int_variable("key_useHealth", &key_usehealth);
+  m_bind_int_variable("key_use_health", &key_usehealth);
   m_bind_int_variable("key_invquery", &key_invquery);
   m_bind_int_variable("key_mission", &key_mission);
-  m_bind_int_variable("key_invPop", &key_invpop);
-  m_bind_int_variable("key_invKey", &key_invkey);
+  m_bind_int_variable("key_inv_pop", &key_invpop);
+  m_bind_int_variable("key_inv_key", &key_invkey);
   m_bind_int_variable("key_invHome", &key_invhome);
-  m_bind_int_variable("key_invEnd", &key_invend);
-  m_bind_int_variable("key_invUse", &key_invuse);
-  m_bind_int_variable("key_invDrop", &key_invdrop);
+  m_bind_int_variable("key_inv_end", &key_invend);
+  m_bind_int_variable("key_inv_use", &key_invuse);
+  m_bind_int_variable("key_inv_drop", &key_invdrop);
 
   // Strife also supports jump on mouse and joystick, and in the exact same
   // manner as Hexen!

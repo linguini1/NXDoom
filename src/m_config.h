@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/m_config.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *      Configuration file interface.
- */
+ *  Configuration file interface.
+ *
+ ****************************************************************************/
 
 #ifndef __M_CONFIG__
 #define __M_CONFIG__
@@ -32,7 +37,7 @@
 extern const char *configdir;
 
 /****************************************************************************
- * Public Functions
+ * Public Function Prototypes
  ****************************************************************************/
 
 void m_load_defaults(void);
