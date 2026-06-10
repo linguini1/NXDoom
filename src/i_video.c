@@ -560,7 +560,7 @@ void I_GetEvent(void)
 #endif
 }
 
-static void UpdateGrab(void)
+static void update_grab(void)
 {
 #if 0
   static boolean currently_grabbed = false;
@@ -993,6 +993,10 @@ static void set_video_mode(void)
 #endif
 }
 
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
 void i_start_tic(void)
 {
   if (!g_graphics_state.inited)
@@ -1013,11 +1017,10 @@ void i_start_tic(void)
     }
 }
 
-/****************************************************************************
- * Public Functions
- ****************************************************************************/
-
-void i_update_no_blit(void) { /* what is this? */ }
+void i_update_no_blit(void)
+{
+  /* what is this? */
+}
 
 void i_finish_update(void)
 {
@@ -1063,7 +1066,7 @@ void i_finish_update(void)
         }
     }
 
-  UpdateGrab();
+  update_grab();
 #endif
 
 #if 0 /* SDL2-TODO */
@@ -1571,7 +1574,7 @@ void i_init_graphics(void)
   doompal = w_cache_lump_name(("PLAYPAL"), PU_CACHE);
   i_set_palette(doompal);
 
-  UpdateGrab();
+  update_grab();
 
   /* On some systems, it takes a second or so for the screen to settle
    * after changing modes.  We include the option to add a delay when

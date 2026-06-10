@@ -1937,7 +1937,7 @@ void d_doom_main(void)
   i_print_startup_banner(g_gamedescription);
   print_dehacked_banners();
 
-  printf("I_Init: Setting up machine state.\n");
+  printf("i_init: Setting up machine state.\n");
   i_check_is_screensaver();
   i_init_timer();
   i_init_joystick();

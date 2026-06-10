@@ -66,7 +66,7 @@ void i_at_exit(atexit_func_t func, boolean run_on_error)
 
 // Tactile feedback function, probably used for the Logitech Cyberman
 
-void I_Tactile(int on, int off, int total) {}
+void i_tactile(int on, int off, int total) {}
 
 // Zone memory auto-allocation function that allocates the zone size
 // by trying progressively smaller zone sizes until one is found that
@@ -110,7 +110,7 @@ static byte *AutoAllocMemory(int *size, int default_ram, int min_ram)
   return zonemem;
 }
 
-byte *I_ZoneBase(int *size)
+byte *i_zone_base(int *size)
 {
   byte *zonemem;
   int min_ram, default_ram;
@@ -207,16 +207,16 @@ void i_print_startup_banner(const char *gamedescription)
 boolean i_console_stdout(void) { return isatty(fileno(stdout)); }
 
 //
-// I_Init
+// i_init
 //
 /*
-void I_Init (void)
+void i_init (void)
 {
     i_check_is_screensaver();
     i_init_timer();
     i_init_joystick();
 }
-void I_BindVariables(void)
+void i_bind_variables(void)
 {
     i_bind_video_variables();
     i_bind_joystick_variables();
@@ -376,7 +376,7 @@ static unsigned char mem_dump_custom[DOS_MEM_DUMP_SIZE];
 
 static const unsigned char *dos_mem_dump = mem_dump_dos622;
 
-boolean I_GetMemoryValue(unsigned int offset, void *value, int size)
+boolean i_get_memory_value(unsigned int offset, void *value, int size)
 {
   static boolean firsttime = true;
 

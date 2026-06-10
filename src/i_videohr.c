@@ -167,7 +167,7 @@ void I_SlamHR(const byte *buffer)
   I_SlamBlockHR(0, 0, HR_SCREENWIDTH, HR_SCREENHEIGHT, buffer);
 }
 
-void I_InitPaletteHR(void)
+void i_initPaletteHR(void)
 {
   // ...
 }

@@ -143,7 +143,7 @@ void z_init(void)
   memblock_t *block;
   int size;
 
-  mainzone = (memzone_t *)I_ZoneBase(&size);
+  mainzone = (memzone_t *)i_zone_base(&size);
   mainzone->size = size;
 
   /* set the entire zone to one free block */

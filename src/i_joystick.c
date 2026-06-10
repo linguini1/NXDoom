@@ -176,7 +176,7 @@ static int DeviceIndexGamepad(void)
 }
 #endif
 
-void I_InitGamepad(void)
+void i_initGamepad(void)
 {
 #if 0
     SDL_JoystickGUID guid;
@@ -196,7 +196,7 @@ void I_InitGamepad(void)
 
     if (index < 0)
     {
-        printf("I_InitGamepad: No gamepad found.\n");
+        printf("i_initGamepad: No gamepad found.\n");
         SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
         return;
     }
@@ -205,7 +205,7 @@ void I_InitGamepad(void)
 
     if (gamepad == NULL)
     {
-        printf("I_InitGamepad: Failed to open gamepad: %s\n", SDL_GetError());
+        printf("i_initGamepad: Failed to open gamepad: %s\n", SDL_GetError());
         SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
         return;
     }
@@ -225,7 +225,7 @@ void I_InitGamepad(void)
     SDL_JoystickEventState(SDL_ENABLE);
     SDL_GameControllerEventState(SDL_ENABLE);
 
-    printf("I_InitGamepad: %s\n", SDL_GameControllerName(gamepad));
+    printf("i_initGamepad: %s\n", SDL_GameControllerName(gamepad));
     i_at_exit(I_ShutdownGamepad, true);
 #endif
 }
@@ -548,7 +548,7 @@ void i_init_joystick(void)
 
     if (use_gamepad)
     {
-        I_InitGamepad();
+        i_initGamepad();
         return;
     }
 

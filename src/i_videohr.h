@@ -25,7 +25,7 @@ void i_set_window_titleHR(const char *title);
 void I_ClearScreenHR(void);
 void I_SlamBlockHR(int x, int y, int w, int h, const byte *src);
 void I_SlamHR(const byte *buffer);
-void I_InitPaletteHR(void);
+void i_initPaletteHR(void);
 void I_SetPaletteHR(const byte *palette);
 void I_FadeToPaletteHR(const byte *palette);
 void I_BlackPaletteHR(void);
