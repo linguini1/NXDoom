@@ -67,8 +67,8 @@ void m_drawer(void);
 
 void m_init(void);
 
-/* Called by intro code to force menu up upon a keypress, does nothing if menu
- * is already up.
+/* Called by intro code to force menu up upon a keypress, does nothing if
+ * menu is already up.
  */
 
 void m_start_control_panel(void);

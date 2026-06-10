@@ -133,7 +133,7 @@ extern int snd_DesiredSfxDevice;
 extern boolean statusbaractive;
 
 extern boolean automapactive; // In AutoMap mode?
-extern boolean menuactive;    // Menu overlayed?
+extern boolean g_menuactive;    // Menu overlayed?
 extern boolean paused;        // Game Pause?
 
 extern boolean viewactive;

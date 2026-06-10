@@ -557,7 +557,7 @@ static void g_check_demo_status_at_exit(void)
 static boolean d_display(void)
 {
   static boolean viewactivestate = false;
-  static boolean menuactivestate = false;
+  static boolean g_menuactivestate = false;
   static boolean inhelpscreensstate = false;
   static boolean d_fullscreen = false;
   static gamestate_t oldgamestate = -1;
@@ -671,7 +671,7 @@ static boolean d_display(void)
   if (gamestate == GS_LEVEL && !automapactive &&
       scaledviewwidth != SCREENWIDTH)
     {
-      if (menuactive || menuactivestate || !viewactivestate)
+      if (g_menuactive || g_menuactivestate || !viewactivestate)
         borderdrawcount = 3;
       if (borderdrawcount)
         {
@@ -687,7 +687,7 @@ static boolean d_display(void)
       v_draw_mouse_speed_box(testcontrols_mousespeed);
     }
 
-  menuactivestate = menuactive;
+  g_menuactivestate = g_menuactive;
   viewactivestate = viewactive;
   inhelpscreensstate = inhelpscreens;
   oldgamestate = wipegamestate = gamestate;
@@ -730,7 +730,7 @@ static boolean d_grab_mouse_callback(void)
 
   /* when menu is active or game is paused, release the mouse */
 
-  if (menuactive || paused) return false;
+  if (g_menuactive || paused) return false;
 
   /* only grab mouse when playing levels (but not demos) */
 
