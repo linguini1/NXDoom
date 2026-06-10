@@ -628,7 +628,7 @@ void P_GroupLines(void)
   sector = sectors;
   for (i = 0; i < numsectors; i++, sector++)
     {
-      M_ClearBox(bbox);
+      m_clear_box(bbox);
 
       for (j = 0; j < sector->linecount; j++)
         {
