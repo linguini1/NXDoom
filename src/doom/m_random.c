@@ -74,7 +74,7 @@ void m_clear_random(void) { rndindex = prndindex = 0; }
 
 /* inspired by the same routine in Eternity, thanks haleyjd */
 
-int P_SubRandom(void)
+int p_sub_random(void)
 {
   int r = p_random();
   return r - p_random();

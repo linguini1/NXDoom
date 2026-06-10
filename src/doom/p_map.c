@@ -1376,8 +1376,8 @@ boolean PIT_ChangeSector(mobj_t *thing)
       mo = p_spawn_mobj(thing->x, thing->y, thing->z + thing->height / 2,
                        MT_BLOOD);
 
-      mo->momx = P_SubRandom() << 12;
-      mo->momy = P_SubRandom() << 12;
+      mo->momx = p_sub_random() << 12;
+      mo->momy = p_sub_random() << 12;
     }
 
   /* keep checking (crush other things) */

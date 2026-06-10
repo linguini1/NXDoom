@@ -682,7 +682,7 @@ void A_FaceTarget(mobj_t *actor)
   actor->angle = r_point_to_angle2(actor->x, actor->y, actor->target->x,
                                    actor->target->y);
 
-  if (actor->target->flags & MF_SHADOW) actor->angle += P_SubRandom() << 21;
+  if (actor->target->flags & MF_SHADOW) actor->angle += p_sub_random() << 21;
 }
 
 //
@@ -703,7 +703,7 @@ void A_PosAttack(mobj_t *actor)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(actor, sfx_pistol);
 #endif
-  angle += P_SubRandom() << 20;
+  angle += p_sub_random() << 20;
   damage = ((p_random() % 5) + 1) * 3;
   P_LineAttack(actor, angle, MISSILERANGE, slope, damage);
 }
@@ -727,7 +727,7 @@ void A_SPosAttack(mobj_t *actor)
 
   for (i = 0; i < 3; i++)
     {
-      angle = bangle + (P_SubRandom() << 20);
+      angle = bangle + (p_sub_random() << 20);
       damage = ((p_random() % 5) + 1) * 3;
       P_LineAttack(actor, angle, MISSILERANGE, slope, damage);
     }
@@ -749,7 +749,7 @@ void A_CPosAttack(mobj_t *actor)
   bangle = actor->angle;
   slope = P_AimLineAttack(actor, bangle, MISSILERANGE);
 
-  angle = bangle + (P_SubRandom() << 20);
+  angle = bangle + (p_sub_random() << 20);
   damage = ((p_random() % 5) + 1) * 3;
   P_LineAttack(actor, angle, MISSILERANGE, slope, damage);
 }
@@ -1726,7 +1726,7 @@ void A_BrainExplode(mobj_t *mo)
   int z;
   mobj_t *th;
 
-  x = mo->x + P_SubRandom() * 2048;
+  x = mo->x + p_sub_random() * 2048;
   y = mo->y;
   z = 128 + p_random() * 2 * FRACUNIT;
   th = p_spawn_mobj(x, y, z, MT_ROCKET);
