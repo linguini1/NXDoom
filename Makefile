@@ -41,7 +41,6 @@ BASESRCS =        \
   i_joystick.c    \
   i_timer.c       \
   i_video.c       \
-  i_videohr.c     \
   m_bbox.c        \
   m_cheat.c       \
   m_config.c      \
