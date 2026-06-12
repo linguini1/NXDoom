@@ -170,7 +170,7 @@ boolean p_path_traverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
                        int flags, boolean (*trav)(intercept_t *));
 
 void P_UnsetThingPosition(mobj_t *thing);
-void P_SetThingPosition(mobj_t *thing);
+void p_set_thing_position(mobj_t *thing);
 
 //
 // P_MAP

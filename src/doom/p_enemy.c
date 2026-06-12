@@ -1147,7 +1147,7 @@ void A_Fire(mobj_t *actor)
   actor->x = dest->x + fixed_mul(24 * FRACUNIT, finecosine[an]);
   actor->y = dest->y + fixed_mul(24 * FRACUNIT, finesine[an]);
   actor->z = dest->z;
-  P_SetThingPosition(actor);
+  p_set_thing_position(actor);
 }
 
 //

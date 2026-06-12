@@ -332,12 +332,12 @@ void P_UnsetThingPosition(mobj_t *thing)
 }
 
 //
-// P_SetThingPosition
+// p_set_thing_position
 // Links a thing into both a block and a subsector
 // based on it's x y.
 // Sets thing->subsector properly
 //
-void P_SetThingPosition(mobj_t *thing)
+void p_set_thing_position(mobj_t *thing)
 {
   subsector_t *ss;
   sector_t *sec;

@@ -584,7 +584,7 @@ mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 
   /* set subsector and/or block links */
 
-  P_SetThingPosition(mobj);
+  p_set_thing_position(mobj);
 
   mobj->floorz = mobj->subsector->sector->floorheight;
   mobj->ceilingz = mobj->subsector->sector->ceilingheight;

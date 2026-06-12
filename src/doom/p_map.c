@@ -326,7 +326,7 @@ boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y)
   thing->x = x;
   thing->y = y;
 
-  P_SetThingPosition(thing);
+  p_set_thing_position(thing);
 
   return true;
 }
@@ -652,7 +652,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y)
   thing->x = x;
   thing->y = y;
 
-  P_SetThingPosition(thing);
+  p_set_thing_position(thing);
 
   /* if any special lines were hit, do the effect */
 
