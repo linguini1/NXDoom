@@ -1,128 +1,167 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//  all external data is defined here
-//  most of the data is loaded into different structures at run time
-//  some internal structures shared by many modules are here
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/doomdata.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  all external data is defined here
+ *  most of the data is loaded into different structures at run time
+ *  some internal structures shared by many modules are here
+ *
+ ****************************************************************************/
 
 #ifndef __DOOMDATA__
 #define __DOOMDATA__
 
-// The most basic types we use, portability.
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+/* The most basic types we use, portability. */
+
 #include "doomtype.h"
 
-// Some global defines, that configure the game.
+/* Some global defines, that configure the game. */
+
 #include "doomdef.h"
 
-//
-// Map level types.
-// The following data structures define the persistent format
-// used in the lumps of the WAD files.
-//
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
-// Lump order in a map WAD: each map needs a couple of lumps
-// to provide a complete scene geometry description.
+/* LineDef attributes. */
+
+/* Solid, is an obstacle. */
+
+#define ML_BLOCKING 1
+
+/* Blocks monsters only. */
+
+#define ML_BLOCKMONSTERS 2
+
+/* Backside will not be present at all if not two sided. */
+
+#define ML_TWOSIDED 4
+
+/* If a texture is pegged, the texture will have the end exposed to air held
+ * constant at the top or bottom of the texture (stairs or pulled down things)
+ * and will move with a height change of one of the neighbor sectors.
+ *
+ * Unpegged textures always have the first row of the texture at the top pixel
+ * of the line for both top and bottom textures (use next to windows).
+ */
+
+/* upper texture unpegged */
+
+#define ML_DONTPEGTOP 8
+
+/* lower texture unpegged */
+
+#define ML_DONTPEGBOTTOM 16
+
+/* In AutoMap: don't map as two sided: IT'S A SECRET! */
+
+#define ML_SECRET 32
+
+/* Sound rendering: don't let sound cross two of these. */
+
+#define ML_SOUNDBLOCK 64
+
+/* Don't draw on the automap at all. */
+
+#define ML_DONTDRAW 128
+
+/* Set if already seen, thus drawn in automap. */
+
+#define ML_MAPPED 256
+
+/* Indicate a leaf. */
+
+#define NF_SUBSECTOR 0x8000
+
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
+
+/* Map level types.
+ * The following data structures define the persistent format
+ * used in the lumps of the WAD files.
+ */
+
+/* Lump order in a map WAD: each map needs a couple of lumps
+ * to provide a complete scene geometry description.
+ */
+
 enum
 {
-  ML_LABEL,    // A separator, name, ExMx or MAPxx
-  ML_THINGS,   // Monsters, items..
-  ML_LINEDEFS, // LineDefs, from editing
-  ML_SIDEDEFS, // SideDefs, from editing
-  ML_VERTICES, // Vertices, edited and BSP splits generated
-  ML_SEGS,     // LineSegs, from LineDefs split by BSP
-  ML_SSECTORS, // SubSectors, list of LineSegs
-  ML_NODES,    // BSP nodes
-  ML_SECTORS,  // Sectors, from editing
-  ML_REJECT,   // LUT, sector-sector visibility
-  ML_BLOCKMAP  // LUT, motion clipping, walls/grid element
+  ML_LABEL,    /* A separator, name, ExMx or MAPxx */
+  ML_THINGS,   /* Monsters, items.. */
+  ML_LINEDEFS, /* LineDefs, from editing */
+  ML_SIDEDEFS, /* SideDefs, from editing */
+  ML_VERTICES, /* Vertices, edited and BSP splits generated */
+  ML_SEGS,     /* LineSegs, from LineDefs split by BSP */
+  ML_SSECTORS, /* SubSectors, list of LineSegs */
+  ML_NODES,    /* BSP nodes */
+  ML_SECTORS,  /* Sectors, from editing */
+  ML_REJECT,   /* LUT, sector-sector visibility */
+  ML_BLOCKMAP  /* LUT, motion clipping, walls/grid element */
 };
 
-// A single Vertex.
-typedef PACKED_STRUCT({
+/* A single Vertex. */
+
+begin_packed_struct typedef struct
+{
   short x;
   short y;
-}) mapvertex_t;
+} mapvertex_t end_packed_struct;
 
-// A SideDef, defining the visual appearance of a wall,
-// by setting textures and offsets.
-typedef PACKED_STRUCT({
+/* A SideDef, defining the visual appearance of a wall, by setting textures
+ * and offsets.
+ */
+
+begin_packed_struct typedef struct
+{
   short textureoffset;
   short rowoffset;
   char toptexture[8];
   char bottomtexture[8];
   char midtexture[8];
-  // Front sector, towards viewer.
   short sector;
-}) mapsidedef_t;
+} mapsidedef_t end_packed_struct;
 
-// A LineDef, as used for editing, and as input
-// to the BSP builder.
-typedef PACKED_STRUCT({
+/* A LineDef, as used for editing, and as input to the BSP builder.
+ */
+
+begin_packed_struct typedef struct
+{
   short v1;
   short v2;
   short flags;
   short special;
   short tag;
-  // sidenum[1] will be -1 if one sided
+
+  /* sidenum[1] will be -1 if one sided */
+
   short sidenum[2];
-}) maplinedef_t;
+} maplinedef_t end_packed_struct;
 
-//
-// LineDef attributes.
-//
+/* Sector definition, from editing. */
 
-// Solid, is an obstacle.
-#define ML_BLOCKING 1
-
-// Blocks monsters only.
-#define ML_BLOCKMONSTERS 2
-
-// Backside will not be present at all
-//  if not two sided.
-#define ML_TWOSIDED 4
-
-// If a texture is pegged, the texture will have
-// the end exposed to air held constant at the
-// top or bottom of the texture (stairs or pulled
-// down things) and will move with a height change
-// of one of the neighbor sectors.
-// Unpegged textures allways have the first row of
-// the texture at the top pixel of the line for both
-// top and bottom textures (use next to windows).
-
-// upper texture unpegged
-#define ML_DONTPEGTOP 8
-
-// lower texture unpegged
-#define ML_DONTPEGBOTTOM 16
-
-// In AutoMap: don't map as two sided: IT'S A SECRET!
-#define ML_SECRET 32
-
-// Sound rendering: don't let sound cross two of these.
-#define ML_SOUNDBLOCK 64
-
-// Don't draw on the automap at all.
-#define ML_DONTDRAW 128
-
-// Set if already seen, thus drawn in automap.
-#define ML_MAPPED 256
-
-// Sector definition, from editing.
-typedef PACKED_STRUCT({
+begin_packed_struct typedef struct
+{
   short floorheight;
   short ceilingheight;
   char floorpic[8];
@@ -130,55 +169,64 @@ typedef PACKED_STRUCT({
   short lightlevel;
   short special;
   short tag;
-}) mapsector_t;
+} mapsector_t end_packed_struct;
 
-// SubSector, as generated by BSP.
-typedef PACKED_STRUCT({
+/* SubSector, as generated by BSP. */
+
+begin_packed_struct typedef struct
+{
   short numsegs;
-  // Index of first one, segs are stored sequentially.
-  short firstseg;
-}) mapsubsector_t;
 
-// LineSeg, generated by splitting LineDefs
-// using partition lines selected by BSP builder.
-typedef PACKED_STRUCT({
+  /* Index of first one, segs are stored sequentially. */
+
+  short firstseg;
+} mapsubsector_t end_packed_struct;
+
+/* LineSeg, generated by splitting LineDefs using partition lines selected by
+ * BSP builder.
+ */
+
+begin_packed_struct typedef struct
+{
   short v1;
   short v2;
   short angle;
   short linedef;
   short side;
   short offset;
-}) mapseg_t;
+} mapseg_t end_packed_struct;
 
-// BSP node structure.
+/* BSP node structure. */
 
-// Indicate a leaf.
-#define NF_SUBSECTOR 0x8000
+begin_packed_struct typedef struct
+{
+  /* Partition line from (x,y) to x+dx,y+dy */
 
-typedef PACKED_STRUCT({
-  // Partition line from (x,y) to x+dx,y+dy)
   short x;
   short y;
   short dx;
   short dy;
 
-  // Bounding box for each child,
-  // clip against view frustum.
+  /* Bounding box for each child, clip against view frustum. */
+
   short bbox[2][4];
 
-  // If NF_SUBSECTOR its a subsector,
-  // else it's a node of another subtree.
-  unsigned short children[2];
-}) mapnode_t;
+  /* If NF_SUBSECTOR its a subsector, else it's a node of another subtree. */
 
-// Thing definition, position, orientation and type,
-// plus skill/visibility flags and attributes.
-typedef PACKED_STRUCT({
+  unsigned short children[2];
+} mapnode_t end_packed_struct;
+
+/* Thing definition, position, orientation and type, plus skill/visibility
+ * flags and attributes.
+ */
+
+begin_packed_struct typedef struct
+{
   short x;
   short y;
   short angle;
   short type;
   short options;
-}) mapthing_t;
+} mapthing_t end_packed_struct;
 
-#endif // __DOOMDATA__
+#endif /* __DOOMDATA__ */
