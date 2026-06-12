@@ -782,7 +782,7 @@ void p_setup_level(int episode, int map, int playermask, skill_t skill)
   iquehead = iquetail = 0;
 
   // set up world state
-  P_SpawnSpecials();
+  p_spawn_specials();
 
   // build subsector connect matrix
   //	UNUSED P_ConnectSubsectors ();
@@ -799,6 +799,6 @@ void p_setup_level(int episode, int map, int playermask, skill_t skill)
 void p_init(void)
 {
   p_init_switch_list();
-  p_initPicAnims();
+  p_init_pic_anims();
   r_init_sprites(sprnames);
 }

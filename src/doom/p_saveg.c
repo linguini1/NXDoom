@@ -1654,13 +1654,13 @@ enum
 //
 // Things to handle:
 //
-// T_MoveCeiling, (ceiling_t: sector_t * swizzle), - active list
-// T_VerticalDoor, (vldoor_t: sector_t * swizzle),
-// T_MoveFloor, (floormove_t: sector_t * swizzle),
-// T_LightFlash, (lightflash_t: sector_t * swizzle),
-// T_StrobeFlash, (strobe_t: sector_t *),
-// T_Glow, (glow_t: sector_t *),
-// T_PlatRaise, (plat_t: sector_t *), - active list
+// t_move_ceiling, (ceiling_t: sector_t * swizzle), - active list
+// t_vertical_door, (vldoor_t: sector_t * swizzle),
+// t_move_floor, (floormove_t: sector_t * swizzle),
+// t_light_flash, (lightflash_t: sector_t * swizzle),
+// t_strobe_flash, (strobe_t: sector_t *),
+// t_glow, (glow_t: sector_t *),
+// t_plat_raise, (plat_t: sector_t *), - active list
 //
 void p_archive_specials(void)
 {
@@ -1684,7 +1684,7 @@ void p_archive_specials(void)
           continue;
         }
 
-      if (th->function.acp1 == (actionf_p1)T_MoveCeiling)
+      if (th->function.acp1 == (actionf_p1)t_move_ceiling)
         {
           saveg_write8(tc_ceiling);
           saveg_write_pad();
@@ -1692,7 +1692,7 @@ void p_archive_specials(void)
           continue;
         }
 
-      if (th->function.acp1 == (actionf_p1)T_VerticalDoor)
+      if (th->function.acp1 == (actionf_p1)t_vertical_door)
         {
           saveg_write8(tc_door);
           saveg_write_pad();
@@ -1700,7 +1700,7 @@ void p_archive_specials(void)
           continue;
         }
 
-      if (th->function.acp1 == (actionf_p1)T_MoveFloor)
+      if (th->function.acp1 == (actionf_p1)t_move_floor)
         {
           saveg_write8(tc_floor);
           saveg_write_pad();
@@ -1708,7 +1708,7 @@ void p_archive_specials(void)
           continue;
         }
 
-      if (th->function.acp1 == (actionf_p1)T_PlatRaise)
+      if (th->function.acp1 == (actionf_p1)t_plat_raise)
         {
           saveg_write8(tc_plat);
           saveg_write_pad();
@@ -1716,7 +1716,7 @@ void p_archive_specials(void)
           continue;
         }
 
-      if (th->function.acp1 == (actionf_p1)T_LightFlash)
+      if (th->function.acp1 == (actionf_p1)t_light_flash)
         {
           saveg_write8(tc_flash);
           saveg_write_pad();
@@ -1724,7 +1724,7 @@ void p_archive_specials(void)
           continue;
         }
 
-      if (th->function.acp1 == (actionf_p1)T_StrobeFlash)
+      if (th->function.acp1 == (actionf_p1)t_strobe_flash)
         {
           saveg_write8(tc_strobe);
           saveg_write_pad();
@@ -1732,7 +1732,7 @@ void p_archive_specials(void)
           continue;
         }
 
-      if (th->function.acp1 == (actionf_p1)T_Glow)
+      if (th->function.acp1 == (actionf_p1)t_glow)
         {
           saveg_write8(tc_glow);
           saveg_write_pad();
@@ -1776,10 +1776,10 @@ void p_unarchive_specials(void)
           ceiling->sector->specialdata = ceiling;
 
           if (ceiling->thinker.function.acp1)
-            ceiling->thinker.function.acp1 = (actionf_p1)T_MoveCeiling;
+            ceiling->thinker.function.acp1 = (actionf_p1)t_move_ceiling;
 
           p_add_thinker(&ceiling->thinker);
-          P_AddActiveCeiling(ceiling);
+          p_add_active_ceiling(ceiling);
           break;
 
         case tc_door:
@@ -1787,7 +1787,7 @@ void p_unarchive_specials(void)
           door = z_malloc(sizeof(*door), PU_LEVEL, NULL);
           saveg_read_vldoor_t(door);
           door->sector->specialdata = door;
-          door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+          door->thinker.function.acp1 = (actionf_p1)t_vertical_door;
           p_add_thinker(&door->thinker);
           break;
 
@@ -1796,7 +1796,7 @@ void p_unarchive_specials(void)
           floor = z_malloc(sizeof(*floor), PU_LEVEL, NULL);
           saveg_read_floormove_t(floor);
           floor->sector->specialdata = floor;
-          floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+          floor->thinker.function.acp1 = (actionf_p1)t_move_floor;
           p_add_thinker(&floor->thinker);
           break;
 
@@ -1807,17 +1807,17 @@ void p_unarchive_specials(void)
           plat->sector->specialdata = plat;
 
           if (plat->thinker.function.acp1)
-            plat->thinker.function.acp1 = (actionf_p1)T_PlatRaise;
+            plat->thinker.function.acp1 = (actionf_p1)t_plat_raise;
 
           p_add_thinker(&plat->thinker);
-          P_AddActivePlat(plat);
+          p_add_active_plat(plat);
           break;
 
         case tc_flash:
           saveg_read_pad();
           flash = z_malloc(sizeof(*flash), PU_LEVEL, NULL);
           saveg_read_lightflash_t(flash);
-          flash->thinker.function.acp1 = (actionf_p1)T_LightFlash;
+          flash->thinker.function.acp1 = (actionf_p1)t_light_flash;
           p_add_thinker(&flash->thinker);
           break;
 
@@ -1825,7 +1825,7 @@ void p_unarchive_specials(void)
           saveg_read_pad();
           strobe = z_malloc(sizeof(*strobe), PU_LEVEL, NULL);
           saveg_read_strobe_t(strobe);
-          strobe->thinker.function.acp1 = (actionf_p1)T_StrobeFlash;
+          strobe->thinker.function.acp1 = (actionf_p1)t_strobe_flash;
           p_add_thinker(&strobe->thinker);
           break;
 
@@ -1833,7 +1833,7 @@ void p_unarchive_specials(void)
           saveg_read_pad();
           glow = z_malloc(sizeof(*glow), PU_LEVEL, NULL);
           saveg_read_glow_t(glow);
-          glow->thinker.function.acp1 = (actionf_p1)T_Glow;
+          glow->thinker.function.acp1 = (actionf_p1)t_glow;
           p_add_thinker(&glow->thinker);
           break;
 

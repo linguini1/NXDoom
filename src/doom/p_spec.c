@@ -74,7 +74,7 @@ typedef struct
 #define MAXANIMS 32
 
 //
-// p_initPicAnims
+// p_init_pic_anims
 //
 
 // Floor/ceiling animation sequences,
@@ -133,7 +133,7 @@ anim_t *lastanim;
 short numlinespecials;
 line_t *linespeciallist[MAXLINEANIMS1_2];
 
-void p_initPicAnims(void)
+void p_init_pic_anims(void)
 {
   int i;
 
@@ -166,7 +166,7 @@ void p_initPicAnims(void)
       lastanim->numpics = lastanim->picnum - lastanim->basepic + 1;
 
       if (lastanim->numpics < 2)
-        i_error("p_initPicAnims: bad cycle from %s to %s", startname,
+        i_error("p_init_pic_anims: bad cycle from %s to %s", startname,
                 endname);
 
       lastanim->speed = animdefs[i].speed;
@@ -179,43 +179,43 @@ void p_initPicAnims(void)
 //
 
 //
-// getSide()
+// get_side()
 // Will return a side_t*
 //  given the number of the current sector,
 //  the line number, and the side (0/1) that you want.
 //
-side_t *getSide(int currentSector, int line, int side)
+side_t *get_side(int current_sector, int line, int side)
 {
-  return &sides[(sectors[currentSector].lines[line])->sidenum[side]];
+  return &sides[(sectors[current_sector].lines[line])->sidenum[side]];
 }
 
 //
-// getSector()
+// get_sector()
 // Will return a sector_t*
 //  given the number of the current sector,
 //  the line number and the side (0/1) that you want.
 //
-sector_t *getSector(int currentSector, int line, int side)
+sector_t *get_sector(int current_sector, int line, int side)
 {
-  return sides[(sectors[currentSector].lines[line])->sidenum[side]].sector;
+  return sides[(sectors[current_sector].lines[line])->sidenum[side]].sector;
 }
 
 //
-// twoSided()
+// two_sided()
 // Given the sector number and the line number,
 //  it will tell you whether the line is two-sided or not.
 //
-int twoSided(int sector, int line)
+int two_sided(int sector, int line)
 {
   return (sectors[sector].lines[line])->flags & ML_TWOSIDED;
 }
 
 //
-// getNextSector()
+// get_next_sector()
 // Return sector_t * of sector next to current.
 // NULL if not two-sided line
 //
-sector_t *getNextSector(line_t *line, sector_t *sec)
+sector_t *get_next_sector(line_t *line, sector_t *sec)
 {
   if (!(line->flags & ML_TWOSIDED)) return NULL;
 
@@ -225,10 +225,10 @@ sector_t *getNextSector(line_t *line, sector_t *sec)
 }
 
 //
-// P_FindLowestFloorSurrounding()
+// p_find_lowest_floor_surrounding()
 // FIND LOWEST FLOOR HEIGHT IN SURROUNDING SECTORS
 //
-fixed_t P_FindLowestFloorSurrounding(sector_t *sec)
+fixed_t p_find_lowest_floor_surrounding(sector_t *sec)
 {
   int i;
   line_t *check;
@@ -238,7 +238,7 @@ fixed_t P_FindLowestFloorSurrounding(sector_t *sec)
   for (i = 0; i < sec->linecount; i++)
     {
       check = sec->lines[i];
-      other = getNextSector(check, sec);
+      other = get_next_sector(check, sec);
 
       if (!other) continue;
 
@@ -248,10 +248,10 @@ fixed_t P_FindLowestFloorSurrounding(sector_t *sec)
 }
 
 //
-// P_FindHighestFloorSurrounding()
+// p_find_highest_floor_surrounding()
 // FIND HIGHEST FLOOR HEIGHT IN SURROUNDING SECTORS
 //
-fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
+fixed_t p_find_highest_floor_surrounding(sector_t *sec)
 {
   int i;
   line_t *check;
@@ -261,7 +261,7 @@ fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
   for (i = 0; i < sec->linecount; i++)
     {
       check = sec->lines[i];
-      other = getNextSector(check, sec);
+      other = get_next_sector(check, sec);
 
       if (!other) continue;
 
@@ -271,7 +271,7 @@ fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
 }
 
 //
-// P_FindNextHighestFloor
+// p_find_next_highest_floor
 // FIND NEXT HIGHEST FLOOR IN SURROUNDING SECTORS
 // Note: this should be doable w/o a fixed array.
 
@@ -280,7 +280,7 @@ fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
 // 20 adjoining sectors max!
 #define MAX_ADJOINING_SECTORS 20
 
-fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight)
+fixed_t p_find_next_highest_floor(sector_t *sec, int currentheight)
 {
   int i;
   int h;
@@ -293,7 +293,7 @@ fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight)
   for (i = 0, h = 0; i < sec->linecount; i++)
     {
       check = sec->lines[i];
-      other = getNextSector(check, sec);
+      other = get_next_sector(check, sec);
 
       if (!other) continue;
 
@@ -338,7 +338,7 @@ fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight)
 //
 // FIND LOWEST CEILING IN THE SURROUNDING SECTORS
 //
-fixed_t P_FindLowestCeilingSurrounding(sector_t *sec)
+fixed_t p_find_lowest_ceiling_surrounding(sector_t *sec)
 {
   int i;
   line_t *check;
@@ -348,7 +348,7 @@ fixed_t P_FindLowestCeilingSurrounding(sector_t *sec)
   for (i = 0; i < sec->linecount; i++)
     {
       check = sec->lines[i];
-      other = getNextSector(check, sec);
+      other = get_next_sector(check, sec);
 
       if (!other) continue;
 
@@ -360,7 +360,7 @@ fixed_t P_FindLowestCeilingSurrounding(sector_t *sec)
 //
 // FIND HIGHEST CEILING IN THE SURROUNDING SECTORS
 //
-fixed_t P_FindHighestCeilingSurrounding(sector_t *sec)
+fixed_t p_find_heighest_ceiling_surrounding(sector_t *sec)
 {
   int i;
   line_t *check;
@@ -370,7 +370,7 @@ fixed_t P_FindHighestCeilingSurrounding(sector_t *sec)
   for (i = 0; i < sec->linecount; i++)
     {
       check = sec->lines[i];
-      other = getNextSector(check, sec);
+      other = get_next_sector(check, sec);
 
       if (!other) continue;
 
@@ -382,7 +382,7 @@ fixed_t P_FindHighestCeilingSurrounding(sector_t *sec)
 //
 // RETURN NEXT SECTOR # THAT LINE TAG REFERS TO
 //
-int P_FindSectorFromLineTag(line_t *line, int start)
+int p_find_sector_from_line_tag(line_t *line, int start)
 {
   int i;
 
@@ -395,7 +395,7 @@ int P_FindSectorFromLineTag(line_t *line, int start)
 //
 // Find minimum light from an adjacent sector
 //
-int P_FindMinSurroundingLight(sector_t *sector, int max)
+int p_find_min_surrounding(sector_t *sector, int max)
 {
   int i;
   int min;
@@ -406,7 +406,7 @@ int P_FindMinSurroundingLight(sector_t *sector, int max)
   for (i = 0; i < sector->linecount; i++)
     {
       line = sector->lines[i];
-      check = getNextSector(line, sector);
+      check = get_next_sector(line, sector);
 
       if (!check) continue;
 
@@ -422,11 +422,11 @@ int P_FindMinSurroundingLight(sector_t *sector, int max)
 //
 
 //
-// P_CrossSpecialLine - TRIGGER
+// p_cross_special_line - TRIGGER
 // Called every time a thing origin is about
 //  to cross a line with a non 0 special.
 //
-void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
+void p_cross_special_line(int linenum, int side, mobj_t *thing)
 {
   line_t *line;
   int is_ok;
@@ -547,7 +547,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 17:
       // Start Light Strobing
-      EV_StartLightStrobing(line);
+      ev_start_light_strobing(line);
       line->special = 0;
       break;
 
@@ -632,7 +632,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 54:
       // Platform Stop
-      EV_StopPlat(line);
+      ev_stop_plat(line);
       line->special = 0;
       break;
 
@@ -644,7 +644,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 57:
       // Ceiling Crush Stop
-      EV_CeilingCrushStop(line);
+      ev_ceiling_crush_stop(line);
       line->special = 0;
       break;
 
@@ -662,7 +662,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 104:
       // Turn lights off in sector(tag)
-      EV_TurnTagLightsOff(line);
+      ev_turn_tag_lights_off(line);
       line->special = 0;
       break;
 
@@ -741,7 +741,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 74:
       // Ceiling Crush Stop
-      EV_CeilingCrushStop(line);
+      ev_ceiling_crush_stop(line);
       break;
 
     case 75:
@@ -806,7 +806,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 89:
       // Platform Stop
-      EV_StopPlat(line);
+      ev_stop_plat(line);
       break;
 
     case 90:
@@ -894,10 +894,10 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 }
 
 //
-// P_ShootSpecialLine - IMPACT SPECIALS
+// p_shoot_special_line - IMPACT SPECIALS
 // Called when a thing shoots a special line.
 //
-void P_ShootSpecialLine(mobj_t *thing, line_t *line)
+void p_shoot_special_line(mobj_t *thing, line_t *line)
 {
   int is_ok;
 
@@ -1003,8 +1003,8 @@ void p_player_in_special_sector(player_t *player)
 // p_update_specials
 // Animate planes, scroll walls, etc.
 //
-boolean levelTimer;
-int levelTimeCount;
+boolean g_level_timer;
+int g_level_time_count;
 
 void p_update_specials(void)
 {
@@ -1014,10 +1014,10 @@ void p_update_specials(void)
   line_t *line;
 
   //	LEVEL TIMER
-  if (levelTimer == true)
+  if (g_level_timer == true)
     {
-      levelTimeCount--;
-      if (!levelTimeCount) g_exit_level();
+      g_level_time_count--;
+      if (!g_level_time_count) g_exit_level();
     }
 
   //	ANIMATE FLATS AND TEXTURES GLOBALLY
@@ -1179,7 +1179,7 @@ int ev_do_donut(line_t *line)
 
   secnum = -1;
   rtn = 0;
-  while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
+  while ((secnum = p_find_sector_from_line_tag(line, secnum)) >= 0)
     {
       s1 = &sectors[secnum];
 
@@ -1187,7 +1187,7 @@ int ev_do_donut(line_t *line)
       if (s1->specialdata) continue;
 
       rtn = 1;
-      s2 = getNextSector(s1->lines[0], s1);
+      s2 = get_next_sector(s1->lines[0], s1);
 
       // Vanilla Doom does not check if the linedef is one sided.  The
       // game does not crash, but reads invalid memory and causes the
@@ -1237,7 +1237,7 @@ int ev_do_donut(line_t *line)
           floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
           p_add_thinker(&floor->thinker);
           s2->specialdata = floor;
-          floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+          floor->thinker.function.acp1 = (actionf_p1)t_move_floor;
           floor->type = FLOOR_DONUTRAISE;
           floor->crush = false;
           floor->direction = 1;
@@ -1251,7 +1251,7 @@ int ev_do_donut(line_t *line)
           floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
           p_add_thinker(&floor->thinker);
           s1->specialdata = floor;
-          floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+          floor->thinker.function.acp1 = (actionf_p1)t_move_floor;
           floor->type = FLOOR_LOWERFLOOR;
           floor->crush = false;
           floor->direction = -1;
@@ -1269,7 +1269,7 @@ int ev_do_donut(line_t *line)
 //
 
 //
-// P_SpawnSpecials
+// p_spawn_specials
 // After the map has been loaded, scan for specials
 //  that spawn thinkers
 //
@@ -1289,7 +1289,7 @@ static unsigned int NumScrollers()
 }
 
 // Parses command line parameters.
-void P_SpawnSpecials(void)
+void p_spawn_specials(void)
 {
   sector_t *sector;
   int i;
@@ -1300,12 +1300,12 @@ void P_SpawnSpecials(void)
 
   if (timelimit > 0 && deathmatch)
     {
-      levelTimer = true;
-      levelTimeCount = timelimit * 60 * TICRATE;
+      g_level_timer = true;
+      g_level_time_count = timelimit * 60 * TICRATE;
     }
   else
     {
-      levelTimer = false;
+      g_level_timer = false;
     }
 
   //	Init special SECTORs.
@@ -1318,28 +1318,28 @@ void P_SpawnSpecials(void)
         {
         case 1:
           // FLICKERING LIGHTS
-          P_SpawnLightFlash(sector);
+          p_spawn_light_flash(sector);
           break;
 
         case 2:
           // STROBE FAST
-          P_SpawnStrobeFlash(sector, FASTDARK, 0);
+          p_spawn_strobe_flash(sector, FASTDARK, 0);
           break;
 
         case 3:
           // STROBE SLOW
-          P_SpawnStrobeFlash(sector, SLOWDARK, 0);
+          p_spawn_strobe_flash(sector, SLOWDARK, 0);
           break;
 
         case 4:
           // STROBE FAST/DEATH SLIME
-          P_SpawnStrobeFlash(sector, FASTDARK, 0);
+          p_spawn_strobe_flash(sector, FASTDARK, 0);
           sector->special = 4;
           break;
 
         case 8:
           // GLOWING LIGHT
-          P_SpawnGlowingLight(sector);
+          p_spawn_glowing_light(sector);
           break;
         case 9:
           // SECRET SECTOR
@@ -1348,29 +1348,29 @@ void P_SpawnSpecials(void)
 
         case 10:
           // DOOR CLOSE IN 30 SECONDS
-          P_SpawnDoorCloseIn30(sector);
+          p_spawn_door_close_in30(sector);
           break;
 
         case 12:
           // SYNC STROBE SLOW
-          P_SpawnStrobeFlash(sector, SLOWDARK, 1);
+          p_spawn_strobe_flash(sector, SLOWDARK, 1);
           break;
 
         case 13:
           // SYNC STROBE FAST
-          P_SpawnStrobeFlash(sector, FASTDARK, 1);
+          p_spawn_strobe_flash(sector, FASTDARK, 1);
           break;
 
         case 14:
           // DOOR RAISE IN 5 MINUTES
-          P_SpawnDoorRaiseIn5Mins(sector, i);
+          p_spawn_door_raise_in_5min(sector, i);
           break;
 
         case 17:
           // first introduced in official v1.4 beta
           if (gameversion > exe_doom_1_2)
             {
-              P_SpawnFireFlicker(sector);
+              p_spawn_fire_flicker(sector);
             }
           break;
         }
@@ -1385,7 +1385,7 @@ void P_SpawnSpecials(void)
         case 48:
           if (numlinespecials >= maxlineanims)
             {
-              i_error("P_SpawnSpecials: Too many scrolling wall linedefs "
+              i_error("p_spawn_specials: Too many scrolling wall linedefs "
                       "(%d)! (Vanilla limit is %d)",
                       NumScrollers(), maxlineanims);
             }
@@ -1407,5 +1407,5 @@ void P_SpawnSpecials(void)
     memset(&buttonlist[i], 0, sizeof(button_t));
 
   // UNUSED: no horizonal sliders.
-  //	p_initSlidingDoorFrames();
+  //	p_init_sliding_door_frames();
 }

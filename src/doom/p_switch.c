@@ -341,7 +341,7 @@ boolean p_use_special_line(mobj_t *thing, line_t *line, int side)
 
       /* UNUSED - Door Slide Open&Close
        *  case 124:
-       *  EV_SlidingDoor (line, thing);
+       *  ev_sliding_door (line, thing);
        *  break;
        */
 

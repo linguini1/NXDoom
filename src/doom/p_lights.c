@@ -50,9 +50,9 @@ void T_FireFlicker(fireflicker_t *flick)
 }
 
 //
-// P_SpawnFireFlicker
+// p_spawn_fire_flicker
 //
-void P_SpawnFireFlicker(sector_t *sector)
+void p_spawn_fire_flicker(sector_t *sector)
 {
   fireflicker_t *flick;
 
@@ -68,7 +68,7 @@ void P_SpawnFireFlicker(sector_t *sector)
   flick->sector = sector;
   flick->maxlight = sector->lightlevel;
   flick->minlight =
-      P_FindMinSurroundingLight(sector, sector->lightlevel) + 16;
+      p_find_min_surrounding(sector, sector->lightlevel) + 16;
   flick->count = 4;
 }
 
@@ -77,10 +77,10 @@ void P_SpawnFireFlicker(sector_t *sector)
 //
 
 //
-// T_LightFlash
+// t_light_flash
 // Do flashing lights.
 //
-void T_LightFlash(lightflash_t *flash)
+void t_light_flash(lightflash_t *flash)
 {
   if (--flash->count) return;
 
@@ -97,11 +97,11 @@ void T_LightFlash(lightflash_t *flash)
 }
 
 //
-// P_SpawnLightFlash
+// p_spawn_light_flash
 // After the map has been loaded, scan each sector
 // for specials that spawn thinkers
 //
-void P_SpawnLightFlash(sector_t *sector)
+void p_spawn_light_flash(sector_t *sector)
 {
   lightflash_t *flash;
 
@@ -112,11 +112,11 @@ void P_SpawnLightFlash(sector_t *sector)
 
   p_add_thinker(&flash->thinker);
 
-  flash->thinker.function.acp1 = (actionf_p1)T_LightFlash;
+  flash->thinker.function.acp1 = (actionf_p1)t_light_flash;
   flash->sector = sector;
   flash->maxlight = sector->lightlevel;
 
-  flash->minlight = P_FindMinSurroundingLight(sector, sector->lightlevel);
+  flash->minlight = p_find_min_surrounding(sector, sector->lightlevel);
   flash->maxtime = 64;
   flash->mintime = 7;
   flash->count = (p_random() & flash->maxtime) + 1;
@@ -127,9 +127,9 @@ void P_SpawnLightFlash(sector_t *sector)
 //
 
 //
-// T_StrobeFlash
+// t_strobe_flash
 //
-void T_StrobeFlash(strobe_t *flash)
+void t_strobe_flash(strobe_t *flash)
 {
   if (--flash->count) return;
 
@@ -146,11 +146,11 @@ void T_StrobeFlash(strobe_t *flash)
 }
 
 //
-// P_SpawnStrobeFlash
+// p_spawn_strobe_flash
 // After the map has been loaded, scan each sector
 // for specials that spawn thinkers
 //
-void P_SpawnStrobeFlash(sector_t *sector, int fastOrSlow, int inSync)
+void p_spawn_strobe_flash(sector_t *sector, int fast_or_slow, int in_sync)
 {
   strobe_t *flash;
 
@@ -159,18 +159,18 @@ void P_SpawnStrobeFlash(sector_t *sector, int fastOrSlow, int inSync)
   p_add_thinker(&flash->thinker);
 
   flash->sector = sector;
-  flash->darktime = fastOrSlow;
+  flash->darktime = fast_or_slow;
   flash->brighttime = STROBEBRIGHT;
-  flash->thinker.function.acp1 = (actionf_p1)T_StrobeFlash;
+  flash->thinker.function.acp1 = (actionf_p1)t_strobe_flash;
   flash->maxlight = sector->lightlevel;
-  flash->minlight = P_FindMinSurroundingLight(sector, sector->lightlevel);
+  flash->minlight = p_find_min_surrounding(sector, sector->lightlevel);
 
   if (flash->minlight == flash->maxlight) flash->minlight = 0;
 
   // nothing special about it during gameplay
   sector->special = 0;
 
-  if (!inSync)
+  if (!in_sync)
     flash->count = (p_random() & 7) + 1;
   else
     flash->count = 1;
@@ -179,25 +179,25 @@ void P_SpawnStrobeFlash(sector_t *sector, int fastOrSlow, int inSync)
 //
 // Start strobing lights (usually from a trigger)
 //
-void EV_StartLightStrobing(line_t *line)
+void ev_start_light_strobing(line_t *line)
 {
   int secnum;
   sector_t *sec;
 
   secnum = -1;
-  while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
+  while ((secnum = p_find_sector_from_line_tag(line, secnum)) >= 0)
     {
       sec = &sectors[secnum];
       if (sec->specialdata) continue;
 
-      P_SpawnStrobeFlash(sec, SLOWDARK, 0);
+      p_spawn_strobe_flash(sec, SLOWDARK, 0);
     }
 }
 
 //
 // TURN LINE'S TAG LIGHTS OFF
 //
-void EV_TurnTagLightsOff(line_t *line)
+void ev_turn_tag_lights_off(line_t *line)
 {
   int i;
   int j;
@@ -216,7 +216,7 @@ void EV_TurnTagLightsOff(line_t *line)
           for (i = 0; i < sector->linecount; i++)
             {
               templine = sector->lines[i];
-              tsec = getNextSector(templine, sector);
+              tsec = get_next_sector(templine, sector);
               if (!tsec) continue;
               if (tsec->lightlevel < min) min = tsec->lightlevel;
             }
@@ -250,7 +250,7 @@ void ev_light_turn_on(line_t *line, int bright)
               for (j = 0; j < sector->linecount; j++)
                 {
                   templine = sector->lines[j];
-                  temp = getNextSector(templine, sector);
+                  temp = get_next_sector(templine, sector);
 
                   if (!temp) continue;
 
@@ -266,7 +266,7 @@ void ev_light_turn_on(line_t *line, int bright)
 // Spawn glowing light
 //
 
-void T_Glow(glow_t *g)
+void t_glow(glow_t *g)
 {
   switch (g->direction)
     {
@@ -292,7 +292,7 @@ void T_Glow(glow_t *g)
     }
 }
 
-void P_SpawnGlowingLight(sector_t *sector)
+void p_spawn_glowing_light(sector_t *sector)
 {
   glow_t *g;
 
@@ -301,9 +301,9 @@ void P_SpawnGlowingLight(sector_t *sector)
   p_add_thinker(&g->thinker);
 
   g->sector = sector;
-  g->minlight = P_FindMinSurroundingLight(sector, sector->lightlevel);
+  g->minlight = p_find_min_surrounding(sector, sector->lightlevel);
   g->maxlight = sector->lightlevel;
-  g->thinker.function.acp1 = (actionf_p1)T_Glow;
+  g->thinker.function.acp1 = (actionf_p1)t_glow;
   g->direction = -1;
 
   sector->special = 0;

@@ -667,7 +667,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y)
           oldside = P_PointOnLineSide(oldx, oldy, ld);
           if (side != oldside)
             {
-              if (ld->special) P_CrossSpecialLine(ld - lines, oldside, thing);
+              if (ld->special) p_cross_special_line(ld - lines, oldside, thing);
             }
         }
     }
@@ -1027,7 +1027,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
     {
       li = in->d.line;
 
-      if (li->special) P_ShootSpecialLine(shootthing, li);
+      if (li->special) p_shoot_special_line(shootthing, li);
 
       if (!(li->flags & ML_TWOSIDED)) goto hitline;
 

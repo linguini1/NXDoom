@@ -40,13 +40,13 @@
 //
 // Move a plane (floor or ceiling) and check for crushing
 //
-result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest,
-                     boolean crush, int floorOrCeiling, int direction)
+result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
+                     boolean crush, int floor_or_ceiling, int direction)
 {
   boolean flag;
   fixed_t lastpos;
 
-  switch (floorOrCeiling)
+  switch (floor_or_ceiling)
     {
     case 0:
       // FLOOR
@@ -191,11 +191,11 @@ result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest,
 //
 // MOVE A FLOOR TO IT'S DESTINATION (UP OR DOWN)
 //
-void T_MoveFloor(floormove_t *floor)
+void t_move_floor(floormove_t *floor)
 {
   result_e res;
 
-  res = T_MovePlane(floor->sector, floor->speed, floor->floordestheight,
+  res = t_move_plane(floor->sector, floor->speed, floor->floordestheight,
                     floor->crush, 0, floor->direction);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -249,7 +249,7 @@ int ev_do_floor(line_t *line, floor_e floortype)
 
   secnum = -1;
   rtn = 0;
-  while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
+  while ((secnum = p_find_sector_from_line_tag(line, secnum)) >= 0)
     {
       sec = &sectors[secnum];
 
@@ -261,7 +261,7 @@ int ev_do_floor(line_t *line, floor_e floortype)
       floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
       p_add_thinker(&floor->thinker);
       sec->specialdata = floor;
-      floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+      floor->thinker.function.acp1 = (actionf_p1)t_move_floor;
       floor->type = floortype;
       floor->crush = false;
 
@@ -271,21 +271,21 @@ int ev_do_floor(line_t *line, floor_e floortype)
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
-          floor->floordestheight = P_FindHighestFloorSurrounding(sec);
+          floor->floordestheight = p_find_highest_floor_surrounding(sec);
           break;
 
         case FLOOR_LOWERFLOORTOLOWEST:
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
-          floor->floordestheight = P_FindLowestFloorSurrounding(sec);
+          floor->floordestheight = p_find_lowest_floor_surrounding(sec);
           break;
 
         case FLOOR_TURBOLOWER:
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED * 4;
-          floor->floordestheight = P_FindHighestFloorSurrounding(sec);
+          floor->floordestheight = p_find_highest_floor_surrounding(sec);
           if (gameversion <= exe_doom_1_2 ||
               floor->floordestheight != sec->floorheight)
             floor->floordestheight += 8 * FRACUNIT;
@@ -297,7 +297,7 @@ int ev_do_floor(line_t *line, floor_e floortype)
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
-          floor->floordestheight = P_FindLowestCeilingSurrounding(sec);
+          floor->floordestheight = p_find_lowest_ceiling_surrounding(sec);
           if (floor->floordestheight > sec->ceilingheight)
             floor->floordestheight = sec->ceilingheight;
           floor->floordestheight -=
@@ -309,7 +309,7 @@ int ev_do_floor(line_t *line, floor_e floortype)
           floor->sector = sec;
           floor->speed = FLOORSPEED * 4;
           floor->floordestheight =
-              P_FindNextHighestFloor(sec, sec->floorheight);
+              p_find_next_highest_floor(sec, sec->floorheight);
           break;
 
         case FLOOR_RAISEFLOORTONEAREST:
@@ -317,7 +317,7 @@ int ev_do_floor(line_t *line, floor_e floortype)
           floor->sector = sec;
           floor->speed = FLOORSPEED;
           floor->floordestheight =
-              P_FindNextHighestFloor(sec, sec->floorheight);
+              p_find_next_highest_floor(sec, sec->floorheight);
           break;
 
         case FLOOR_RAISEFLOOR24:
@@ -354,13 +354,13 @@ int ev_do_floor(line_t *line, floor_e floortype)
             floor->speed = FLOORSPEED;
             for (i = 0; i < sec->linecount; i++)
               {
-                if (twoSided(secnum, i))
+                if (two_sided(secnum, i))
                   {
-                    side = getSide(secnum, i, 0);
+                    side = get_side(secnum, i, 0);
                     if (side->bottomtexture >= 0)
                       if (textureheight[side->bottomtexture] < minsize)
                         minsize = textureheight[side->bottomtexture];
-                    side = getSide(secnum, i, 1);
+                    side = get_side(secnum, i, 1);
                     if (side->bottomtexture >= 0)
                       if (textureheight[side->bottomtexture] < minsize)
                         minsize = textureheight[side->bottomtexture];
@@ -374,16 +374,16 @@ int ev_do_floor(line_t *line, floor_e floortype)
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
-          floor->floordestheight = P_FindLowestFloorSurrounding(sec);
+          floor->floordestheight = p_find_lowest_floor_surrounding(sec);
           floor->texture = sec->floorpic;
 
           for (i = 0; i < sec->linecount; i++)
             {
-              if (twoSided(secnum, i))
+              if (two_sided(secnum, i))
                 {
-                  if (getSide(secnum, i, 0)->sector - sectors == secnum)
+                  if (get_side(secnum, i, 0)->sector - sectors == secnum)
                     {
-                      sec = getSector(secnum, i, 1);
+                      sec = get_sector(secnum, i, 1);
 
                       if (sec->floorheight == floor->floordestheight)
                         {
@@ -394,7 +394,7 @@ int ev_do_floor(line_t *line, floor_e floortype)
                     }
                   else
                     {
-                      sec = getSector(secnum, i, 0);
+                      sec = get_sector(secnum, i, 0);
 
                       if (sec->floorheight == floor->floordestheight)
                         {
@@ -435,7 +435,7 @@ int ev_build_stairs(line_t *line, stair_e type)
 
   secnum = -1;
   rtn = 0;
-  while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
+  while ((secnum = p_find_sector_from_line_tag(line, secnum)) >= 0)
     {
       sec = &sectors[secnum];
 
@@ -447,7 +447,7 @@ int ev_build_stairs(line_t *line, stair_e type)
       floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
       p_add_thinker(&floor->thinker);
       sec->specialdata = floor;
-      floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+      floor->thinker.function.acp1 = (actionf_p1)t_move_floor;
       floor->direction = 1;
       floor->sector = sec;
       switch (type)
@@ -504,7 +504,7 @@ int ev_build_stairs(line_t *line, stair_e type)
               p_add_thinker(&floor->thinker);
 
               sec->specialdata = floor;
-              floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+              floor->thinker.function.acp1 = (actionf_p1)t_move_floor;
               floor->direction = 1;
               floor->sector = sec;
               floor->speed = speed;

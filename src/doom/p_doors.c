@@ -51,9 +51,9 @@ slidename_t	slideFrameNames[MAXSLIDEDOORS] =
 //
 
 //
-// T_VerticalDoor
+// t_vertical_door
 //
-void T_VerticalDoor(vldoor_t *door)
+void t_vertical_door(vldoor_t *door)
 {
   result_e res;
 
@@ -114,7 +114,7 @@ void T_VerticalDoor(vldoor_t *door)
 
     case -1:
       // DOWN
-      res = T_MovePlane(door->sector, door->speed, door->sector->floorheight,
+      res = t_move_plane(door->sector, door->speed, door->sector->floorheight,
                         false, 1, door->direction);
       if (res == pastdest)
         {
@@ -164,7 +164,7 @@ void T_VerticalDoor(vldoor_t *door)
 
     case 1:
       // UP
-      res = T_MovePlane(door->sector, door->speed, door->topheight, false, 1,
+      res = t_move_plane(door->sector, door->speed, door->topheight, false, 1,
                         door->direction);
 
       if (res == pastdest)
@@ -256,7 +256,7 @@ int ev_do_door(line_t *line, vldoor_e type)
   secnum = -1;
   rtn = 0;
 
-  while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
+  while ((secnum = p_find_sector_from_line_tag(line, secnum)) >= 0)
     {
       sec = &sectors[secnum];
       if (sec->specialdata) continue;
@@ -267,7 +267,7 @@ int ev_do_door(line_t *line, vldoor_e type)
       p_add_thinker(&door->thinker);
       sec->specialdata = door;
 
-      door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+      door->thinker.function.acp1 = (actionf_p1)t_vertical_door;
       door->sector = sec;
       door->type = type;
       door->topwait = VDOORWAIT;
@@ -276,7 +276,7 @@ int ev_do_door(line_t *line, vldoor_e type)
       switch (type)
         {
         case VLD_BLAZECLOSE:
-          door->topheight = P_FindLowestCeilingSurrounding(sec);
+          door->topheight = p_find_lowest_ceiling_surrounding(sec);
           door->topheight -= 4 * FRACUNIT;
           door->direction = -1;
           door->speed = VDOORSPEED * 4;
@@ -286,7 +286,7 @@ int ev_do_door(line_t *line, vldoor_e type)
           break;
 
         case VLD_CLOSE:
-          door->topheight = P_FindLowestCeilingSurrounding(sec);
+          door->topheight = p_find_lowest_ceiling_surrounding(sec);
           door->topheight -= 4 * FRACUNIT;
           door->direction = -1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -305,7 +305,7 @@ int ev_do_door(line_t *line, vldoor_e type)
         case VLD_BLAZERAISE:
         case VLD_BLAZEOPEN:
           door->direction = 1;
-          door->topheight = P_FindLowestCeilingSurrounding(sec);
+          door->topheight = p_find_lowest_ceiling_surrounding(sec);
           door->topheight -= 4 * FRACUNIT;
           door->speed = VDOORSPEED * 4;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -317,7 +317,7 @@ int ev_do_door(line_t *line, vldoor_e type)
         case VLD_NORMAL:
         case VLD_OPEN:
           door->direction = 1;
-          door->topheight = P_FindLowestCeilingSurrounding(sec);
+          door->topheight = p_find_lowest_ceiling_surrounding(sec);
           door->topheight -= 4 * FRACUNIT;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           if (door->topheight != sec->ceilingheight)
@@ -421,11 +421,11 @@ void ev_vertical_door(line_t *line, mobj_t *thing)
               // In Vanilla, door->direction is set, even though
               // "specialdata" might not actually point at a door.
 
-              if (door->thinker.function.acp1 == (actionf_p1)T_VerticalDoor)
+              if (door->thinker.function.acp1 == (actionf_p1)t_vertical_door)
                 {
                   door->direction = -1; // start going down immediately
                 }
-              else if (door->thinker.function.acp1 == (actionf_p1)T_PlatRaise)
+              else if (door->thinker.function.acp1 == (actionf_p1)t_plat_raise)
                 {
                   // Erm, this is a plat, not a door.
                   // This notably causes a problem in ep1-0500.lmp where
@@ -480,7 +480,7 @@ void ev_vertical_door(line_t *line, mobj_t *thing)
   door = z_malloc(sizeof(*door), PU_LEVSPEC, 0);
   p_add_thinker(&door->thinker);
   sec->specialdata = door;
-  door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+  door->thinker.function.acp1 = (actionf_p1)t_vertical_door;
   door->sector = sec;
   door->direction = 1;
   door->speed = VDOORSPEED;
@@ -515,14 +515,14 @@ void ev_vertical_door(line_t *line, mobj_t *thing)
     }
 
   // find the top and bottom of the movement range
-  door->topheight = P_FindLowestCeilingSurrounding(sec);
+  door->topheight = p_find_lowest_ceiling_surrounding(sec);
   door->topheight -= 4 * FRACUNIT;
 }
 
 //
 // Spawn a door that closes after 30 seconds
 //
-void P_SpawnDoorCloseIn30(sector_t *sec)
+void p_spawn_door_close_in30(sector_t *sec)
 {
   vldoor_t *door;
 
@@ -533,7 +533,7 @@ void P_SpawnDoorCloseIn30(sector_t *sec)
   sec->specialdata = door;
   sec->special = 0;
 
-  door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+  door->thinker.function.acp1 = (actionf_p1)t_vertical_door;
   door->sector = sec;
   door->direction = 0;
   door->type = VLD_NORMAL;
@@ -544,7 +544,7 @@ void P_SpawnDoorCloseIn30(sector_t *sec)
 //
 // Spawn a door that opens after 5 minutes
 //
-void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
+void p_spawn_door_raise_in_5min(sector_t *sec, int secnum)
 {
   vldoor_t *door;
 
@@ -555,12 +555,12 @@ void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
   sec->specialdata = door;
   sec->special = 0;
 
-  door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+  door->thinker.function.acp1 = (actionf_p1)t_vertical_door;
   door->sector = sec;
   door->direction = 2;
   door->type = VLD_RAISEIN5MINS;
   door->speed = VDOORSPEED;
-  door->topheight = P_FindLowestCeilingSurrounding(sec);
+  door->topheight = p_find_lowest_ceiling_surrounding(sec);
   door->topheight -= 4 * FRACUNIT;
   door->topwait = VDOORWAIT;
   door->topcountdown = 5 * 60 * TICRATE;
@@ -571,14 +571,14 @@ void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
 
 #if 0 // ABANDONED TO THE MISTS OF TIME!!!
 //
-// EV_SlidingDoor : slide a door horizontally
+// ev_sliding_door : slide a door horizontally
 // (animate midtexture, then set noblocking line)
 //
 
 
 slideframe_t slideFrames[MAXSLIDEDOORS];
 
-void p_initSlidingDoorFrames(void)
+void p_init_sliding_door_frames(void)
 {
     int		i;
     int		f1;
@@ -592,28 +592,28 @@ void p_initSlidingDoorFrames(void)
 	
     for (i = 0;i < MAXSLIDEDOORS; i++)
     {
-	if (!slideFrameNames[i].frontFrame1[0])
+	if (!slideFrameNames[i].front_frame1[0])
 	    break;
 			
-	f1 = r_texture_num_for_name(slideFrameNames[i].frontFrame1);
-	f2 = r_texture_num_for_name(slideFrameNames[i].frontFrame2);
-	f3 = r_texture_num_for_name(slideFrameNames[i].frontFrame3);
-	f4 = r_texture_num_for_name(slideFrameNames[i].frontFrame4);
+	f1 = r_texture_num_for_name(slideFrameNames[i].front_frame1);
+	f2 = r_texture_num_for_name(slideFrameNames[i].front_frame2);
+	f3 = r_texture_num_for_name(slideFrameNames[i].front_frame3);
+	f4 = r_texture_num_for_name(slideFrameNames[i].front_frame4);
 
-	slideFrames[i].frontFrames[0] = f1;
-	slideFrames[i].frontFrames[1] = f2;
-	slideFrames[i].frontFrames[2] = f3;
-	slideFrames[i].frontFrames[3] = f4;
+	slideFrames[i].front_frames[0] = f1;
+	slideFrames[i].front_frames[1] = f2;
+	slideFrames[i].front_frames[2] = f3;
+	slideFrames[i].front_frames[3] = f4;
 		
-	f1 = r_texture_num_for_name(slideFrameNames[i].backFrame1);
-	f2 = r_texture_num_for_name(slideFrameNames[i].backFrame2);
-	f3 = r_texture_num_for_name(slideFrameNames[i].backFrame3);
-	f4 = r_texture_num_for_name(slideFrameNames[i].backFrame4);
+	f1 = r_texture_num_for_name(slideFrameNames[i].back_frame1);
+	f2 = r_texture_num_for_name(slideFrameNames[i].back_frame2);
+	f3 = r_texture_num_for_name(slideFrameNames[i].back_frame3);
+	f4 = r_texture_num_for_name(slideFrameNames[i].back_frame4);
 
-	slideFrames[i].backFrames[0] = f1;
-	slideFrames[i].backFrames[1] = f2;
-	slideFrames[i].backFrames[2] = f3;
-	slideFrames[i].backFrames[3] = f4;
+	slideFrames[i].back_frames[0] = f1;
+	slideFrames[i].back_frames[1] = f2;
+	slideFrames[i].back_frames[2] = f3;
+	slideFrames[i].back_frames[3] = f4;
     }
 }
 
@@ -630,7 +630,7 @@ int P_FindSlidingDoorType(line_t*	line)
     for (i = 0;i < MAXSLIDEDOORS;i++)
     {
 	val = sides[line->sidenum[0]].midtexture;
-	if (val == slideFrames[i].frontFrames[0])
+	if (val == slideFrames[i].front_frames[0])
 	    return i;
     }
 	
@@ -651,7 +651,7 @@ void T_SlidingDoor (slidedoor_t*	door)
 		sides[door->line->sidenum[1]].midtexture = 0;
 		door->line->flags &= ML_BLOCKING^0xff;
 					
-		if (door->type == sdt_openOnly)
+		if (door->type == SDT_OPENONLY)
 		{
 		    door->frontsector->specialdata = NULL;
 		    p_remove_thinker (&door->thinker);
@@ -667,11 +667,11 @@ void T_SlidingDoor (slidedoor_t*	door)
 		door->timer = SWAITTICS;
 					
 		sides[door->line->sidenum[0]].midtexture =
-		    slideFrames[door->whichDoorIndex].
-		    frontFrames[door->frame];
+		    slideFrames[door->which_door_index].
+		    front_frames[door->frame];
 		sides[door->line->sidenum[1]].midtexture =
-		    slideFrames[door->whichDoorIndex].
-		    backFrames[door->frame];
+		    slideFrames[door->which_door_index].
+		    back_frames[door->frame];
 	    }
 	}
 	break;
@@ -711,11 +711,11 @@ void T_SlidingDoor (slidedoor_t*	door)
 		door->timer = SWAITTICS;
 					
 		sides[door->line->sidenum[0]].midtexture =
-		    slideFrames[door->whichDoorIndex].
-		    frontFrames[door->frame];
+		    slideFrames[door->which_door_index].
+		    front_frames[door->frame];
 		sides[door->line->sidenum[1]].midtexture =
-		    slideFrames[door->whichDoorIndex].
-		    backFrames[door->frame];
+		    slideFrames[door->which_door_index].
+		    back_frames[door->frame];
 	    }
 	}
 	break;
@@ -725,7 +725,7 @@ void T_SlidingDoor (slidedoor_t*	door)
 
 
 void
-EV_SlidingDoor
+ev_sliding_door
 ( line_t*	line,
   mobj_t*	thing )
 {
@@ -745,7 +745,7 @@ EV_SlidingDoor
 	    return;
 			
 	door = sec->specialdata;
-	if (door->type == sdt_openAndClose)
+	if (door->type == SDT_OPENANDCLOSE)
 	{
 	    if (door->status == sd_waiting)
 		door->status = sd_closing;
@@ -761,12 +761,12 @@ EV_SlidingDoor
 	p_add_thinker (&door->thinker);
 	sec->specialdata = door;
 		
-	door->type = sdt_openAndClose;
+	door->type = SDT_OPENANDCLOSE;
 	door->status = sd_opening;
-	door->whichDoorIndex = P_FindSlidingDoorType(line);
+	door->which_door_index = P_FindSlidingDoorType(line);
 
-	if (door->whichDoorIndex < 0)
-	    i_error("EV_SlidingDoor: Can't use texture for sliding door!");
+	if (door->which_door_index < 0)
+	    i_error("ev_sliding_door: Can't use texture for sliding door!");
 			
 	door->frontsector = sec;
 	door->backsector = line->backsector;

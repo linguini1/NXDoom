@@ -35,10 +35,10 @@
 ceiling_t *activeceilings[MAXCEILINGS];
 
 //
-// T_MoveCeiling
+// t_move_ceiling
 //
 
-void T_MoveCeiling(ceiling_t *ceiling)
+void t_move_ceiling(ceiling_t *ceiling)
 {
   result_e res;
 
@@ -49,7 +49,7 @@ void T_MoveCeiling(ceiling_t *ceiling)
       break;
     case 1:
       // UP
-      res = T_MovePlane(ceiling->sector, ceiling->speed, ceiling->topheight,
+      res = t_move_plane(ceiling->sector, ceiling->speed, ceiling->topheight,
                         false, 1, ceiling->direction);
 
       if (!(leveltime & 7))
@@ -72,7 +72,7 @@ void T_MoveCeiling(ceiling_t *ceiling)
           switch (ceiling->type)
             {
             case CEIL_RAISETOHIGHEST:
-              P_RemoveActiveCeiling(ceiling);
+              p_remove_active_ceiling(ceiling);
               break;
 
             case CEIL_SILENTCRUSHANDRAISE:
@@ -93,7 +93,7 @@ void T_MoveCeiling(ceiling_t *ceiling)
     case -1:
       // DOWN
       res =
-          T_MovePlane(ceiling->sector, ceiling->speed, ceiling->bottomheight,
+          t_move_plane(ceiling->sector, ceiling->speed, ceiling->bottomheight,
                       ceiling->crush, 1, ceiling->direction);
 
       if (!(leveltime & 7))
@@ -128,7 +128,7 @@ void T_MoveCeiling(ceiling_t *ceiling)
 
             case CEIL_LOWERANDCRUSH:
             case CEIL_LOWERTOFLOOR:
-              P_RemoveActiveCeiling(ceiling);
+              p_remove_active_ceiling(ceiling);
               break;
 
             default:
@@ -176,12 +176,12 @@ int ev_do_ceiling(line_t *line, ceiling_e type)
     case CEIL_FASTCRUSHANDRAISE:
     case CEIL_SILENTCRUSHANDRAISE:
     case CEIL_CRUSHANDRAISE:
-      P_ActivateInStasisCeiling(line);
+      p_activate_in_stasis_ceiling(line);
     default:
       break;
     }
 
-  while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
+  while ((secnum = p_find_sector_from_line_tag(line, secnum)) >= 0)
     {
       sec = &sectors[secnum];
       if (sec->specialdata) continue;
@@ -191,7 +191,7 @@ int ev_do_ceiling(line_t *line, ceiling_e type)
       ceiling = z_malloc(sizeof(*ceiling), PU_LEVSPEC, 0);
       p_add_thinker(&ceiling->thinker);
       sec->specialdata = ceiling;
-      ceiling->thinker.function.acp1 = (actionf_p1)T_MoveCeiling;
+      ceiling->thinker.function.acp1 = (actionf_p1)t_move_ceiling;
       ceiling->sector = sec;
       ceiling->crush = false;
 
@@ -218,7 +218,7 @@ int ev_do_ceiling(line_t *line, ceiling_e type)
           break;
 
         case CEIL_RAISETOHIGHEST:
-          ceiling->topheight = P_FindHighestCeilingSurrounding(sec);
+          ceiling->topheight = p_find_heighest_ceiling_surrounding(sec);
           ceiling->direction = 1;
           ceiling->speed = CEILSPEED;
           break;
@@ -226,7 +226,7 @@ int ev_do_ceiling(line_t *line, ceiling_e type)
 
       ceiling->tag = sec->tag;
       ceiling->type = type;
-      P_AddActiveCeiling(ceiling);
+      p_add_active_ceiling(ceiling);
     }
   return rtn;
 }
@@ -234,7 +234,7 @@ int ev_do_ceiling(line_t *line, ceiling_e type)
 //
 // Add an active ceiling
 //
-void P_AddActiveCeiling(ceiling_t *c)
+void p_add_active_ceiling(ceiling_t *c)
 {
   int i;
 
@@ -251,7 +251,7 @@ void P_AddActiveCeiling(ceiling_t *c)
 //
 // Remove a ceiling's thinker
 //
-void P_RemoveActiveCeiling(ceiling_t *c)
+void p_remove_active_ceiling(ceiling_t *c)
 {
   int i;
 
@@ -270,7 +270,7 @@ void P_RemoveActiveCeiling(ceiling_t *c)
 //
 // Restart a ceiling that's in-stasis
 //
-void P_ActivateInStasisCeiling(line_t *line)
+void p_activate_in_stasis_ceiling(line_t *line)
 {
   int i;
 
@@ -281,16 +281,16 @@ void P_ActivateInStasisCeiling(line_t *line)
         {
           activeceilings[i]->direction = activeceilings[i]->olddirection;
           activeceilings[i]->thinker.function.acp1 =
-              (actionf_p1)T_MoveCeiling;
+              (actionf_p1)t_move_ceiling;
         }
     }
 }
 
 //
-// EV_CeilingCrushStop
+// ev_ceiling_crush_stop
 // Stop a ceiling from crushing!
 //
-int EV_CeilingCrushStop(line_t *line)
+int ev_ceiling_crush_stop(line_t *line)
 {
   int i;
   int rtn;
