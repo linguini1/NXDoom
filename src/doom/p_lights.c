@@ -1,21 +1,30 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Handle Sector base lighting effects.
-//	Muzzle flash?
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/p_lights.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  Handle Sector base lighting effects.
+ *  Muzzle flash?
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include "m_random.h"
 #include "z_zone.h"
@@ -23,17 +32,19 @@
 #include "doomdef.h"
 #include "p_local.h"
 
-// State.
+/* State. */
+
 #include "r_state.h"
 
-//
-// FIRELIGHT FLICKER
-//
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
 
-//
-// T_FireFlicker
-//
-void T_FireFlicker(fireflicker_t *flick)
+/* FIRELIGHT FLICKER */
+
+/* t_fire_flicker */
+
+static void t_fire_flicker(fireflicker_t *flick)
 {
   int amount;
 
@@ -49,37 +60,37 @@ void T_FireFlicker(fireflicker_t *flick)
   flick->count = 4;
 }
 
-//
-// p_spawn_fire_flicker
-//
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
 void p_spawn_fire_flicker(sector_t *sector)
 {
   fireflicker_t *flick;
 
-  // Note that we are resetting sector attributes.
-  // Nothing special about it during gameplay.
+  /* Note that we are resetting sector attributes. Nothing special about it
+   * during gameplay.
+   */
+
   sector->special = 0;
 
   flick = z_malloc(sizeof(*flick), PU_LEVSPEC, 0);
 
   p_add_thinker(&flick->thinker);
 
-  flick->thinker.function.acp1 = (actionf_p1)T_FireFlicker;
+  flick->thinker.function.acp1 = (actionf_p1)t_fire_flicker;
   flick->sector = sector;
   flick->maxlight = sector->lightlevel;
-  flick->minlight =
-      p_find_min_surrounding(sector, sector->lightlevel) + 16;
+  flick->minlight = p_find_min_surrounding(sector, sector->lightlevel) + 16;
   flick->count = 4;
 }
 
-//
-// BROKEN LIGHT FLASHING
-//
+/* BROKEN LIGHT FLASHING */
 
-//
-// t_light_flash
-// Do flashing lights.
-//
+/* t_light_flash
+ * Do flashing lights.
+ */
+
 void t_light_flash(lightflash_t *flash)
 {
   if (--flash->count) return;
@@ -96,16 +107,17 @@ void t_light_flash(lightflash_t *flash)
     }
 }
 
-//
-// p_spawn_light_flash
-// After the map has been loaded, scan each sector
-// for specials that spawn thinkers
-//
+/* p_spawn_light_flash
+ * After the map has been loaded, scan each sector for specials that spawn
+ * thinkers
+ */
+
 void p_spawn_light_flash(sector_t *sector)
 {
   lightflash_t *flash;
 
-  // nothing special about it during gameplay
+  /* nothing special about it during gameplay */
+
   sector->special = 0;
 
   flash = z_malloc(sizeof(*flash), PU_LEVSPEC, 0);
@@ -122,13 +134,8 @@ void p_spawn_light_flash(sector_t *sector)
   flash->count = (p_random() & flash->maxtime) + 1;
 }
 
-//
-// STROBE LIGHT FLASHING
-//
+/* STROBE LIGHT FLASHING */
 
-//
-// t_strobe_flash
-//
 void t_strobe_flash(strobe_t *flash)
 {
   if (--flash->count) return;
@@ -145,11 +152,11 @@ void t_strobe_flash(strobe_t *flash)
     }
 }
 
-//
-// p_spawn_strobe_flash
-// After the map has been loaded, scan each sector
-// for specials that spawn thinkers
-//
+/* p_spawn_strobe_flash
+ * After the map has been loaded, scan each sector for specials that spawn
+ * thinkers
+ */
+
 void p_spawn_strobe_flash(sector_t *sector, int fast_or_slow, int in_sync)
 {
   strobe_t *flash;
@@ -167,7 +174,8 @@ void p_spawn_strobe_flash(sector_t *sector, int fast_or_slow, int in_sync)
 
   if (flash->minlight == flash->maxlight) flash->minlight = 0;
 
-  // nothing special about it during gameplay
+  /* nothing special about it during gameplay */
+
   sector->special = 0;
 
   if (!in_sync)
@@ -176,9 +184,8 @@ void p_spawn_strobe_flash(sector_t *sector, int fast_or_slow, int in_sync)
     flash->count = 1;
 }
 
-//
-// Start strobing lights (usually from a trigger)
-//
+/* Start strobing lights (usually from a trigger) */
+
 void ev_start_light_strobing(line_t *line)
 {
   int secnum;
@@ -194,9 +201,8 @@ void ev_start_light_strobing(line_t *line)
     }
 }
 
-//
-// TURN LINE'S TAG LIGHTS OFF
-//
+/* TURN LINE'S TAG LIGHTS OFF */
+
 void ev_turn_tag_lights_off(line_t *line)
 {
   int i;
@@ -220,14 +226,14 @@ void ev_turn_tag_lights_off(line_t *line)
               if (!tsec) continue;
               if (tsec->lightlevel < min) min = tsec->lightlevel;
             }
+
           sector->lightlevel = min;
         }
     }
 }
 
-//
-// TURN LINE'S TAG LIGHTS ON
-//
+/* TURN LINE'S TAG LIGHTS ON */
+
 void ev_light_turn_on(line_t *line, int bright)
 {
   int i;
@@ -242,9 +248,10 @@ void ev_light_turn_on(line_t *line, int bright)
     {
       if (sector->tag == line->tag)
         {
-          // bright = 0 means to search
-          // for highest light level
-          // surrounding sector
+          /* bright = 0 means to search for highest light level surrounding
+           * sector
+           */
+
           if (!bright)
             {
               for (j = 0; j < sector->linecount; j++)
@@ -257,21 +264,19 @@ void ev_light_turn_on(line_t *line, int bright)
                   if (temp->lightlevel > bright) bright = temp->lightlevel;
                 }
             }
+
           sector->lightlevel = bright;
         }
     }
 }
 
-//
-// Spawn glowing light
-//
+/* Spawn glowing light */
 
 void t_glow(glow_t *g)
 {
   switch (g->direction)
     {
-    case -1:
-      // DOWN
+    case -1: /* DOWN */
       g->sector->lightlevel -= GLOWSPEED;
       if (g->sector->lightlevel <= g->minlight)
         {
@@ -280,8 +285,7 @@ void t_glow(glow_t *g)
         }
       break;
 
-    case 1:
-      // UP
+    case 1: /* UP */
       g->sector->lightlevel += GLOWSPEED;
       if (g->sector->lightlevel >= g->maxlight)
         {
