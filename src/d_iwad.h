@@ -41,7 +41,7 @@ char *d_try_find_wad_by_name(const char *filename);
 char *d_find_iwad(int mask, gamemission_t *mission);
 const iwad_t **d_find_all_iwads(int mask);
 const char *d_save_game_iwad_name(gamemission_t gamemission,
-                               GameVariant_t gamevariant);
+                               game_variant_t gamevariant);
 const char *d_suggest_iwad_name(gamemission_t mission, game_mode_t mode);
 const char *d_suggest_game_name(gamemission_t mission, game_mode_t mode);
 void D_CheckCorrectIWAD(gamemission_t mission);

@@ -85,7 +85,7 @@ typedef enum
   freedoom,   // FreeDoom: Phase 1 + 2
   freedm,     // FreeDM
   bfgedition, // Doom Classic (Doom 3: BFG Edition)
-} GameVariant_t;
+} game_variant_t;
 
 // Skill level.
 

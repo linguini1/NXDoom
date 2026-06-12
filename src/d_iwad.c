@@ -542,7 +542,7 @@ const iwad_t **d_find_all_iwads(int mask)
 //
 
 const char *d_save_game_iwad_name(gamemission_t gamemission,
-                               GameVariant_t gamevariant)
+                               game_variant_t gamevariant)
 {
   size_t i;
 
