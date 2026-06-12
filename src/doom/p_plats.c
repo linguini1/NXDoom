@@ -1,20 +1,29 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Plats (i.e. elevator platforms) code, raising/lowering.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/p_plats.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  Plats (i.e. elevator platforms) code, raising/lowering.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 
@@ -30,15 +39,23 @@
 #include "sounds.h"
 #endif
 
-// State.
+/* State. */
+
 #include "doomstat.h"
 #include "r_state.h"
 
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
 plat_t *activeplats[MAXPLATS];
 
-//
-// Move a plat up and down
-//
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/* Move a plat up and down */
+
 void t_plat_raise(plat_t *plat)
 {
   result_e res;
@@ -46,8 +63,8 @@ void t_plat_raise(plat_t *plat)
   switch (plat->status)
     {
     case up:
-      res = t_move_plane(plat->sector, plat->speed, plat->high, plat->crush, 0,
-                        1);
+      res = t_move_plane(plat->sector, plat->speed,
+              plat->high, plat->crush, 0, 1);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
       if (plat->type == PLAT_RAISEANDCHANGE ||
@@ -119,15 +136,16 @@ void t_plat_raise(plat_t *plat)
           s_start_sound(&plat->sector->soundorg, SFX_PSTART);
 #endif
         }
+
     case in_stasis:
       break;
     }
 }
 
-//
-// Do Platforms
-//  "amount" is only used for SOME platforms.
-//
+/* Do Platforms
+ *  "amount" is only used for SOME platforms.
+ */
+
 int ev_do_plat(line_t *line, plattype_e type, int amount)
 {
   plat_t *plat;
@@ -138,7 +156,8 @@ int ev_do_plat(line_t *line, plattype_e type, int amount)
   secnum = -1;
   rtn = 0;
 
-  //	Activate all <type> plats that are in_stasis
+  /* Activate all <type> plats that are in_stasis */
+
   switch (type)
     {
     case PLAT_PERPETUALRAISE:
@@ -155,7 +174,8 @@ int ev_do_plat(line_t *line, plattype_e type, int amount)
 
       if (sec->specialdata) continue;
 
-      // Find lowest & highest floors around sector
+      /* Find lowest & highest floors around sector */
+
       rtn = 1;
       plat = z_malloc(sizeof(*plat), PU_LEVSPEC, 0);
       p_add_thinker(&plat->thinker);
@@ -175,7 +195,9 @@ int ev_do_plat(line_t *line, plattype_e type, int amount)
           plat->high = p_find_next_highest_floor(sec, sec->floorheight);
           plat->wait = 0;
           plat->status = up;
-          // NO MORE DAMAGE, IF APPLICABLE
+
+          /* NO MORE DAMAGE, IF APPLICABLE */
+
           sec->special = 0;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -241,8 +263,10 @@ int ev_do_plat(line_t *line, plattype_e type, int amount)
 #endif
           break;
         }
+
       p_add_active_plat(plat);
     }
+
   return rtn;
 }
 
@@ -251,12 +275,14 @@ void p_activate_in_stasis(int tag)
   int i;
 
   for (i = 0; i < MAXPLATS; i++)
-    if (activeplats[i] && (activeplats[i])->tag == tag &&
-        (activeplats[i])->status == in_stasis)
-      {
-        (activeplats[i])->status = (activeplats[i])->oldstatus;
-        (activeplats[i])->thinker.function.acp1 = (actionf_p1)t_plat_raise;
-      }
+    {
+      if (activeplats[i] && (activeplats[i])->tag == tag &&
+          (activeplats[i])->status == in_stasis)
+        {
+          (activeplats[i])->status = (activeplats[i])->oldstatus;
+          (activeplats[i])->thinker.function.acp1 = (actionf_p1)t_plat_raise;
+        }
+    }
 }
 
 void ev_stop_plat(line_t *line)
@@ -264,13 +290,15 @@ void ev_stop_plat(line_t *line)
   int j;
 
   for (j = 0; j < MAXPLATS; j++)
-    if (activeplats[j] && ((activeplats[j])->status != in_stasis) &&
-        ((activeplats[j])->tag == line->tag))
-      {
-        (activeplats[j])->oldstatus = (activeplats[j])->status;
-        (activeplats[j])->status = in_stasis;
-        (activeplats[j])->thinker.function.acv = (actionf_v)NULL;
-      }
+    {
+      if (activeplats[j] && ((activeplats[j])->status != in_stasis) &&
+          ((activeplats[j])->tag == line->tag))
+        {
+          (activeplats[j])->oldstatus = (activeplats[j])->status;
+          (activeplats[j])->status = in_stasis;
+          (activeplats[j])->thinker.function.acv = (actionf_v)NULL;
+        }
+    }
 }
 
 void p_add_active_plat(plat_t *plat)
@@ -278,11 +306,14 @@ void p_add_active_plat(plat_t *plat)
   int i;
 
   for (i = 0; i < MAXPLATS; i++)
-    if (activeplats[i] == NULL)
-      {
-        activeplats[i] = plat;
-        return;
-      }
+    {
+      if (activeplats[i] == NULL)
+        {
+          activeplats[i] = plat;
+          return;
+        }
+    }
+
   i_error("p_add_active_plat: no more plats!");
 }
 
@@ -290,13 +321,16 @@ void p_remove_active_plat(plat_t *plat)
 {
   int i;
   for (i = 0; i < MAXPLATS; i++)
-    if (plat == activeplats[i])
-      {
-        (activeplats[i])->sector->specialdata = NULL;
-        p_remove_thinker(&(activeplats[i])->thinker);
-        activeplats[i] = NULL;
+    {
+      if (plat == activeplats[i])
+        {
+          (activeplats[i])->sector->specialdata = NULL;
+          p_remove_thinker(&(activeplats[i])->thinker);
+          activeplats[i] = NULL;
 
-        return;
-      }
+          return;
+        }
+    }
+
   i_error("p_remove_active_plat: can't find plat!");
 }
