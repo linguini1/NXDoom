@@ -52,7 +52,7 @@ static const iwad_t iwads[] = {
     {"strife1.wad", strife, commercial, "Strife"},
 };
 
-boolean D_IsIWADName(const char *name)
+static boolean D_IsIWADName(const char *name)
 {
   int i;
 
