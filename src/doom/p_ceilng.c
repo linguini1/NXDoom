@@ -56,11 +56,11 @@ void T_MoveCeiling(ceiling_t *ceiling)
         {
           switch (ceiling->type)
             {
-            case silentCrushAndRaise:
+            case CEIL_SILENTCRUSHANDRAISE:
               break;
             default:
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&ceiling->sector->soundorg, sfx_stnmov);
+              s_start_sound(&ceiling->sector->soundorg, SFX_STNMOV);
 #endif
               // ?
               break;
@@ -71,16 +71,16 @@ void T_MoveCeiling(ceiling_t *ceiling)
         {
           switch (ceiling->type)
             {
-            case raiseToHighest:
+            case CEIL_RAISETOHIGHEST:
               P_RemoveActiveCeiling(ceiling);
               break;
 
-            case silentCrushAndRaise:
+            case CEIL_SILENTCRUSHANDRAISE:
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&ceiling->sector->soundorg, sfx_pstop);
+              s_start_sound(&ceiling->sector->soundorg, SFX_PSTOP);
 #endif
-            case fastCrushAndRaise:
-            case crushAndRaise:
+            case CEIL_FASTCRUSHANDRAISE:
+            case CEIL_CRUSHANDRAISE:
               ceiling->direction = -1;
               break;
 
@@ -100,11 +100,11 @@ void T_MoveCeiling(ceiling_t *ceiling)
         {
           switch (ceiling->type)
             {
-            case silentCrushAndRaise:
+            case CEIL_SILENTCRUSHANDRAISE:
               break;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
             default:
-              s_start_sound(&ceiling->sector->soundorg, sfx_stnmov);
+              s_start_sound(&ceiling->sector->soundorg, SFX_STNMOV);
 #else
             default:
               break;
@@ -116,18 +116,18 @@ void T_MoveCeiling(ceiling_t *ceiling)
         {
           switch (ceiling->type)
             {
-            case silentCrushAndRaise:
+            case CEIL_SILENTCRUSHANDRAISE:
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&ceiling->sector->soundorg, sfx_pstop);
+              s_start_sound(&ceiling->sector->soundorg, SFX_PSTOP);
 #endif
-            case crushAndRaise:
+            case CEIL_CRUSHANDRAISE:
               ceiling->speed = CEILSPEED;
-            case fastCrushAndRaise:
+            case CEIL_FASTCRUSHANDRAISE:
               ceiling->direction = 1;
               break;
 
-            case lowerAndCrush:
-            case lowerToFloor:
+            case CEIL_LOWERANDCRUSH:
+            case CEIL_LOWERTOFLOOR:
               P_RemoveActiveCeiling(ceiling);
               break;
 
@@ -141,9 +141,9 @@ void T_MoveCeiling(ceiling_t *ceiling)
             {
               switch (ceiling->type)
                 {
-                case silentCrushAndRaise:
-                case crushAndRaise:
-                case lowerAndCrush:
+                case CEIL_SILENTCRUSHANDRAISE:
+                case CEIL_CRUSHANDRAISE:
+                case CEIL_LOWERANDCRUSH:
                   ceiling->speed = CEILSPEED / 8;
                   break;
 
@@ -157,10 +157,10 @@ void T_MoveCeiling(ceiling_t *ceiling)
 }
 
 //
-// EV_DoCeiling
+// ev_do_ceiling
 // Move a ceiling up/down and all around!
 //
-int EV_DoCeiling(line_t *line, ceiling_e type)
+int ev_do_ceiling(line_t *line, ceiling_e type)
 {
   int secnum;
   int rtn;
@@ -173,9 +173,9 @@ int EV_DoCeiling(line_t *line, ceiling_e type)
   //	Reactivate in-stasis ceilings...for certain types.
   switch (type)
     {
-    case fastCrushAndRaise:
-    case silentCrushAndRaise:
-    case crushAndRaise:
+    case CEIL_FASTCRUSHANDRAISE:
+    case CEIL_SILENTCRUSHANDRAISE:
+    case CEIL_CRUSHANDRAISE:
       P_ActivateInStasisCeiling(line);
     default:
       break;
@@ -197,7 +197,7 @@ int EV_DoCeiling(line_t *line, ceiling_e type)
 
       switch (type)
         {
-        case fastCrushAndRaise:
+        case CEIL_FASTCRUSHANDRAISE:
           ceiling->crush = true;
           ceiling->topheight = sec->ceilingheight;
           ceiling->bottomheight = sec->floorheight + (8 * FRACUNIT);
@@ -205,19 +205,19 @@ int EV_DoCeiling(line_t *line, ceiling_e type)
           ceiling->speed = CEILSPEED * 2;
           break;
 
-        case silentCrushAndRaise:
-        case crushAndRaise:
+        case CEIL_SILENTCRUSHANDRAISE:
+        case CEIL_CRUSHANDRAISE:
           ceiling->crush = true;
           ceiling->topheight = sec->ceilingheight;
-        case lowerAndCrush:
-        case lowerToFloor:
+        case CEIL_LOWERANDCRUSH:
+        case CEIL_LOWERTOFLOOR:
           ceiling->bottomheight = sec->floorheight;
-          if (type != lowerToFloor) ceiling->bottomheight += 8 * FRACUNIT;
+          if (type != CEIL_LOWERTOFLOOR) ceiling->bottomheight += 8 * FRACUNIT;
           ceiling->direction = -1;
           ceiling->speed = CEILSPEED;
           break;
 
-        case raiseToHighest:
+        case CEIL_RAISETOHIGHEST:
           ceiling->topheight = P_FindHighestCeilingSurrounding(sec);
           ceiling->direction = 1;
           ceiling->speed = CEILSPEED;

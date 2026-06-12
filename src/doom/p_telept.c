@@ -110,7 +110,7 @@ int ev_teleport(line_t *line, int side, mobj_t *thing)
 
               fog = p_spawn_mobj(oldx, oldy, oldz, MT_TFOG);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(fog, sfx_telept);
+              s_start_sound(fog, SFX_TELEPT);
 #endif
               an = m->angle >> ANGLETOFINESHIFT;
               fog = p_spawn_mobj(m->x + 20 * finecosine[an],
@@ -121,7 +121,7 @@ int ev_teleport(line_t *line, int side, mobj_t *thing)
 
               /* emit sound, where? */
 
-              s_start_sound(fog, sfx_telept);
+              s_start_sound(fog, SFX_TELEPT);
 #else
               UNUSED(fog);
 #endif

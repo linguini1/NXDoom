@@ -1178,7 +1178,7 @@ static void wi_update_deathmatch_stats(void)
         }
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(0, sfx_barexp);
+      s_start_sound(0, SFX_BAREXP);
 #endif
       dm_state = 4;
     }
@@ -1186,7 +1186,7 @@ static void wi_update_deathmatch_stats(void)
   if (dm_state == 2)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       stillticking = false;
@@ -1223,7 +1223,7 @@ static void wi_update_deathmatch_stats(void)
       if (!stillticking)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_barexp);
+          s_start_sound(0, SFX_BAREXP);
 #endif
           dm_state++;
         }
@@ -1233,7 +1233,7 @@ static void wi_update_deathmatch_stats(void)
       if (acceleratestage)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_slop);
+          s_start_sound(0, SFX_SLOP);
 #endif
 
           if (gamemode == commercial)
@@ -1384,7 +1384,7 @@ static void wi_update_netgame_stats(void)
         }
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(0, sfx_barexp);
+      s_start_sound(0, SFX_BAREXP);
 #endif
       ng_state = 10;
     }
@@ -1392,7 +1392,7 @@ static void wi_update_netgame_stats(void)
   if (ng_state == 2)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       stillticking = false;
@@ -1412,7 +1412,7 @@ static void wi_update_netgame_stats(void)
       if (!stillticking)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_barexp);
+          s_start_sound(0, SFX_BAREXP);
 #endif
           ng_state++;
         }
@@ -1420,7 +1420,7 @@ static void wi_update_netgame_stats(void)
   else if (ng_state == 4)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       stillticking = false;
@@ -1439,7 +1439,7 @@ static void wi_update_netgame_stats(void)
       if (!stillticking)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_barexp);
+          s_start_sound(0, SFX_BAREXP);
 #endif
           ng_state++;
         }
@@ -1447,7 +1447,7 @@ static void wi_update_netgame_stats(void)
   else if (ng_state == 6)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       stillticking = false;
@@ -1467,7 +1467,7 @@ static void wi_update_netgame_stats(void)
       if (!stillticking)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_barexp);
+          s_start_sound(0, SFX_BAREXP);
 #endif
           ng_state += 1 + 2 * !dofrags;
         }
@@ -1475,7 +1475,7 @@ static void wi_update_netgame_stats(void)
   else if (ng_state == 8)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       stillticking = false;
@@ -1495,7 +1495,7 @@ static void wi_update_netgame_stats(void)
       if (!stillticking)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_pldeth);
+          s_start_sound(0, SFX_PLDETH);
 #endif
           ng_state++;
         }
@@ -1505,7 +1505,7 @@ static void wi_update_netgame_stats(void)
       if (acceleratestage)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_sgcock);
+          s_start_sound(0, SFX_SGCOCK);
 #endif
           if (gamemode == commercial)
             wi_init_nostate();
@@ -1548,7 +1548,7 @@ static void wi_update_stats(void)
       cnt_time = plrs[me].stime / TICRATE;
       cnt_par = wbs->partime / TICRATE;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(0, sfx_barexp);
+      s_start_sound(0, SFX_BAREXP);
 #endif
       sp_state = 10;
     }
@@ -1558,14 +1558,14 @@ static void wi_update_stats(void)
       cnt_kills[0] += 2;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       if (cnt_kills[0] >= (plrs[me].skills * 100) / wbs->maxkills)
         {
           cnt_kills[0] = (plrs[me].skills * 100) / wbs->maxkills;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_barexp);
+          s_start_sound(0, SFX_BAREXP);
 #endif
           sp_state++;
         }
@@ -1575,14 +1575,14 @@ static void wi_update_stats(void)
       cnt_items[0] += 2;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       if (cnt_items[0] >= (plrs[me].sitems * 100) / wbs->maxitems)
         {
           cnt_items[0] = (plrs[me].sitems * 100) / wbs->maxitems;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_barexp);
+          s_start_sound(0, SFX_BAREXP);
 #endif
           sp_state++;
         }
@@ -1592,14 +1592,14 @@ static void wi_update_stats(void)
       cnt_secret[0] += 2;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       if (cnt_secret[0] >= (plrs[me].ssecret * 100) / wbs->maxsecret)
         {
           cnt_secret[0] = (plrs[me].ssecret * 100) / wbs->maxsecret;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_barexp);
+          s_start_sound(0, SFX_BAREXP);
 #endif
           sp_state++;
         }
@@ -1608,7 +1608,7 @@ static void wi_update_stats(void)
   else if (sp_state == 8)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (!(bcnt & 3)) s_start_sound(0, sfx_pistol);
+      if (!(bcnt & 3)) s_start_sound(0, SFX_PISTOL);
 #endif
 
       cnt_time += 3;
@@ -1625,7 +1625,7 @@ static void wi_update_stats(void)
           if (cnt_time >= plrs[me].stime / TICRATE)
             {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(0, sfx_barexp);
+              s_start_sound(0, SFX_BAREXP);
 #endif
               sp_state++;
             }
@@ -1636,7 +1636,7 @@ static void wi_update_stats(void)
       if (acceleratestage)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(0, sfx_sgcock);
+          s_start_sound(0, SFX_SGCOCK);
 #endif
 
           if (gamemode == commercial)
@@ -1818,9 +1818,9 @@ void wi_ticker(void)
       /* intermission music */
 
       if (gamemode == commercial)
-        s_change_music(mus_dm2int, true);
+        s_change_music(MUS_DM2INT, true);
       else
-        s_change_music(mus_inter, true);
+        s_change_music(MUS_INTER, true);
 #endif
     }
 

@@ -1169,11 +1169,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE | MF_DROPOFF | MF_PICKUP | MF_NOTDMATCH,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_plpain,
-        .deathsound = sfx_pldeth,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_PLPAIN,
+        .deathsound = SFX_PLDETH,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -1199,11 +1199,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE | MF_COUNTKILL,
         .raisestate = S_POSS_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_pistol,
-        .painsound = sfx_popain,
-        .deathsound = sfx_podth1,
-        .activesound = sfx_posact,
-        .seesound = sfx_posit1,
+        .attacksound = SFX_PISTOL,
+        .painsound = SFX_POPAIN,
+        .deathsound = SFX_PODTH1,
+        .activesound = SFX_POSACT,
+        .seesound = SFX_POSIT1,
 #endif
     },
 
@@ -1230,10 +1230,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_SPOS_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_popain,
-        .deathsound = sfx_podth2,
-        .activesound = sfx_posact,
-        .seesound = sfx_posit2,
+        .painsound = SFX_POPAIN,
+        .deathsound = SFX_PODTH2,
+        .activesound = SFX_POSACT,
+        .seesound = SFX_POSIT2,
 #endif
     },
 
@@ -1260,10 +1260,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_vipain,
-        .deathsound = sfx_vildth,
-        .activesound = sfx_vilact,
-        .seesound = sfx_vilsit,
+        .painsound = SFX_VIPAIN,
+        .deathsound = SFX_VILDTH,
+        .activesound = SFX_VILACT,
+        .seesound = SFX_VILSIT,
 #endif
     },
 
@@ -1289,11 +1289,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -1320,10 +1320,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_SKEL_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_popain,
-        .deathsound = sfx_skedth,
-        .activesound = sfx_skeact,
-        .seesound = sfx_skesit,
+        .painsound = SFX_POPAIN,
+        .deathsound = SFX_SKEDTH,
+        .activesound = SFX_SKEACT,
+        .seesound = SFX_SKESIT,
 #endif
     },
 
@@ -1349,11 +1349,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_barexp,
-        .activesound = sfx_None,
-        .seesound = sfx_skeatk,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_BAREXP,
+        .activesound = SFX_NONE,
+        .seesound = SFX_SKEATK,
 #endif
     },
 
@@ -1379,11 +1379,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -1410,10 +1410,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_FATT_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_mnpain,
-        .deathsound = sfx_mandth,
-        .activesound = sfx_posact,
-        .seesound = sfx_mansit,
+        .painsound = SFX_MNPAIN,
+        .deathsound = SFX_MANDTH,
+        .activesound = SFX_POSACT,
+        .seesound = SFX_MANSIT,
 #endif
     },
 
@@ -1439,11 +1439,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_None,
-        .seesound = sfx_firsht,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_NONE,
+        .seesound = SFX_FIRSHT,
 #endif
     },
 
@@ -1470,10 +1470,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_CPOS_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_popain,
-        .deathsound = sfx_podth2,
-        .activesound = sfx_posact,
-        .seesound = sfx_posit2,
+        .painsound = SFX_POPAIN,
+        .deathsound = SFX_PODTH2,
+        .activesound = SFX_POSACT,
+        .seesound = SFX_POSIT2,
 #endif
     },
 
@@ -1500,10 +1500,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_TROO_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_popain,
-        .deathsound = sfx_bgdth1,
-        .activesound = sfx_bgact,
-        .seesound = sfx_bgsit1,
+        .painsound = SFX_POPAIN,
+        .deathsound = SFX_BGDTH1,
+        .activesound = SFX_BGACT,
+        .seesound = SFX_BGSIT1,
 #endif
     },
 
@@ -1529,11 +1529,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE | MF_COUNTKILL,
         .raisestate = S_SARG_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_sgtatk,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_sgtdth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_sgtsit,
+        .attacksound = SFX_SGTATK,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_SGTDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_SGTSIT,
 #endif
     },
 
@@ -1559,11 +1559,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE | MF_SHADOW | MF_COUNTKILL,
         .raisestate = S_SARG_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_sgtatk,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_sgtdth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_sgtsit,
+        .attacksound = SFX_SGTATK,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_SGTDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_SGTSIT,
 #endif
     },
 
@@ -1590,10 +1590,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_HEAD_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_cacdth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_cacsit,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_CACDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_CACSIT,
 #endif
     },
 
@@ -1620,10 +1620,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_BOSS_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_brsdth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_brssit,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_BRSDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_BRSSIT,
 #endif
     },
 
@@ -1649,11 +1649,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_None,
-        .seesound = sfx_firsht,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_NONE,
+        .seesound = SFX_FIRSHT,
 #endif
     },
 
@@ -1680,10 +1680,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_BOS2_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_kntdth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_kntsit,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_KNTDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_KNTSIT,
 #endif
     },
 
@@ -1709,10 +1709,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE | MF_FLOAT | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_sklatk,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_dmact,
+        .attacksound = SFX_SKLATK,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_DMACT,
         .seesound = 0,
 #endif
     },
@@ -1739,11 +1739,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE | MF_COUNTKILL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_shotgn,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_spidth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_spisit,
+        .attacksound = SFX_SHOTGN,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_SPIDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_SPISIT,
 #endif
     },
 
@@ -1770,10 +1770,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_BSPI_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_bspdth,
-        .activesound = sfx_bspact,
-        .seesound = sfx_bspsit,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_BSPDTH,
+        .activesound = SFX_BSPACT,
+        .seesound = SFX_BSPSIT,
 #endif
     },
 
@@ -1800,10 +1800,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_dmpain,
-        .deathsound = sfx_cybdth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_cybsit,
+        .painsound = SFX_DMPAIN,
+        .deathsound = SFX_CYBDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_CYBSIT,
 #endif
     },
 
@@ -1830,10 +1830,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_PAIN_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_pepain,
-        .deathsound = sfx_pedth,
-        .activesound = sfx_dmact,
-        .seesound = sfx_pesit,
+        .painsound = SFX_PEPAIN,
+        .deathsound = SFX_PEDTH,
+        .activesound = SFX_DMACT,
+        .seesound = SFX_PESIT,
 #endif
     },
 
@@ -1860,10 +1860,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .raisestate = S_SSWV_RAISE1,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
         .attacksound = 0,
-        .painsound = sfx_popain,
-        .deathsound = sfx_ssdth,
-        .activesound = sfx_posact,
-        .seesound = sfx_sssit,
+        .painsound = SFX_POPAIN,
+        .deathsound = SFX_SSDTH,
+        .activesound = SFX_POSACT,
+        .seesound = SFX_SSSIT,
 #endif
     },
 
@@ -1889,11 +1889,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY | MF_SHOOTABLE | MF_COUNTKILL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_keenpn,
-        .deathsound = sfx_keendt,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_KEENPN,
+        .deathsound = SFX_KEENDT,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -1919,11 +1919,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_bospn,
-        .deathsound = sfx_bosdth,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_BOSPN,
+        .deathsound = SFX_BOSDTH,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -1949,11 +1949,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOSECTOR,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -1979,11 +1979,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOSECTOR,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2009,11 +2009,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY | MF_NOCLIP,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_None,
-        .seesound = sfx_bospit,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_NONE,
+        .seesound = SFX_BOSPIT,
 #endif
     },
 
@@ -2039,11 +2039,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2069,11 +2069,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SHOOTABLE | MF_NOBLOOD,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_barexp,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_BAREXP,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2099,11 +2099,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_None,
-        .seesound = sfx_firsht,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_NONE,
+        .seesound = SFX_FIRSHT,
 #endif
     },
 
@@ -2129,11 +2129,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_None,
-        .seesound = sfx_firsht,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_NONE,
+        .seesound = SFX_FIRSHT,
 #endif
     },
 
@@ -2159,11 +2159,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_barexp,
-        .activesound = sfx_None,
-        .seesound = sfx_rlaunc,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_BAREXP,
+        .activesound = SFX_NONE,
+        .seesound = SFX_RLAUNC,
 #endif
     },
 
@@ -2189,11 +2189,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_None,
-        .seesound = sfx_plasma,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_NONE,
+        .seesound = SFX_PLASMA,
 #endif
     },
 
@@ -2219,10 +2219,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_rxplod,
-        .activesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_RXPLOD,
+        .activesound = SFX_NONE,
         .seesound = 0,
 #endif
     },
@@ -2249,11 +2249,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_MISSILE | MF_DROPOFF | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_firxpl,
-        .activesound = sfx_None,
-        .seesound = sfx_plasma,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_FIRXPL,
+        .activesound = SFX_NONE,
+        .seesound = SFX_PLASMA,
 #endif
     },
 
@@ -2279,11 +2279,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2309,11 +2309,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2339,11 +2339,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2369,11 +2369,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2399,11 +2399,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOSECTOR,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2429,11 +2429,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2459,11 +2459,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2489,11 +2489,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2519,11 +2519,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2549,11 +2549,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2579,11 +2579,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_NOTDMATCH,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2609,11 +2609,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_NOTDMATCH,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2639,11 +2639,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_NOTDMATCH,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2669,11 +2669,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_NOTDMATCH,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2699,11 +2699,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_NOTDMATCH,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2729,11 +2729,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_NOTDMATCH,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2759,11 +2759,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2789,11 +2789,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2819,11 +2819,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2849,11 +2849,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2879,11 +2879,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2909,11 +2909,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2939,11 +2939,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2969,11 +2969,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -2999,11 +2999,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3029,11 +3029,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL | MF_COUNTITEM,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3059,11 +3059,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3089,11 +3089,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3119,11 +3119,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3149,11 +3149,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3179,11 +3179,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3209,11 +3209,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3239,11 +3239,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3269,11 +3269,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3299,11 +3299,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3329,11 +3329,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3359,11 +3359,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3389,11 +3389,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3419,11 +3419,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3449,11 +3449,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3479,11 +3479,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3509,11 +3509,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPECIAL,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3539,11 +3539,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3569,11 +3569,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3599,11 +3599,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3629,11 +3629,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3659,11 +3659,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3689,11 +3689,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3719,11 +3719,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3749,11 +3749,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3779,11 +3779,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3809,11 +3809,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3839,11 +3839,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3869,11 +3869,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3899,11 +3899,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3929,11 +3929,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3959,11 +3959,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -3989,11 +3989,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4019,11 +4019,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4049,11 +4049,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4079,11 +4079,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4109,11 +4109,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4139,11 +4139,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4169,11 +4169,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4199,11 +4199,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4229,11 +4229,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4259,11 +4259,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4289,11 +4289,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4319,11 +4319,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4349,11 +4349,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4379,11 +4379,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4409,11 +4409,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4439,11 +4439,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4469,11 +4469,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4499,11 +4499,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4529,11 +4529,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4559,11 +4559,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4589,11 +4589,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4619,11 +4619,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4649,11 +4649,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4679,11 +4679,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4709,11 +4709,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4739,11 +4739,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4769,11 +4769,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4799,11 +4799,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = 0,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4829,11 +4829,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4859,11 +4859,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4889,11 +4889,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4919,11 +4919,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4949,11 +4949,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -4979,11 +4979,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5009,11 +5009,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5039,11 +5039,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5069,11 +5069,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5099,11 +5099,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5129,11 +5129,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5159,11 +5159,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_SOLID | MF_SPAWNCEILING | MF_NOGRAVITY,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5189,11 +5189,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5219,11 +5219,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
-        .seesound = sfx_None,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
+        .seesound = SFX_NONE,
 #endif
     },
 
@@ -5249,11 +5249,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         .flags = MF_NOBLOCKMAP,
         .raisestate = S_NULL,
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-        .seesound = sfx_None,
-        .attacksound = sfx_None,
-        .painsound = sfx_None,
-        .deathsound = sfx_None,
-        .activesound = sfx_None,
+        .seesound = SFX_NONE,
+        .attacksound = SFX_NONE,
+        .painsound = SFX_NONE,
+        .deathsound = SFX_NONE,
+        .activesound = SFX_NONE,
 #endif
     },
 };

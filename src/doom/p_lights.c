@@ -228,7 +228,7 @@ void EV_TurnTagLightsOff(line_t *line)
 //
 // TURN LINE'S TAG LIGHTS ON
 //
-void EV_LightTurnOn(line_t *line, int bright)
+void ev_light_turn_on(line_t *line, int bright)
 {
   int i;
   int j;

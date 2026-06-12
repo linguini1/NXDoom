@@ -41,7 +41,7 @@ void P_SpawnSpecials(void);
 void p_update_specials(void);
 
 // when needed
-boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side);
+boolean p_use_special_line(mobj_t *thing, line_t *line, int side);
 
 void P_ShootSpecialLine(mobj_t *thing, line_t *line);
 
@@ -72,7 +72,7 @@ sector_t *getNextSector(line_t *line, sector_t *sec);
 //
 // SPECIAL
 //
-int EV_DoDonut(line_t *line);
+int ev_do_donut(line_t *line);
 
 //
 // P_LIGHTS
@@ -136,7 +136,7 @@ void P_SpawnStrobeFlash(sector_t *sector, int fastOrSlow, int inSync);
 void EV_StartLightStrobing(line_t *line);
 void EV_TurnTagLightsOff(line_t *line);
 
-void EV_LightTurnOn(line_t *line, int bright);
+void ev_light_turn_on(line_t *line, int bright);
 
 void T_Glow(glow_t *g);
 void P_SpawnGlowingLight(sector_t *sector);
@@ -181,9 +181,9 @@ typedef struct
 
 extern button_t buttonlist[MAXBUTTONS];
 
-void P_ChangeSwitchTexture(line_t *line, int useAgain);
+void p_change_switch_texture(line_t *line, int useAgain);
 
-void p_initSwitchList(void);
+void p_init_switch_list(void);
 
 //
 // P_PLATS
@@ -199,12 +199,11 @@ typedef enum
 
 typedef enum
 {
-  perpetualRaise,
-  downWaitUpStay,
-  raiseAndChange,
-  raiseToNearestAndChange,
-  blazeDWUS
-
+  PLAT_PERPETUALRAISE,
+  PLAT_DOWNWAITUPSTAY,
+  PLAT_RAISEANDCHANGE,
+  PLAT_RAISETONEARESTANDCHANGE,
+  PLAT_BLAZEDWUS
 } plattype_e;
 
 typedef struct
@@ -232,7 +231,7 @@ extern plat_t *activeplats[MAXPLATS];
 
 void T_PlatRaise(plat_t *plat);
 
-int EV_DoPlat(line_t *line, plattype_e type, int amount);
+int ev_do_plat(line_t *line, plattype_e type, int amount);
 
 void P_AddActivePlat(plat_t *plat);
 void P_RemoveActivePlat(plat_t *plat);
@@ -244,15 +243,14 @@ void P_ActivateInStasis(int tag);
 //
 typedef enum
 {
-  vld_normal,
-  vld_close30ThenOpen,
-  vld_close,
-  vld_open,
-  vld_raiseIn5Mins,
-  vld_blazeRaise,
-  vld_blazeOpen,
-  vld_blazeClose
-
+  VLD_NORMAL,
+  VLD_CLOSE30THENOPEN,
+  VLD_CLOSE,
+  VLD_OPEN,
+  VLD_RAISEIN5MINS,
+  VLD_BLAZERAISE,
+  VLD_BLAZEOPEN,
+  VLD_BLAZECLOSE
 } vldoor_e;
 
 typedef struct
@@ -277,11 +275,11 @@ typedef struct
 #define VDOORSPEED FRACUNIT * 2
 #define VDOORWAIT 150
 
-void EV_VerticalDoor(line_t *line, mobj_t *thing);
+void ev_vertical_door(line_t *line, mobj_t *thing);
 
-int EV_DoDoor(line_t *line, vldoor_e type);
+int ev_do_door(line_t *line, vldoor_e type);
 
-int EV_DoLockedDoor(line_t *line, vldoor_e type, mobj_t *thing);
+int ev_do_locked_door(line_t *line, vldoor_e type, mobj_t *thing);
 
 void T_VerticalDoor(vldoor_t *door);
 void P_SpawnDoorCloseIn30(sector_t *sec);
@@ -375,13 +373,12 @@ EV_SlidingDoor
 //
 typedef enum
 {
-  lowerToFloor,
-  raiseToHighest,
-  lowerAndCrush,
-  crushAndRaise,
-  fastCrushAndRaise,
-  silentCrushAndRaise
-
+  CEIL_LOWERTOFLOOR,
+  CEIL_RAISETOHIGHEST,
+  CEIL_LOWERANDCRUSH,
+  CEIL_CRUSHANDRAISE,
+  CEIL_FASTCRUSHANDRAISE,
+  CEIL_SILENTCRUSHANDRAISE
 } ceiling_e;
 
 typedef struct
@@ -409,7 +406,7 @@ typedef struct
 
 extern ceiling_t *activeceilings[MAXCEILINGS];
 
-int EV_DoCeiling(line_t *line, ceiling_e type);
+int ev_do_ceiling(line_t *line, ceiling_e type);
 
 void T_MoveCeiling(ceiling_t *ceiling);
 void P_AddActiveCeiling(ceiling_t *c);
@@ -417,49 +414,53 @@ void P_RemoveActiveCeiling(ceiling_t *c);
 int EV_CeilingCrushStop(line_t *line);
 void P_ActivateInStasisCeiling(line_t *line);
 
-//
-// P_FLOOR
-//
+/* P_FLOOR */
+
 typedef enum
 {
-  // lower floor to highest surrounding floor
-  lowerFloor,
+  /* lower floor to highest surrounding floor */
 
-  // lower floor to lowest surrounding floor
-  lowerFloorToLowest,
+  FLOOR_LOWERFLOOR,
 
-  // lower floor to highest surrounding floor VERY FAST
-  turboLower,
+  /* lower floor to lowest surrounding floor */
 
-  // raise floor to lowest surrounding CEILING
-  raiseFloor,
+  FLOOR_LOWERFLOORTOLOWEST,
 
-  // raise floor to next highest surrounding floor
-  raiseFloorToNearest,
+  /* lower floor to highest surrounding floor VERY FAST */
 
-  // raise floor to shortest height texture around it
-  raiseToTexture,
+  FLOOR_TURBOLOWER,
 
-  // lower floor to lowest surrounding floor
-  //  and change floorpic
-  lowerAndChange,
+  /* raise floor to lowest surrounding CEILING */
 
-  raiseFloor24,
-  raiseFloor24AndChange,
-  raiseFloorCrush,
+  FLOOR_RAISEFLOOR,
 
-  // raise to next highest floor, turbo-speed
-  raiseFloorTurbo,
-  donutRaise,
-  raiseFloor512
+  /* raise floor to next highest surrounding floor */
 
+  FLOOR_RAISEFLOORTONEAREST,
+
+  /* raise floor to shortest height texture around it */
+
+  FLOOR_RAISETOTEXTURE,
+
+  /* lower floor to lowest surrounding floor and change floorpic */
+
+  FLOOR_LOWERANDCHANGE,
+
+  FLOOR_RAISEFLOOR24,
+  FLOOR_RAISEFLOOR24ANDCHANGE,
+  FLOOR_RAISEFLOORCRUSH,
+
+  /* raise to next highest floor, turbo-speed */
+
+  FLOOR_RAISEFLOORTURBO,
+  FLOOR_DONUTRAISE,
+  FLOOR_RAISEFLOOR512
 } floor_e;
 
 typedef enum
 {
-  build8, // slowly build by 8
-  turbo16 // quickly build by 16
-
+  STAIR_BUILD8, /* slowly build by 8 */
+  STAIR_TURBO16 /* quickly build by 16 */
 } stair_e;
 
 typedef struct
@@ -489,9 +490,9 @@ typedef enum
 result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest,
                      boolean crush, int floorOrCeiling, int direction);
 
-int EV_BuildStairs(line_t *line, stair_e type);
+int ev_build_stairs(line_t *line, stair_e type);
 
-int EV_DoFloor(line_t *line, floor_e floortype);
+int ev_do_floor(line_t *line, floor_e floortype);
 
 void T_MoveFloor(floormove_t *floor);
 

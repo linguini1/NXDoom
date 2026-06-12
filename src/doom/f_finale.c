@@ -119,11 +119,11 @@ void f_start_finale(void)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   if (logical_gamemission == doom)
     {
-      s_change_music(mus_victor, true);
+      s_change_music(MUS_VICTOR, true);
     }
   else
     {
-      s_change_music(mus_read_m, true);
+      s_change_music(MUS_READ_M, true);
     }
 #endif
 
@@ -206,7 +206,7 @@ void f_ticker(void)
       finalestage = F_STAGE_ARTSCREEN;
       wipegamestate = -1; // force a wipe
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameepisode == 3) s_start_music(mus_bunny);
+      if (gameepisode == 3) s_start_music(MUS_BUNNY);
 #endif
     }
 }
@@ -335,7 +335,7 @@ void F_StartCast(void)
   castonmelee = 0;
   castattacking = false;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_change_music(mus_evil, true);
+  s_change_music(MUS_EVIL, true);
 #endif
 }
 
@@ -382,64 +382,64 @@ void F_CastTicker(void)
       switch (st)
         {
         case S_PLAY_ATK1:
-          sfx = sfx_dshtgn;
+          sfx = SFX_DSHTGN;
           break;
         case S_POSS_ATK2:
-          sfx = sfx_pistol;
+          sfx = SFX_PISTOL;
           break;
         case S_SPOS_ATK2:
-          sfx = sfx_shotgn;
+          sfx = SFX_SHOTGN;
           break;
         case S_VILE_ATK2:
-          sfx = sfx_vilatk;
+          sfx = SFX_VILATK;
           break;
         case S_SKEL_FIST2:
-          sfx = sfx_skeswg;
+          sfx = SFX_SKESWG;
           break;
         case S_SKEL_FIST4:
-          sfx = sfx_skepch;
+          sfx = SFX_SKEPCH;
           break;
         case S_SKEL_MISS2:
-          sfx = sfx_skeatk;
+          sfx = SFX_SKEATK;
           break;
         case S_FATT_ATK8:
         case S_FATT_ATK5:
         case S_FATT_ATK2:
-          sfx = sfx_firsht;
+          sfx = SFX_FIRSHT;
           break;
         case S_CPOS_ATK2:
         case S_CPOS_ATK3:
         case S_CPOS_ATK4:
-          sfx = sfx_shotgn;
+          sfx = SFX_SHOTGN;
           break;
         case S_TROO_ATK3:
-          sfx = sfx_claw;
+          sfx = SFX_CLAW;
           break;
         case S_SARG_ATK2:
-          sfx = sfx_sgtatk;
+          sfx = SFX_SGTATK;
           break;
         case S_BOSS_ATK2:
         case S_BOS2_ATK2:
         case S_HEAD_ATK2:
-          sfx = sfx_firsht;
+          sfx = SFX_FIRSHT;
           break;
         case S_SKULL_ATK2:
-          sfx = sfx_sklatk;
+          sfx = SFX_SKLATK;
           break;
         case S_SPID_ATK2:
         case S_SPID_ATK3:
-          sfx = sfx_shotgn;
+          sfx = SFX_SHOTGN;
           break;
         case S_BSPI_ATK2:
-          sfx = sfx_plasma;
+          sfx = SFX_PLASMA;
           break;
         case S_CYBER_ATK2:
         case S_CYBER_ATK4:
         case S_CYBER_ATK6:
-          sfx = sfx_rlaunc;
+          sfx = SFX_RLAUNC;
           break;
         case S_PAIN_ATK3:
-          sfx = sfx_sklatk;
+          sfx = SFX_SKLATK;
           break;
         default:
           sfx = 0;
@@ -663,7 +663,7 @@ void F_BunnyScroll(void)
   if (stage > laststage)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(NULL, sfx_pistol);
+      s_start_sound(NULL, SFX_PISTOL);
 #endif
       laststage = stage;
     }

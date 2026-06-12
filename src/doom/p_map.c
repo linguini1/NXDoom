@@ -1208,7 +1208,7 @@ boolean PTR_UseTraverse(intercept_t *in)
       if (openrange <= 0)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(usething, sfx_noway);
+          s_start_sound(usething, SFX_NOWAY);
 #endif
 
           /* can't use through a wall */
@@ -1225,7 +1225,7 @@ boolean PTR_UseTraverse(intercept_t *in)
 
   /*	return false;		don't use back side */
 
-  P_UseSpecialLine(usething, in->d.line, side);
+  p_use_special_line(usething, in->d.line, side);
 
   /* can't use for than one special line in a row */
 

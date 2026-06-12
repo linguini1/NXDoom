@@ -46,7 +46,7 @@ static void *DEH_SoundStart(deh_context_t *context, char *line)
       return NULL;
     }
 
-  if (sound_number < 0 || sound_number >= NUMSFX)
+  if (sound_number < 0 || sound_number >= SFX_NUMSFX)
     {
       DEH_Warning(context, "Invalid sound number: %i", sound_number);
       return NULL;

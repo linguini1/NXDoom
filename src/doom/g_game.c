@@ -652,7 +652,7 @@ static boolean g_check_spot(int playernum, mapthing_t *mthing)
     {
       /* don't start sound on first frame */
 
-      s_start_sound(mo, sfx_telept);
+      s_start_sound(mo, SFX_TELEPT);
     }
 #else
   UNUSED(mo);

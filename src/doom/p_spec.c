@@ -487,61 +487,61 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
       // All from here to RETRIGGERS.
     case 2:
       // Open Door
-      EV_DoDoor(line, vld_open);
+      ev_do_door(line, VLD_OPEN);
       line->special = 0;
       break;
 
     case 3:
       // Close Door
-      EV_DoDoor(line, vld_close);
+      ev_do_door(line, VLD_CLOSE);
       line->special = 0;
       break;
 
     case 4:
       // Raise Door
-      EV_DoDoor(line, vld_normal);
+      ev_do_door(line, VLD_NORMAL);
       line->special = 0;
       break;
 
     case 5:
       // Raise Floor
-      EV_DoFloor(line, raiseFloor);
+      ev_do_floor(line, FLOOR_RAISEFLOOR);
       line->special = 0;
       break;
 
     case 6:
       // Fast Ceiling Crush & Raise
-      EV_DoCeiling(line, fastCrushAndRaise);
+      ev_do_ceiling(line, CEIL_FASTCRUSHANDRAISE);
       line->special = 0;
       break;
 
     case 8:
       // Build Stairs
-      EV_BuildStairs(line, build8);
+      ev_build_stairs(line, STAIR_BUILD8);
       line->special = 0;
       break;
 
     case 10:
       // PlatDownWaitUp
-      EV_DoPlat(line, downWaitUpStay, 0);
+      ev_do_plat(line, PLAT_DOWNWAITUPSTAY, 0);
       line->special = 0;
       break;
 
     case 12:
       // Light Turn On - brightest near
-      EV_LightTurnOn(line, 0);
+      ev_light_turn_on(line, 0);
       line->special = 0;
       break;
 
     case 13:
       // Light Turn On 255
-      EV_LightTurnOn(line, 255);
+      ev_light_turn_on(line, 255);
       line->special = 0;
       break;
 
     case 16:
       // Close Door 30
-      EV_DoDoor(line, vld_close30ThenOpen);
+      ev_do_door(line, VLD_CLOSE30THENOPEN);
       line->special = 0;
       break;
 
@@ -553,50 +553,50 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 19:
       // Lower Floor
-      EV_DoFloor(line, lowerFloor);
+      ev_do_floor(line, FLOOR_LOWERFLOOR);
       line->special = 0;
       break;
 
     case 22:
       // Raise floor to nearest height and change texture
-      EV_DoPlat(line, raiseToNearestAndChange, 0);
+      ev_do_plat(line, PLAT_RAISETONEARESTANDCHANGE, 0);
       line->special = 0;
       break;
 
     case 25:
       // Ceiling Crush and Raise
-      EV_DoCeiling(line, crushAndRaise);
+      ev_do_ceiling(line, CEIL_CRUSHANDRAISE);
       line->special = 0;
       break;
 
     case 30:
       // Raise floor to shortest texture height
       //  on either side of lines.
-      EV_DoFloor(line, raiseToTexture);
+      ev_do_floor(line, FLOOR_RAISETOTEXTURE);
       line->special = 0;
       break;
 
     case 35:
       // Lights Very Dark
-      EV_LightTurnOn(line, 35);
+      ev_light_turn_on(line, 35);
       line->special = 0;
       break;
 
     case 36:
       // Lower Floor (TURBO)
-      EV_DoFloor(line, turboLower);
+      ev_do_floor(line, FLOOR_TURBOLOWER);
       line->special = 0;
       break;
 
     case 37:
       // LowerAndChange
-      EV_DoFloor(line, lowerAndChange);
+      ev_do_floor(line, FLOOR_LOWERANDCHANGE);
       line->special = 0;
       break;
 
     case 38:
       // Lower Floor To Lowest
-      EV_DoFloor(line, lowerFloorToLowest);
+      ev_do_floor(line, FLOOR_LOWERFLOORTOLOWEST);
       line->special = 0;
       break;
 
@@ -608,14 +608,14 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 40:
       // RaiseCeilingLowerFloor
-      EV_DoCeiling(line, raiseToHighest);
-      EV_DoFloor(line, lowerFloorToLowest);
+      ev_do_ceiling(line, CEIL_RAISETOHIGHEST);
+      ev_do_floor(line, FLOOR_LOWERFLOORTOLOWEST);
       line->special = 0;
       break;
 
     case 44:
       // Ceiling Crush
-      EV_DoCeiling(line, lowerAndCrush);
+      ev_do_ceiling(line, CEIL_LOWERANDCRUSH);
       line->special = 0;
       break;
 
@@ -626,7 +626,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 53:
       // Perpetual Platform Raise
-      EV_DoPlat(line, perpetualRaise, 0);
+      ev_do_plat(line, PLAT_PERPETUALRAISE, 0);
       line->special = 0;
       break;
 
@@ -638,7 +638,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 56:
       // Raise Floor Crush
-      EV_DoFloor(line, raiseFloorCrush);
+      ev_do_floor(line, FLOOR_RAISEFLOORCRUSH);
       line->special = 0;
       break;
 
@@ -650,13 +650,13 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 58:
       // Raise Floor 24
-      EV_DoFloor(line, raiseFloor24);
+      ev_do_floor(line, FLOOR_RAISEFLOOR24);
       line->special = 0;
       break;
 
     case 59:
       // Raise Floor 24 And Change
-      EV_DoFloor(line, raiseFloor24AndChange);
+      ev_do_floor(line, FLOOR_RAISEFLOOR24ANDCHANGE);
       line->special = 0;
       break;
 
@@ -668,37 +668,37 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 108:
       // Blazing Door Raise (faster than TURBO!)
-      EV_DoDoor(line, vld_blazeRaise);
+      ev_do_door(line, VLD_BLAZERAISE);
       line->special = 0;
       break;
 
     case 109:
       // Blazing Door Open (faster than TURBO!)
-      EV_DoDoor(line, vld_blazeOpen);
+      ev_do_door(line, VLD_BLAZEOPEN);
       line->special = 0;
       break;
 
     case 100:
       // Build Stairs Turbo 16
-      EV_BuildStairs(line, turbo16);
+      ev_build_stairs(line, STAIR_TURBO16);
       line->special = 0;
       break;
 
     case 110:
       // Blazing Door Close (faster than TURBO!)
-      EV_DoDoor(line, vld_blazeClose);
+      ev_do_door(line, VLD_BLAZECLOSE);
       line->special = 0;
       break;
 
     case 119:
       // Raise floor to nearest surr. floor
-      EV_DoFloor(line, raiseFloorToNearest);
+      ev_do_floor(line, FLOOR_RAISEFLOORTONEAREST);
       line->special = 0;
       break;
 
     case 121:
       // Blazing PlatDownWaitUpStay
-      EV_DoPlat(line, blazeDWUS, 0);
+      ev_do_plat(line, PLAT_BLAZEDWUS, 0);
       line->special = 0;
       break;
 
@@ -718,25 +718,25 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 130:
       // Raise Floor Turbo
-      EV_DoFloor(line, raiseFloorTurbo);
+      ev_do_floor(line, FLOOR_RAISEFLOORTURBO);
       line->special = 0;
       break;
 
     case 141:
       // Silent Ceiling Crush & Raise
-      EV_DoCeiling(line, silentCrushAndRaise);
+      ev_do_ceiling(line, CEIL_SILENTCRUSHANDRAISE);
       line->special = 0;
       break;
 
       // RETRIGGERS.  All from here till end.
     case 72:
       // Ceiling Crush
-      EV_DoCeiling(line, lowerAndCrush);
+      ev_do_ceiling(line, CEIL_LOWERANDCRUSH);
       break;
 
     case 73:
       // Ceiling Crush and Raise
-      EV_DoCeiling(line, crushAndRaise);
+      ev_do_ceiling(line, CEIL_CRUSHANDRAISE);
       break;
 
     case 74:
@@ -746,62 +746,62 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 75:
       // Close Door
-      EV_DoDoor(line, vld_close);
+      ev_do_door(line, VLD_CLOSE);
       break;
 
     case 76:
       // Close Door 30
-      EV_DoDoor(line, vld_close30ThenOpen);
+      ev_do_door(line, VLD_CLOSE30THENOPEN);
       break;
 
     case 77:
       // Fast Ceiling Crush & Raise
-      EV_DoCeiling(line, fastCrushAndRaise);
+      ev_do_ceiling(line, CEIL_FASTCRUSHANDRAISE);
       break;
 
     case 79:
       // Lights Very Dark
-      EV_LightTurnOn(line, 35);
+      ev_light_turn_on(line, 35);
       break;
 
     case 80:
       // Light Turn On - brightest near
-      EV_LightTurnOn(line, 0);
+      ev_light_turn_on(line, 0);
       break;
 
     case 81:
       // Light Turn On 255
-      EV_LightTurnOn(line, 255);
+      ev_light_turn_on(line, 255);
       break;
 
     case 82:
       // Lower Floor To Lowest
-      EV_DoFloor(line, lowerFloorToLowest);
+      ev_do_floor(line, FLOOR_LOWERFLOORTOLOWEST);
       break;
 
     case 83:
       // Lower Floor
-      EV_DoFloor(line, lowerFloor);
+      ev_do_floor(line, FLOOR_LOWERFLOOR);
       break;
 
     case 84:
       // LowerAndChange
-      EV_DoFloor(line, lowerAndChange);
+      ev_do_floor(line, FLOOR_LOWERANDCHANGE);
       break;
 
     case 86:
       // Open Door
-      EV_DoDoor(line, vld_open);
+      ev_do_door(line, VLD_OPEN);
       break;
 
     case 87:
       // Perpetual Platform Raise
-      EV_DoPlat(line, perpetualRaise, 0);
+      ev_do_plat(line, PLAT_PERPETUALRAISE, 0);
       break;
 
     case 88:
       // PlatDownWaitUp
-      EV_DoPlat(line, downWaitUpStay, 0);
+      ev_do_plat(line, PLAT_DOWNWAITUPSTAY, 0);
       break;
 
     case 89:
@@ -811,39 +811,39 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 90:
       // Raise Door
-      EV_DoDoor(line, vld_normal);
+      ev_do_door(line, VLD_NORMAL);
       break;
 
     case 91:
       // Raise Floor
-      EV_DoFloor(line, raiseFloor);
+      ev_do_floor(line, FLOOR_RAISEFLOOR);
       break;
 
     case 92:
       // Raise Floor 24
-      EV_DoFloor(line, raiseFloor24);
+      ev_do_floor(line, FLOOR_RAISEFLOOR24);
       break;
 
     case 93:
       // Raise Floor 24 And Change
-      EV_DoFloor(line, raiseFloor24AndChange);
+      ev_do_floor(line, FLOOR_RAISEFLOOR24ANDCHANGE);
       break;
 
     case 94:
       // Raise Floor Crush
-      EV_DoFloor(line, raiseFloorCrush);
+      ev_do_floor(line, FLOOR_RAISEFLOORCRUSH);
       break;
 
     case 95:
       // Raise floor to nearest height
       // and change texture.
-      EV_DoPlat(line, raiseToNearestAndChange, 0);
+      ev_do_plat(line, PLAT_RAISETONEARESTANDCHANGE, 0);
       break;
 
     case 96:
       // Raise floor to shortest texture height
       // on either side of lines.
-      EV_DoFloor(line, raiseToTexture);
+      ev_do_floor(line, FLOOR_RAISETOTEXTURE);
       break;
 
     case 97:
@@ -853,27 +853,27 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 98:
       // Lower Floor (TURBO)
-      EV_DoFloor(line, turboLower);
+      ev_do_floor(line, FLOOR_TURBOLOWER);
       break;
 
     case 105:
       // Blazing Door Raise (faster than TURBO!)
-      EV_DoDoor(line, vld_blazeRaise);
+      ev_do_door(line, VLD_BLAZERAISE);
       break;
 
     case 106:
       // Blazing Door Open (faster than TURBO!)
-      EV_DoDoor(line, vld_blazeOpen);
+      ev_do_door(line, VLD_BLAZEOPEN);
       break;
 
     case 107:
       // Blazing Door Close (faster than TURBO!)
-      EV_DoDoor(line, vld_blazeClose);
+      ev_do_door(line, VLD_BLAZECLOSE);
       break;
 
     case 120:
       // Blazing PlatDownWaitUpStay.
-      EV_DoPlat(line, blazeDWUS, 0);
+      ev_do_plat(line, PLAT_BLAZEDWUS, 0);
       break;
 
     case 126:
@@ -883,12 +883,12 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 128:
       // Raise To Nearest Floor
-      EV_DoFloor(line, raiseFloorToNearest);
+      ev_do_floor(line, FLOOR_RAISEFLOORTONEAREST);
       break;
 
     case 129:
       // Raise Floor Turbo
-      EV_DoFloor(line, raiseFloorTurbo);
+      ev_do_floor(line, FLOOR_RAISEFLOORTURBO);
       break;
     }
 }
@@ -919,20 +919,20 @@ void P_ShootSpecialLine(mobj_t *thing, line_t *line)
     {
     case 24:
       // RAISE FLOOR
-      EV_DoFloor(line, raiseFloor);
-      P_ChangeSwitchTexture(line, 0);
+      ev_do_floor(line, FLOOR_RAISEFLOOR);
+      p_change_switch_texture(line, 0);
       break;
 
     case 46:
       // OPEN DOOR
-      EV_DoDoor(line, vld_open);
-      P_ChangeSwitchTexture(line, 1);
+      ev_do_door(line, VLD_OPEN);
+      p_change_switch_texture(line, 1);
       break;
 
     case 47:
       // RAISE FLOOR NEAR AND CHANGE
-      EV_DoPlat(line, raiseToNearestAndChange, 0);
-      P_ChangeSwitchTexture(line, 0);
+      ev_do_plat(line, PLAT_RAISETONEARESTANDCHANGE, 0);
+      p_change_switch_texture(line, 0);
       break;
     }
 }
@@ -1072,7 +1072,7 @@ void p_update_specials(void)
                 break;
               }
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-            s_start_sound(&buttonlist[i].soundorg, sfx_swtchn);
+            s_start_sound(&buttonlist[i].soundorg, SFX_SWTCHN);
 #endif
             memset(&buttonlist[i], 0, sizeof(button_t));
           }
@@ -1165,7 +1165,7 @@ static void DonutOverrun(fixed_t *s3_floorheight, short *s3_floorpic,
 //
 // Special Stuff that can not be categorized
 //
-int EV_DoDonut(line_t *line)
+int ev_do_donut(line_t *line)
 {
   sector_t *s1;
   sector_t *s2;
@@ -1201,7 +1201,7 @@ int EV_DoDonut(line_t *line)
       if (s2 == NULL)
         {
           fprintf(stderr,
-                  "EV_DoDonut: linedef had no second sidedef! "
+                  "ev_do_donut: linedef had no second sidedef! "
                   "Unexpected behavior may occur in Vanilla Doom. \n");
           break;
         }
@@ -1221,7 +1221,7 @@ int EV_DoDonut(line_t *line)
               // Trying to emulate
 
               fprintf(stderr,
-                      "EV_DoDonut: WARNING: emulating buffer overrun due to "
+                      "ev_do_donut: WARNING: emulating buffer overrun due to "
                       "NULL back sector. "
                       "Unexpected behavior may occur in Vanilla Doom.\n");
 
@@ -1238,7 +1238,7 @@ int EV_DoDonut(line_t *line)
           p_add_thinker(&floor->thinker);
           s2->specialdata = floor;
           floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
-          floor->type = donutRaise;
+          floor->type = FLOOR_DONUTRAISE;
           floor->crush = false;
           floor->direction = 1;
           floor->sector = s2;
@@ -1252,7 +1252,7 @@ int EV_DoDonut(line_t *line)
           p_add_thinker(&floor->thinker);
           s1->specialdata = floor;
           floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
-          floor->type = lowerFloor;
+          floor->type = FLOOR_LOWERFLOOR;
           floor->crush = false;
           floor->direction = -1;
           floor->sector = s1;

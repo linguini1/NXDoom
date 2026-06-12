@@ -144,7 +144,7 @@ sfxinfo_t s_sfx[] = {
     SOUND("punch", 64),
     SOUND("hoof", 70),
     SOUND("metal", 70),
-    SOUND_LINK("chgun", 64, sfx_pistol, 150, 0),
+    SOUND_LINK("chgun", 64, SFX_PISTOL, 150, 0),
     SOUND("tink", 60),
     SOUND("bdopn", 100),
     SOUND("bdcls", 100),

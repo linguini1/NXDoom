@@ -1184,7 +1184,7 @@ boolean st_responder(event_t *ev)
                 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
                   musnum =
-                      mus_runnin + (buf[0] - '0') * 10 + buf[1] - '0' - 1;
+                      MUS_RUNNIN + (buf[0] - '0') * 10 + buf[1] - '0' - 1;
 #endif
 
                   if (((buf[0] - '0') * 10 + buf[1] - '0') > 35 &&
@@ -1200,7 +1200,7 @@ boolean st_responder(event_t *ev)
               else
                 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-                  musnum = mus_e1m1 + (buf[0] - '1') * 9 + (buf[1] - '1');
+                  musnum = MUS_E1M1 + (buf[0] - '1') * 9 + (buf[1] - '1');
 #endif
 
                   if (((buf[0] - '1') * 9 + buf[1] - '1') > 31)

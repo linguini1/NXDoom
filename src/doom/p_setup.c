@@ -798,7 +798,7 @@ void p_setup_level(int episode, int map, int playermask, skill_t skill)
 //
 void p_init(void)
 {
-  p_initSwitchList();
+  p_init_switch_list();
   p_initPicAnims();
   r_init_sprites(sprnames);
 }

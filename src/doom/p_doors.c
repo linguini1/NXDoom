@@ -65,24 +65,24 @@ void T_VerticalDoor(vldoor_t *door)
         {
           switch (door->type)
             {
-            case vld_blazeRaise:
+            case VLD_BLAZERAISE:
               door->direction = -1; // time to go back down
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&door->sector->soundorg, sfx_bdcls);
+              s_start_sound(&door->sector->soundorg, SFX_BDCLS);
 #endif
               break;
 
-            case vld_normal:
+            case VLD_NORMAL:
               door->direction = -1; // time to go back down
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&door->sector->soundorg, sfx_dorcls);
+              s_start_sound(&door->sector->soundorg, SFX_DORCLS);
 #endif
               break;
 
-            case vld_close30ThenOpen:
+            case VLD_CLOSE30THENOPEN:
               door->direction = 1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&door->sector->soundorg, sfx_doropn);
+              s_start_sound(&door->sector->soundorg, SFX_DOROPN);
 #endif
               break;
 
@@ -98,11 +98,11 @@ void T_VerticalDoor(vldoor_t *door)
         {
           switch (door->type)
             {
-            case vld_raiseIn5Mins:
+            case VLD_RAISEIN5MINS:
               door->direction = 1;
-              door->type = vld_normal;
+              door->type = VLD_NORMAL;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&door->sector->soundorg, sfx_doropn);
+              s_start_sound(&door->sector->soundorg, SFX_DOROPN);
 #endif
               break;
 
@@ -120,22 +120,22 @@ void T_VerticalDoor(vldoor_t *door)
         {
           switch (door->type)
             {
-            case vld_blazeRaise:
-            case vld_blazeClose:
+            case VLD_BLAZERAISE:
+            case VLD_BLAZECLOSE:
               door->sector->specialdata = NULL;
               p_remove_thinker(&door->thinker); // unlink and free
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&door->sector->soundorg, sfx_bdcls);
+              s_start_sound(&door->sector->soundorg, SFX_BDCLS);
 #endif
               break;
 
-            case vld_normal:
-            case vld_close:
+            case VLD_NORMAL:
+            case VLD_CLOSE:
               door->sector->specialdata = NULL;
               p_remove_thinker(&door->thinker); // unlink and free
               break;
 
-            case vld_close30ThenOpen:
+            case VLD_CLOSE30THENOPEN:
               door->direction = 0;
               door->topcountdown = TICRATE * 30;
               break;
@@ -148,14 +148,14 @@ void T_VerticalDoor(vldoor_t *door)
         {
           switch (door->type)
             {
-            case vld_blazeClose:
-            case vld_close: // DO NOT GO BACK UP!
+            case VLD_BLAZECLOSE:
+            case VLD_CLOSE: // DO NOT GO BACK UP!
               break;
 
             default:
               door->direction = 1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&door->sector->soundorg, sfx_doropn);
+              s_start_sound(&door->sector->soundorg, SFX_DOROPN);
 #endif
               break;
             }
@@ -171,15 +171,15 @@ void T_VerticalDoor(vldoor_t *door)
         {
           switch (door->type)
             {
-            case vld_blazeRaise:
-            case vld_normal:
+            case VLD_BLAZERAISE:
+            case VLD_NORMAL:
               door->direction = 0; // wait at top
               door->topcountdown = door->topwait;
               break;
 
-            case vld_close30ThenOpen:
-            case vld_blazeOpen:
-            case vld_open:
+            case VLD_CLOSE30THENOPEN:
+            case VLD_BLAZEOPEN:
+            case VLD_OPEN:
               door->sector->specialdata = NULL;
               p_remove_thinker(&door->thinker); // unlink and free
               break;
@@ -193,11 +193,11 @@ void T_VerticalDoor(vldoor_t *door)
 }
 
 //
-// EV_DoLockedDoor
+// ev_do_locked_door
 // Move a locked door up/down
 //
 
-int EV_DoLockedDoor(line_t *line, vldoor_e type, mobj_t *thing)
+int ev_do_locked_door(line_t *line, vldoor_e type, mobj_t *thing)
 {
   player_t *p;
 
@@ -213,7 +213,7 @@ int EV_DoLockedDoor(line_t *line, vldoor_e type, mobj_t *thing)
         {
           p->message = (PD_BLUEO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_oof);
+          s_start_sound(NULL, SFX_OOF);
 #endif
           return 0;
         }
@@ -225,7 +225,7 @@ int EV_DoLockedDoor(line_t *line, vldoor_e type, mobj_t *thing)
         {
           p->message = (PD_REDO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_oof);
+          s_start_sound(NULL, SFX_OOF);
 #endif
           return 0;
         }
@@ -237,17 +237,17 @@ int EV_DoLockedDoor(line_t *line, vldoor_e type, mobj_t *thing)
         {
           p->message = (PD_YELLOWO);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_oof);
+          s_start_sound(NULL, SFX_OOF);
 #endif
           return 0;
         }
       break;
     }
 
-  return EV_DoDoor(line, type);
+  return ev_do_door(line, type);
 }
 
-int EV_DoDoor(line_t *line, vldoor_e type)
+int ev_do_door(line_t *line, vldoor_e type)
 {
   int secnum, rtn;
   sector_t *sec;
@@ -275,53 +275,53 @@ int EV_DoDoor(line_t *line, vldoor_e type)
 
       switch (type)
         {
-        case vld_blazeClose:
+        case VLD_BLAZECLOSE:
           door->topheight = P_FindLowestCeilingSurrounding(sec);
           door->topheight -= 4 * FRACUNIT;
           door->direction = -1;
           door->speed = VDOORSPEED * 4;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&door->sector->soundorg, sfx_bdcls);
+          s_start_sound(&door->sector->soundorg, SFX_BDCLS);
 #endif
           break;
 
-        case vld_close:
+        case VLD_CLOSE:
           door->topheight = P_FindLowestCeilingSurrounding(sec);
           door->topheight -= 4 * FRACUNIT;
           door->direction = -1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&door->sector->soundorg, sfx_dorcls);
+          s_start_sound(&door->sector->soundorg, SFX_DORCLS);
 #endif
           break;
 
-        case vld_close30ThenOpen:
+        case VLD_CLOSE30THENOPEN:
           door->topheight = sec->ceilingheight;
           door->direction = -1;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&door->sector->soundorg, sfx_dorcls);
+          s_start_sound(&door->sector->soundorg, SFX_DORCLS);
 #endif
           break;
 
-        case vld_blazeRaise:
-        case vld_blazeOpen:
+        case VLD_BLAZERAISE:
+        case VLD_BLAZEOPEN:
           door->direction = 1;
           door->topheight = P_FindLowestCeilingSurrounding(sec);
           door->topheight -= 4 * FRACUNIT;
           door->speed = VDOORSPEED * 4;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           if (door->topheight != sec->ceilingheight)
-            s_start_sound(&door->sector->soundorg, sfx_bdopn);
+            s_start_sound(&door->sector->soundorg, SFX_BDOPN);
 #endif
           break;
 
-        case vld_normal:
-        case vld_open:
+        case VLD_NORMAL:
+        case VLD_OPEN:
           door->direction = 1;
           door->topheight = P_FindLowestCeilingSurrounding(sec);
           door->topheight -= 4 * FRACUNIT;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
           if (door->topheight != sec->ceilingheight)
-            s_start_sound(&door->sector->soundorg, sfx_doropn);
+            s_start_sound(&door->sector->soundorg, SFX_DOROPN);
 #endif
           break;
 
@@ -333,9 +333,9 @@ int EV_DoDoor(line_t *line, vldoor_e type)
 }
 
 //
-// EV_VerticalDoor : open a door manually, no tag value
+// ev_vertical_door : open a door manually, no tag value
 //
-void EV_VerticalDoor(line_t *line, mobj_t *thing)
+void ev_vertical_door(line_t *line, mobj_t *thing)
 {
   player_t *player;
   sector_t *sec;
@@ -357,7 +357,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
         {
           player->message = (PD_BLUEK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_oof);
+          s_start_sound(NULL, SFX_OOF);
 #endif
           return;
         }
@@ -371,7 +371,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
         {
           player->message = (PD_YELLOWK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_oof);
+          s_start_sound(NULL, SFX_OOF);
 #endif
           return;
         }
@@ -385,7 +385,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
         {
           player->message = (PD_REDK);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_oof);
+          s_start_sound(NULL, SFX_OOF);
 #endif
           return;
         }
@@ -396,7 +396,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
 
   if (line->sidenum[side ^ 1] == -1)
     {
-      i_error("EV_VerticalDoor: DR special type on 1-sided linedef");
+      i_error("ev_vertical_door: DR special type on 1-sided linedef");
     }
 
   sec = sides[line->sidenum[side ^ 1]].sector;
@@ -443,7 +443,7 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
                 {
                   // This isn't a door OR a plat.  Now we're in trouble.
 
-                  fprintf(stderr, "EV_VerticalDoor: Tried to close "
+                  fprintf(stderr, "ev_vertical_door: Tried to close "
                                   "something that wasn't a door.\n");
 
                   // Try closing it anyway. At least it will work on 32-bit
@@ -462,16 +462,16 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
     {
     case 117: // BLAZING DOOR RAISE
     case 118: // BLAZING DOOR OPEN
-      s_start_sound(&sec->soundorg, sfx_bdopn);
+      s_start_sound(&sec->soundorg, SFX_BDOPN);
       break;
 
     case 1: // NORMAL DOOR SOUND
     case 31:
-      s_start_sound(&sec->soundorg, sfx_doropn);
+      s_start_sound(&sec->soundorg, SFX_DOROPN);
       break;
 
     default: // LOCKED DOOR SOUND
-      s_start_sound(&sec->soundorg, sfx_doropn);
+      s_start_sound(&sec->soundorg, SFX_DOROPN);
       break;
     }
 #endif
@@ -492,23 +492,23 @@ void EV_VerticalDoor(line_t *line, mobj_t *thing)
     case 26:
     case 27:
     case 28:
-      door->type = vld_normal;
+      door->type = VLD_NORMAL;
       break;
 
     case 31:
     case 32:
     case 33:
     case 34:
-      door->type = vld_open;
+      door->type = VLD_OPEN;
       line->special = 0;
       break;
 
     case 117: // blazing door raise
-      door->type = vld_blazeRaise;
+      door->type = VLD_BLAZERAISE;
       door->speed = VDOORSPEED * 4;
       break;
     case 118: // blazing door open
-      door->type = vld_blazeOpen;
+      door->type = VLD_BLAZEOPEN;
       line->special = 0;
       door->speed = VDOORSPEED * 4;
       break;
@@ -536,7 +536,7 @@ void P_SpawnDoorCloseIn30(sector_t *sec)
   door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
   door->sector = sec;
   door->direction = 0;
-  door->type = vld_normal;
+  door->type = VLD_NORMAL;
   door->speed = VDOORSPEED;
   door->topcountdown = 30 * TICRATE;
 }
@@ -558,7 +558,7 @@ void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
   door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
   door->sector = sec;
   door->direction = 2;
-  door->type = vld_raiseIn5Mins;
+  door->type = VLD_RAISEIN5MINS;
   door->speed = VDOORSPEED;
   door->topheight = P_FindLowestCeilingSurrounding(sec);
   door->topheight -= 4 * FRACUNIT;

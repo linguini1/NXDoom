@@ -382,7 +382,7 @@ void s_init(int sfxvolume, int musicvolume)
     }
 #endif
 
-  i_precache_sounds(s_sfx, NUMSFX);
+  i_precache_sounds(s_sfx, SFX_NUMSFX);
 
   s_set_sfx_volume(sfxvolume);
   s_set_music_volume(musicvolume);
@@ -407,7 +407,7 @@ void s_init(int sfxvolume, int musicvolume)
 
   /* Note that sounds have not been cached (yet). */
 
-  for (i = 1; i < NUMSFX; i++)
+  for (i = 1; i < SFX_NUMSFX; i++)
     {
       s_sfx[i].lumpnum = s_sfx[i].usefulness = -1;
     }
@@ -449,27 +449,27 @@ void s_start(void)
 
   if (gamemode == commercial)
     {
-      mnum = mus_runnin + gamemap - 1;
+      mnum = MUS_RUNNIN + gamemap - 1;
     }
   else
     {
       int spmus[] = {
           /* Song - Who? - Where? */
 
-          mus_e3m4, /* American     e4m1 */
-          mus_e3m2, /* Romero       e4m2 */
-          mus_e3m3, /* Shawn        e4m3 */
-          mus_e1m5, /* American     e4m4 */
-          mus_e2m7, /* Tim          e4m5 */
-          mus_e2m4, /* Romero       e4m6 */
-          mus_e2m6, /* J.Anderson   e4m7 CHIRON.WAD */
-          mus_e2m5, /* Shawn        e4m8 */
-          mus_e1m9, /* Tim          e4m9 */
+          MUS_E3M4, /* American     e4m1 */
+          MUS_E3M2, /* Romero       e4m2 */
+          MUS_E3M3, /* Shawn        e4m3 */
+          MUS_E1M5, /* American     e4m4 */
+          MUS_E2M7, /* Tim          e4m5 */
+          MUS_E2M4, /* Romero       e4m6 */
+          MUS_E2M6, /* J.Anderson   e4m7 CHIRON.WAD */
+          MUS_E2M5, /* Shawn        e4m8 */
+          MUS_E1M9, /* Tim          e4m9 */
       };
 
       if (gameepisode < 4)
         {
-          mnum = mus_e1m1 + (gameepisode - 1) * 9 + gamemap - 1;
+          mnum = MUS_E1M1 + (gameepisode - 1) * 9 + gamemap - 1;
         }
       else
         {
@@ -509,7 +509,7 @@ void s_start_sound(void *origin_p, int sfx_id)
 
   /* check for bogus sound # */
 
-  if (sfx_id < 1 || sfx_id > NUMSFX)
+  if (sfx_id < 1 || sfx_id > SFX_NUMSFX)
     {
       i_error("Bad sfx #: %d", sfx_id);
     }
@@ -560,11 +560,11 @@ void s_start_sound(void *origin_p, int sfx_id)
 
   /* hacks to vary the sfx pitches */
 
-  if (sfx_id >= sfx_sawup && sfx_id <= sfx_sawhit)
+  if (sfx_id >= SFX_SAWUP && sfx_id <= SFX_SAWHIT)
     {
       pitch += 8 - (m_random() & 15);
     }
-  else if (sfx_id != sfx_itemup && sfx_id != sfx_tink)
+  else if (sfx_id != SFX_ITEMUP && sfx_id != SFX_TINK)
     {
       pitch += 16 - (m_random() & 31);
     }
@@ -724,15 +724,15 @@ void s_change_music(int musicnum, int looping)
    * and d_introa. The latter is used for OPL playback.
    */
 
-  if (musicnum == mus_intro &&
+  if (musicnum == MUS_INTRO &&
       (snd_musicdevice == SNDDEVICE_ADLIB ||
        snd_musicdevice == SNDDEVICE_SB) &&
       w_check_num_for_name("D_INTROA") >= 0)
     {
-      musicnum = mus_introa;
+      musicnum = MUS_INTROA;
     }
 
-  if (musicnum <= mus_None || musicnum >= NUMMUSIC)
+  if (musicnum <= MUS_NONE || musicnum >= MUS_NUMMUSIC)
     {
       i_error("Bad music number %d", musicnum);
     }

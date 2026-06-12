@@ -1374,11 +1374,11 @@ void d_do_advance_demo(void)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
       if (gamemode == commercial)
         {
-          s_start_music(mus_dm2ttl);
+          s_start_music(MUS_DM2TTL);
         }
       else
         {
-          s_start_music(mus_intro);
+          s_start_music(MUS_INTRO);
         }
 #endif
 
@@ -1401,7 +1401,7 @@ void d_do_advance_demo(void)
           pagetic = TICRATE * 11;
           pagename = ("TITLEPIC");
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_music(mus_dm2ttl);
+          s_start_music(MUS_DM2TTL);
 #endif
         }
       else

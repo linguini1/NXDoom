@@ -332,9 +332,9 @@ void hu_ticker(void)
                           message_counter = HU_MSGTIMEOUT;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
                           if (gamemode == commercial)
-                            s_start_sound(0, sfx_radio);
+                            s_start_sound(0, SFX_RADIO);
                           else if (gameversion > exe_doom_1_2)
-                            s_start_sound(0, sfx_tink);
+                            s_start_sound(0, SFX_TINK);
 #endif
                         }
                       HUlib_resetIText(&w_inputbuffer[i]);

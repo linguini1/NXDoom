@@ -365,7 +365,7 @@ void P_ZMovement(mobj_t *mo)
                */
               mo->player->deltaviewheight = mo->momz >> 3;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(mo, sfx_oof);
+              s_start_sound(mo, SFX_OOF);
 #endif
             }
           mo->momz = 0;
@@ -447,7 +447,7 @@ void P_NightmareRespawn(mobj_t *mobj)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   /* initiate teleport sound */
 
-  s_start_sound(mo, sfx_telept);
+  s_start_sound(mo, SFX_TELEPT);
 #endif
 
   /* spawn a teleport fog at the new spot */
@@ -457,7 +457,7 @@ void P_NightmareRespawn(mobj_t *mobj)
   mo = p_spawn_mobj(x, y, ss->sector->floorheight, MT_TFOG);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(mo, sfx_telept);
+  s_start_sound(mo, SFX_TELEPT);
 #endif
 
   mthing = &mobj->spawnpoint; /* spawn the new monster */
@@ -671,7 +671,7 @@ void p_respawn_specials(void)
   ss = r_point_in_subsector(x, y);
   mo = p_spawn_mobj(x, y, ss->sector->floorheight, MT_IFOG);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(mo, sfx_itmbk);
+  s_start_sound(mo, SFX_ITMBK);
 #endif
 
   /* find which type to spawn */

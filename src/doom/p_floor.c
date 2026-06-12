@@ -199,7 +199,7 @@ void T_MoveFloor(floormove_t *floor)
                     floor->crush, 0, floor->direction);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  if (!(leveltime & 7)) s_start_sound(&floor->sector->soundorg, sfx_stnmov);
+  if (!(leveltime & 7)) s_start_sound(&floor->sector->soundorg, SFX_STNMOV);
 #endif
 
   if (res == pastdest)
@@ -210,7 +210,7 @@ void T_MoveFloor(floormove_t *floor)
         {
           switch (floor->type)
             {
-            case donutRaise:
+            case FLOOR_DONUTRAISE:
               floor->sector->special = floor->newspecial;
               floor->sector->floorpic = floor->texture;
             default:
@@ -221,7 +221,7 @@ void T_MoveFloor(floormove_t *floor)
         {
           switch (floor->type)
             {
-            case lowerAndChange:
+            case FLOOR_LOWERANDCHANGE:
               floor->sector->special = floor->newspecial;
               floor->sector->floorpic = floor->texture;
             default:
@@ -231,7 +231,7 @@ void T_MoveFloor(floormove_t *floor)
       p_remove_thinker(&floor->thinker);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(&floor->sector->soundorg, sfx_pstop);
+      s_start_sound(&floor->sector->soundorg, SFX_PSTOP);
 #endif
     }
 }
@@ -239,7 +239,7 @@ void T_MoveFloor(floormove_t *floor)
 //
 // HANDLE FLOOR TYPES
 //
-int EV_DoFloor(line_t *line, floor_e floortype)
+int ev_do_floor(line_t *line, floor_e floortype)
 {
   int secnum;
   int rtn;
@@ -267,21 +267,21 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 
       switch (floortype)
         {
-        case lowerFloor:
+        case FLOOR_LOWERFLOOR:
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
           floor->floordestheight = P_FindHighestFloorSurrounding(sec);
           break;
 
-        case lowerFloorToLowest:
+        case FLOOR_LOWERFLOORTOLOWEST:
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
           floor->floordestheight = P_FindLowestFloorSurrounding(sec);
           break;
 
-        case turboLower:
+        case FLOOR_TURBOLOWER:
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED * 4;
@@ -291,9 +291,9 @@ int EV_DoFloor(line_t *line, floor_e floortype)
             floor->floordestheight += 8 * FRACUNIT;
           break;
 
-        case raiseFloorCrush:
+        case FLOOR_RAISEFLOORCRUSH:
           floor->crush = true;
-        case raiseFloor:
+        case FLOOR_RAISEFLOOR:
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
@@ -301,10 +301,10 @@ int EV_DoFloor(line_t *line, floor_e floortype)
           if (floor->floordestheight > sec->ceilingheight)
             floor->floordestheight = sec->ceilingheight;
           floor->floordestheight -=
-              (8 * FRACUNIT) * (floortype == raiseFloorCrush);
+              (8 * FRACUNIT) * (floortype == FLOOR_RAISEFLOORCRUSH);
           break;
 
-        case raiseFloorTurbo:
+        case FLOOR_RAISEFLOORTURBO:
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED * 4;
@@ -312,7 +312,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
               P_FindNextHighestFloor(sec, sec->floorheight);
           break;
 
-        case raiseFloorToNearest:
+        case FLOOR_RAISEFLOORTONEAREST:
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
@@ -320,13 +320,14 @@ int EV_DoFloor(line_t *line, floor_e floortype)
               P_FindNextHighestFloor(sec, sec->floorheight);
           break;
 
-        case raiseFloor24:
+        case FLOOR_RAISEFLOOR24:
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
           floor->floordestheight = floor->sector->floorheight + 24 * FRACUNIT;
           break;
-        case raiseFloor512:
+
+        case FLOOR_RAISEFLOOR512:
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
@@ -334,7 +335,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
               floor->sector->floorheight + 512 * FRACUNIT;
           break;
 
-        case raiseFloor24AndChange:
+        case FLOOR_RAISEFLOOR24ANDCHANGE:
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
@@ -343,7 +344,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
           sec->special = line->frontsector->special;
           break;
 
-        case raiseToTexture:
+        case FLOOR_RAISETOTEXTURE:
           {
             int minsize = INT_MAX;
             side_t *side;
@@ -369,7 +370,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
           }
           break;
 
-        case lowerAndChange:
+        case FLOOR_LOWERANDCHANGE:
           floor->direction = -1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
@@ -414,7 +415,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 //
 // BUILD A STAIRCASE!
 //
-int EV_BuildStairs(line_t *line, stair_e type)
+int ev_build_stairs(line_t *line, stair_e type)
 {
   int secnum;
   int height;
@@ -451,11 +452,11 @@ int EV_BuildStairs(line_t *line, stair_e type)
       floor->sector = sec;
       switch (type)
         {
-        case build8:
+        case STAIR_BUILD8:
           speed = FLOORSPEED / 4;
           stairsize = 8 * FRACUNIT;
           break;
-        case turbo16:
+        case STAIR_TURBO16:
           speed = FLOORSPEED * 4;
           stairsize = 16 * FRACUNIT;
           break;
@@ -464,7 +465,7 @@ int EV_BuildStairs(line_t *line, stair_e type)
       height = sec->floorheight + stairsize;
       floor->floordestheight = height;
       // Initialize
-      floor->type = lowerFloor;
+      floor->type = FLOOR_LOWERFLOOR;
       // e6y
       // Uninitialized crush field will not be equal to 0 or 1 (true)
       // with high probability. So, initialize it with any other value
@@ -509,7 +510,7 @@ int EV_BuildStairs(line_t *line, stair_e type)
               floor->speed = speed;
               floor->floordestheight = height;
               // Initialize
-              floor->type = lowerFloor;
+              floor->type = FLOOR_LOWERFLOOR;
               // e6y
               // Uninitialized crush field will not be equal to 0 or 1 (true)
               // with high probability. So, initialize it with any other value

@@ -157,7 +157,7 @@ boolean P_GiveWeapon(player_t *player, weapontype_t weapon, boolean dropped)
       player->pendingweapon = weapon;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (player == &players[consoleplayer]) s_start_sound(NULL, sfx_wpnup);
+      if (player == &players[consoleplayer]) s_start_sound(NULL, SFX_WPNUP);
 #endif
       return false;
     }
@@ -294,7 +294,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
     }
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  sound = sfx_itemup;
+  sound = SFX_ITEMUP;
 #endif
   player = toucher->player;
 
@@ -342,7 +342,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       player->message = (GOTSUPER);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -355,7 +355,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       P_GiveArmor(player, 2);
       player->message = (GOTMSPHERE);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -417,7 +417,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!p_give_power(player, pw_invulnerability)) return;
       player->message = (GOTINVUL);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -426,7 +426,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       player->message = (GOTBERSERK);
       if (player->readyweapon != wp_fist) player->pendingweapon = wp_fist;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -434,7 +434,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!p_give_power(player, pw_invisibility)) return;
       player->message = (GOTINVIS);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -442,7 +442,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!p_give_power(player, pw_ironfeet)) return;
       player->message = (GOTSUIT);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -450,7 +450,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!p_give_power(player, pw_allmap)) return;
       player->message = (GOTMAP);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -458,7 +458,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!p_give_power(player, pw_infrared)) return;
       player->message = (GOTVISOR);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (gameversion > exe_doom_1_2) sound = sfx_getpow;
+      if (gameversion > exe_doom_1_2) sound = SFX_GETPOW;
 #endif
       break;
 
@@ -527,7 +527,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!P_GiveWeapon(player, wp_bfg, false)) return;
       player->message = (GOTBFG9000);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      sound = sfx_wpnup;
+      sound = SFX_WPNUP;
 #endif
       break;
 
@@ -537,7 +537,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
         return;
       player->message = (GOTCHAINGUN);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      sound = sfx_wpnup;
+      sound = SFX_WPNUP;
 #endif
       break;
 
@@ -545,7 +545,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!P_GiveWeapon(player, wp_chainsaw, false)) return;
       player->message = (GOTCHAINSAW);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      sound = sfx_wpnup;
+      sound = SFX_WPNUP;
 #endif
       break;
 
@@ -553,7 +553,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!P_GiveWeapon(player, wp_missile, false)) return;
       player->message = (GOTLAUNCHER);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      sound = sfx_wpnup;
+      sound = SFX_WPNUP;
 #endif
       break;
 
@@ -561,7 +561,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!P_GiveWeapon(player, wp_plasma, false)) return;
       player->message = (GOTPLASMA);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      sound = sfx_wpnup;
+      sound = SFX_WPNUP;
 #endif
       break;
 
@@ -571,7 +571,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
         return;
       player->message = (GOTSHOTGUN);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      sound = sfx_wpnup;
+      sound = SFX_WPNUP;
 #endif
       break;
 
@@ -581,7 +581,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
         return;
       player->message = (GOTSHOTGUN2);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      sound = sfx_wpnup;
+      sound = SFX_WPNUP;
 #endif
       break;
 

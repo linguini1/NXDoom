@@ -344,14 +344,14 @@ static const char *g_skull_name[2] =
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 static int g_quitsounds[8] =
 {
-    sfx_pldeth, sfx_dmpain, sfx_popain, sfx_slop,
-    sfx_telept, sfx_posit1, sfx_posit3, sfx_sgtatk,
+    SFX_PLDETH, SFX_DMPAIN, SFX_POPAIN, SFX_SLOP,
+    SFX_TELEPT, SFX_POSIT1, SFX_POSIT3, SFX_SGTATK,
 };
 
 static int g_quitsounds2[8] =
 {
-    sfx_vilact, sfx_getpow, sfx_boscub, sfx_slop,
-    sfx_skeswg, sfx_kntdth, sfx_bspact, sfx_sgtatk,
+    SFX_VILACT, SFX_GETPOW, SFX_BOSCUB, SFX_SLOP,
+    SFX_SKESWG, SFX_KNTDTH, SFX_BSPACT, SFX_SGTATK,
 };
 #endif
 
@@ -565,7 +565,7 @@ static void m_quick_save_response(int key)
     {
       m_do_save(g_quick_save_slot);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(NULL, sfx_swtchx);
+      s_start_sound(NULL, SFX_SWTCHX);
 #endif
     }
 }
@@ -576,7 +576,7 @@ static void m_quick_load_response(int key)
     {
       m_load_select(g_quick_save_slot);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(NULL, sfx_swtchx);
+      s_start_sound(NULL, SFX_SWTCHX);
 #endif
     }
 }
@@ -828,7 +828,7 @@ void m_quick_save(void)
   if (!usergame)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(NULL, sfx_oof);
+      s_start_sound(NULL, SFX_OOF);
 #endif
       return;
     }
@@ -1054,7 +1054,7 @@ void m_end_game(int choice)
   if (!usergame)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(NULL, sfx_oof);
+      s_start_sound(NULL, SFX_OOF);
 #endif
       return;
     }
@@ -1288,7 +1288,7 @@ boolean m_responder(event_t *ev)
       else
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           m_quit_doom(0);
         }
@@ -1558,7 +1558,7 @@ boolean m_responder(event_t *ev)
 
       g_menuactive = false;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(NULL, sfx_swtchx);
+      s_start_sound(NULL, SFX_SWTCHX);
 #endif
       return true;
     }
@@ -1579,7 +1579,7 @@ boolean m_responder(event_t *ev)
           if (automapactive || chat_on) return false;
           m_size_display(0);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_stnmov);
+          s_start_sound(NULL, SFX_STNMOV);
 #endif
           return true;
         }
@@ -1588,7 +1588,7 @@ boolean m_responder(event_t *ev)
           if (automapactive || chat_on) return false;
           m_size_display(1);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_stnmov);
+          s_start_sound(NULL, SFX_STNMOV);
 #endif
           return true;
         }
@@ -1603,7 +1603,7 @@ boolean m_responder(event_t *ev)
 
           g_item_on = 0;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           return true;
         }
@@ -1611,7 +1611,7 @@ boolean m_responder(event_t *ev)
         {
           m_start_control_panel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           m_save_game(0);
           return true;
@@ -1620,7 +1620,7 @@ boolean m_responder(event_t *ev)
         {
           m_start_control_panel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           m_load_game(0);
           return true;
@@ -1631,7 +1631,7 @@ boolean m_responder(event_t *ev)
           g_current_menu = &g_sound_def;
           g_item_on = SOUND_SFXVOL;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           return true;
         }
@@ -1639,14 +1639,14 @@ boolean m_responder(event_t *ev)
         {
           m_change_detail(0);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           return true;
         }
       else if (key == key_menu_qsave) /* Quicksave */
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           m_quick_save();
           return true;
@@ -1654,7 +1654,7 @@ boolean m_responder(event_t *ev)
       else if (key == key_menu_endgame) /* End game */
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           m_end_game(0);
           return true;
@@ -1663,14 +1663,14 @@ boolean m_responder(event_t *ev)
         {
           m_change_messages(0);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           return true;
         }
       else if (key == key_menu_qload) /* Quickload */
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           m_quick_load();
           return true;
@@ -1678,7 +1678,7 @@ boolean m_responder(event_t *ev)
       else if (key == key_menu_quit) /* Quit DOOM */
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           m_quit_doom(0);
           return true;
@@ -1701,7 +1701,7 @@ boolean m_responder(event_t *ev)
         {
           m_start_control_panel();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
           return true;
         }
@@ -1722,7 +1722,7 @@ boolean m_responder(event_t *ev)
           else
             g_item_on++;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_pstop);
+          s_start_sound(NULL, SFX_PSTOP);
 #endif
         }
       while (g_current_menu->menu_items[g_item_on].status == -1);
@@ -1740,7 +1740,7 @@ boolean m_responder(event_t *ev)
           else
             g_item_on--;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_pstop);
+          s_start_sound(NULL, SFX_PSTOP);
 #endif
         }
       while (g_current_menu->menu_items[g_item_on].status == -1);
@@ -1755,7 +1755,7 @@ boolean m_responder(event_t *ev)
           g_current_menu->menu_items[g_item_on].status == 2)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_stnmov);
+          s_start_sound(NULL, SFX_STNMOV);
 #endif
           g_current_menu->menu_items[g_item_on].routine(0);
         }
@@ -1770,7 +1770,7 @@ boolean m_responder(event_t *ev)
           g_current_menu->menu_items[g_item_on].status == 2)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_stnmov);
+          s_start_sound(NULL, SFX_STNMOV);
 #endif
           g_current_menu->menu_items[g_item_on].routine(1);
         }
@@ -1790,14 +1790,14 @@ boolean m_responder(event_t *ev)
               g_current_menu->menu_items[g_item_on].routine(
                   1); /* right arrow */
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(NULL, sfx_stnmov);
+              s_start_sound(NULL, SFX_STNMOV);
 #endif
             }
           else
             {
               g_current_menu->menu_items[g_item_on].routine(g_item_on);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(NULL, sfx_pistol);
+              s_start_sound(NULL, SFX_PISTOL);
 #endif
             }
         }
@@ -1811,7 +1811,7 @@ boolean m_responder(event_t *ev)
       g_current_menu->last_on = g_item_on;
       m_clear_menus();
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(NULL, sfx_swtchx);
+      s_start_sound(NULL, SFX_SWTCHX);
 #endif
       return true;
     }
@@ -1825,7 +1825,7 @@ boolean m_responder(event_t *ev)
           g_current_menu = g_current_menu->prev_menu;
           g_item_on = g_current_menu->last_on;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(NULL, sfx_swtchn);
+          s_start_sound(NULL, SFX_SWTCHN);
 #endif
         }
 
@@ -1845,7 +1845,7 @@ boolean m_responder(event_t *ev)
             {
               g_item_on = i;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(NULL, sfx_pstop);
+              s_start_sound(NULL, SFX_PSTOP);
 #endif
               return true;
             }
@@ -1857,7 +1857,7 @@ boolean m_responder(event_t *ev)
             {
               g_item_on = i;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(NULL, sfx_pstop);
+              s_start_sound(NULL, SFX_PSTOP);
 #endif
               return true;
             }

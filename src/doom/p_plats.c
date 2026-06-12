@@ -50,11 +50,11 @@ void T_PlatRaise(plat_t *plat)
                         1);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      if (plat->type == raiseAndChange ||
-          plat->type == raiseToNearestAndChange)
+      if (plat->type == PLAT_RAISEANDCHANGE ||
+          plat->type == PLAT_RAISETONEARESTANDCHANGE)
         {
           if (!(leveltime & 7))
-            s_start_sound(&plat->sector->soundorg, sfx_stnmov);
+            s_start_sound(&plat->sector->soundorg, SFX_STNMOV);
         }
 #endif
 
@@ -63,7 +63,7 @@ void T_PlatRaise(plat_t *plat)
           plat->count = plat->wait;
           plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&plat->sector->soundorg, sfx_pstart);
+          s_start_sound(&plat->sector->soundorg, SFX_PSTART);
 #endif
         }
       else
@@ -73,18 +73,18 @@ void T_PlatRaise(plat_t *plat)
               plat->count = plat->wait;
               plat->status = waiting;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-              s_start_sound(&plat->sector->soundorg, sfx_pstop);
+              s_start_sound(&plat->sector->soundorg, SFX_PSTOP);
 #endif
 
               switch (plat->type)
                 {
-                case blazeDWUS:
-                case downWaitUpStay:
+                case PLAT_BLAZEDWUS:
+                case PLAT_DOWNWAITUPSTAY:
                   P_RemoveActivePlat(plat);
                   break;
 
-                case raiseAndChange:
-                case raiseToNearestAndChange:
+                case PLAT_RAISEANDCHANGE:
+                case PLAT_RAISETONEARESTANDCHANGE:
                   P_RemoveActivePlat(plat);
                   break;
 
@@ -103,7 +103,7 @@ void T_PlatRaise(plat_t *plat)
           plat->count = plat->wait;
           plat->status = waiting;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&plat->sector->soundorg, sfx_pstop);
+          s_start_sound(&plat->sector->soundorg, SFX_PSTOP);
 #endif
         }
       break;
@@ -116,7 +116,7 @@ void T_PlatRaise(plat_t *plat)
           else
             plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&plat->sector->soundorg, sfx_pstart);
+          s_start_sound(&plat->sector->soundorg, SFX_PSTART);
 #endif
         }
     case in_stasis:
@@ -128,7 +128,7 @@ void T_PlatRaise(plat_t *plat)
 // Do Platforms
 //  "amount" is only used for SOME platforms.
 //
-int EV_DoPlat(line_t *line, plattype_e type, int amount)
+int ev_do_plat(line_t *line, plattype_e type, int amount)
 {
   plat_t *plat;
   int secnum;
@@ -141,7 +141,7 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
   //	Activate all <type> plats that are in_stasis
   switch (type)
     {
-    case perpetualRaise:
+    case PLAT_PERPETUALRAISE:
       P_ActivateInStasis(line->tag);
       break;
 
@@ -169,7 +169,7 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
 
       switch (type)
         {
-        case raiseToNearestAndChange:
+        case PLAT_RAISETONEARESTANDCHANGE:
           plat->speed = PLATSPEED / 2;
           sec->floorpic = sides[line->sidenum[0]].sector->floorpic;
           plat->high = P_FindNextHighestFloor(sec, sec->floorheight);
@@ -179,11 +179,11 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
           sec->special = 0;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&sec->soundorg, sfx_stnmov);
+          s_start_sound(&sec->soundorg, SFX_STNMOV);
 #endif
           break;
 
-        case raiseAndChange:
+        case PLAT_RAISEANDCHANGE:
           plat->speed = PLATSPEED / 2;
           sec->floorpic = sides[line->sidenum[0]].sector->floorpic;
           plat->high = sec->floorheight + amount * FRACUNIT;
@@ -191,11 +191,11 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
           plat->status = up;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&sec->soundorg, sfx_stnmov);
+          s_start_sound(&sec->soundorg, SFX_STNMOV);
 #endif
           break;
 
-        case downWaitUpStay:
+        case PLAT_DOWNWAITUPSTAY:
           plat->speed = PLATSPEED * 4;
           plat->low = P_FindLowestFloorSurrounding(sec);
 
@@ -205,11 +205,11 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
           plat->wait = TICRATE * PLATWAIT;
           plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&sec->soundorg, sfx_pstart);
+          s_start_sound(&sec->soundorg, SFX_PSTART);
 #endif
           break;
 
-        case blazeDWUS:
+        case PLAT_BLAZEDWUS:
           plat->speed = PLATSPEED * 8;
           plat->low = P_FindLowestFloorSurrounding(sec);
 
@@ -219,11 +219,11 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
           plat->wait = TICRATE * PLATWAIT;
           plat->status = down;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&sec->soundorg, sfx_pstart);
+          s_start_sound(&sec->soundorg, SFX_PSTART);
 #endif
           break;
 
-        case perpetualRaise:
+        case PLAT_PERPETUALRAISE:
           plat->speed = PLATSPEED;
           plat->low = P_FindLowestFloorSurrounding(sec);
 
@@ -237,7 +237,7 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
           plat->status = p_random() & 1;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-          s_start_sound(&sec->soundorg, sfx_pstart);
+          s_start_sound(&sec->soundorg, SFX_PSTART);
 #endif
           break;
         }

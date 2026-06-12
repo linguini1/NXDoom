@@ -268,7 +268,7 @@ boolean P_Move(mobj_t *actor)
           // if the special is not a door
           // that can be opened,
           // return false
-          if (P_UseSpecialLine(actor, ld, 0)) good = true;
+          if (p_use_special_line(actor, ld, 0)) good = true;
         }
       return good;
     }
@@ -498,7 +498,7 @@ void A_KeenDie(mobj_t *mo)
     }
 
   junk.tag = 666;
-  EV_DoDoor(&junk, vld_open);
+  ev_do_door(&junk, VLD_OPEN);
 }
 
 //
@@ -539,15 +539,15 @@ seeyou:
 
       switch (actor->info->seesound)
         {
-        case sfx_posit1:
-        case sfx_posit2:
-        case sfx_posit3:
-          sound = sfx_posit1 + p_random() % 3;
+        case SFX_POSIT1:
+        case SFX_POSIT2:
+        case SFX_POSIT3:
+          sound = SFX_POSIT1 + p_random() % 3;
           break;
 
-        case sfx_bgsit1:
-        case sfx_bgsit2:
-          sound = sfx_bgsit1 + p_random() % 2;
+        case SFX_BGSIT1:
+        case SFX_BGSIT2:
+          sound = SFX_BGSIT1 + p_random() % 2;
           break;
 
         default:
@@ -701,7 +701,7 @@ void A_PosAttack(mobj_t *actor)
   slope = P_AimLineAttack(actor, angle, MISSILERANGE);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_pistol);
+  s_start_sound(actor, SFX_PISTOL);
 #endif
   angle += p_sub_random() << 20;
   damage = ((p_random() % 5) + 1) * 3;
@@ -719,7 +719,7 @@ void A_SPosAttack(mobj_t *actor)
   if (!actor->target) return;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_shotgn);
+  s_start_sound(actor, SFX_SHOTGN);
 #endif
   A_FaceTarget(actor);
   bangle = actor->angle;
@@ -743,7 +743,7 @@ void A_CPosAttack(mobj_t *actor)
   if (!actor->target) return;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_shotgn);
+  s_start_sound(actor, SFX_SHOTGN);
 #endif
   A_FaceTarget(actor);
   bangle = actor->angle;
@@ -805,7 +805,7 @@ void A_TroopAttack(mobj_t *actor)
   if (P_CheckMeleeRange(actor))
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(actor, sfx_claw);
+      s_start_sound(actor, SFX_CLAW);
 #endif
       damage = (p_random() % 8 + 1) * 3;
       P_DamageMobj(actor->target, actor, actor, damage);
@@ -872,7 +872,7 @@ void A_BruisAttack(mobj_t *actor)
   if (P_CheckMeleeRange(actor))
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(actor, sfx_claw);
+      s_start_sound(actor, SFX_CLAW);
 #endif
       damage = (p_random() % 8 + 1) * 10;
       P_DamageMobj(actor->target, actor, actor, damage);
@@ -969,7 +969,7 @@ void A_SkelWhoosh(mobj_t *actor)
   if (!actor->target) return;
   A_FaceTarget(actor);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_skeswg);
+  s_start_sound(actor, SFX_SKESWG);
 #endif
 }
 
@@ -985,7 +985,7 @@ void A_SkelFist(mobj_t *actor)
     {
       damage = ((p_random() % 10) + 1) * 6;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(actor, sfx_skepch);
+      s_start_sound(actor, SFX_SKEPCH);
 #endif
       P_DamageMobj(actor->target, actor, actor, damage);
     }
@@ -1075,7 +1075,7 @@ void A_VileChase(mobj_t *actor)
 
                   p_set_mobj_state(actor, S_VILE_HEAL1);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-                  s_start_sound(corpsehit, sfx_slop);
+                  s_start_sound(corpsehit, SFX_SLOP);
 #endif
                   info = corpsehit->info;
 
@@ -1101,7 +1101,7 @@ void A_VileChase(mobj_t *actor)
 void A_VileStart(mobj_t *actor)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_vilatk);
+  s_start_sound(actor, SFX_VILATK);
 #endif
 }
 
@@ -1114,7 +1114,7 @@ void A_Fire(mobj_t *actor);
 void A_StartFire(mobj_t *actor)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_flamst);
+  s_start_sound(actor, SFX_FLAMST);
 #endif
   A_Fire(actor);
 }
@@ -1122,7 +1122,7 @@ void A_StartFire(mobj_t *actor)
 void A_FireCrackle(mobj_t *actor)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_flame);
+  s_start_sound(actor, SFX_FLAME);
 #endif
   A_Fire(actor);
 }
@@ -1186,7 +1186,7 @@ void A_VileAttack(mobj_t *actor)
   if (!P_CheckSight(actor, actor->target)) return;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_barexp);
+  s_start_sound(actor, SFX_BAREXP);
 #endif
   P_DamageMobj(actor->target, actor, actor, 20);
   actor->target->momz = 1000 * FRACUNIT / actor->target->info->mass;
@@ -1215,7 +1215,7 @@ void A_FatRaise(mobj_t *actor)
 {
   A_FaceTarget(actor);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_manatk);
+  s_start_sound(actor, SFX_MANATK);
 #endif
 }
 
@@ -1398,15 +1398,15 @@ void A_Scream(mobj_t *actor)
     case 0:
       return;
 
-    case sfx_podth1:
-    case sfx_podth2:
-    case sfx_podth3:
-      sound = sfx_podth1 + p_random() % 3;
+    case SFX_PODTH1:
+    case SFX_PODTH2:
+    case SFX_PODTH3:
+      sound = SFX_PODTH1 + p_random() % 3;
       break;
 
-    case sfx_bgdth1:
-    case sfx_bgdth2:
-      sound = sfx_bgdth1 + p_random() % 2;
+    case SFX_BGDTH1:
+    case SFX_BGDTH2:
+      sound = SFX_BGDTH1 + p_random() % 2;
       break;
 
     default:
@@ -1428,7 +1428,7 @@ void A_Scream(mobj_t *actor)
 void A_XScream(mobj_t *actor)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(actor, sfx_slop);
+  s_start_sound(actor, SFX_SLOP);
 #endif
 }
 
@@ -1562,14 +1562,14 @@ void A_BossDeath(mobj_t *mo)
           if (mo->type == MT_FATSO)
             {
               junk.tag = 666;
-              EV_DoFloor(&junk, lowerFloorToLowest);
+              ev_do_floor(&junk, FLOOR_LOWERFLOORTOLOWEST);
               return;
             }
 
           if (mo->type == MT_BABY)
             {
               junk.tag = 667;
-              EV_DoFloor(&junk, raiseToTexture);
+              ev_do_floor(&junk, FLOOR_RAISETOTEXTURE);
               return;
             }
         }
@@ -1580,7 +1580,7 @@ void A_BossDeath(mobj_t *mo)
         {
         case 1:
           junk.tag = 666;
-          EV_DoFloor(&junk, lowerFloorToLowest);
+          ev_do_floor(&junk, FLOOR_LOWERFLOORTOLOWEST);
           return;
           break;
 
@@ -1589,13 +1589,13 @@ void A_BossDeath(mobj_t *mo)
             {
             case 6:
               junk.tag = 666;
-              EV_DoDoor(&junk, vld_blazeOpen);
+              ev_do_door(&junk, VLD_BLAZEOPEN);
               return;
               break;
 
             case 8:
               junk.tag = 666;
-              EV_DoFloor(&junk, lowerFloorToLowest);
+              ev_do_floor(&junk, FLOOR_LOWERFLOORTOLOWEST);
               return;
               break;
             }
@@ -1608,7 +1608,7 @@ void A_BossDeath(mobj_t *mo)
 void A_Hoof(mobj_t *mo)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(mo, sfx_hoof);
+  s_start_sound(mo, SFX_HOOF);
 #endif
   A_Chase(mo);
 }
@@ -1616,7 +1616,7 @@ void A_Hoof(mobj_t *mo)
 void A_Metal(mobj_t *mo)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(mo, sfx_metal);
+  s_start_sound(mo, SFX_METAL);
 #endif
   A_Chase(mo);
 }
@@ -1624,7 +1624,7 @@ void A_Metal(mobj_t *mo)
 void A_BabyMetal(mobj_t *mo)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(mo, sfx_bspwlk);
+  s_start_sound(mo, SFX_BSPWLK);
 #endif
   A_Chase(mo);
 }
@@ -1632,14 +1632,14 @@ void A_BabyMetal(mobj_t *mo)
 void A_OpenShotgun2(player_t *player, pspdef_t *psp)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_dbopn);
+  s_start_sound(player->mo, SFX_DBOPN);
 #endif
 }
 
 void A_LoadShotgun2(player_t *player, pspdef_t *psp)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_dbload);
+  s_start_sound(player->mo, SFX_DBLOAD);
 #endif
 }
 
@@ -1648,7 +1648,7 @@ void A_ReFire(player_t *player, pspdef_t *psp);
 void A_CloseShotgun2(player_t *player, pspdef_t *psp)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_dbcls);
+  s_start_sound(player->mo, SFX_DBCLS);
 #endif
   A_ReFire(player, psp);
 }
@@ -1682,14 +1682,14 @@ void A_BrainAwake(mobj_t *mo)
     }
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(NULL, sfx_bossit);
+  s_start_sound(NULL, SFX_BOSSIT);
 #endif
 }
 
 void A_BrainPain(mobj_t *mo)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(NULL, sfx_bospn);
+  s_start_sound(NULL, SFX_BOSPN);
 #endif
 }
 
@@ -1715,7 +1715,7 @@ void A_BrainScream(mobj_t *mo)
     }
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(NULL, sfx_bosdth);
+  s_start_sound(NULL, SFX_BOSDTH);
 #endif
 }
 
@@ -1765,7 +1765,7 @@ void A_BrainSpit(mobj_t *mo)
       ((targ->y - mo->y) / newmobj->momy) / newmobj->state->tics;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(NULL, sfx_bospit);
+  s_start_sound(NULL, SFX_BOSPIT);
 #endif
 }
 
@@ -1775,7 +1775,7 @@ void A_SpawnFly(mobj_t *mo);
 void A_SpawnSound(mobj_t *mo)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(mo, sfx_boscub);
+  s_start_sound(mo, SFX_BOSCUB);
 #endif
   A_SpawnFly(mo);
 }
@@ -1795,7 +1795,7 @@ void A_SpawnFly(mobj_t *mo)
   // First spawn teleport fog.
   fog = p_spawn_mobj(targ->x, targ->y, targ->z, MT_SPAWNFIRE);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(fog, sfx_telept);
+  s_start_sound(fog, SFX_TELEPT);
 #else
   UNUSED(fog);
 #endif
@@ -1843,13 +1843,13 @@ void A_PlayerScream(mobj_t *mo)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   // Default death sound.
-  int sound = sfx_pldeth;
+  int sound = SFX_PLDETH;
 
   if ((gamemode == commercial) && (mo->health < -50))
     {
       // IF THE PLAYER DIES
       // LESS THAN -50% WITHOUT GIBBING
-      sound = sfx_pdiehi;
+      sound = SFX_PDIEHI;
     }
 
   s_start_sound(mo, sound);

@@ -128,7 +128,7 @@ void P_BringUpWeapon(player_t *player)
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   if (player->pendingweapon == wp_chainsaw)
-    s_start_sound(player->mo, sfx_sawup);
+    s_start_sound(player->mo, SFX_SAWUP);
 #endif
 
   newstate = weaponinfo[player->pendingweapon].upstate;
@@ -262,7 +262,7 @@ void A_WeaponReady(player_t *player, pspdef_t *psp)
   if (player->readyweapon == wp_chainsaw && psp->state == &states[S_SAW])
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(player->mo, sfx_sawidl);
+      s_start_sound(player->mo, SFX_SAWIDL);
 #endif
     }
 
@@ -421,7 +421,7 @@ void A_Punch(player_t *player, pspdef_t *psp)
   if (linetarget)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(player->mo, sfx_punch);
+      s_start_sound(player->mo, SFX_PUNCH);
 #endif
       player->mo->angle = r_point_to_angle2(player->mo->x, player->mo->y,
                                             linetarget->x, linetarget->y);
@@ -448,12 +448,12 @@ void A_Saw(player_t *player, pspdef_t *psp)
   if (!linetarget)
     {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-      s_start_sound(player->mo, sfx_sawful);
+      s_start_sound(player->mo, SFX_SAWFUL);
 #endif
       return;
     }
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_sawhit);
+  s_start_sound(player->mo, SFX_SAWHIT);
 #endif
 
   // turn to face target
@@ -575,7 +575,7 @@ void P_GunShot(mobj_t *mo, boolean accurate)
 void A_FirePistol(player_t *player, pspdef_t *psp)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_pistol);
+  s_start_sound(player->mo, SFX_PISTOL);
 #endif
 
   p_set_mobj_state(player->mo, S_PLAY_ATK2);
@@ -595,7 +595,7 @@ void A_FireShotgun(player_t *player, pspdef_t *psp)
   int i;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_shotgn);
+  s_start_sound(player->mo, SFX_SHOTGN);
 #endif
   p_set_mobj_state(player->mo, S_PLAY_ATK2);
 
@@ -619,7 +619,7 @@ void A_FireShotgun2(player_t *player, pspdef_t *psp)
   int damage;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_dshtgn);
+  s_start_sound(player->mo, SFX_DSHTGN);
 #endif
   p_set_mobj_state(player->mo, S_PLAY_ATK2);
 
@@ -645,7 +645,7 @@ void A_FireShotgun2(player_t *player, pspdef_t *psp)
 void A_FireCGun(player_t *player, pspdef_t *psp)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_pistol);
+  s_start_sound(player->mo, SFX_PISTOL);
 #endif
 
   if (!player->ammo[weaponinfo[player->readyweapon].ammo]) return;
@@ -710,7 +710,7 @@ void A_BFGSpray(mobj_t *mo)
 void A_BFGsound(player_t *player, pspdef_t *psp)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
-  s_start_sound(player->mo, sfx_bfg);
+  s_start_sound(player->mo, SFX_BFG);
 #endif
 }
 
