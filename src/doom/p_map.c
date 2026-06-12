@@ -263,9 +263,9 @@ static void spechit_overrun(line_t *ld)
  * Public Functions
  ****************************************************************************/
 
-/* P_TeleportMove */
+/* p_teleport_move */
 
-boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y)
+boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y)
 {
   int xl;
   int xh;

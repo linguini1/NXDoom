@@ -200,7 +200,7 @@ extern int numspechit;
 
 boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y);
 boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y);
-boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y);
+boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y);
 void P_SlideMove(mobj_t *mo);
 boolean P_CheckSight(mobj_t *t1, mobj_t *t2);
 void p_use_lines(player_t *player);

@@ -498,6 +498,6 @@ void T_MoveFloor(floormove_t *floor);
 //
 // P_TELEPT
 //
-int EV_Teleport(line_t *line, int side, mobj_t *thing);
+int ev_teleport(line_t *line, int side, mobj_t *thing);
 
 #endif

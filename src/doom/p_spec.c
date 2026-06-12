@@ -602,7 +602,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 39:
       // TELEPORT!
-      EV_Teleport(line, side, thing);
+      ev_teleport(line, side, thing);
       line->special = 0;
       break;
 
@@ -711,7 +711,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
       // TELEPORT MonsterONLY
       if (!thing->player)
         {
-          EV_Teleport(line, side, thing);
+          ev_teleport(line, side, thing);
           line->special = 0;
         }
       break;
@@ -848,7 +848,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 97:
       // TELEPORT!
-      EV_Teleport(line, side, thing);
+      ev_teleport(line, side, thing);
       break;
 
     case 98:
@@ -878,7 +878,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t *thing)
 
     case 126:
       // TELEPORT MonsterONLY.
-      if (!thing->player) EV_Teleport(line, side, thing);
+      if (!thing->player) ev_teleport(line, side, thing);
       break;
 
     case 128:
