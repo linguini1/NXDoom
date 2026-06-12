@@ -60,8 +60,8 @@ extern int numspritelumps;
 extern int numsprites;
 extern spritedef_t *sprites;
 
-extern int numvertexes;
-extern vertex_t *vertexes;
+extern int numvertices;
+extern vertex_t *vertices;
 
 extern int numsegs;
 extern seg_t *segs;

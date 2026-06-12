@@ -427,17 +427,17 @@ void AM_findMinMaxBoundaries(void)
   min_x = min_y = INT_MAX;
   max_x = max_y = -INT_MAX;
 
-  for (i = 0; i < numvertexes; i++)
+  for (i = 0; i < numvertices; i++)
     {
-      if (vertexes[i].x < min_x)
-        min_x = vertexes[i].x;
-      else if (vertexes[i].x > max_x)
-        max_x = vertexes[i].x;
+      if (vertices[i].x < min_x)
+        min_x = vertices[i].x;
+      else if (vertices[i].x > max_x)
+        max_x = vertices[i].x;
 
-      if (vertexes[i].y < min_y)
-        min_y = vertexes[i].y;
-      else if (vertexes[i].y > max_y)
-        max_y = vertexes[i].y;
+      if (vertices[i].y < min_y)
+        min_y = vertices[i].y;
+      else if (vertices[i].y > max_y)
+        max_y = vertices[i].y;
     }
 
   max_w = max_x - min_x;

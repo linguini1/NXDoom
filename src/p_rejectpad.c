@@ -25,7 +25,7 @@
 // Pad the REJECT lump with extra data when the lump is too small,
 // to simulate a REJECT buffer overflow in Vanilla Doom.
 
-void PadRejectArray(byte *array, unsigned int len, int totallines)
+void pad_reject_array(byte *array, unsigned int len, int totallines)
 {
   unsigned int i;
   unsigned int byte_num;
@@ -60,7 +60,7 @@ void PadRejectArray(byte *array, unsigned int len, int totallines)
   if (len > sizeof(rejectpad))
     {
       fprintf(stderr,
-              "PadRejectArray: REJECT lump too short to pad! (%u > %i)\n",
+              "pad_reject_array: REJECT lump too short to pad! (%u > %i)\n",
               len, (int)sizeof(rejectpad));
 
       // Pad remaining space with 0 (or 0xff, if specified on command line).

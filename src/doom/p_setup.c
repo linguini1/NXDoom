@@ -1,21 +1,30 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Do all the WAD I/O, get map description,
-//	set up initial state and misc. LUTs.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/p_setup.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  Do all the WAD I/O, get map description, set up initial state and misc.
+ * LUTs.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <math.h>
 #include <stdlib.h>
@@ -42,14 +51,36 @@
 
 #include "doomstat.h"
 
-void P_SpawnMapThing(mapthing_t *mthing);
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
-//
-// MAP related Lookup tables.
-// Store VERTEXES, LINEDEFS, SIDEDEFS, etc.
-//
-int numvertexes;
-vertex_t *vertexes;
+/* Maintain single and multi player starting spots. */
+
+#define MAX_DEATHMATCH_STARTS 10
+
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
+
+void p_spawn_map_thing(mapthing_t *mthing);
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+static int totallines;
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+/* MAP related Lookup tables.
+ * Store VERTICES, LINEDEFS, SIDEDEFS, etc.
+ */
+
+int numvertices;
+vertex_t *vertices;
 
 int numsegs;
 seg_t *segs;
@@ -69,83 +100,90 @@ line_t *lines;
 int numsides;
 side_t *sides;
 
-static int totallines;
+/* BLOCKMAP
+ * Created from axis aligned bounding box
+ * of the map, a rectangular array of
+ * blocks of size ...
+ * Used to speed up collision detection
+ * by spatial subdivision in 2D.
+ */
 
-// BLOCKMAP
-// Created from axis aligned bounding box
-// of the map, a rectangular array of
-// blocks of size ...
-// Used to speed up collision detection
-// by spatial subdivision in 2D.
-//
-// Blockmap size.
+/* Blockmap size. */
+
 int bmapwidth;
-int bmapheight;  // size in mapblocks
-short *blockmap; // int for larger maps
-// offsets in blockmap are from here
+int bmapheight;  /* size in mapblocks */
+short *blockmap; /* int for larger maps */
+
+/* offsets in blockmap are from here */
+
 short *blockmaplump;
-// origin of block map
+
+/* origin of block map */
+
 fixed_t bmaporgx;
 fixed_t bmaporgy;
-// for thing chains
+
+/* for thing chains */
+
 mobj_t **blocklinks;
 
-// REJECT
-// For fast sight rejection.
-// Speeds up enemy AI by skipping detailed
-//  LineOf Sight calculation.
-// Without special effect, this could be
-//  used as a PVS lookup as well.
-//
-byte *rejectmatrix;
+/* REJECT
+ * For fast sight rejection.
+ * Speeds up enemy AI by skipping detailed LineOf Sight calculation.
+ * Without special effect, this could be used as a PVS lookup as well.
+ */
 
-// Maintain single and multi player starting spots.
-#define MAX_DEATHMATCH_STARTS 10
+byte *rejectmatrix;
 
 mapthing_t deathmatchstarts[MAX_DEATHMATCH_STARTS];
 mapthing_t *deathmatch_p;
 mapthing_t playerstarts[MAXPLAYERS];
 boolean playerstartsingame[MAXPLAYERS];
 
-//
-// P_LoadVertexes
-//
-void P_LoadVertexes(int lump)
+/* pointer to the current map lump info struct */
+
+lumpinfo_t *maplumpinfo;
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void p_load_vertices(int lump)
 {
   byte *data;
   int i;
   mapvertex_t *ml;
   vertex_t *li;
 
-  // Determine number of lumps:
-  //  total lump length / vertex record length.
-  numvertexes = w_lump_length(lump) / sizeof(mapvertex_t);
+  /* Determine number of lumps: total lump length / vertex record length. */
 
-  // Allocate zone memory for buffer.
-  vertexes = z_malloc(numvertexes * sizeof(vertex_t), PU_LEVEL, 0);
+  numvertices = w_lump_length(lump) / sizeof(mapvertex_t);
 
-  // Load data into cache.
+  /* Allocate zone memory for buffer. */
+
+  vertices = z_malloc(numvertices * sizeof(vertex_t), PU_LEVEL, 0);
+
+  /* Load data into cache. */
+
   data = w_cache_lump_num(lump, PU_STATIC);
 
   ml = (mapvertex_t *)data;
-  li = vertexes;
+  li = vertices;
 
-  // Copy and convert vertex coordinates,
-  // internal representation as fixed.
-  for (i = 0; i < numvertexes; i++, li++, ml++)
+  /* Copy and convert vertex coordinates, internal representation as fixed. */
+
+  for (i = 0; i < numvertices; i++, li++, ml++)
     {
       li->x = SHORT(ml->x) << FRACBITS;
       li->y = SHORT(ml->y) << FRACBITS;
     }
 
-  // Free buffer memory.
+  /* Free buffer memory. */
+
   w_release_lump_num(lump);
 }
 
-//
-// GetSectorAtNullAddress
-//
-sector_t *GetSectorAtNullAddress(void)
+static sector_t *get_sector_at_null_address(void)
 {
   static boolean null_sector_is_initialized = false;
   static sector_t null_sector;
@@ -161,10 +199,7 @@ sector_t *GetSectorAtNullAddress(void)
   return &null_sector;
 }
 
-//
-// P_LoadSegs
-//
-void P_LoadSegs(int lump)
+static void p_load_segs(int lump)
 {
   byte *data;
   int i;
@@ -184,8 +219,8 @@ void P_LoadSegs(int lump)
   li = segs;
   for (i = 0; i < numsegs; i++, li++, ml++)
     {
-      li->v1 = &vertexes[SHORT(ml->v1)];
-      li->v2 = &vertexes[SHORT(ml->v2)];
+      li->v1 = &vertices[SHORT(ml->v1)];
+      li->v2 = &vertices[SHORT(ml->v2)];
 
       li->angle = (SHORT(ml->angle)) << FRACBITS;
       li->offset = (SHORT(ml->offset)) << FRACBITS;
@@ -194,10 +229,11 @@ void P_LoadSegs(int lump)
       li->linedef = ldef;
       side = SHORT(ml->side);
 
-      // e6y: check for wrong indexes
+      /* e6y: check for wrong indexes */
+
       if ((unsigned)ldef->sidenum[side] >= (unsigned)numsides)
         {
-          i_error("P_LoadSegs: linedef %d for seg %d references a "
+          i_error("p_load_segs: linedef %d for seg %d references a "
                   "non-existent sidedef %d",
                   linedef_int, i, (unsigned)ldef->sidenum[side]);
         }
@@ -209,15 +245,16 @@ void P_LoadSegs(int lump)
         {
           sidenum = ldef->sidenum[side ^ 1];
 
-          // If the sidenum is out of range, this may be a "glass hack"
-          // impassible window.  Point at side #0 (this may not be
-          // the correct Vanilla behavior; however, it seems to work for
-          // OTTAWAU.WAD, which is the one place I've seen this trick
-          // used).
+          /* If the sidenum is out of range, this may be a "glass hack"
+           * impassable window. Point at side #0 (this may not be
+           * the correct Vanilla behavior; however, it seems to work for
+           * OTTAWAU.WAD, which is the one place I've seen this trick
+           * used).
+           */
 
           if (sidenum < 0 || sidenum >= numsides)
             {
-              li->backsector = GetSectorAtNullAddress();
+              li->backsector = get_sector_at_null_address();
             }
           else
             {
@@ -233,10 +270,7 @@ void P_LoadSegs(int lump)
   w_release_lump_num(lump);
 }
 
-//
-// P_LoadSubsectors
-//
-void P_LoadSubsectors(int lump)
+static void p_load_subsectors(int lump)
 {
   byte *data;
   int i;
@@ -260,10 +294,7 @@ void P_LoadSubsectors(int lump)
   w_release_lump_num(lump);
 }
 
-//
-// P_LoadSectors
-//
-void P_LoadSectors(int lump)
+static void p_load_sectors(int lump)
 {
   byte *data;
   int i;
@@ -292,10 +323,7 @@ void P_LoadSectors(int lump)
   w_release_lump_num(lump);
 }
 
-//
-// P_LoadNodes
-//
-void P_LoadNodes(int lump)
+static void p_load_nodes(int lump)
 {
   byte *data;
   int i;
@@ -328,10 +356,7 @@ void P_LoadNodes(int lump)
   w_release_lump_num(lump);
 }
 
-//
-// P_LoadThings
-//
-void P_LoadThings(int lump)
+static void p_load_things(int lump)
 {
   byte *data;
   int i;
@@ -348,35 +373,38 @@ void P_LoadThings(int lump)
     {
       spawn = true;
 
-      // Do not spawn cool, new monsters if !commercial
+      /* Do not spawn cool, new monsters if !commercial */
+
       if (gamemode != commercial)
         {
           switch (SHORT(mt->type))
             {
-            case 68: // Arachnotron
-            case 64: // Archvile
-            case 88: // Boss Brain
-            case 89: // Boss Shooter
-            case 69: // Hell Knight
-            case 67: // Mancubus
-            case 71: // Pain Elemental
-            case 65: // Former Human Commando
-            case 66: // Revenant
-            case 84: // Wolf SS
+            case 68: /* Arachnotron */
+            case 64: /* Archvile */
+            case 88: /* Boss Brain */
+            case 89: /* Boss Shooter */
+            case 69: /* Hell Knight */
+            case 67: /* Mancubus */
+            case 71: /* Pain Elemental */
+            case 65: /* Former Human Commando */
+            case 66: /* Revenant */
+            case 84: /* Wolf SS */
               spawn = false;
               break;
             }
         }
+
       if (spawn == false) break;
 
-      // Do spawn all other stuff.
+      /* Do spawn all other stuff. */
+
       spawnthing.x = SHORT(mt->x);
       spawnthing.y = SHORT(mt->y);
       spawnthing.angle = SHORT(mt->angle);
       spawnthing.type = SHORT(mt->type);
       spawnthing.options = SHORT(mt->options);
 
-      P_SpawnMapThing(&spawnthing);
+      p_spawn_map_thing(&spawnthing);
     }
 
   if (!deathmatch)
@@ -385,10 +413,11 @@ void P_LoadThings(int lump)
         {
           if (playeringame[i] && !playerstartsingame[i])
             {
-              i_error("P_LoadThings: Player %d start missing (vanilla "
+              i_error("p_load_things: Player %d start missing (vanilla "
                       "crashes here)",
                       i + 1);
             }
+
           playerstartsingame[i] = false;
         }
     }
@@ -396,11 +425,11 @@ void P_LoadThings(int lump)
   w_release_lump_num(lump);
 }
 
-//
-// P_LoadLineDefs
-// Also counts secret lines for intermissions.
-//
-void P_LoadLineDefs(int lump)
+/* p_load_linedefs
+ * Also counts secret lines for intermissions.
+ */
+
+static void p_load_linedefs(int lump)
 {
   byte *data;
   int i;
@@ -421,8 +450,8 @@ void P_LoadLineDefs(int lump)
       ld->flags = SHORT(mld->flags);
       ld->special = SHORT(mld->special);
       ld->tag = SHORT(mld->tag);
-      v1 = ld->v1 = &vertexes[SHORT(mld->v1)];
-      v2 = ld->v2 = &vertexes[SHORT(mld->v2)];
+      v1 = ld->v1 = &vertices[SHORT(mld->v1)];
+      v2 = ld->v2 = &vertices[SHORT(mld->v2)];
       ld->dx = v2->x - v1->x;
       ld->dy = v2->y - v1->y;
 
@@ -477,10 +506,7 @@ void P_LoadLineDefs(int lump)
   w_release_lump_num(lump);
 }
 
-//
-// P_LoadSideDefs
-//
-void P_LoadSideDefs(int lump)
+static void p_load_side_defs(int lump)
 {
   byte *data;
   int i;
@@ -507,10 +533,7 @@ void P_LoadSideDefs(int lump)
   w_release_lump_num(lump);
 }
 
-//
-// P_LoadBlockMap
-//
-void P_LoadBlockMap(int lump)
+static void p_load_block_map(int lump)
 {
   int i;
   int count;
@@ -523,33 +546,33 @@ void P_LoadBlockMap(int lump)
   w_read_lump(lump, blockmaplump);
   blockmap = blockmaplump + 4;
 
-  // Swap all short integers to native byte ordering.
+  /* Swap all short integers to native byte ordering. */
 
   for (i = 0; i < count; i++)
     {
       blockmaplump[i] = SHORT(blockmaplump[i]);
     }
 
-  // Read the header
+  /* Read the header */
 
   bmaporgx = blockmaplump[0] << FRACBITS;
   bmaporgy = blockmaplump[1] << FRACBITS;
   bmapwidth = blockmaplump[2];
   bmapheight = blockmaplump[3];
 
-  // Clear out mobj chains
+  /* Clear out mobj chains */
 
   count = sizeof(*blocklinks) * bmapwidth * bmapheight;
   blocklinks = z_malloc(count, PU_LEVEL, 0);
   memset(blocklinks, 0, count);
 }
 
-//
-// P_GroupLines
-// Builds sector line lists and subsector sector numbers.
-// Finds block bounding boxes for sectors.
-//
-void P_GroupLines(void)
+/* p_group_lines
+ * Builds sector line lists and subsector sector numbers.
+ * Finds block bounding boxes for sectors.
+ */
+
+static void p_group_lines(void)
 {
   line_t **linebuffer;
   int i;
@@ -561,7 +584,8 @@ void P_GroupLines(void)
   fixed_t bbox[4];
   int block;
 
-  // look up sector number for each subsector
+  /* look up sector number for each subsector */
+
   ss = subsectors;
   for (i = 0; i < numsubsectors; i++, ss++)
     {
@@ -569,7 +593,8 @@ void P_GroupLines(void)
       ss->sector = seg->sidedef->sector;
     }
 
-  // count number of lines in each sector
+  /* count number of lines in each sector */
+
   li = lines;
   totallines = 0;
   for (i = 0; i < numlines; i++, li++)
@@ -584,23 +609,25 @@ void P_GroupLines(void)
         }
     }
 
-  // build line tables for each sector
+  /* build line tables for each sector */
+
   linebuffer = z_malloc(totallines * sizeof(line_t *), PU_LEVEL, 0);
 
   for (i = 0; i < numsectors; ++i)
     {
-      // Assign the line buffer for this sector
+      /* Assign the line buffer for this sector */
 
       sectors[i].lines = linebuffer;
       linebuffer += sectors[i].linecount;
 
-      // Reset linecount to zero so in the next stage we can count
-      // lines into the list.
+      /* Reset linecount to zero so in the next stage we can count
+       * lines into the list.
+       */
 
       sectors[i].linecount = 0;
     }
 
-  // Assign lines to sectors
+  /* Assign lines to sectors */
 
   for (i = 0; i < numlines; ++i)
     {
@@ -623,7 +650,7 @@ void P_GroupLines(void)
         }
     }
 
-  // Generate bounding boxes for sectors
+  /* Generate bounding boxes for sectors */
 
   sector = sectors;
   for (i = 0; i < numsectors; i++, sector++)
@@ -638,11 +665,13 @@ void P_GroupLines(void)
           m_add_to_box(bbox, li->v2->x, li->v2->y);
         }
 
-      // set the degenmobj_t to the middle of the bounding box
+      /* set the degenmobj_t to the middle of the bounding box */
+
       sector->soundorg.x = (bbox[BOXRIGHT] + bbox[BOXLEFT]) / 2;
       sector->soundorg.y = (bbox[BOXTOP] + bbox[BOXBOTTOM]) / 2;
 
-      // adjust bounding box to map blocks
+      /* adjust bounding box to map blocks */
+
       block = (bbox[BOXTOP] - bmaporgy + MAXRADIUS) >> MAPBLOCKSHIFT;
       block = block >= bmapheight ? bmapheight - 1 : block;
       sector->blockbox[BOXTOP] = block;
@@ -661,18 +690,19 @@ void P_GroupLines(void)
     }
 }
 
-static void P_LoadReject(int lumpnum)
+static void p_load_reject(int lumpnum)
 {
   int minlength;
   int lumplen;
 
-  // Calculate the size that the REJECT lump *should* be.
+  /* Calculate the size that the REJECT lump *should* be. */
 
   minlength = (numsectors * numsectors + 7) / 8;
 
-  // If the lump meets the minimum length, it can be loaded directly.
-  // Otherwise, we need to allocate a buffer of the correct size
-  // and pad it with appropriate data.
+  /* If the lump meets the minimum length, it can be loaded directly.
+   * Otherwise, we need to allocate a buffer of the correct size
+   * and pad it with appropriate data.
+   */
 
   lumplen = w_lump_length(lumpnum);
 
@@ -685,16 +715,13 @@ static void P_LoadReject(int lumpnum)
       rejectmatrix = z_malloc(minlength, PU_LEVEL, &rejectmatrix);
       w_read_lump(lumpnum, rejectmatrix);
 
-      PadRejectArray(rejectmatrix + lumplen, minlength - lumplen, totallines);
+      pad_reject_array(rejectmatrix + lumplen, minlength - lumplen,
+                       totallines);
     }
 }
 
-// pointer to the current map lump info struct
-lumpinfo_t *maplumpinfo;
+/* p_setup_level */
 
-//
-// p_setup_level
-//
 void p_setup_level(int episode, int map, int playermask, skill_t skill)
 {
   int i;
@@ -709,24 +736,28 @@ void p_setup_level(int episode, int map, int playermask, skill_t skill)
           0;
     }
 
-  // Initial height of PointOfView
-  // will be set by player think.
+  /* Initial height of PointOfView will be set by player think. */
+
   players[consoleplayer].viewz = 1;
 
-  // Make sure all sounds are stopped before z_free_tags.
+  /* Make sure all sounds are stopped before z_free_tags. */
+
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start();
 #endif
 
   z_free_tags(PU_LEVEL, PU_PURGELEVEL - 1);
 
-  // UNUSED w_profile ();
+  /* UNUSED w_profile (); */
+
   p_init_thinkers();
 
-  // if working with a devlopment map, reload it
+  /* if working with a development map, reload it */
+
   w_reload();
 
-  // find map name
+  /* find map name */
+
   if (gamemode == commercial)
     {
       if (map < 10)
@@ -749,53 +780,52 @@ void p_setup_level(int episode, int map, int playermask, skill_t skill)
 
   leveltime = 0;
 
-  // note: most of this ordering is important
-  P_LoadBlockMap(lumpnum + ML_BLOCKMAP);
-  P_LoadVertexes(lumpnum + ML_VERTEXES);
-  P_LoadSectors(lumpnum + ML_SECTORS);
-  P_LoadSideDefs(lumpnum + ML_SIDEDEFS);
+  /* note: most of this ordering is important */
 
-  P_LoadLineDefs(lumpnum + ML_LINEDEFS);
-  P_LoadSubsectors(lumpnum + ML_SSECTORS);
-  P_LoadNodes(lumpnum + ML_NODES);
-  P_LoadSegs(lumpnum + ML_SEGS);
+  p_load_block_map(lumpnum + ML_BLOCKMAP);
+  p_load_vertices(lumpnum + ML_VERTICES);
+  p_load_sectors(lumpnum + ML_SECTORS);
+  p_load_side_defs(lumpnum + ML_SIDEDEFS);
 
-  P_GroupLines();
-  P_LoadReject(lumpnum + ML_REJECT);
+  p_load_linedefs(lumpnum + ML_LINEDEFS);
+  p_load_subsectors(lumpnum + ML_SSECTORS);
+  p_load_nodes(lumpnum + ML_NODES);
+  p_load_segs(lumpnum + ML_SEGS);
+
+  p_group_lines();
+  p_load_reject(lumpnum + ML_REJECT);
 
   bodyqueslot = 0;
   deathmatch_p = deathmatchstarts;
-  P_LoadThings(lumpnum + ML_THINGS);
+  p_load_things(lumpnum + ML_THINGS);
 
-  // if deathmatch, randomly spawn the active players
+  /* if deathmatch, randomly spawn the active players */
+
   if (deathmatch)
     {
       for (i = 0; i < MAXPLAYERS; i++)
-        if (playeringame[i])
-          {
-            players[i].mo = NULL;
-            g_death_match_spawn_player(i);
-          }
+        {
+          if (playeringame[i])
+            {
+              players[i].mo = NULL;
+              g_death_match_spawn_player(i);
+            }
+        }
     }
 
-  // clear special respawning que
+  /* clear special respawning que */
+
   iquehead = iquetail = 0;
 
-  // set up world state
+  /* set up world state */
+
   p_spawn_specials();
 
-  // build subsector connect matrix
-  //	UNUSED P_ConnectSubsectors ();
+  /* preload graphics */
 
-  // preload graphics
   if (precache) r_precache_level();
-
-  // printf ("free memory: 0x%x\n", z_free_memory());
 }
 
-//
-// p_init
-//
 void p_init(void)
 {
   p_init_switch_list();

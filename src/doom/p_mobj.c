@@ -69,7 +69,7 @@ int iquetail;
  ****************************************************************************/
 
 void g_player_reborn(int player);
-void P_SpawnMapThing(mapthing_t *mthing);
+void p_spawn_map_thing(mapthing_t *mthing);
 
 /****************************************************************************
  * Name: p_set_mobj_state
@@ -778,14 +778,14 @@ void p_spawn_player(mapthing_t *mthing)
 }
 
 /****************************************************************************
- * Name: P_SpawnMapThing
+ * Name: p_spawn_map_thing
  *
  * Description:
  *  The fields of the mapthing should already be in host byte order.
  *
  ****************************************************************************/
 
-void P_SpawnMapThing(mapthing_t *mthing)
+void p_spawn_map_thing(mapthing_t *mthing)
 {
   int i;
   int bit;
@@ -853,7 +853,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
     if (mthing->type == mobjinfo[i].doomednum) break;
 
   if (i == NUMMOBJTYPES)
-    i_error("P_SpawnMapThing: Unknown type %i at (%i, %i)", mthing->type,
+    i_error("p_spawn_map_thing: Unknown type %i at (%i, %i)", mthing->type,
             mthing->x, mthing->y);
 
   /* don't spawn keycards and players in deathmatch */

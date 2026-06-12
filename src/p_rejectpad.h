@@ -22,6 +22,6 @@
 #include "doomtype.h"
 
 // Padding of Reject Lump
-void PadRejectArray(byte *array, unsigned int len, int totallines);
+void pad_reject_array(byte *array, unsigned int len, int totallines);
 
 #endif
