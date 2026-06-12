@@ -1,20 +1,29 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Floor animation: raising stairs.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/p_floor.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  Floor animation: raising stairs.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include "doomdef.h"
 #include "p_local.h"
@@ -25,35 +34,39 @@
 #include "sounds.h"
 #endif
 
-// State.
+/* State. */
+
 #include "doomstat.h"
 #include "r_state.h"
-// Data.
 
-// e6y
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* e6y */
+
 #define STAIRS_UNINITIALIZED_CRUSH_FIELD_VALUE 10
 
-//
-// FLOORS
-//
+/* FLOORS */
 
-//
-// Move a plane (floor or ceiling) and check for crushing
-//
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/* Move a plane (floor or ceiling) and check for crushing */
+
 result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
-                     boolean crush, int floor_or_ceiling, int direction)
+                      boolean crush, int floor_or_ceiling, int direction)
 {
   boolean flag;
   fixed_t lastpos;
 
   switch (floor_or_ceiling)
     {
-    case 0:
-      // FLOOR
+    case 0: /* FLOOR */
       switch (direction)
         {
-        case -1:
-          // DOWN
+        case -1: /* DOWN */
           if (sector->floorheight - speed < dest)
             {
               lastpos = sector->floorheight;
@@ -63,8 +76,10 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
                 {
                   sector->floorheight = lastpos;
                   p_change_sector(sector, crush);
-                  // return crushed;
+
+                  /* return crushed; */
                 }
+
               return pastdest;
             }
           else
@@ -79,10 +94,10 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
                   return crushed;
                 }
             }
+
           break;
 
-        case 1:
-          // UP
+        case 1: /* UP */
           if (sector->floorheight + speed > dest)
             {
               lastpos = sector->floorheight;
@@ -92,13 +107,16 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
                 {
                   sector->floorheight = lastpos;
                   p_change_sector(sector, crush);
-                  // return crushed;
+
+                  /* return crushed; */
                 }
+
               return pastdest;
             }
           else
             {
-              // COULD GET CRUSHED
+              /* COULD GET CRUSHED */
+
               lastpos = sector->floorheight;
               sector->floorheight += speed;
               flag = p_change_sector(sector, crush);
@@ -114,12 +132,10 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
         }
       break;
 
-    case 1:
-      // CEILING
+    case 1: /* CEILING */
       switch (direction)
         {
-        case -1:
-          // DOWN
+        case -1: /* DOWN */
           if (sector->ceilingheight - speed < dest)
             {
               lastpos = sector->ceilingheight;
@@ -130,13 +146,16 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
                 {
                   sector->ceilingheight = lastpos;
                   p_change_sector(sector, crush);
-                  // return crushed;
+
+                  /* return crushed; */
                 }
+
               return pastdest;
             }
           else
             {
-              // COULD GET CRUSHED
+              /* COULD GET CRUSHED */
+
               lastpos = sector->ceilingheight;
               sector->ceilingheight -= speed;
               flag = p_change_sector(sector, crush);
@@ -151,8 +170,7 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
             }
           break;
 
-        case 1:
-          // UP
+        case 1: /* UP */
           if (sector->ceilingheight + speed > dest)
             {
               lastpos = sector->ceilingheight;
@@ -162,8 +180,10 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
                 {
                   sector->ceilingheight = lastpos;
                   p_change_sector(sector, crush);
-                  // return crushed;
+
+                  /* return crushed; */
                 }
+
               return pastdest;
             }
           else
@@ -171,32 +191,32 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
               lastpos = sector->ceilingheight;
               sector->ceilingheight += speed;
               flag = p_change_sector(sector, crush);
-// UNUSED
-#if 0
-		if (flag == true)
-		{
-		    sector->ceilingheight = lastpos;
-		    p_change_sector(sector,crush);
-		    return crushed;
-		}
+
+#if 0 /* UNUSED */
+              if (flag == true)
+                {
+                  sector->ceilingheight = lastpos;
+                  p_change_sector(sector, crush);
+                  return crushed;
+                }
 #endif
             }
           break;
         }
       break;
     }
+
   return ok;
 }
 
-//
-// MOVE A FLOOR TO IT'S DESTINATION (UP OR DOWN)
-//
+/* MOVE A FLOOR TO IT'S DESTINATION (UP OR DOWN) */
+
 void t_move_floor(floormove_t *floor)
 {
   result_e res;
 
   res = t_move_plane(floor->sector, floor->speed, floor->floordestheight,
-                    floor->crush, 0, floor->direction);
+                     floor->crush, 0, floor->direction);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   if (!(leveltime & 7)) s_start_sound(&floor->sector->soundorg, SFX_STNMOV);
@@ -228,6 +248,7 @@ void t_move_floor(floormove_t *floor)
               break;
             }
         }
+
       p_remove_thinker(&floor->thinker);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -236,9 +257,8 @@ void t_move_floor(floormove_t *floor)
     }
 }
 
-//
-// HANDLE FLOOR TYPES
-//
+/* HANDLE FLOOR TYPES */
+
 int ev_do_floor(line_t *line, floor_e floortype)
 {
   int secnum;
@@ -253,10 +273,12 @@ int ev_do_floor(line_t *line, floor_e floortype)
     {
       sec = &sectors[secnum];
 
-      // ALREADY MOVING?  IF SO, KEEP GOING...
+      /* ALREADY MOVING?  IF SO, KEEP GOING... */
+
       if (sec->specialdata) continue;
 
-      // new floor thinker
+      /* new floor thinker */
+
       rtn = 1;
       floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
       p_add_thinker(&floor->thinker);
@@ -324,7 +346,8 @@ int ev_do_floor(line_t *line, floor_e floortype)
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
-          floor->floordestheight = floor->sector->floorheight + 24 * FRACUNIT;
+          floor->floordestheight =
+              floor->sector->floorheight + 24 * FRACUNIT;
           break;
 
         case FLOOR_RAISEFLOOR512:
@@ -339,7 +362,8 @@ int ev_do_floor(line_t *line, floor_e floortype)
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
-          floor->floordestheight = floor->sector->floorheight + 24 * FRACUNIT;
+          floor->floordestheight =
+              floor->sector->floorheight + 24 * FRACUNIT;
           sec->floorpic = line->frontsector->floorpic;
           sec->special = line->frontsector->special;
           break;
@@ -366,6 +390,7 @@ int ev_do_floor(line_t *line, floor_e floortype)
                         minsize = textureheight[side->bottomtexture];
                   }
               }
+
             floor->floordestheight = floor->sector->floorheight + minsize;
           }
           break;
@@ -405,16 +430,17 @@ int ev_do_floor(line_t *line, floor_e floortype)
                     }
                 }
             }
+
         default:
           break;
         }
     }
+
   return rtn;
 }
 
-//
-// BUILD A STAIRCASE!
-//
+/* BUILD A STAIRCASE! */
+
 int ev_build_stairs(line_t *line, stair_e type)
 {
   int secnum;
@@ -439,10 +465,12 @@ int ev_build_stairs(line_t *line, stair_e type)
     {
       sec = &sectors[secnum];
 
-      // ALREADY MOVING?  IF SO, KEEP GOING...
+      /* ALREADY MOVING?  IF SO, KEEP GOING... */
+
       if (sec->specialdata) continue;
 
-      // new floor thinker
+      /* new floor thinker */
+
       rtn = 1;
       floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
       p_add_thinker(&floor->thinker);
@@ -450,6 +478,7 @@ int ev_build_stairs(line_t *line, stair_e type)
       floor->thinker.function.acp1 = (actionf_p1)t_move_floor;
       floor->direction = 1;
       floor->sector = sec;
+
       switch (type)
         {
         case STAIR_BUILD8:
@@ -461,21 +490,29 @@ int ev_build_stairs(line_t *line, stair_e type)
           stairsize = 16 * FRACUNIT;
           break;
         }
+
       floor->speed = speed;
       height = sec->floorheight + stairsize;
       floor->floordestheight = height;
-      // Initialize
+
+      /* Initialize */
+
       floor->type = FLOOR_LOWERFLOOR;
-      // e6y
-      // Uninitialized crush field will not be equal to 0 or 1 (true)
-      // with high probability. So, initialize it with any other value
+
+      /* e6y
+       * Uninitialized crush field will not be equal to 0 or 1 (true)
+       * with high probability. So, initialize it with any other value
+       */
+
       floor->crush = STAIRS_UNINITIALIZED_CRUSH_FIELD_VALUE;
 
       texture = sec->floorpic;
 
-      // Find next sector to raise
-      // 1.	Find 2-sided line with same sector side[0]
-      // 2.	Other side is the next sector to raise
+      /* Find next sector to raise
+       * 1. Find 2-sided line with same sector side[0]
+       * 2. Other side is the next sector to raise
+       */
+
       do
         {
           is_ok = 0;
@@ -509,11 +546,17 @@ int ev_build_stairs(line_t *line, stair_e type)
               floor->sector = sec;
               floor->speed = speed;
               floor->floordestheight = height;
-              // Initialize
+
+              /* Initialize */
+
               floor->type = FLOOR_LOWERFLOOR;
-              // e6y
-              // Uninitialized crush field will not be equal to 0 or 1 (true)
-              // with high probability. So, initialize it with any other value
+
+              /* e6y
+               * Uninitialized crush field will not be equal to 0 or 1
+               * (true) with high probability. So, initialize it with any
+               * other value
+               */
+
               floor->crush = STAIRS_UNINITIALIZED_CRUSH_FIELD_VALUE;
               is_ok = 1;
               break;
@@ -521,5 +564,6 @@ int ev_build_stairs(line_t *line, stair_e type)
         }
       while (is_ok);
     }
+
   return rtn;
 }
