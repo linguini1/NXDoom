@@ -1,19 +1,28 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:  Heads-up displays
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/hu_stuff.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:  Heads-up displays
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -42,12 +51,16 @@
 
 #include "doomstat.h"
 
-// Data.
+/* Data. */
+
 #include "dstrings.h"
 
-//
-// Locally used constants, shortcuts.
-//
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* Locally used constants, shortcuts. */
+
 #define HU_TITLE (mapnames[(gameepisode - 1) * 9 + gamemap - 1])
 #define HU_TITLE2 (mapnames_commercial[gamemap - 1])
 #define HU_TITLEP (mapnames_commercial[gamemap - 1 + 32])
@@ -63,23 +76,20 @@
 #define HU_INPUTWIDTH 64
 #define HU_INPUTHEIGHT 1
 
-char *chat_macros[10];
+#define QUEUESIZE 128
 
-const char *player_names[] = {HUSTR_PLRGREEN, HUSTR_PLRINDIGO, HUSTR_PLRBROWN,
-                              HUSTR_PLRRED};
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
 
-char chat_char; // remove later.
 static player_t *plr;
-patch_t *hu_font[HU_FONTSIZE];
 static hu_textline_t w_title;
-boolean chat_on;
 static hu_itext_t w_chat;
 static boolean always_off = false;
 static char chat_dest[MAXPLAYERS];
 static hu_itext_t w_inputbuffer[MAXPLAYERS];
 
 static boolean message_on;
-boolean message_dontfuckwithme;
 static boolean message_nottobefuckedwith;
 
 static hu_stext_t w_message;
@@ -87,99 +97,227 @@ static int message_counter;
 
 static boolean headsupactive = false;
 
-//
-// Builtin map names.
-// The actual names can be found in DStrings.h.
-//
+static char chatchars[QUEUESIZE];
+static int head = 0;
+static int tail = 0;
 
-const char *mapnames[] = // DOOM shareware/registered/retail (Ultimate) names.
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+char *chat_macros[10];
+
+const char *player_names[] =
+{
+  HUSTR_PLRGREEN,
+  HUSTR_PLRINDIGO,
+  HUSTR_PLRBROWN,
+  HUSTR_PLRRED,
+};
+
+char chat_char; /* remove later. */
+
+patch_t *hu_font[HU_FONTSIZE];
+boolean chat_on;
+boolean message_dontfuckwithme;
+
+/* Builtin map names.
+ * The actual names can be found in DStrings.h.
+ */
+
+/* DOOM shareware/registered/retail (Ultimate) names. */
+
+const char *mapnames[] =
+{
+  HUSTR_E1M1, HUSTR_E1M2, HUSTR_E1M3, HUSTR_E1M4, HUSTR_E1M5, HUSTR_E1M6,
+  HUSTR_E1M7, HUSTR_E1M8, HUSTR_E1M9, HUSTR_E2M1, HUSTR_E2M2, HUSTR_E2M3,
+  HUSTR_E2M4, HUSTR_E2M5, HUSTR_E2M6, HUSTR_E2M7, HUSTR_E2M8, HUSTR_E2M9,
+  HUSTR_E3M1, HUSTR_E3M2, HUSTR_E3M3, HUSTR_E3M4, HUSTR_E3M5, HUSTR_E3M6,
+  HUSTR_E3M7, HUSTR_E3M8, HUSTR_E3M9, HUSTR_E4M1, HUSTR_E4M2, HUSTR_E4M3,
+  HUSTR_E4M4, HUSTR_E4M5, HUSTR_E4M6, HUSTR_E4M7, HUSTR_E4M8, HUSTR_E4M9,
+  "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL",
+  "NEWLEVEL", "NEWLEVEL", "NEWLEVEL",
+};
+
+/* Chex Quest names. */
+
+const char *mapnames_chex[] =
+{
+  HUSTR_E1M1, HUSTR_E1M2, HUSTR_E1M3, HUSTR_E1M4, HUSTR_E1M5,
+  HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+  HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+  HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+  HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+  HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+  HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+  HUSTR_E1M5, "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL",
+  "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL",
+};
+
+/* List of names for levels in commercial IWADs
+ * (doom2.wad, plutonia.wad, tnt.wad).  These are stored in a
+ * single large array; WADs like pl2.wad have a MAP33, and rely on
+ * the layout in the Vanilla executable, where it is possible to
+ * overflow the end of one array into the next.
+ */
+
+const char *mapnames_commercial[] =
+{
+  HUSTR_1, /* DOOM 2 map names. */
+  HUSTR_2,
+  HUSTR_3,
+  HUSTR_4,
+  HUSTR_5,
+  HUSTR_6,
+  HUSTR_7,
+  HUSTR_8,
+  HUSTR_9,
+  HUSTR_10,
+  HUSTR_11,
+  HUSTR_12,
+  HUSTR_13,
+  HUSTR_14,
+  HUSTR_15,
+  HUSTR_16,
+  HUSTR_17,
+  HUSTR_18,
+  HUSTR_19,
+  HUSTR_20,
+  HUSTR_21,
+  HUSTR_22,
+  HUSTR_23,
+  HUSTR_24,
+  HUSTR_25,
+  HUSTR_26,
+  HUSTR_27,
+  HUSTR_28,
+  HUSTR_29,
+  HUSTR_30,
+  HUSTR_31,
+  HUSTR_32,
+  PHUSTR_1, /* Plutonia WAD map names. */
+  PHUSTR_2,
+  PHUSTR_3,
+  PHUSTR_4,
+  PHUSTR_5,
+  PHUSTR_6,
+  PHUSTR_7,
+  PHUSTR_8,
+  PHUSTR_9,
+  PHUSTR_10,
+  PHUSTR_11,
+  PHUSTR_12,
+  PHUSTR_13,
+  PHUSTR_14,
+  PHUSTR_15,
+  PHUSTR_16,
+  PHUSTR_17,
+  PHUSTR_18,
+  PHUSTR_19,
+  PHUSTR_20,
+  PHUSTR_21,
+  PHUSTR_22,
+  PHUSTR_23,
+  PHUSTR_24,
+  PHUSTR_25,
+  PHUSTR_26,
+  PHUSTR_27,
+  PHUSTR_28,
+  PHUSTR_29,
+  PHUSTR_30,
+  PHUSTR_31,
+  PHUSTR_32,
+  THUSTR_1, /* TNT WAD map names. */
+  THUSTR_2,
+  THUSTR_3,
+  THUSTR_4,
+  THUSTR_5,
+  THUSTR_6,
+  THUSTR_7,
+  THUSTR_8,
+  THUSTR_9,
+  THUSTR_10,
+  THUSTR_11,
+  THUSTR_12,
+  THUSTR_13,
+  THUSTR_14,
+  THUSTR_15,
+  THUSTR_16,
+  THUSTR_17,
+  THUSTR_18,
+  THUSTR_19,
+  THUSTR_20,
+  THUSTR_21,
+  THUSTR_22,
+  THUSTR_23,
+  THUSTR_24,
+  THUSTR_25,
+  THUSTR_26,
+  THUSTR_27,
+  THUSTR_28,
+  THUSTR_29,
+  THUSTR_30,
+  THUSTR_31,
+  THUSTR_32,
+
+  /* Emulation: TNT maps 33-35 can be warped to and played if they exist
+   * so include blank names instead of spilling over
+   */
+
+  "",
+  "",
+  "",
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void hu_stop(void)
+{
+  headsupactive = false;
+}
+
+static void hu_queue_chat_char(char c)
+{
+  if (((head + 1) & (QUEUESIZE - 1)) == tail)
     {
-
-        HUSTR_E1M1, HUSTR_E1M2, HUSTR_E1M3, HUSTR_E1M4, HUSTR_E1M5,
-        HUSTR_E1M6, HUSTR_E1M7, HUSTR_E1M8, HUSTR_E1M9,
-
-        HUSTR_E2M1, HUSTR_E2M2, HUSTR_E2M3, HUSTR_E2M4, HUSTR_E2M5,
-        HUSTR_E2M6, HUSTR_E2M7, HUSTR_E2M8, HUSTR_E2M9,
-
-        HUSTR_E3M1, HUSTR_E3M2, HUSTR_E3M3, HUSTR_E3M4, HUSTR_E3M5,
-        HUSTR_E3M6, HUSTR_E3M7, HUSTR_E3M8, HUSTR_E3M9,
-
-        HUSTR_E4M1, HUSTR_E4M2, HUSTR_E4M3, HUSTR_E4M4, HUSTR_E4M5,
-        HUSTR_E4M6, HUSTR_E4M7, HUSTR_E4M8, HUSTR_E4M9,
-
-        "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL",
-        "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL"};
-
-const char *mapnames_chex[] = // Chex Quest names.
+      plr->message = (HUSTR_MSGU);
+    }
+  else
     {
+      chatchars[head] = c;
+      head = (head + 1) & (QUEUESIZE - 1);
+    }
+}
 
-        HUSTR_E1M1, HUSTR_E1M2, HUSTR_E1M3, HUSTR_E1M4, HUSTR_E1M5,
-        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+static void start_chat_input(int dest)
+{
+  chat_on = true;
+  hu_lib_reset_itext(&w_chat);
+  hu_queue_chat_char(HU_BROADCAST);
 
-        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
-        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+  i_start_text_input(0, 8, SCREENWIDTH, 16);
+}
 
-        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
-        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+static void stop_chat_input(void)
+{
+  chat_on = false;
+  i_stop_text_input();
+}
 
-        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
-        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
-
-        "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL",
-        "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL"};
-
-// List of names for levels in commercial IWADs
-// (doom2.wad, plutonia.wad, tnt.wad).  These are stored in a
-// single large array; WADs like pl2.wad have a MAP33, and rely on
-// the layout in the Vanilla executable, where it is possible to
-// overflow the end of one array into the next.
-
-const char *mapnames_commercial[] = {
-    // DOOM 2 map names.
-
-    HUSTR_1, HUSTR_2, HUSTR_3, HUSTR_4, HUSTR_5, HUSTR_6, HUSTR_7, HUSTR_8,
-    HUSTR_9, HUSTR_10, HUSTR_11,
-
-    HUSTR_12, HUSTR_13, HUSTR_14, HUSTR_15, HUSTR_16, HUSTR_17, HUSTR_18,
-    HUSTR_19, HUSTR_20,
-
-    HUSTR_21, HUSTR_22, HUSTR_23, HUSTR_24, HUSTR_25, HUSTR_26, HUSTR_27,
-    HUSTR_28, HUSTR_29, HUSTR_30, HUSTR_31, HUSTR_32,
-
-    // Plutonia WAD map names.
-
-    PHUSTR_1, PHUSTR_2, PHUSTR_3, PHUSTR_4, PHUSTR_5, PHUSTR_6, PHUSTR_7,
-    PHUSTR_8, PHUSTR_9, PHUSTR_10, PHUSTR_11,
-
-    PHUSTR_12, PHUSTR_13, PHUSTR_14, PHUSTR_15, PHUSTR_16, PHUSTR_17,
-    PHUSTR_18, PHUSTR_19, PHUSTR_20,
-
-    PHUSTR_21, PHUSTR_22, PHUSTR_23, PHUSTR_24, PHUSTR_25, PHUSTR_26,
-    PHUSTR_27, PHUSTR_28, PHUSTR_29, PHUSTR_30, PHUSTR_31, PHUSTR_32,
-
-    // TNT WAD map names.
-
-    THUSTR_1, THUSTR_2, THUSTR_3, THUSTR_4, THUSTR_5, THUSTR_6, THUSTR_7,
-    THUSTR_8, THUSTR_9, THUSTR_10, THUSTR_11,
-
-    THUSTR_12, THUSTR_13, THUSTR_14, THUSTR_15, THUSTR_16, THUSTR_17,
-    THUSTR_18, THUSTR_19, THUSTR_20,
-
-    THUSTR_21, THUSTR_22, THUSTR_23, THUSTR_24, THUSTR_25, THUSTR_26,
-    THUSTR_27, THUSTR_28, THUSTR_29, THUSTR_30, THUSTR_31, THUSTR_32,
-
-    // Emulation: TNT maps 33-35 can be warped to and played if they exist
-    // so include blank names instead of spilling over
-    "", "", ""};
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 void hu_init(void)
 {
-
   uint8_t i;
   uint8_t j;
   char buffer[9];
 
-  // load the heads-up font
+  /* load the heads-up font */
+
   j = HU_FONTSTART;
   for (i = 0; i < HU_FONTSIZE; i++)
     {
@@ -188,15 +326,12 @@ void hu_init(void)
     }
 }
 
-void HU_Stop(void) { headsupactive = false; }
-
 void hu_start(void)
 {
-
   int i;
   const char *s;
 
-  if (headsupactive) HU_Stop();
+  if (headsupactive) hu_stop();
 
   plr = &players[consoleplayer];
   message_on = false;
@@ -204,12 +339,15 @@ void hu_start(void)
   message_nottobefuckedwith = false;
   chat_on = false;
 
-  // create the message widget
-  HUlib_initSText(&w_message, HU_MSGX, HU_MSGY, HU_MSGHEIGHT, hu_font,
+  /* create the message widget */
+
+  hu_lib_init_stext(&w_message, HU_MSGX, HU_MSGY, HU_MSGHEIGHT, hu_font,
                   HU_FONTSTART, &message_on);
 
-  // create the map title widget
-  HUlib_initTextLine(&w_title, HU_TITLEX, HU_TITLEY, hu_font, HU_FONTSTART);
+  /* create the map title widget */
+
+  hu_lib_init_text_line(&w_title, HU_TITLEX, HU_TITLEY, hu_font,
+                        HU_FONTSTART);
 
   switch (logical_gamemission)
     {
@@ -218,11 +356,14 @@ void hu_start(void)
       break;
     case doom2:
       s = HU_TITLE2;
-      // Pre-Final Doom compatibility: map33-map35 names don't spill over
+
+      /* Pre-Final Doom compatibility: map33-map35 names don't spill over */
+
       if (gameversion <= exe_doom_1_9 && gamemap >= 33)
         {
           s = "";
         }
+
       break;
     case pack_plut:
       s = HU_TITLEP;
@@ -240,47 +381,51 @@ void hu_start(void)
       s = HU_TITLE_CHEX;
     }
 
-  // dehacked substitution to get modified level name
+  /* dehacked substitution to get modified level name */
 
   s = (s);
-
   while (*s)
-    HUlib_addCharToTextLine(&w_title, *(s++));
+    {
+      hu_lib_add_char_to_text_line(&w_title, *(s++));
+    }
 
-  // create the chat widget
-  HUlib_initIText(&w_chat, HU_INPUTX, HU_INPUTY, hu_font, HU_FONTSTART,
+  /* create the chat widget */
+
+  hu_lib_init_itext(&w_chat, HU_INPUTX, HU_INPUTY, hu_font, HU_FONTSTART,
                   &chat_on);
 
-  // create the inputbuffer widgets
+  /* create the inputbuffer widgets */
+
   for (i = 0; i < MAXPLAYERS; i++)
-    HUlib_initIText(&w_inputbuffer[i], 0, 0, 0, 0, &always_off);
+    {
+      hu_lib_init_itext(&w_inputbuffer[i], 0, 0, 0, 0, &always_off);
+    }
 
   headsupactive = true;
 }
 
 void hu_drawer(void)
 {
-
-  HUlib_drawSText(&w_message);
-  HUlib_drawIText(&w_chat);
-  if (automapactive) HUlib_drawTextLine(&w_title, false);
+  hu_lib_draw_stext(&w_message);
+  hu_lib_draw_itext(&w_chat);
+  if (automapactive) hu_lib_draw_text_line(&w_title, false);
 }
 
 void hu_erase(void)
 {
-
-  HUlib_eraseSText(&w_message);
-  HUlib_eraseIText(&w_chat);
-  HUlib_eraseTextLine(&w_title);
+  hu_lib_erase_stext(&w_message);
+  hu_lib_erase_itext(&w_chat);
+  hu_lib_erase_text_line(&w_title);
 }
 
 void hu_ticker(void)
 {
-
-  int i, rc;
+  int i;
+  int rc;
   char c;
 
-  // tick down message counter if message is up
+  /* tick down message counter if message is up */
+
   if (message_counter && !--message_counter)
     {
       message_on = false;
@@ -289,22 +434,22 @@ void hu_ticker(void)
 
   if (g_show_messages || message_dontfuckwithme)
     {
+      /* display message if necessary */
 
-      // display message if necessary
       if ((plr->message && !message_nottobefuckedwith) ||
           (plr->message && message_dontfuckwithme))
         {
-          HUlib_addMessageToSText(&w_message, 0, plr->message);
+          hu_lib_add_messsage_to_stext(&w_message, 0, plr->message);
           plr->message = 0;
           message_on = true;
           message_counter = HU_MSGTIMEOUT;
           message_nottobefuckedwith = message_dontfuckwithme;
           message_dontfuckwithme = 0;
         }
+    }
 
-    } // else message_on = false;
+  /* check for incoming chat characters */
 
-  // check for incoming chat characters
   if (netgame)
     {
       for (i = 0; i < MAXPLAYERS; i++)
@@ -316,14 +461,14 @@ void hu_ticker(void)
                 chat_dest[i] = c;
               else
                 {
-                  rc = HUlib_keyInIText(&w_inputbuffer[i], c);
+                  rc = hu_lib_key_in_itext(&w_inputbuffer[i], c);
                   if (rc && c == KEY_ENTER)
                     {
                       if (w_inputbuffer[i].l.len &&
                           (chat_dest[i] == consoleplayer + 1 ||
                            chat_dest[i] == HU_BROADCAST))
                         {
-                          HUlib_addMessageToSText(&w_message,
+                          hu_lib_add_messsage_to_stext(&w_message,
                                                   (player_names[i]),
                                                   w_inputbuffer[i].l.l);
 
@@ -337,31 +482,14 @@ void hu_ticker(void)
                             s_start_sound(0, SFX_TINK);
 #endif
                         }
-                      HUlib_resetIText(&w_inputbuffer[i]);
+
+                      hu_lib_reset_itext(&w_inputbuffer[i]);
                     }
                 }
+
               players[i].cmd.chatchar = 0;
             }
         }
-    }
-}
-
-#define QUEUESIZE 128
-
-static char chatchars[QUEUESIZE];
-static int head = 0;
-static int tail = 0;
-
-void HU_queueChatChar(char c)
-{
-  if (((head + 1) & (QUEUESIZE - 1)) == tail)
-    {
-      plr->message = (HUSTR_MSGU);
-    }
-  else
-    {
-      chatchars[head] = c;
-      head = (head + 1) & (QUEUESIZE - 1);
     }
 }
 
@@ -382,24 +510,8 @@ char hu_dequeue_chat_char(void)
   return c;
 }
 
-static void StartChatInput(int dest)
-{
-  chat_on = true;
-  HUlib_resetIText(&w_chat);
-  HU_queueChatChar(HU_BROADCAST);
-
-  i_start_text_input(0, 8, SCREENWIDTH, 16);
-}
-
-static void StopChatInput(void)
-{
-  chat_on = false;
-  i_stop_text_input();
-}
-
 boolean hu_responder(event_t *ev)
 {
-
   static char lastmessage[HU_MAXLINELENGTH + 1];
   const char *macromessage;
   boolean eatkey = false;
@@ -437,7 +549,7 @@ boolean hu_responder(event_t *ev)
       else if (netgame && ev->data2 == key_multi_msg)
         {
           eatkey = true;
-          StartChatInput(HU_BROADCAST);
+          start_chat_input(HU_BROADCAST);
         }
       else if (netgame && numplayers > 2)
         {
@@ -448,7 +560,7 @@ boolean hu_responder(event_t *ev)
                   if (playeringame[i] && i != consoleplayer)
                     {
                       eatkey = true;
-                      StartChatInput(i + 1);
+                      start_chat_input(i + 1);
                       break;
                     }
                   else if (i == consoleplayer)
@@ -471,24 +583,30 @@ boolean hu_responder(event_t *ev)
     }
   else
     {
-      // send a macro
+      /* send a macro */
+
       if (altdown)
         {
           c = ev->data1 - '0';
           if (c > 9) return false;
-          // fprintf(stderr, "got here\n");
           macromessage = chat_macros[c];
 
-          // kill last message with a '\n'
-          HU_queueChatChar(KEY_ENTER); // DEBUG!!!
+          /* kill last message with a '\n' */
 
-          // send the macro message
+          hu_queue_chat_char(KEY_ENTER); /* DEBUG!!! */
+
+          /* send the macro message */
+
           while (*macromessage)
-            HU_queueChatChar(*macromessage++);
-          HU_queueChatChar(KEY_ENTER);
+            {
+              hu_queue_chat_char(*macromessage++);
+            }
 
-          // leave chat mode and notify that it was sent
-          StopChatInput();
+          hu_queue_chat_char(KEY_ENTER);
+
+          /* leave chat mode and notify that it was sent */
+
+          stop_chat_input();
           m_str_copy(lastmessage, chat_macros[c], sizeof(lastmessage));
           plr->message = lastmessage;
           eatkey = true;
@@ -497,18 +615,15 @@ boolean hu_responder(event_t *ev)
         {
           c = ev->data3;
 
-          eatkey = HUlib_keyInIText(&w_chat, c);
+          eatkey = hu_lib_key_in_itext(&w_chat, c);
           if (eatkey)
             {
-              // static unsigned char buf[20]; // DEBUG
-              HU_queueChatChar(c);
-
-              // snprintf(buf, sizeof(buf), "KEY: %d => %d", ev->data1, c);
-              //        plr->message = buf;
+              hu_queue_chat_char(c);
             }
+
           if (c == KEY_ENTER)
             {
-              StopChatInput();
+              stop_chat_input();
               if (w_chat.l.len)
                 {
                   m_str_copy(lastmessage, w_chat.l.l, sizeof(lastmessage));
@@ -517,7 +632,7 @@ boolean hu_responder(event_t *ev)
             }
           else if (c == KEY_ESCAPE)
             {
-              StopChatInput();
+              stop_chat_input();
             }
         }
     }

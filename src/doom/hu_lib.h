@@ -92,43 +92,43 @@ void HUlib_init(void);
 // clear a line of text
 void HUlib_clearTextLine(hu_textline_t *t);
 
-void HUlib_initTextLine(hu_textline_t *t, int x, int y, patch_t **f, int sc);
+void hu_lib_init_text_line(hu_textline_t *t, int x, int y, patch_t **f, int sc);
 
 // returns success
-boolean HUlib_addCharToTextLine(hu_textline_t *t, char ch);
+boolean hu_lib_add_char_to_text_line(hu_textline_t *t, char ch);
 
 // returns success
 boolean HUlib_delCharFromTextLine(hu_textline_t *t);
 
 // draws tline
-void HUlib_drawTextLine(hu_textline_t *l, boolean drawcursor);
+void hu_lib_draw_text_line(hu_textline_t *l, boolean drawcursor);
 
 // erases text line
-void HUlib_eraseTextLine(hu_textline_t *l);
+void hu_lib_erase_text_line(hu_textline_t *l);
 
 //
 // Scrolling Text window widget routines
 //
 
 // ?
-void HUlib_initSText(hu_stext_t *s, int x, int y, int h, patch_t **font,
+void hu_lib_init_stext(hu_stext_t *s, int x, int y, int h, patch_t **font,
                      int startchar, boolean *on);
 
 // add a new line
 void HUlib_addLineToSText(hu_stext_t *s);
 
 // ?
-void HUlib_addMessageToSText(hu_stext_t *s, const char *prefix,
+void hu_lib_add_messsage_to_stext(hu_stext_t *s, const char *prefix,
                              const char *msg);
 
 // draws stext
-void HUlib_drawSText(hu_stext_t *s);
+void hu_lib_draw_stext(hu_stext_t *s);
 
 // erases all stext lines
-void HUlib_eraseSText(hu_stext_t *s);
+void hu_lib_erase_stext(hu_stext_t *s);
 
 // Input Text Line widget routines
-void HUlib_initIText(hu_itext_t *it, int x, int y, patch_t **font,
+void hu_lib_init_itext(hu_itext_t *it, int x, int y, patch_t **font,
                      int startchar, boolean *on);
 
 // enforces left margin
@@ -138,17 +138,17 @@ void HUlib_delCharFromIText(hu_itext_t *it);
 void HUlib_eraseLineFromIText(hu_itext_t *it);
 
 // resets line and left margin
-void HUlib_resetIText(hu_itext_t *it);
+void hu_lib_reset_itext(hu_itext_t *it);
 
 // left of left-margin
 void HUlib_addPrefixToIText(hu_itext_t *it, char *str);
 
 // whether eaten
-boolean HUlib_keyInIText(hu_itext_t *it, unsigned char ch);
+boolean hu_lib_key_in_itext(hu_itext_t *it, unsigned char ch);
 
-void HUlib_drawIText(hu_itext_t *it);
+void hu_lib_draw_itext(hu_itext_t *it);
 
 // erases all itext lines
-void HUlib_eraseIText(hu_itext_t *it);
+void hu_lib_erase_itext(hu_itext_t *it);
 
 #endif

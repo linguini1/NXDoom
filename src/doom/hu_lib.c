@@ -40,7 +40,7 @@ void HUlib_clearTextLine(hu_textline_t *t)
   t->needsupdate = true;
 }
 
-void HUlib_initTextLine(hu_textline_t *t, int x, int y, patch_t **f, int sc)
+void hu_lib_init_text_line(hu_textline_t *t, int x, int y, patch_t **f, int sc)
 {
   t->x = x;
   t->y = y;
@@ -49,7 +49,7 @@ void HUlib_initTextLine(hu_textline_t *t, int x, int y, patch_t **f, int sc)
   HUlib_clearTextLine(t);
 }
 
-boolean HUlib_addCharToTextLine(hu_textline_t *t, char ch)
+boolean hu_lib_add_char_to_text_line(hu_textline_t *t, char ch)
 {
 
   if (t->len == HU_MAXLINELENGTH)
@@ -76,7 +76,7 @@ boolean HUlib_delCharFromTextLine(hu_textline_t *t)
     }
 }
 
-void HUlib_drawTextLine(hu_textline_t *l, boolean drawcursor)
+void hu_lib_draw_text_line(hu_textline_t *l, boolean drawcursor)
 {
 
   int i;
@@ -111,7 +111,7 @@ void HUlib_drawTextLine(hu_textline_t *l, boolean drawcursor)
 }
 
 // sorta called by hu_erase and just better darn get things straight
-void HUlib_eraseTextLine(hu_textline_t *l)
+void hu_lib_erase_text_line(hu_textline_t *l)
 {
   int lh;
   int y;
@@ -141,7 +141,7 @@ void HUlib_eraseTextLine(hu_textline_t *l)
   if (l->needsupdate) l->needsupdate--;
 }
 
-void HUlib_initSText(hu_stext_t *s, int x, int y, int h, patch_t **font,
+void hu_lib_init_stext(hu_stext_t *s, int x, int y, int h, patch_t **font,
                      int startchar, boolean *on)
 {
 
@@ -152,7 +152,7 @@ void HUlib_initSText(hu_stext_t *s, int x, int y, int h, patch_t **font,
   s->laston = true;
   s->cl = 0;
   for (i = 0; i < h; i++)
-    HUlib_initTextLine(&s->l[i], x, y - i * (SHORT(font[0]->height) + 1),
+    hu_lib_init_text_line(&s->l[i], x, y - i * (SHORT(font[0]->height) + 1),
                        font, startchar);
 }
 
@@ -170,19 +170,19 @@ void HUlib_addLineToSText(hu_stext_t *s)
     s->l[i].needsupdate = 4;
 }
 
-void HUlib_addMessageToSText(hu_stext_t *s, const char *prefix,
+void hu_lib_add_messsage_to_stext(hu_stext_t *s, const char *prefix,
                              const char *msg)
 {
   HUlib_addLineToSText(s);
   if (prefix)
     while (*prefix)
-      HUlib_addCharToTextLine(&s->l[s->cl], *(prefix++));
+      hu_lib_add_char_to_text_line(&s->l[s->cl], *(prefix++));
 
   while (*msg)
-    HUlib_addCharToTextLine(&s->l[s->cl], *(msg++));
+    hu_lib_add_char_to_text_line(&s->l[s->cl], *(msg++));
 }
 
-void HUlib_drawSText(hu_stext_t *s)
+void hu_lib_draw_stext(hu_stext_t *s)
 {
   int i, idx;
   hu_textline_t *l;
@@ -198,11 +198,11 @@ void HUlib_drawSText(hu_stext_t *s)
       l = &s->l[idx];
 
       // need a decision made here on whether to skip the draw
-      HUlib_drawTextLine(l, false); // no cursor, please
+      hu_lib_draw_text_line(l, false); // no cursor, please
     }
 }
 
-void HUlib_eraseSText(hu_stext_t *s)
+void hu_lib_erase_stext(hu_stext_t *s)
 {
 
   int i;
@@ -210,18 +210,18 @@ void HUlib_eraseSText(hu_stext_t *s)
   for (i = 0; i < s->h; i++)
     {
       if (s->laston && !*s->on) s->l[i].needsupdate = 4;
-      HUlib_eraseTextLine(&s->l[i]);
+      hu_lib_erase_text_line(&s->l[i]);
     }
   s->laston = *s->on;
 }
 
-void HUlib_initIText(hu_itext_t *it, int x, int y, patch_t **font,
+void hu_lib_init_itext(hu_itext_t *it, int x, int y, patch_t **font,
                      int startchar, boolean *on)
 {
   it->lm = 0; // default left margin is start of text
   it->on = on;
   it->laston = true;
-  HUlib_initTextLine(&it->l, x, y, font, startchar);
+  hu_lib_init_text_line(&it->l, x, y, font, startchar);
 }
 
 // The following deletion routines adhere to the left margin restriction
@@ -237,7 +237,7 @@ void HUlib_eraseLineFromIText(hu_itext_t *it)
 }
 
 // Resets left margin as well
-void HUlib_resetIText(hu_itext_t *it)
+void hu_lib_reset_itext(hu_itext_t *it)
 {
   it->lm = 0;
   HUlib_clearTextLine(&it->l);
@@ -246,18 +246,18 @@ void HUlib_resetIText(hu_itext_t *it)
 void HUlib_addPrefixToIText(hu_itext_t *it, char *str)
 {
   while (*str)
-    HUlib_addCharToTextLine(&it->l, *(str++));
+    hu_lib_add_char_to_text_line(&it->l, *(str++));
   it->lm = it->l.len;
 }
 
 // wrapper function for handling general keyed input.
 // returns true if it ate the key
-boolean HUlib_keyInIText(hu_itext_t *it, unsigned char ch)
+boolean hu_lib_key_in_itext(hu_itext_t *it, unsigned char ch)
 {
   ch = toupper(ch);
 
   if (ch >= ' ' && ch <= '_')
-    HUlib_addCharToTextLine(&it->l, (char)ch);
+    hu_lib_add_char_to_text_line(&it->l, (char)ch);
   else if (ch == KEY_BACKSPACE)
     HUlib_delCharFromIText(it);
   else if (ch != KEY_ENTER)
@@ -266,18 +266,18 @@ boolean HUlib_keyInIText(hu_itext_t *it, unsigned char ch)
   return true; // ate the key
 }
 
-void HUlib_drawIText(hu_itext_t *it)
+void hu_lib_draw_itext(hu_itext_t *it)
 {
 
   hu_textline_t *l = &it->l;
 
   if (!*it->on) return;
-  HUlib_drawTextLine(l, true); // draw the line w/ cursor
+  hu_lib_draw_text_line(l, true); // draw the line w/ cursor
 }
 
-void HUlib_eraseIText(hu_itext_t *it)
+void hu_lib_erase_itext(hu_itext_t *it)
 {
   if (it->laston && !*it->on) it->l.needsupdate = 4;
-  HUlib_eraseTextLine(&it->l);
+  hu_lib_erase_text_line(&it->l);
   it->laston = *it->on;
 }
