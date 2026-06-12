@@ -634,10 +634,10 @@ void p_remove_mobj(mobj_t *mobj)
 }
 
 /****************************************************************************
- * Name: P_RespawnSpecials
+ * Name: p_respawn_specials
  ****************************************************************************/
 
-void P_RespawnSpecials(void)
+void p_respawn_specials(void)
 {
   fixed_t x;
   fixed_t y;
@@ -683,7 +683,7 @@ void P_RespawnSpecials(void)
 
   if (i >= NUMMOBJTYPES)
     {
-      i_error("P_RespawnSpecials: Failed to find mobj type with doomednum "
+      i_error("p_respawn_specials: Failed to find mobj type with doomednum "
               "%d when respawning thing. This would cause a buffer overrun "
               "in vanilla Doom",
               mthing->type);

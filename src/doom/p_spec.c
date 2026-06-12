@@ -1000,13 +1000,13 @@ void p_player_in_special_sector(player_t *player)
 }
 
 //
-// P_UpdateSpecials
+// p_update_specials
 // Animate planes, scroll walls, etc.
 //
 boolean levelTimer;
 int levelTimeCount;
 
-void P_UpdateSpecials(void)
+void p_update_specials(void)
 {
   anim_t *anim;
   int pic;

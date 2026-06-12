@@ -91,7 +91,7 @@ extern int itemrespawntime[ITEMQUESIZE];
 extern int iquehead;
 extern int iquetail;
 
-void P_RespawnSpecials(void);
+void p_respawn_specials(void);
 
 mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type);
 

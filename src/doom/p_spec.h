@@ -38,7 +38,7 @@ void p_initPicAnims(void);
 void P_SpawnSpecials(void);
 
 // every tic
-void P_UpdateSpecials(void);
+void p_update_specials(void);
 
 // when needed
 boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side);

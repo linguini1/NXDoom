@@ -49,10 +49,44 @@ int leveltime;
 thinker_t thinkercap;
 
 /****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void p_run_thinkers(void)
+{
+  thinker_t *currentthinker, *nextthinker;
+
+  currentthinker = thinkercap.next;
+  while (currentthinker != &thinkercap)
+    {
+      if (currentthinker->function.acv == (actionf_v)(-1))
+        {
+          /* time to remove it */
+
+          nextthinker = currentthinker->next;
+          currentthinker->next->prev = currentthinker->prev;
+          currentthinker->prev->next = currentthinker->next;
+          z_free(currentthinker);
+        }
+      else
+        {
+          if (currentthinker->function.acp1)
+            currentthinker->function.acp1(currentthinker);
+          nextthinker = currentthinker->next;
+        }
+
+      currentthinker = nextthinker;
+    }
+}
+
+/****************************************************************************
  * Public Functions
  ****************************************************************************/
 
-void p_init_thinkers(void) { thinkercap.prev = thinkercap.next = &thinkercap; }
+void p_init_thinkers(void)
+{
+  thinkercap.prev = thinkercap.next = &thinkercap;
+}
 
 /* p_add_thinker
  * Adds a new thinker at the end of the list.
@@ -77,49 +111,16 @@ void p_remove_thinker(thinker_t *thinker)
   thinker->function.acv = (actionf_v)(-1);
 }
 
-/* P_AllocateThinker
- * Allocates memory and adds a new thinker at the end of the list.
- */
-
-void P_AllocateThinker(thinker_t *thinker) {}
-
-void P_RunThinkers(void)
-{
-  thinker_t *currentthinker, *nextthinker;
-
-  currentthinker = thinkercap.next;
-  while (currentthinker != &thinkercap)
-    {
-      if (currentthinker->function.acv == (actionf_v)(-1))
-        {
-          // time to remove it
-          nextthinker = currentthinker->next;
-          currentthinker->next->prev = currentthinker->prev;
-          currentthinker->prev->next = currentthinker->next;
-          z_free(currentthinker);
-        }
-      else
-        {
-          if (currentthinker->function.acp1)
-            currentthinker->function.acp1(currentthinker);
-          nextthinker = currentthinker->next;
-        }
-      currentthinker = nextthinker;
-    }
-}
-
-//
-// p_ticker
-//
-
 void p_ticker(void)
 {
   int i;
 
-  // run the tic
+  /* run the tic */
+
   if (paused) return;
 
-  // pause if in menu and at least one tic has been run
+  /* pause if in menu and at least one tic has been run */
+
   if (!netgame && g_menuactive && !demoplayback &&
       players[consoleplayer].viewz != 1)
     {
@@ -127,12 +128,18 @@ void p_ticker(void)
     }
 
   for (i = 0; i < MAXPLAYERS; i++)
-    if (playeringame[i]) p_player_think(&players[i]);
+    {
+      if (playeringame[i])
+        {
+          p_player_think(&players[i]);
+        }
+    }
 
-  P_RunThinkers();
-  P_UpdateSpecials();
-  P_RespawnSpecials();
+  p_run_thinkers();
+  p_update_specials();
+  p_respawn_specials();
 
-  // for par times
+  /* for par times */
+
   leveltime++;
 }
