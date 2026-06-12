@@ -75,7 +75,7 @@ void A_Fall(mobj_t *actor);
 //
 
 //
-// Called by P_NoiseAlert.
+// Called by p_noise_alert.
 // Recursively traverse adjacent sectors,
 // sound blocking lines cut off traversal.
 //
@@ -122,11 +122,11 @@ void P_RecursiveSound(sector_t *sec, int soundblocks)
 }
 
 //
-// P_NoiseAlert
+// p_noise_alert
 // If a monster yells at a player,
 // it will alert other monsters to the player.
 //
-void P_NoiseAlert(mobj_t *target, mobj_t *emmiter)
+void p_noise_alert(mobj_t *target, mobj_t *emmiter)
 {
   soundtarget = target;
   validcount++;
@@ -698,14 +698,14 @@ void A_PosAttack(mobj_t *actor)
 
   A_FaceTarget(actor);
   angle = actor->angle;
-  slope = P_AimLineAttack(actor, angle, MISSILERANGE);
+  slope = p_aim_line_attack(actor, angle, MISSILERANGE);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(actor, SFX_PISTOL);
 #endif
   angle += p_sub_random() << 20;
   damage = ((p_random() % 5) + 1) * 3;
-  P_LineAttack(actor, angle, MISSILERANGE, slope, damage);
+  p_line_attack(actor, angle, MISSILERANGE, slope, damage);
 }
 
 void A_SPosAttack(mobj_t *actor)
@@ -723,13 +723,13 @@ void A_SPosAttack(mobj_t *actor)
 #endif
   A_FaceTarget(actor);
   bangle = actor->angle;
-  slope = P_AimLineAttack(actor, bangle, MISSILERANGE);
+  slope = p_aim_line_attack(actor, bangle, MISSILERANGE);
 
   for (i = 0; i < 3; i++)
     {
       angle = bangle + (p_sub_random() << 20);
       damage = ((p_random() % 5) + 1) * 3;
-      P_LineAttack(actor, angle, MISSILERANGE, slope, damage);
+      p_line_attack(actor, angle, MISSILERANGE, slope, damage);
     }
 }
 
@@ -747,11 +747,11 @@ void A_CPosAttack(mobj_t *actor)
 #endif
   A_FaceTarget(actor);
   bangle = actor->angle;
-  slope = P_AimLineAttack(actor, bangle, MISSILERANGE);
+  slope = p_aim_line_attack(actor, bangle, MISSILERANGE);
 
   angle = bangle + (p_sub_random() << 20);
   damage = ((p_random() % 5) + 1) * 3;
-  P_LineAttack(actor, angle, MISSILERANGE, slope, damage);
+  p_line_attack(actor, angle, MISSILERANGE, slope, damage);
 }
 
 void A_CPosRefire(mobj_t *actor)
@@ -832,7 +832,7 @@ void A_SargAttack(mobj_t *actor)
   damage = ((p_random() % 10) + 1) * 4;
 
   if (gameversion <= exe_doom_1_2)
-    P_LineAttack(actor, actor->angle, MELEERANGE, 0, damage);
+    p_line_attack(actor, actor->angle, MELEERANGE, 0, damage);
   else
     p_damage_mobj(actor->target, actor, actor, damage);
 }
@@ -1643,14 +1643,14 @@ void A_LoadShotgun2(player_t *player, pspdef_t *psp)
 #endif
 }
 
-void A_ReFire(player_t *player, pspdef_t *psp);
+void a_refire(player_t *player, pspdef_t *psp);
 
 void A_CloseShotgun2(player_t *player, pspdef_t *psp)
 {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(player->mo, SFX_DBCLS);
 #endif
-  A_ReFire(player, psp);
+  a_refire(player, psp);
 }
 
 mobj_t *braintargets[32];

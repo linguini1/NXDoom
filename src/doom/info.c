@@ -97,29 +97,29 @@ const char *sprnames[] = {
 
 /* Doesn't work with g++, needs actionf_p1 */
 
-void A_Light0();
-void A_WeaponReady();
-void A_Lower();
-void A_Raise();
-void A_Punch();
-void A_ReFire();
-void A_FirePistol();
-void A_Light1();
-void A_FireShotgun();
-void A_Light2();
-void A_FireShotgun2();
-void A_CheckReload();
+void a_light0();
+void a_weapon_ready();
+void a_lower();
+void a_raise();
+void a_punch();
+void a_refire();
+void a_fire_pistol();
+void a_light1();
+void a_fire_shotgun();
+void a_light2();
+void a_fire_shotgun2();
+void a_check_reload();
 void A_OpenShotgun2();
 void A_LoadShotgun2();
 void A_CloseShotgun2();
-void A_FireCGun();
-void A_GunFlash();
-void A_FireMissile();
-void A_Saw();
-void A_FirePlasma();
-void A_BFGsound();
-void A_FireBFG();
-void A_BFGSpray();
+void a_fire_cgun();
+void a_gun_flash();
+void a_fire_missile();
+void a_saw();
+void a_fire_plasma();
+void a_bfg_sound();
+void a_fire_bfg();
+void a_bfg_spray();
 void A_Explode();
 void A_Pain();
 void A_PlayerScream();
@@ -178,95 +178,95 @@ void A_BrainExplode();
 
 state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_TROO, 0, -1, NULL, S_NULL),               /* S_NULL */
-    STATE_ENTRY(SPR_SHTG, 4, 0, A_Light0, S_NULL),            /* S_LIGHTDONE */
-    STATE_ENTRY(SPR_PUNG, 0, 1, A_WeaponReady, S_PUNCH),      /* S_PUNCH */
-    STATE_ENTRY(SPR_PUNG, 0, 1, A_Lower, S_PUNCHDOWN),        /* S_PUNCHDOWN */
-    STATE_ENTRY(SPR_PUNG, 0, 1, A_Raise, S_PUNCHUP),          /* S_PUNCHUP */
+    STATE_ENTRY(SPR_SHTG, 4, 0, a_light0, S_NULL),            /* S_LIGHTDONE */
+    STATE_ENTRY(SPR_PUNG, 0, 1, a_weapon_ready, S_PUNCH),      /* S_PUNCH */
+    STATE_ENTRY(SPR_PUNG, 0, 1, a_lower, S_PUNCHDOWN),        /* S_PUNCHDOWN */
+    STATE_ENTRY(SPR_PUNG, 0, 1, a_raise, S_PUNCHUP),          /* S_PUNCHUP */
     STATE_ENTRY(SPR_PUNG, 1, 4, NULL, S_PUNCH2),              /* S_PUNCH1 */
-    STATE_ENTRY(SPR_PUNG, 2, 4, A_Punch, S_PUNCH3),           /* S_PUNCH2 */
+    STATE_ENTRY(SPR_PUNG, 2, 4, a_punch, S_PUNCH3),           /* S_PUNCH2 */
     STATE_ENTRY(SPR_PUNG, 3, 5, NULL, S_PUNCH4),              /* S_PUNCH3 */
     STATE_ENTRY(SPR_PUNG, 2, 4, NULL, S_PUNCH5),              /* S_PUNCH4 */
-    STATE_ENTRY(SPR_PUNG, 1, 5, A_ReFire, S_PUNCH),           /* S_PUNCH5 */
-    STATE_ENTRY(SPR_PISG, 0, 1, A_WeaponReady, S_PISTOL),     /* S_PISTOL */
-    STATE_ENTRY(SPR_PISG, 0, 1, A_Lower, S_PISTOLDOWN),       /* S_PISTOLDOWN */
-    STATE_ENTRY(SPR_PISG, 0, 1, A_Raise, S_PISTOLUP),         /* S_PISTOLUP */
+    STATE_ENTRY(SPR_PUNG, 1, 5, a_refire, S_PUNCH),           /* S_PUNCH5 */
+    STATE_ENTRY(SPR_PISG, 0, 1, a_weapon_ready, S_PISTOL),     /* S_PISTOL */
+    STATE_ENTRY(SPR_PISG, 0, 1, a_lower, S_PISTOLDOWN),       /* S_PISTOLDOWN */
+    STATE_ENTRY(SPR_PISG, 0, 1, a_raise, S_PISTOLUP),         /* S_PISTOLUP */
     STATE_ENTRY(SPR_PISG, 0, 4, NULL, S_PISTOL2),             /* S_PISTOL1 */
-    STATE_ENTRY(SPR_PISG, 1, 6, A_FirePistol, S_PISTOL3),     /* S_PISTOL2 */
+    STATE_ENTRY(SPR_PISG, 1, 6, a_fire_pistol, S_PISTOL3),     /* S_PISTOL2 */
     STATE_ENTRY(SPR_PISG, 2, 4, NULL, S_PISTOL4),             /* S_PISTOL3 */
-    STATE_ENTRY(SPR_PISG, 1, 5, A_ReFire, S_PISTOL),          /* S_PISTOL4 */
-    STATE_ENTRY(SPR_PISF, 32768, 7, A_Light1, S_LIGHTDONE),   /* S_PISTOLFLASH */
-    STATE_ENTRY(SPR_SHTG, 0, 1, A_WeaponReady, S_SGUN),       /* S_SGUN */
-    STATE_ENTRY(SPR_SHTG, 0, 1, A_Lower, S_SGUNDOWN),         /* S_SGUNDOWN */
-    STATE_ENTRY(SPR_SHTG, 0, 1, A_Raise, S_SGUNUP),           /* S_SGUNUP */
+    STATE_ENTRY(SPR_PISG, 1, 5, a_refire, S_PISTOL),          /* S_PISTOL4 */
+    STATE_ENTRY(SPR_PISF, 32768, 7, a_light1, S_LIGHTDONE),   /* S_PISTOLFLASH */
+    STATE_ENTRY(SPR_SHTG, 0, 1, a_weapon_ready, S_SGUN),       /* S_SGUN */
+    STATE_ENTRY(SPR_SHTG, 0, 1, a_lower, S_SGUNDOWN),         /* S_SGUNDOWN */
+    STATE_ENTRY(SPR_SHTG, 0, 1, a_raise, S_SGUNUP),           /* S_SGUNUP */
     STATE_ENTRY(SPR_SHTG, 0, 3, NULL, S_SGUN2),               /* S_SGUN1 */
-    STATE_ENTRY(SPR_SHTG, 0, 7, A_FireShotgun, S_SGUN3),      /* S_SGUN2 */
+    STATE_ENTRY(SPR_SHTG, 0, 7, a_fire_shotgun, S_SGUN3),      /* S_SGUN2 */
     STATE_ENTRY(SPR_SHTG, 1, 5, NULL, S_SGUN4),               /* S_SGUN3 */
     STATE_ENTRY(SPR_SHTG, 2, 5, NULL, S_SGUN5),               /* S_SGUN4 */
     STATE_ENTRY(SPR_SHTG, 3, 4, NULL, S_SGUN6),               /* S_SGUN5 */
     STATE_ENTRY(SPR_SHTG, 2, 5, NULL, S_SGUN7),               /* S_SGUN6 */
     STATE_ENTRY(SPR_SHTG, 1, 5, NULL, S_SGUN8),               /* S_SGUN7 */
     STATE_ENTRY(SPR_SHTG, 0, 3, NULL, S_SGUN9),               /* S_SGUN8 */
-    STATE_ENTRY(SPR_SHTG, 0, 7, A_ReFire, S_SGUN),            /* S_SGUN9 */
-    STATE_ENTRY(SPR_SHTF, 32768, 4, A_Light1, S_SGUNFLASH2),  /* S_SGUNFLASH1 */
-    STATE_ENTRY(SPR_SHTF, 32769, 3, A_Light2, S_LIGHTDONE),   /* S_SGUNFLASH2 */
-    STATE_ENTRY(SPR_SHT2, 0, 1, A_WeaponReady, S_DSGUN),      /* S_DSGUN */
-    STATE_ENTRY(SPR_SHT2, 0, 1, A_Lower, S_DSGUNDOWN),        /* S_DSGUNDOWN */
-    STATE_ENTRY(SPR_SHT2, 0, 1, A_Raise, S_DSGUNUP),          /* S_DSGUNUP */
+    STATE_ENTRY(SPR_SHTG, 0, 7, a_refire, S_SGUN),            /* S_SGUN9 */
+    STATE_ENTRY(SPR_SHTF, 32768, 4, a_light1, S_SGUNFLASH2),  /* S_SGUNFLASH1 */
+    STATE_ENTRY(SPR_SHTF, 32769, 3, a_light2, S_LIGHTDONE),   /* S_SGUNFLASH2 */
+    STATE_ENTRY(SPR_SHT2, 0, 1, a_weapon_ready, S_DSGUN),      /* S_DSGUN */
+    STATE_ENTRY(SPR_SHT2, 0, 1, a_lower, S_DSGUNDOWN),        /* S_DSGUNDOWN */
+    STATE_ENTRY(SPR_SHT2, 0, 1, a_raise, S_DSGUNUP),          /* S_DSGUNUP */
     STATE_ENTRY(SPR_SHT2, 0, 3, NULL, S_DSGUN2),              /* S_DSGUN1 */
-    STATE_ENTRY(SPR_SHT2, 0, 7, A_FireShotgun2, S_DSGUN3),    /* S_DSGUN2 */
+    STATE_ENTRY(SPR_SHT2, 0, 7, a_fire_shotgun2, S_DSGUN3),    /* S_DSGUN2 */
     STATE_ENTRY(SPR_SHT2, 1, 7, NULL, S_DSGUN4),              /* S_DSGUN3 */
-    STATE_ENTRY(SPR_SHT2, 2, 7, A_CheckReload, S_DSGUN5),     /* S_DSGUN4 */
+    STATE_ENTRY(SPR_SHT2, 2, 7, a_check_reload, S_DSGUN5),     /* S_DSGUN4 */
     STATE_ENTRY(SPR_SHT2, 3, 7, A_OpenShotgun2, S_DSGUN6),    /* S_DSGUN5 */
     STATE_ENTRY(SPR_SHT2, 4, 7, NULL, S_DSGUN7),              /* S_DSGUN6 */
     STATE_ENTRY(SPR_SHT2, 5, 7, A_LoadShotgun2, S_DSGUN8),    /* S_DSGUN7 */
     STATE_ENTRY(SPR_SHT2, 6, 6, NULL, S_DSGUN9),              /* S_DSGUN8 */
     STATE_ENTRY(SPR_SHT2, 7, 6, A_CloseShotgun2, S_DSGUN10),  /* S_DSGUN9 */
-    STATE_ENTRY(SPR_SHT2, 0, 5, A_ReFire, S_DSGUN),           /* S_DSGUN10 */
+    STATE_ENTRY(SPR_SHT2, 0, 5, a_refire, S_DSGUN),           /* S_DSGUN10 */
     STATE_ENTRY(SPR_SHT2, 1, 7, NULL, S_DSNR2),               /* S_DSNR1 */
     STATE_ENTRY(SPR_SHT2, 0, 3, NULL, S_DSGUNDOWN),           /* S_DSNR2 */
-    STATE_ENTRY(SPR_SHT2, 32776, 5, A_Light1, S_DSGUNFLASH2), /* S_DSGUNFLASH1 */
-    STATE_ENTRY(SPR_SHT2, 32777, 4, A_Light2, S_LIGHTDONE),   /* S_DSGUNFLASH2 */
-    STATE_ENTRY(SPR_CHGG, 0, 1, A_WeaponReady, S_CHAIN),      /* S_CHAIN */
-    STATE_ENTRY(SPR_CHGG, 0, 1, A_Lower, S_CHAINDOWN),        /* S_CHAINDOWN */
-    STATE_ENTRY(SPR_CHGG, 0, 1, A_Raise, S_CHAINUP),          /* S_CHAINUP */
-    STATE_ENTRY(SPR_CHGG, 0, 4, A_FireCGun, S_CHAIN2),        /* S_CHAIN1 */
-    STATE_ENTRY(SPR_CHGG, 1, 4, A_FireCGun, S_CHAIN3),        /* S_CHAIN2 */
-    STATE_ENTRY(SPR_CHGG, 1, 0, A_ReFire, S_CHAIN),           /* S_CHAIN3 */
-    STATE_ENTRY(SPR_CHGF, 32768, 5, A_Light1, S_LIGHTDONE),   /* S_CHAINFLASH1 */
-    STATE_ENTRY(SPR_CHGF, 32769, 5, A_Light2, S_LIGHTDONE),   /* S_CHAINFLASH2 */
-    STATE_ENTRY(SPR_MISG, 0, 1, A_WeaponReady, S_MISSILE),    /* S_MISSILE */
-    STATE_ENTRY(SPR_MISG, 0, 1, A_Lower, S_MISSILEDOWN),      /* S_MISSILEDOWN */
-    STATE_ENTRY(SPR_MISG, 0, 1, A_Raise, S_MISSILEUP),        /* S_MISSILEUP */
-    STATE_ENTRY(SPR_MISG, 1, 8, A_GunFlash, S_MISSILE2),      /* S_MISSILE1 */
-    STATE_ENTRY(SPR_MISG, 1, 12, A_FireMissile, S_MISSILE3),  /* S_MISSILE2 */
-    STATE_ENTRY(SPR_MISG, 1, 0, A_ReFire, S_MISSILE),         /* S_MISSILE3 */
-    STATE_ENTRY(SPR_MISF, 32768, 3, A_Light1, S_MISSILEFLASH2),                                                 /* S_MISSILEFLASH1 */
+    STATE_ENTRY(SPR_SHT2, 32776, 5, a_light1, S_DSGUNFLASH2), /* S_DSGUNFLASH1 */
+    STATE_ENTRY(SPR_SHT2, 32777, 4, a_light2, S_LIGHTDONE),   /* S_DSGUNFLASH2 */
+    STATE_ENTRY(SPR_CHGG, 0, 1, a_weapon_ready, S_CHAIN),      /* S_CHAIN */
+    STATE_ENTRY(SPR_CHGG, 0, 1, a_lower, S_CHAINDOWN),        /* S_CHAINDOWN */
+    STATE_ENTRY(SPR_CHGG, 0, 1, a_raise, S_CHAINUP),          /* S_CHAINUP */
+    STATE_ENTRY(SPR_CHGG, 0, 4, a_fire_cgun, S_CHAIN2),        /* S_CHAIN1 */
+    STATE_ENTRY(SPR_CHGG, 1, 4, a_fire_cgun, S_CHAIN3),        /* S_CHAIN2 */
+    STATE_ENTRY(SPR_CHGG, 1, 0, a_refire, S_CHAIN),           /* S_CHAIN3 */
+    STATE_ENTRY(SPR_CHGF, 32768, 5, a_light1, S_LIGHTDONE),   /* S_CHAINFLASH1 */
+    STATE_ENTRY(SPR_CHGF, 32769, 5, a_light2, S_LIGHTDONE),   /* S_CHAINFLASH2 */
+    STATE_ENTRY(SPR_MISG, 0, 1, a_weapon_ready, S_MISSILE),    /* S_MISSILE */
+    STATE_ENTRY(SPR_MISG, 0, 1, a_lower, S_MISSILEDOWN),      /* S_MISSILEDOWN */
+    STATE_ENTRY(SPR_MISG, 0, 1, a_raise, S_MISSILEUP),        /* S_MISSILEUP */
+    STATE_ENTRY(SPR_MISG, 1, 8, a_gun_flash, S_MISSILE2),      /* S_MISSILE1 */
+    STATE_ENTRY(SPR_MISG, 1, 12, a_fire_missile, S_MISSILE3),  /* S_MISSILE2 */
+    STATE_ENTRY(SPR_MISG, 1, 0, a_refire, S_MISSILE),         /* S_MISSILE3 */
+    STATE_ENTRY(SPR_MISF, 32768, 3, a_light1, S_MISSILEFLASH2),                                                 /* S_MISSILEFLASH1 */
     STATE_ENTRY(SPR_MISF, 32769, 4, NULL, S_MISSILEFLASH3), /* S_MISSILEFLASH2 */
-    STATE_ENTRY(SPR_MISF, 32770, 4, A_Light2, S_MISSILEFLASH4),                                                 /* S_MISSILEFLASH3 */
-    STATE_ENTRY(SPR_MISF, 32771, 4, A_Light2, S_LIGHTDONE), /* S_MISSILEFLASH4 */
-    STATE_ENTRY(SPR_SAWG, 2, 4, A_WeaponReady, S_SAWB),     /* S_SAW */
-    STATE_ENTRY(SPR_SAWG, 3, 4, A_WeaponReady, S_SAW),      /* S_SAWB */
-    STATE_ENTRY(SPR_SAWG, 2, 1, A_Lower, S_SAWDOWN),        /* S_SAWDOWN */
-    STATE_ENTRY(SPR_SAWG, 2, 1, A_Raise, S_SAWUP),          /* S_SAWUP */
-    STATE_ENTRY(SPR_SAWG, 0, 4, A_Saw, S_SAW2),             /* S_SAW1 */
-    STATE_ENTRY(SPR_SAWG, 1, 4, A_Saw, S_SAW3),             /* S_SAW2 */
-    STATE_ENTRY(SPR_SAWG, 1, 0, A_ReFire, S_SAW),           /* S_SAW3 */
-    STATE_ENTRY(SPR_PLSG, 0, 1, A_WeaponReady, S_PLASMA),   /* S_PLASMA */
-    STATE_ENTRY(SPR_PLSG, 0, 1, A_Lower, S_PLASMADOWN),     /* S_PLASMADOWN */
-    STATE_ENTRY(SPR_PLSG, 0, 1, A_Raise, S_PLASMAUP),       /* S_PLASMAUP */
-    STATE_ENTRY(SPR_PLSG, 0, 3, A_FirePlasma, S_PLASMA2),   /* S_PLASMA1 */
-    STATE_ENTRY(SPR_PLSG, 1, 20, A_ReFire, S_PLASMA),       /* S_PLASMA2 */
-    STATE_ENTRY(SPR_PLSF, 32768, 4, A_Light1, S_LIGHTDONE), /* S_PLASMAFLASH1 */
-    STATE_ENTRY(SPR_PLSF, 32769, 4, A_Light1, S_LIGHTDONE), /* S_PLASMAFLASH2 */
-    STATE_ENTRY(SPR_BFGG, 0, 1, A_WeaponReady, S_BFG),      /* S_BFG */
-    STATE_ENTRY(SPR_BFGG, 0, 1, A_Lower, S_BFGDOWN),        /* S_BFGDOWN */
-    STATE_ENTRY(SPR_BFGG, 0, 1, A_Raise, S_BFGUP),          /* S_BFGUP */
-    STATE_ENTRY(SPR_BFGG, 0, 20, A_BFGsound, S_BFG2),       /* S_BFG1 */
-    STATE_ENTRY(SPR_BFGG, 1, 10, A_GunFlash, S_BFG3),       /* S_BFG2 */
-    STATE_ENTRY(SPR_BFGG, 1, 10, A_FireBFG, S_BFG4),        /* S_BFG3 */
-    STATE_ENTRY(SPR_BFGG, 1, 20, A_ReFire, S_BFG),          /* S_BFG4 */
-    STATE_ENTRY(SPR_BFGF, 32768, 11, A_Light1, S_BFGFLASH2),   /* S_BFGFLASH1 */
-    STATE_ENTRY(SPR_BFGF, 32769, 6, A_Light2, S_LIGHTDONE),    /* S_BFGFLASH2 */
+    STATE_ENTRY(SPR_MISF, 32770, 4, a_light2, S_MISSILEFLASH4),                                                 /* S_MISSILEFLASH3 */
+    STATE_ENTRY(SPR_MISF, 32771, 4, a_light2, S_LIGHTDONE), /* S_MISSILEFLASH4 */
+    STATE_ENTRY(SPR_SAWG, 2, 4, a_weapon_ready, S_SAWB),     /* S_SAW */
+    STATE_ENTRY(SPR_SAWG, 3, 4, a_weapon_ready, S_SAW),      /* S_SAWB */
+    STATE_ENTRY(SPR_SAWG, 2, 1, a_lower, S_SAWDOWN),        /* S_SAWDOWN */
+    STATE_ENTRY(SPR_SAWG, 2, 1, a_raise, S_SAWUP),          /* S_SAWUP */
+    STATE_ENTRY(SPR_SAWG, 0, 4, a_saw, S_SAW2),             /* S_SAW1 */
+    STATE_ENTRY(SPR_SAWG, 1, 4, a_saw, S_SAW3),             /* S_SAW2 */
+    STATE_ENTRY(SPR_SAWG, 1, 0, a_refire, S_SAW),           /* S_SAW3 */
+    STATE_ENTRY(SPR_PLSG, 0, 1, a_weapon_ready, S_PLASMA),   /* S_PLASMA */
+    STATE_ENTRY(SPR_PLSG, 0, 1, a_lower, S_PLASMADOWN),     /* S_PLASMADOWN */
+    STATE_ENTRY(SPR_PLSG, 0, 1, a_raise, S_PLASMAUP),       /* S_PLASMAUP */
+    STATE_ENTRY(SPR_PLSG, 0, 3, a_fire_plasma, S_PLASMA2),   /* S_PLASMA1 */
+    STATE_ENTRY(SPR_PLSG, 1, 20, a_refire, S_PLASMA),       /* S_PLASMA2 */
+    STATE_ENTRY(SPR_PLSF, 32768, 4, a_light1, S_LIGHTDONE), /* S_PLASMAFLASH1 */
+    STATE_ENTRY(SPR_PLSF, 32769, 4, a_light1, S_LIGHTDONE), /* S_PLASMAFLASH2 */
+    STATE_ENTRY(SPR_BFGG, 0, 1, a_weapon_ready, S_BFG),      /* S_BFG */
+    STATE_ENTRY(SPR_BFGG, 0, 1, a_lower, S_BFGDOWN),        /* S_BFGDOWN */
+    STATE_ENTRY(SPR_BFGG, 0, 1, a_raise, S_BFGUP),          /* S_BFGUP */
+    STATE_ENTRY(SPR_BFGG, 0, 20, a_bfg_sound, S_BFG2),       /* S_BFG1 */
+    STATE_ENTRY(SPR_BFGG, 1, 10, a_gun_flash, S_BFG3),       /* S_BFG2 */
+    STATE_ENTRY(SPR_BFGG, 1, 10, a_fire_bfg, S_BFG4),        /* S_BFG3 */
+    STATE_ENTRY(SPR_BFGG, 1, 20, a_refire, S_BFG),          /* S_BFG4 */
+    STATE_ENTRY(SPR_BFGF, 32768, 11, a_light1, S_BFGFLASH2),   /* S_BFGFLASH1 */
+    STATE_ENTRY(SPR_BFGF, 32769, 6, a_light2, S_LIGHTDONE),    /* S_BFGFLASH2 */
     STATE_ENTRY(SPR_BLUD, 2, 8, NULL, S_BLOOD2),               /* S_BLOOD1 */
     STATE_ENTRY(SPR_BLUD, 1, 8, NULL, S_BLOOD3),               /* S_BLOOD2 */
     STATE_ENTRY(SPR_BLUD, 0, 8, NULL, S_NULL),                 /* S_BLOOD3 */
@@ -296,7 +296,7 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_BFS1, 32769, 4, NULL, S_BFGSHOT),          /* S_BFGSHOT2 */
     STATE_ENTRY(SPR_BFE1, 32768, 8, NULL, S_BFGLAND2),         /* S_BFGLAND */
     STATE_ENTRY(SPR_BFE1, 32769, 8, NULL, S_BFGLAND3),         /* S_BFGLAND2 */
-    STATE_ENTRY(SPR_BFE1, 32770, 8, A_BFGSpray, S_BFGLAND4),   /* S_BFGLAND3 */
+    STATE_ENTRY(SPR_BFE1, 32770, 8, a_bfg_spray, S_BFGLAND4),   /* S_BFGLAND3 */
     STATE_ENTRY(SPR_BFE1, 32771, 8, NULL, S_BFGLAND5),         /* S_BFGLAND4 */
     STATE_ENTRY(SPR_BFE1, 32772, 8, NULL, S_BFGLAND6),         /* S_BFGLAND5 */
     STATE_ENTRY(SPR_BFE1, 32773, 8, NULL, S_NULL),             /* S_BFGLAND6 */

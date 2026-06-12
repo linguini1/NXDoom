@@ -68,9 +68,9 @@ void p_remove_thinker(thinker_t *thinker);
 //
 // P_PSPR
 //
-void P_SetupPsprites(player_t *curplayer);
+void p_setup_psprites(player_t *curplayer);
 void p_move_psprites(player_t *curplayer);
-void P_DropWeapon(player_t *player);
+void p_drop_weapon(player_t *player);
 
 //
 // P_USER
@@ -103,12 +103,12 @@ void p_mobj_thinker(mobj_t *mobj);
 void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z);
 void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage);
 mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type);
-void p_spawn_playerMissile(mobj_t *source, mobjtype_t type);
+void p_spawn_player_missile(mobj_t *source, mobjtype_t type);
 
 //
 // P_ENEMY
 //
-void P_NoiseAlert(mobj_t *target, mobj_t *emmiter);
+void p_noise_alert(mobj_t *target, mobj_t *emmiter);
 
 //
 // P_MAPUTL
@@ -215,9 +215,9 @@ extern fixed_t attackrange;
 extern fixed_t topslope;
 extern fixed_t bottomslope;
 
-fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance);
+fixed_t p_aim_line_attack(mobj_t *t1, angle_t angle, fixed_t distance);
 
-void P_LineAttack(mobj_t *t1, angle_t angle, fixed_t distance, fixed_t slope,
+void p_line_attack(mobj_t *t1, angle_t angle, fixed_t distance, fixed_t slope,
                   int damage);
 
 void P_RadiusAttack(mobj_t *spot, mobj_t *source, int damage);

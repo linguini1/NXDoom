@@ -633,7 +633,7 @@ void P_KillMobj(mobj_t *source, mobj_t *target)
 
       target->flags &= ~MF_SOLID;
       target->player->playerstate = PST_DEAD;
-      P_DropWeapon(target->player);
+      p_drop_weapon(target->player);
 
       if (target->player == &players[consoleplayer] && automapactive)
         {

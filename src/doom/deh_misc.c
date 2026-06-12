@@ -116,7 +116,7 @@ int deh_idkfa_armor_class = DEH_DEFAULT_IDKFA_ARMOR_CLASS;
 
 // Dehacked: "BFG Cells/Shot"
 // This is the number of CELLs firing the BFG uses up.
-// See P_CheckAmmo and A_FireBFG in p_pspr.c
+// See p_check_ammo and a_fire_bfg in p_pspr.c
 
 int deh_bfg_cells_per_shot = DEH_DEFAULT_BFG_CELLS_PER_SHOT;
 

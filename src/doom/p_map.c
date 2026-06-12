@@ -122,7 +122,7 @@ mobj_t *slidemo;
 fixed_t tmxmove;
 fixed_t tmymove;
 
-/* P_LineAttack */
+/* p_line_attack */
 
 mobj_t *linetarget; /* who got hit (or NULL) */
 mobj_t *shootthing;
@@ -1142,9 +1142,9 @@ boolean PTR_ShootTraverse(intercept_t *in)
   return false;
 }
 
-/* P_AimLineAttack */
+/* p_aim_line_attack */
 
-fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance)
+fixed_t p_aim_line_attack(mobj_t *t1, angle_t angle, fixed_t distance)
 {
   fixed_t x2;
   fixed_t y2;
@@ -1174,12 +1174,12 @@ fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance)
   return 0;
 }
 
-/* P_LineAttack
+/* p_line_attack
  * If damage == 0, it is just a test trace
  * that will leave linetarget set.
  */
 
-void P_LineAttack(mobj_t *t1, angle_t angle, fixed_t distance, fixed_t slope,
+void p_line_attack(mobj_t *t1, angle_t angle, fixed_t distance, fixed_t slope,
                   int damage)
 {
   fixed_t x2;

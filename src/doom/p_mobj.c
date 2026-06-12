@@ -761,7 +761,7 @@ void p_spawn_player(mapthing_t *mthing)
   p->fixedcolormap = 0;
   p->viewheight = VIEWHEIGHT;
 
-  P_SetupPsprites(p); /* setup gun psprite */
+  p_setup_psprites(p); /* setup gun psprite */
 
   /* give all cards in death match mode */
 
@@ -1024,14 +1024,14 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 }
 
 /****************************************************************************
- * Name: p_spawn_playerMissile
+ * Name: p_spawn_player_missile
  *
  * Description:
  *  Tries to aim at a nearby monster
  *
  ****************************************************************************/
 
-void p_spawn_playerMissile(mobj_t *source, mobjtype_t type)
+void p_spawn_player_missile(mobj_t *source, mobjtype_t type)
 {
   mobj_t *th;
   angle_t an;
@@ -1044,17 +1044,17 @@ void p_spawn_playerMissile(mobj_t *source, mobjtype_t type)
   /* see which target is to be aimed at */
 
   an = source->angle;
-  slope = P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+  slope = p_aim_line_attack(source, an, 16 * 64 * FRACUNIT);
 
   if (!linetarget)
     {
       an += 1 << 26;
-      slope = P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+      slope = p_aim_line_attack(source, an, 16 * 64 * FRACUNIT);
 
       if (!linetarget)
         {
           an -= 2 << 26;
-          slope = P_AimLineAttack(source, an, 16 * 64 * FRACUNIT);
+          slope = p_aim_line_attack(source, an, 16 * 64 * FRACUNIT);
         }
 
       if (!linetarget)
