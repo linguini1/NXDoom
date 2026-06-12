@@ -27,7 +27,7 @@ int DEH_GetChar(deh_context_t *context);
 char *DEH_ReadLine(deh_context_t *context, boolean extended);
 void DEH_Error(deh_context_t *context, const char *msg, ...)
     PRINTF_ATTR(2, 3);
-void DEH_Warning(deh_context_t *context, const char *msg, ...)
+void deh_warning(deh_context_t *context, const char *msg, ...)
     PRINTF_ATTR(2, 3);
 boolean DEH_HadError(deh_context_t *context);
 

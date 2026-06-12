@@ -321,7 +321,7 @@ char *DEH_ReadLine(deh_context_t *context, boolean extended)
   return context->readbuffer;
 }
 
-void DEH_Warning(deh_context_t *context, const char *msg, ...)
+void deh_warning(deh_context_t *context, const char *msg, ...)
 {
   va_list args;
 

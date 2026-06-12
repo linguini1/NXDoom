@@ -61,7 +61,7 @@ static void *DEH_ThingStart(deh_context_t *context, char *line)
 
   if (sscanf(line, "Thing %i", &thing_number) != 1)
     {
-      DEH_Warning(context, "Parse error on section start");
+      deh_warning(context, "Parse error on section start");
       return NULL;
     }
 
@@ -70,7 +70,7 @@ static void *DEH_ThingStart(deh_context_t *context, char *line)
 
   if (thing_number < 0 || thing_number >= NUMMOBJTYPES)
     {
-      DEH_Warning(context, "Invalid thing number: %i", thing_number);
+      deh_warning(context, "Invalid thing number: %i", thing_number);
       return NULL;
     }
 
@@ -91,11 +91,11 @@ static void DEH_ThingParseLine(deh_context_t *context, char *line, void *tag)
 
   // Parse the assignment
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
       // Failed to parse
 
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 
@@ -107,7 +107,7 @@ static void DEH_ThingParseLine(deh_context_t *context, char *line, void *tag)
 
   // Set the field value
 
-  DEH_SetMapping(context, &thing_mapping, mobj, variable_name, ivalue);
+  deh_set_mapping(context, &thing_mapping, mobj, variable_name, ivalue);
 }
 
 static void DEH_ThingSHA1Sum(SHA1_CTX *context)
@@ -116,7 +116,7 @@ static void DEH_ThingSHA1Sum(SHA1_CTX *context)
 
   for (i = 0; i < NUMMOBJTYPES; ++i)
     {
-      DEH_StructSHA1Sum(context, &thing_mapping, &mobjinfo[i]);
+      deh_struct_sha1_sum(context, &thing_mapping, &mobjinfo[i]);
     }
 }
 

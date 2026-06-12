@@ -46,19 +46,19 @@ static void *DEH_FrameStart(deh_context_t *context, char *line)
 
   if (sscanf(line, "Frame %i", &frame_number) != 1)
     {
-      DEH_Warning(context, "Parse error on section start");
+      deh_warning(context, "Parse error on section start");
       return NULL;
     }
 
   if (frame_number < 0 || frame_number >= NUMSTATES)
     {
-      DEH_Warning(context, "Invalid frame number: %i", frame_number);
+      deh_warning(context, "Invalid frame number: %i", frame_number);
       return NULL;
     }
 
   if (frame_number >= DEH_VANILLA_NUMSTATES)
     {
-      DEH_Warning(context,
+      deh_warning(context,
                   "Attempt to modify frame %i: this will cause "
                   "problems in Vanilla dehacked.",
                   frame_number);
@@ -119,11 +119,11 @@ static void DEH_FrameParseLine(deh_context_t *context, char *line, void *tag)
 
   // Parse the assignment
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
       // Failed to parse
 
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 
@@ -139,7 +139,7 @@ static void DEH_FrameParseLine(deh_context_t *context, char *line, void *tag)
     {
       // set the appropriate field
 
-      DEH_SetMapping(context, &state_mapping, state, variable_name, ivalue);
+      deh_set_mapping(context, &state_mapping, state, variable_name, ivalue);
     }
 }
 
@@ -149,7 +149,7 @@ static void DEH_FrameSHA1Sum(SHA1_CTX *context)
 
   for (i = 0; i < NUMSTATES; ++i)
     {
-      DEH_StructSHA1Sum(context, &state_mapping, &states[i]);
+      deh_struct_sha1_sum(context, &state_mapping, &states[i]);
     }
 }
 

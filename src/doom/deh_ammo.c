@@ -32,13 +32,13 @@ static void *DEH_AmmoStart(deh_context_t *context, char *line)
 
   if (sscanf(line, "Ammo %i", &ammo_number) != 1)
     {
-      DEH_Warning(context, "Parse error on section start");
+      deh_warning(context, "Parse error on section start");
       return NULL;
     }
 
   if (ammo_number < 0 || ammo_number >= NUMAMMO)
     {
-      DEH_Warning(context, "Invalid ammo number: %i", ammo_number);
+      deh_warning(context, "Invalid ammo number: %i", ammo_number);
       return NULL;
     }
 
@@ -57,11 +57,11 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
 
   // Parse the assignment
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
       // Failed to parse
 
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 
@@ -75,7 +75,7 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
     maxammo[ammo_number] = ivalue;
   else
     {
-      DEH_Warning(context, "Field named '%s' not found", variable_name);
+      deh_warning(context, "Field named '%s' not found", variable_name);
     }
 }
 

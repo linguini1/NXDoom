@@ -57,11 +57,11 @@
 #define ML_TWOSIDED 4
 
 /* If a texture is pegged, the texture will have the end exposed to air held
- * constant at the top or bottom of the texture (stairs or pulled down things)
- * and will move with a height change of one of the neighbor sectors.
+ * constant at the top or bottom of the texture (stairs or pulled down
+ * things) and will move with a height change of one of the neighbor sectors.
  *
- * Unpegged textures always have the first row of the texture at the top pixel
- * of the line for both top and bottom textures (use next to windows).
+ * Unpegged textures always have the first row of the texture at the top
+ * pixel  the line for both top and bottom textures (use next to windows).
  */
 
 /* upper texture unpegged */

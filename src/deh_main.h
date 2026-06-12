@@ -36,7 +36,7 @@ int deh_load_lump(int lumpnum, boolean allow_long, boolean allow_error);
 int deh_load_lump_by_name(const char *name, boolean allow_long,
                        boolean allow_error);
 
-boolean DEH_ParseAssignment(char *line, char **variable_name, char **value);
+boolean deh_parse_assignment(char *line, char **variable_name, char **value);
 
 void deh_checksum(sha1_digest_t digest);
 

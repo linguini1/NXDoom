@@ -366,7 +366,7 @@ void deh_checksum(sha1_digest_t digest)
  * Returns true if read correctly
  */
 
-boolean DEH_ParseAssignment(char *line, char **variable_name, char **value)
+boolean deh_parse_assignment(char *line, char **variable_name, char **value)
 {
   char *p;
 

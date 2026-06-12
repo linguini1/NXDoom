@@ -62,13 +62,13 @@ static void *DEH_PointerStart(deh_context_t *context, char *line)
 
   if (sscanf(line, "Pointer %*i (%*s %i)", &frame_number) != 1)
     {
-      DEH_Warning(context, "Parse error on section start");
+      deh_warning(context, "Parse error on section start");
       return NULL;
     }
 
   if (frame_number < 0 || frame_number >= NUMSTATES)
     {
-      DEH_Warning(context, "Invalid frame number: %i", frame_number);
+      deh_warning(context, "Invalid frame number: %i", frame_number);
       return NULL;
     }
 
@@ -88,10 +88,10 @@ static void DEH_PointerParseLine(deh_context_t *context, char *line,
 
   // Parse the assignment
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
       // Failed to parse
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 
@@ -107,7 +107,7 @@ static void DEH_PointerParseLine(deh_context_t *context, char *line,
     {
       if (ivalue < 0 || ivalue >= NUMSTATES)
         {
-          DEH_Warning(context, "Invalid state '%i'", ivalue);
+          deh_warning(context, "Invalid state '%i'", ivalue);
         }
       else
         {
@@ -116,7 +116,7 @@ static void DEH_PointerParseLine(deh_context_t *context, char *line,
     }
   else
     {
-      DEH_Warning(context, "Unknown variable name '%s'", variable_name);
+      deh_warning(context, "Unknown variable name '%s'", variable_name);
     }
 }
 

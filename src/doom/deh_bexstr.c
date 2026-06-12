@@ -340,7 +340,7 @@ static void *DEH_BEXStrStart(deh_context_t *context, char *line)
 
   if (sscanf(line, "%9s", s) == 0 || strncmp("[STRINGS]", s, sizeof(s)))
     {
-      DEH_Warning(context, "Parse error on section start");
+      deh_warning(context, "Parse error on section start");
     }
 
   return NULL;
@@ -351,9 +351,9 @@ static void DEH_BEXStrParseLine(deh_context_t *context, char *line, void *tag)
   char *variable_name, *value;
   int i;
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 

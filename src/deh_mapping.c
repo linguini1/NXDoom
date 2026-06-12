@@ -41,7 +41,7 @@ static deh_mapping_entry_t *GetMappingEntryByName(deh_context_t *context,
         {
           if (entry->location == NULL)
             {
-              DEH_Warning(context, "Field '%s' is unsupported", name);
+              deh_warning(context, "Field '%s' is unsupported", name);
               return NULL;
             }
 
@@ -51,7 +51,7 @@ static deh_mapping_entry_t *GetMappingEntryByName(deh_context_t *context,
 
   // Not found.
 
-  DEH_Warning(context, "Field named '%s' not found", name);
+  deh_warning(context, "Field named '%s' not found", name);
 
   return NULL;
 }
@@ -74,7 +74,7 @@ static void *GetStructField(void *structptr, deh_mapping_t *mapping,
 // Set the value of a particular field in a structure by name
 //
 
-boolean DEH_SetMapping(deh_context_t *context, deh_mapping_t *mapping,
+boolean deh_set_mapping(deh_context_t *context, deh_mapping_t *mapping,
                        void *structptr, char *name, int value)
 {
   deh_mapping_entry_t *entry;
@@ -155,7 +155,7 @@ boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
   return true;
 }
 
-void DEH_StructSHA1Sum(SHA1_CTX *context, deh_mapping_t *mapping,
+void deh_struct_sha1_sum(SHA1_CTX *context, deh_mapping_t *mapping,
                        void *structptr)
 {
   int i;

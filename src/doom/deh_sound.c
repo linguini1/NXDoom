@@ -42,19 +42,19 @@ static void *DEH_SoundStart(deh_context_t *context, char *line)
 
   if (sscanf(line, "Sound %i", &sound_number) != 1)
     {
-      DEH_Warning(context, "Parse error on section start");
+      deh_warning(context, "Parse error on section start");
       return NULL;
     }
 
   if (sound_number < 0 || sound_number >= SFX_NUMSFX)
     {
-      DEH_Warning(context, "Invalid sound number: %i", sound_number);
+      deh_warning(context, "Invalid sound number: %i", sound_number);
       return NULL;
     }
 
   if (sound_number >= DEH_VANILLA_NUMSFX)
     {
-      DEH_Warning(context,
+      deh_warning(context,
                   "Attempt to modify SFX %i.  This will cause "
                   "problems in Vanilla dehacked.",
                   sound_number);
@@ -75,10 +75,10 @@ static void DEH_SoundParseLine(deh_context_t *context, char *line, void *tag)
 
   // Parse the assignment
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
       // Failed to parse
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 
@@ -88,7 +88,7 @@ static void DEH_SoundParseLine(deh_context_t *context, char *line, void *tag)
 
   // Set the field value
 
-  DEH_SetMapping(context, &sound_mapping, sfx, variable_name, ivalue);
+  deh_set_mapping(context, &sound_mapping, sfx, variable_name, ivalue);
 }
 
 deh_section_t deh_section_sound = {

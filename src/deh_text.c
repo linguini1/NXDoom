@@ -55,7 +55,7 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
 
   if (sscanf(line, "Text %i %i", &fromlen, &tolen) != 2)
     {
-      DEH_Warning(context, "Parse error on section start");
+      deh_warning(context, "Parse error on section start");
       return NULL;
     }
 

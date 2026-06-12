@@ -75,11 +75,11 @@ struct deh_mapping_s
   deh_mapping_entry_t entries[MAX_MAPPING_ENTRIES];
 };
 
-boolean DEH_SetMapping(deh_context_t *context, deh_mapping_t *mapping,
+boolean deh_set_mapping(deh_context_t *context, deh_mapping_t *mapping,
                        void *structptr, char *name, int value);
 boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
                              void *structptr, char *name, char *value);
-void DEH_StructSHA1Sum(SHA1_CTX *context, deh_mapping_t *mapping,
+void deh_struct_sha1_sum(SHA1_CTX *context, deh_mapping_t *mapping,
                        void *structptr);
 
 #endif /* #ifndef DEH_MAPPING_H */

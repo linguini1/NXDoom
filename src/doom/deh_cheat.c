@@ -77,11 +77,11 @@ static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
   unsigned char *unsvalue;
   unsigned int i;
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
       // Failed to parse
 
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 
@@ -91,7 +91,7 @@ static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
 
   if (cheat == NULL)
     {
-      DEH_Warning(context, "Unknown cheat '%s'", variable_name);
+      deh_warning(context, "Unknown cheat '%s'", variable_name);
       return;
     }
 
@@ -106,7 +106,7 @@ static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
 
       if (!deh_allow_long_cheats && i >= cheat->seq->sequence_len)
         {
-          DEH_Warning(context, "Cheat sequence longer than supported by "
+          deh_warning(context, "Cheat sequence longer than supported by "
                                "Vanilla dehacked");
           break;
         }

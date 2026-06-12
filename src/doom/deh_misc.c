@@ -163,11 +163,11 @@ static void DEH_MiscParseLine(deh_context_t *context, char *line, void *tag)
   int ivalue;
   size_t i;
 
-  if (!DEH_ParseAssignment(line, &variable_name, &value))
+  if (!deh_parse_assignment(line, &variable_name, &value))
     {
       // Failed to parse
 
-      DEH_Warning(context, "Failed to parse assignment");
+      deh_warning(context, "Failed to parse assignment");
       return;
     }
 
@@ -187,7 +187,7 @@ static void DEH_MiscParseLine(deh_context_t *context, char *line, void *tag)
         }
       else
         {
-          DEH_Warning(context, "Invalid value for 'Monsters Infight': %i",
+          deh_warning(context, "Invalid value for 'Monsters Infight': %i",
                       ivalue);
         }
 
@@ -203,7 +203,7 @@ static void DEH_MiscParseLine(deh_context_t *context, char *line, void *tag)
         }
     }
 
-  DEH_Warning(context, "Unknown Misc variable '%s'", variable_name);
+  deh_warning(context, "Unknown Misc variable '%s'", variable_name);
 }
 
 static void DEH_MiscSHA1Sum(SHA1_CTX *context)
