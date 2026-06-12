@@ -370,7 +370,7 @@ boolean PIT_CheckLine(line_t *ld)
 
   /* set openrange, opentop, openbottom */
 
-  P_LineOpening(ld);
+  p_line_opening(ld);
 
   /* adjust floor / ceiling heights */
 
@@ -791,7 +791,7 @@ boolean PTR_SlideTraverse(intercept_t *in)
 
   /* set openrange, opentop, openbottom */
 
-  P_LineOpening(li);
+  p_line_opening(li);
 
   if (openrange < slidemo->height) goto isblocking; /* doesn't fit */
 
@@ -872,11 +872,11 @@ retry:
 
   bestslidefrac = FRACUNIT + 1;
 
-  P_PathTraverse(leadx, leady, leadx + mo->momx, leady + mo->momy,
+  p_path_traverse(leadx, leady, leadx + mo->momx, leady + mo->momy,
                  PT_ADDLINES, PTR_SlideTraverse);
-  P_PathTraverse(trailx, leady, trailx + mo->momx, leady + mo->momy,
+  p_path_traverse(trailx, leady, trailx + mo->momx, leady + mo->momy,
                  PT_ADDLINES, PTR_SlideTraverse);
-  P_PathTraverse(leadx, traily, leadx + mo->momx, traily + mo->momy,
+  p_path_traverse(leadx, traily, leadx + mo->momx, traily + mo->momy,
                  PT_ADDLINES, PTR_SlideTraverse);
 
   /* move up to the wall */
@@ -950,7 +950,7 @@ boolean PTR_AimTraverse(intercept_t *in)
        * the possible target ranges.
        */
 
-      P_LineOpening(li);
+      p_line_opening(li);
 
       if (openbottom >= opentop) return false; /* stop */
 
@@ -1033,7 +1033,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       /* crosses a two sided line */
 
-      P_LineOpening(li);
+      p_line_opening(li);
 
       dist = fixed_mul(attackrange, in->frac);
 
@@ -1166,7 +1166,7 @@ fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance)
   attackrange = distance;
   linetarget = NULL;
 
-  P_PathTraverse(t1->x, t1->y, x2, y2, PT_ADDLINES | PT_ADDTHINGS,
+  p_path_traverse(t1->x, t1->y, x2, y2, PT_ADDLINES | PT_ADDTHINGS,
                  PTR_AimTraverse);
 
   if (linetarget) return aimslope;
@@ -1194,7 +1194,7 @@ void P_LineAttack(mobj_t *t1, angle_t angle, fixed_t distance, fixed_t slope,
   attackrange = distance;
   aimslope = slope;
 
-  P_PathTraverse(t1->x, t1->y, x2, y2, PT_ADDLINES | PT_ADDTHINGS,
+  p_path_traverse(t1->x, t1->y, x2, y2, PT_ADDLINES | PT_ADDTHINGS,
                  PTR_ShootTraverse);
 }
 
@@ -1204,7 +1204,7 @@ boolean PTR_UseTraverse(intercept_t *in)
 
   if (!in->d.line->special)
     {
-      P_LineOpening(in->d.line);
+      p_line_opening(in->d.line);
       if (openrange <= 0)
         {
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
@@ -1253,7 +1253,7 @@ void p_use_lines(player_t *player)
   x2 = x1 + (USERANGE >> FRACBITS) * finecosine[angle];
   y2 = y1 + (USERANGE >> FRACBITS) * finesine[angle];
 
-  P_PathTraverse(x1, y1, x2, y2, PT_ADDLINES, PTR_UseTraverse);
+  p_path_traverse(x1, y1, x2, y2, PT_ADDLINES, PTR_UseTraverse);
 }
 
 /* PIT_RadiusAttack
@@ -1285,7 +1285,7 @@ boolean PIT_RadiusAttack(mobj_t *thing)
 
   if (dist >= bombdamage) return true; /* out of range */
 
-  if (P_CheckSight(thing, bombspot))
+  if (p_check_sight(thing, bombspot))
     {
       /* must be in direct path */
 

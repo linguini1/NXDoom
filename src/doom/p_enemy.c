@@ -103,7 +103,7 @@ void P_RecursiveSound(sector_t *sec, int soundblocks)
       check = sec->lines[i];
       if (!(check->flags & ML_TWOSIDED)) continue;
 
-      P_LineOpening(check);
+      p_line_opening(check);
 
       if (openrange <= 0) continue; // closed door
 
@@ -154,7 +154,7 @@ boolean P_CheckMeleeRange(mobj_t *actor)
 
   if (dist >= range) return false;
 
-  if (!P_CheckSight(actor, actor->target)) return false;
+  if (!p_check_sight(actor, actor->target)) return false;
 
   return true;
 }
@@ -166,7 +166,7 @@ boolean P_CheckMissileRange(mobj_t *actor)
 {
   fixed_t dist;
 
-  if (!P_CheckSight(actor, actor->target)) return false;
+  if (!p_check_sight(actor, actor->target)) return false;
 
   if (actor->flags & MF_JUSTHIT)
     {
@@ -446,7 +446,7 @@ boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 
       if (player->health <= 0) continue; // dead
 
-      if (!P_CheckSight(actor, player->mo)) continue; // out of sight
+      if (!p_check_sight(actor, player->mo)) continue; // out of sight
 
       if (!allaround)
         {
@@ -522,7 +522,7 @@ void A_Look(mobj_t *actor)
 
       if (actor->flags & MF_AMBUSH)
         {
-          if (P_CheckSight(actor, actor->target)) goto seeyou;
+          if (p_check_sight(actor, actor->target)) goto seeyou;
         }
       else
         goto seeyou;
@@ -650,7 +650,7 @@ void A_Chase(mobj_t *actor)
   // ?
 nomissile:
   // possibly choose another target
-  if (netgame && !actor->threshold && !P_CheckSight(actor, actor->target))
+  if (netgame && !actor->threshold && !p_check_sight(actor, actor->target))
     {
       if (P_LookForPlayers(actor, true)) return; // got a new target
     }
@@ -762,7 +762,7 @@ void A_CPosRefire(mobj_t *actor)
   if (p_random() < 40) return;
 
   if (!actor->target || actor->target->health <= 0 ||
-      !P_CheckSight(actor, actor->target))
+      !p_check_sight(actor, actor->target))
     {
       p_set_mobj_state(actor, actor->info->seestate);
     }
@@ -776,7 +776,7 @@ void A_SpidRefire(mobj_t *actor)
   if (p_random() < 10) return;
 
   if (!actor->target || actor->target->health <= 0 ||
-      !P_CheckSight(actor, actor->target))
+      !p_check_sight(actor, actor->target))
     {
       p_set_mobj_state(actor, actor->info->seestate);
     }
@@ -1139,7 +1139,7 @@ void A_Fire(mobj_t *actor)
   target = P_SubstNullMobj(actor->target);
 
   // don't move it if the vile lost sight
-  if (!P_CheckSight(target, dest)) return;
+  if (!p_check_sight(target, dest)) return;
 
   an = dest->angle >> ANGLETOFINESHIFT;
 
@@ -1183,7 +1183,7 @@ void A_VileAttack(mobj_t *actor)
 
   A_FaceTarget(actor);
 
-  if (!P_CheckSight(actor, actor->target)) return;
+  if (!p_check_sight(actor, actor->target)) return;
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(actor, SFX_BAREXP);

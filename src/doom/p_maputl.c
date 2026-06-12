@@ -237,7 +237,7 @@ fixed_t P_InterceptVector(divline_t *v2, divline_t *v1)
 }
 
 //
-// P_LineOpening
+// p_line_opening
 // Sets opentop and openbottom to the window
 // through a two sided line.
 // OPTIMIZE: keep this precalculated
@@ -247,7 +247,7 @@ fixed_t openbottom;
 fixed_t openrange;
 fixed_t lowfloor;
 
-void P_LineOpening(line_t *p_linedef)
+void p_line_opening(line_t *p_linedef)
 {
   sector_t *front;
   sector_t *back;
@@ -749,13 +749,13 @@ static void InterceptsOverrun(int num_intercepts, intercept_t *intercept)
 }
 
 //
-// P_PathTraverse
+// p_path_traverse
 // Traces a line from x1,y1 to x2,y2,
 // calling the traverser function for each.
 // Returns true if the traverser function returns true
 // for all lines.
 //
-boolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
+boolean p_path_traverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
                        int flags, boolean (*trav)(intercept_t *))
 {
   fixed_t xt1;

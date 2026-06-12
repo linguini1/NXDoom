@@ -155,7 +155,7 @@ extern fixed_t openbottom;
 extern fixed_t openrange;
 extern fixed_t lowfloor;
 
-void P_LineOpening(line_t *linedef);
+void p_line_opening(line_t *linedef);
 
 boolean P_BlockLinesIterator(int x, int y, boolean (*func)(line_t *));
 boolean P_BlockThingsIterator(int x, int y, boolean (*func)(mobj_t *));
@@ -166,7 +166,7 @@ boolean P_BlockThingsIterator(int x, int y, boolean (*func)(mobj_t *));
 
 extern divline_t trace;
 
-boolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
+boolean p_path_traverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
                        int flags, boolean (*trav)(intercept_t *));
 
 void P_UnsetThingPosition(mobj_t *thing);
@@ -202,7 +202,7 @@ boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y);
 boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y);
 boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y);
 void P_SlideMove(mobj_t *mo);
-boolean P_CheckSight(mobj_t *t1, mobj_t *t2);
+boolean p_check_sight(mobj_t *t1, mobj_t *t2);
 void p_use_lines(player_t *player);
 
 boolean P_ChangeSector(sector_t *sector, boolean crunch);
