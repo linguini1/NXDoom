@@ -376,9 +376,6 @@ typedef struct
 
 /* End-level timer (-TIMER option) */
 
-extern boolean g_level_timer;
-extern int g_level_time_count;
-
 extern button_t buttonlist[MAXBUTTONS];
 
 extern plat_t *activeplats[MAXPLATS];

@@ -690,7 +690,7 @@ void P_KillMobj(mobj_t *source, mobj_t *target)
 }
 
 //
-// P_DamageMobj
+// p_damage_mobj
 // Damages both enemies and players
 // "inflictor" is the thing that caused the damage
 //  creature or missile, can be NULL (slime, etc)
@@ -700,7 +700,7 @@ void P_KillMobj(mobj_t *source, mobj_t *target)
 // Source can be NULL for slime, barrel explosions
 // and other environmental stuff.
 //
-void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source,
+void p_damage_mobj(mobj_t *target, mobj_t *inflictor, mobj_t *source,
                   int damage)
 {
   unsigned ang;

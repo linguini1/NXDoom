@@ -808,7 +808,7 @@ void A_TroopAttack(mobj_t *actor)
       s_start_sound(actor, SFX_CLAW);
 #endif
       damage = (p_random() % 8 + 1) * 3;
-      P_DamageMobj(actor->target, actor, actor, damage);
+      p_damage_mobj(actor->target, actor, actor, damage);
       return;
     }
 
@@ -834,7 +834,7 @@ void A_SargAttack(mobj_t *actor)
   if (gameversion <= exe_doom_1_2)
     P_LineAttack(actor, actor->angle, MELEERANGE, 0, damage);
   else
-    P_DamageMobj(actor->target, actor, actor, damage);
+    p_damage_mobj(actor->target, actor, actor, damage);
 }
 
 void A_HeadAttack(mobj_t *actor)
@@ -847,7 +847,7 @@ void A_HeadAttack(mobj_t *actor)
   if (P_CheckMeleeRange(actor))
     {
       damage = (p_random() % 6 + 1) * 10;
-      P_DamageMobj(actor->target, actor, actor, damage);
+      p_damage_mobj(actor->target, actor, actor, damage);
       return;
     }
 
@@ -875,7 +875,7 @@ void A_BruisAttack(mobj_t *actor)
       s_start_sound(actor, SFX_CLAW);
 #endif
       damage = (p_random() % 8 + 1) * 10;
-      P_DamageMobj(actor->target, actor, actor, damage);
+      p_damage_mobj(actor->target, actor, actor, damage);
       return;
     }
 
@@ -987,7 +987,7 @@ void A_SkelFist(mobj_t *actor)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
       s_start_sound(actor, SFX_SKEPCH);
 #endif
-      P_DamageMobj(actor->target, actor, actor, damage);
+      p_damage_mobj(actor->target, actor, actor, damage);
     }
 }
 
@@ -1188,7 +1188,7 @@ void A_VileAttack(mobj_t *actor)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(actor, SFX_BAREXP);
 #endif
-  P_DamageMobj(actor->target, actor, actor, 20);
+  p_damage_mobj(actor->target, actor, actor, 20);
   actor->target->momz = 1000 * FRACUNIT / actor->target->info->mass;
 
   an = actor->angle >> ANGLETOFINESHIFT;
@@ -1360,7 +1360,7 @@ void A_PainShootSkull(mobj_t *actor, angle_t angle)
   if (!P_TryMove(newmobj, newmobj->x, newmobj->y))
     {
       // kill it immediately
-      P_DamageMobj(newmobj, actor, actor, 10000);
+      p_damage_mobj(newmobj, actor, actor, 10000);
       return;
     }
 

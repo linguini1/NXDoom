@@ -190,7 +190,7 @@ static boolean pit_stomp_thing(mobj_t *thing)
 
   if (!tmthing->player && gamemap != 30) return false;
 
-  P_DamageMobj(thing, tmthing, tmthing, 10000);
+  p_damage_mobj(thing, tmthing, tmthing, 10000);
 
   return true;
 }
@@ -429,7 +429,7 @@ boolean PIT_CheckThing(mobj_t *thing)
     {
       damage = ((p_random() % 8) + 1) * tmthing->info->damage;
 
-      P_DamageMobj(thing, tmthing, tmthing, damage);
+      p_damage_mobj(thing, tmthing, tmthing, damage);
 
       tmthing->flags &= ~MF_SKULLFLY;
       tmthing->momx = tmthing->momy = tmthing->momz = 0;
@@ -484,7 +484,7 @@ boolean PIT_CheckThing(mobj_t *thing)
       /* damage / explode */
 
       damage = ((p_random() % 8) + 1) * tmthing->info->damage;
-      P_DamageMobj(thing, tmthing, tmthing->target, damage);
+      p_damage_mobj(thing, tmthing, tmthing->target, damage);
 
       /* don't traverse any more */
 
@@ -1135,7 +1135,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
   else
     P_SpawnBlood(x, y, z, la_damage);
 
-  if (la_damage) P_DamageMobj(th, shootthing, shootthing, la_damage);
+  if (la_damage) p_damage_mobj(th, shootthing, shootthing, la_damage);
 
   /* don't go any farther */
 
@@ -1289,7 +1289,7 @@ boolean PIT_RadiusAttack(mobj_t *thing)
     {
       /* must be in direct path */
 
-      P_DamageMobj(thing, bombspot, bombsource, bombdamage - dist);
+      p_damage_mobj(thing, bombspot, bombsource, bombdamage - dist);
     }
 
   return true;
@@ -1369,7 +1369,7 @@ boolean PIT_ChangeSector(mobj_t *thing)
 
   if (crushchange && !(leveltime & 3))
     {
-      P_DamageMobj(thing, NULL, NULL, 10);
+      p_damage_mobj(thing, NULL, NULL, 10);
 
       /* spray blood in a random direction */
 
