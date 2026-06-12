@@ -109,9 +109,9 @@ void a_fire_shotgun();
 void a_light2();
 void a_fire_shotgun2();
 void a_check_reload();
-void A_OpenShotgun2();
-void A_LoadShotgun2();
-void A_CloseShotgun2();
+void a_open_shotgun2();
+void a_load_shotgun2();
+void a_close_shotgun2();
 void a_fire_cgun();
 void a_gun_flash();
 void a_fire_missile();
@@ -120,57 +120,57 @@ void a_fire_plasma();
 void a_bfg_sound();
 void a_fire_bfg();
 void a_bfg_spray();
-void A_Explode();
-void A_Pain();
-void A_PlayerScream();
-void A_Fall();
-void A_XScream();
-void A_Look();
-void A_Chase();
-void A_FaceTarget();
-void A_PosAttack();
-void A_Scream();
-void A_SPosAttack();
-void A_VileChase();
-void A_VileStart();
-void A_VileTarget();
-void A_VileAttack();
-void A_StartFire();
-void A_Fire();
-void A_FireCrackle();
-void A_Tracer();
-void A_SkelWhoosh();
-void A_SkelFist();
-void A_SkelMissile();
-void A_FatRaise();
-void A_FatAttack1();
-void A_FatAttack2();
-void A_FatAttack3();
-void A_BossDeath();
-void A_CPosAttack();
-void A_CPosRefire();
-void A_TroopAttack();
-void A_SargAttack();
-void A_HeadAttack();
-void A_BruisAttack();
-void A_SkullAttack();
-void A_Metal();
-void A_SpidRefire();
-void A_BabyMetal();
-void A_BspiAttack();
-void A_Hoof();
-void A_CyberAttack();
-void A_PainAttack();
-void A_PainDie();
-void A_KeenDie();
-void A_BrainPain();
-void A_BrainScream();
-void A_BrainDie();
-void A_BrainAwake();
-void A_BrainSpit();
-void A_SpawnSound();
-void A_SpawnFly();
-void A_BrainExplode();
+void a_explode();
+void a_pain();
+void a_player_screm();
+void a_fall();
+void a_xscream();
+void a_look();
+void a_chase();
+void a_face_target();
+void a_pos_attack();
+void a_scream();
+void a_s_pos_attack();
+void a_vile_chase();
+void a_vile_start();
+void a_vile_target();
+void a_vile_attack();
+void a_start_fire();
+void a_fire();
+void a_fire_crackle();
+void a_tracer();
+void a_skel_woosh();
+void a_skel_fist();
+void a_skel_missile();
+void a_fat_raise();
+void a_fat_attack1();
+void a_fat_attack2();
+void a_fat_attack3();
+void a_boss_death();
+void a_c_pos_attack();
+void a_c_pos_refire();
+void a_troop_attack();
+void a_sarg_attack();
+void a_head_attack();
+void a_bruis_attack();
+void a_skull_attack();
+void a_metal();
+void a_spid_refire();
+void a_baby_metal();
+void a_bspi_attack();
+void a_hoof();
+void a_cyber_attack();
+void a_pain_attack();
+void a_pain_die();
+void a_keen_die();
+void a_brain_pain();
+void a_brain_scream();
+void a_brain_die();
+void a_brain_awake();
+void a_brain_split();
+void a_spawn_sound();
+void a_spawn_fly();
+void a_brain_explode();
 
 /****************************************************************************
  * Public Data
@@ -216,11 +216,11 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_SHT2, 0, 7, a_fire_shotgun2, S_DSGUN3),    /* S_DSGUN2 */
     STATE_ENTRY(SPR_SHT2, 1, 7, NULL, S_DSGUN4),              /* S_DSGUN3 */
     STATE_ENTRY(SPR_SHT2, 2, 7, a_check_reload, S_DSGUN5),     /* S_DSGUN4 */
-    STATE_ENTRY(SPR_SHT2, 3, 7, A_OpenShotgun2, S_DSGUN6),    /* S_DSGUN5 */
+    STATE_ENTRY(SPR_SHT2, 3, 7, a_open_shotgun2, S_DSGUN6),    /* S_DSGUN5 */
     STATE_ENTRY(SPR_SHT2, 4, 7, NULL, S_DSGUN7),              /* S_DSGUN6 */
-    STATE_ENTRY(SPR_SHT2, 5, 7, A_LoadShotgun2, S_DSGUN8),    /* S_DSGUN7 */
+    STATE_ENTRY(SPR_SHT2, 5, 7, a_load_shotgun2, S_DSGUN8),    /* S_DSGUN7 */
     STATE_ENTRY(SPR_SHT2, 6, 6, NULL, S_DSGUN9),              /* S_DSGUN8 */
-    STATE_ENTRY(SPR_SHT2, 7, 6, A_CloseShotgun2, S_DSGUN10),  /* S_DSGUN9 */
+    STATE_ENTRY(SPR_SHT2, 7, 6, a_close_shotgun2, S_DSGUN10),  /* S_DSGUN9 */
     STATE_ENTRY(SPR_SHT2, 0, 5, a_refire, S_DSGUN),           /* S_DSGUN10 */
     STATE_ENTRY(SPR_SHT2, 1, 7, NULL, S_DSNR2),               /* S_DSNR1 */
     STATE_ENTRY(SPR_SHT2, 0, 3, NULL, S_DSGUNDOWN),           /* S_DSNR2 */
@@ -304,7 +304,7 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_BFE2, 32769, 8, NULL, S_BFGEXP3),          /* S_BFGEXP2 */
     STATE_ENTRY(SPR_BFE2, 32770, 8, NULL, S_BFGEXP4),          /* S_BFGEXP3 */
     STATE_ENTRY(SPR_BFE2, 32771, 8, NULL, S_NULL),             /* S_BFGEXP4 */
-    STATE_ENTRY(SPR_MISL, 32769, 8, A_Explode, S_EXPLODE2),    /* S_EXPLODE1 */
+    STATE_ENTRY(SPR_MISL, 32769, 8, a_explode, S_EXPLODE2),    /* S_EXPLODE1 */
     STATE_ENTRY(SPR_MISL, 32770, 6, NULL, S_EXPLODE3),         /* S_EXPLODE2 */
     STATE_ENTRY(SPR_MISL, 32771, 4, NULL, S_NULL),             /* S_EXPLODE3 */
     STATE_ENTRY(SPR_TFOG, 32768, 6, NULL, S_TFOG01),           /* S_TFOG */
@@ -334,46 +334,46 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_PLAY, 4, 12, NULL, S_PLAY),                /* S_PLAY_ATK1 */
     STATE_ENTRY(SPR_PLAY, 32773, 6, NULL, S_PLAY_ATK1),        /* S_PLAY_ATK2 */
     STATE_ENTRY(SPR_PLAY, 6, 4, NULL, S_PLAY_PAIN2),           /* S_PLAY_PAIN */
-    STATE_ENTRY(SPR_PLAY, 6, 4, A_Pain, S_PLAY),               /* S_PLAY_PAIN2 */
+    STATE_ENTRY(SPR_PLAY, 6, 4, a_pain, S_PLAY),               /* S_PLAY_PAIN2 */
     STATE_ENTRY(SPR_PLAY, 7, 10, NULL, S_PLAY_DIE2),           /* S_PLAY_DIE1 */
-    STATE_ENTRY(SPR_PLAY, 8, 10, A_PlayerScream, S_PLAY_DIE3), /* S_PLAY_DIE2 */
-    STATE_ENTRY(SPR_PLAY, 9, 10, A_Fall, S_PLAY_DIE4),         /* S_PLAY_DIE3 */
+    STATE_ENTRY(SPR_PLAY, 8, 10, a_player_screm, S_PLAY_DIE3), /* S_PLAY_DIE2 */
+    STATE_ENTRY(SPR_PLAY, 9, 10, a_fall, S_PLAY_DIE4),         /* S_PLAY_DIE3 */
     STATE_ENTRY(SPR_PLAY, 10, 10, NULL, S_PLAY_DIE5),          /* S_PLAY_DIE4 */
     STATE_ENTRY(SPR_PLAY, 11, 10, NULL, S_PLAY_DIE6),          /* S_PLAY_DIE5 */
     STATE_ENTRY(SPR_PLAY, 12, 10, NULL, S_PLAY_DIE7),          /* S_PLAY_DIE6 */
     STATE_ENTRY(SPR_PLAY, 13, -1, NULL, S_NULL),               /* S_PLAY_DIE7 */
     STATE_ENTRY(SPR_PLAY, 14, 5, NULL, S_PLAY_XDIE2),          /* S_PLAY_XDIE1 */
-    STATE_ENTRY(SPR_PLAY, 15, 5, A_XScream, S_PLAY_XDIE3),     /* S_PLAY_XDIE2 */
-    STATE_ENTRY(SPR_PLAY, 16, 5, A_Fall, S_PLAY_XDIE4),        /* S_PLAY_XDIE3 */
+    STATE_ENTRY(SPR_PLAY, 15, 5, a_xscream, S_PLAY_XDIE3),     /* S_PLAY_XDIE2 */
+    STATE_ENTRY(SPR_PLAY, 16, 5, a_fall, S_PLAY_XDIE4),        /* S_PLAY_XDIE3 */
     STATE_ENTRY(SPR_PLAY, 17, 5, NULL, S_PLAY_XDIE5),          /* S_PLAY_XDIE4 */
     STATE_ENTRY(SPR_PLAY, 18, 5, NULL, S_PLAY_XDIE6),          /* S_PLAY_XDIE5 */
     STATE_ENTRY(SPR_PLAY, 19, 5, NULL, S_PLAY_XDIE7),          /* S_PLAY_XDIE6 */
     STATE_ENTRY(SPR_PLAY, 20, 5, NULL, S_PLAY_XDIE8),          /* S_PLAY_XDIE7 */
     STATE_ENTRY(SPR_PLAY, 21, 5, NULL, S_PLAY_XDIE9),          /* S_PLAY_XDIE8 */
     STATE_ENTRY(SPR_PLAY, 22, -1, NULL, S_NULL),               /* S_PLAY_XDIE9 */
-    STATE_ENTRY(SPR_POSS, 0, 10, A_Look, S_POSS_STND2),        /* S_POSS_STND */
-    STATE_ENTRY(SPR_POSS, 1, 10, A_Look, S_POSS_STND),         /* S_POSS_STND2 */
-    STATE_ENTRY(SPR_POSS, 0, 4, A_Chase, S_POSS_RUN2),         /* S_POSS_RUN1 */
-    STATE_ENTRY(SPR_POSS, 0, 4, A_Chase, S_POSS_RUN3),         /* S_POSS_RUN2 */
-    STATE_ENTRY(SPR_POSS, 1, 4, A_Chase, S_POSS_RUN4),         /* S_POSS_RUN3 */
-    STATE_ENTRY(SPR_POSS, 1, 4, A_Chase, S_POSS_RUN5),         /* S_POSS_RUN4 */
-    STATE_ENTRY(SPR_POSS, 2, 4, A_Chase, S_POSS_RUN6),         /* S_POSS_RUN5 */
-    STATE_ENTRY(SPR_POSS, 2, 4, A_Chase, S_POSS_RUN7),         /* S_POSS_RUN6 */
-    STATE_ENTRY(SPR_POSS, 3, 4, A_Chase, S_POSS_RUN8),         /* S_POSS_RUN7 */
-    STATE_ENTRY(SPR_POSS, 3, 4, A_Chase, S_POSS_RUN1),         /* S_POSS_RUN8 */
-    STATE_ENTRY(SPR_POSS, 4, 10, A_FaceTarget, S_POSS_ATK2),   /* S_POSS_ATK1 */
-    STATE_ENTRY(SPR_POSS, 5, 8, A_PosAttack, S_POSS_ATK3),     /* S_POSS_ATK2 */
+    STATE_ENTRY(SPR_POSS, 0, 10, a_look, S_POSS_STND2),        /* S_POSS_STND */
+    STATE_ENTRY(SPR_POSS, 1, 10, a_look, S_POSS_STND),         /* S_POSS_STND2 */
+    STATE_ENTRY(SPR_POSS, 0, 4, a_chase, S_POSS_RUN2),         /* S_POSS_RUN1 */
+    STATE_ENTRY(SPR_POSS, 0, 4, a_chase, S_POSS_RUN3),         /* S_POSS_RUN2 */
+    STATE_ENTRY(SPR_POSS, 1, 4, a_chase, S_POSS_RUN4),         /* S_POSS_RUN3 */
+    STATE_ENTRY(SPR_POSS, 1, 4, a_chase, S_POSS_RUN5),         /* S_POSS_RUN4 */
+    STATE_ENTRY(SPR_POSS, 2, 4, a_chase, S_POSS_RUN6),         /* S_POSS_RUN5 */
+    STATE_ENTRY(SPR_POSS, 2, 4, a_chase, S_POSS_RUN7),         /* S_POSS_RUN6 */
+    STATE_ENTRY(SPR_POSS, 3, 4, a_chase, S_POSS_RUN8),         /* S_POSS_RUN7 */
+    STATE_ENTRY(SPR_POSS, 3, 4, a_chase, S_POSS_RUN1),         /* S_POSS_RUN8 */
+    STATE_ENTRY(SPR_POSS, 4, 10, a_face_target, S_POSS_ATK2),   /* S_POSS_ATK1 */
+    STATE_ENTRY(SPR_POSS, 5, 8, a_pos_attack, S_POSS_ATK3),     /* S_POSS_ATK2 */
     STATE_ENTRY(SPR_POSS, 4, 8, NULL, S_POSS_RUN1),            /* S_POSS_ATK3 */
     STATE_ENTRY(SPR_POSS, 6, 3, NULL, S_POSS_PAIN2),           /* S_POSS_PAIN */
-    STATE_ENTRY(SPR_POSS, 6, 3, A_Pain, S_POSS_RUN1),          /* S_POSS_PAIN2 */
+    STATE_ENTRY(SPR_POSS, 6, 3, a_pain, S_POSS_RUN1),          /* S_POSS_PAIN2 */
     STATE_ENTRY(SPR_POSS, 7, 5, NULL, S_POSS_DIE2),            /* S_POSS_DIE1 */
-    STATE_ENTRY(SPR_POSS, 8, 5, A_Scream, S_POSS_DIE3),        /* S_POSS_DIE2 */
-    STATE_ENTRY(SPR_POSS, 9, 5, A_Fall, S_POSS_DIE4),          /* S_POSS_DIE3 */
+    STATE_ENTRY(SPR_POSS, 8, 5, a_scream, S_POSS_DIE3),        /* S_POSS_DIE2 */
+    STATE_ENTRY(SPR_POSS, 9, 5, a_fall, S_POSS_DIE4),          /* S_POSS_DIE3 */
     STATE_ENTRY(SPR_POSS, 10, 5, NULL, S_POSS_DIE5),           /* S_POSS_DIE4 */
     STATE_ENTRY(SPR_POSS, 11, -1, NULL, S_NULL),               /* S_POSS_DIE5 */
     STATE_ENTRY(SPR_POSS, 12, 5, NULL, S_POSS_XDIE2),          /* S_POSS_XDIE1 */
-    STATE_ENTRY(SPR_POSS, 13, 5, A_XScream, S_POSS_XDIE3),     /* S_POSS_XDIE2 */
-    STATE_ENTRY(SPR_POSS, 14, 5, A_Fall, S_POSS_XDIE4),        /* S_POSS_XDIE3 */
+    STATE_ENTRY(SPR_POSS, 13, 5, a_xscream, S_POSS_XDIE3),     /* S_POSS_XDIE2 */
+    STATE_ENTRY(SPR_POSS, 14, 5, a_fall, S_POSS_XDIE4),        /* S_POSS_XDIE3 */
     STATE_ENTRY(SPR_POSS, 15, 5, NULL, S_POSS_XDIE5),          /* S_POSS_XDIE4 */
     STATE_ENTRY(SPR_POSS, 16, 5, NULL, S_POSS_XDIE6),          /* S_POSS_XDIE5 */
     STATE_ENTRY(SPR_POSS, 17, 5, NULL, S_POSS_XDIE7),          /* S_POSS_XDIE6 */
@@ -384,29 +384,29 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_POSS, 9, 5, NULL, S_POSS_RAISE3),        /* S_POSS_RAISE2 */
     STATE_ENTRY(SPR_POSS, 8, 5, NULL, S_POSS_RAISE4),        /* S_POSS_RAISE3 */
     STATE_ENTRY(SPR_POSS, 7, 5, NULL, S_POSS_RUN1),          /* S_POSS_RAISE4 */
-    STATE_ENTRY(SPR_SPOS, 0, 10, A_Look, S_SPOS_STND2),      /* S_SPOS_STND */
-    STATE_ENTRY(SPR_SPOS, 1, 10, A_Look, S_SPOS_STND),       /* S_SPOS_STND2 */
-    STATE_ENTRY(SPR_SPOS, 0, 3, A_Chase, S_SPOS_RUN2),       /* S_SPOS_RUN1 */
-    STATE_ENTRY(SPR_SPOS, 0, 3, A_Chase, S_SPOS_RUN3),       /* S_SPOS_RUN2 */
-    STATE_ENTRY(SPR_SPOS, 1, 3, A_Chase, S_SPOS_RUN4),       /* S_SPOS_RUN3 */
-    STATE_ENTRY(SPR_SPOS, 1, 3, A_Chase, S_SPOS_RUN5),       /* S_SPOS_RUN4 */
-    STATE_ENTRY(SPR_SPOS, 2, 3, A_Chase, S_SPOS_RUN6),       /* S_SPOS_RUN5 */
-    STATE_ENTRY(SPR_SPOS, 2, 3, A_Chase, S_SPOS_RUN7),       /* S_SPOS_RUN6 */
-    STATE_ENTRY(SPR_SPOS, 3, 3, A_Chase, S_SPOS_RUN8),       /* S_SPOS_RUN7 */
-    STATE_ENTRY(SPR_SPOS, 3, 3, A_Chase, S_SPOS_RUN1),       /* S_SPOS_RUN8 */
-    STATE_ENTRY(SPR_SPOS, 4, 10, A_FaceTarget, S_SPOS_ATK2), /* S_SPOS_ATK1 */
-    STATE_ENTRY(SPR_SPOS, 32773, 10, A_SPosAttack, S_SPOS_ATK3), /* S_SPOS_ATK2 */
+    STATE_ENTRY(SPR_SPOS, 0, 10, a_look, S_SPOS_STND2),      /* S_SPOS_STND */
+    STATE_ENTRY(SPR_SPOS, 1, 10, a_look, S_SPOS_STND),       /* S_SPOS_STND2 */
+    STATE_ENTRY(SPR_SPOS, 0, 3, a_chase, S_SPOS_RUN2),       /* S_SPOS_RUN1 */
+    STATE_ENTRY(SPR_SPOS, 0, 3, a_chase, S_SPOS_RUN3),       /* S_SPOS_RUN2 */
+    STATE_ENTRY(SPR_SPOS, 1, 3, a_chase, S_SPOS_RUN4),       /* S_SPOS_RUN3 */
+    STATE_ENTRY(SPR_SPOS, 1, 3, a_chase, S_SPOS_RUN5),       /* S_SPOS_RUN4 */
+    STATE_ENTRY(SPR_SPOS, 2, 3, a_chase, S_SPOS_RUN6),       /* S_SPOS_RUN5 */
+    STATE_ENTRY(SPR_SPOS, 2, 3, a_chase, S_SPOS_RUN7),       /* S_SPOS_RUN6 */
+    STATE_ENTRY(SPR_SPOS, 3, 3, a_chase, S_SPOS_RUN8),       /* S_SPOS_RUN7 */
+    STATE_ENTRY(SPR_SPOS, 3, 3, a_chase, S_SPOS_RUN1),       /* S_SPOS_RUN8 */
+    STATE_ENTRY(SPR_SPOS, 4, 10, a_face_target, S_SPOS_ATK2), /* S_SPOS_ATK1 */
+    STATE_ENTRY(SPR_SPOS, 32773, 10, a_s_pos_attack, S_SPOS_ATK3), /* S_SPOS_ATK2 */
     STATE_ENTRY(SPR_SPOS, 4, 10, NULL, S_SPOS_RUN1),        /* S_SPOS_ATK3 */
     STATE_ENTRY(SPR_SPOS, 6, 3, NULL, S_SPOS_PAIN2),        /* S_SPOS_PAIN */
-    STATE_ENTRY(SPR_SPOS, 6, 3, A_Pain, S_SPOS_RUN1),       /* S_SPOS_PAIN2 */
+    STATE_ENTRY(SPR_SPOS, 6, 3, a_pain, S_SPOS_RUN1),       /* S_SPOS_PAIN2 */
     STATE_ENTRY(SPR_SPOS, 7, 5, NULL, S_SPOS_DIE2),         /* S_SPOS_DIE1 */
-    STATE_ENTRY(SPR_SPOS, 8, 5, A_Scream, S_SPOS_DIE3),     /* S_SPOS_DIE2 */
-    STATE_ENTRY(SPR_SPOS, 9, 5, A_Fall, S_SPOS_DIE4),       /* S_SPOS_DIE3 */
+    STATE_ENTRY(SPR_SPOS, 8, 5, a_scream, S_SPOS_DIE3),     /* S_SPOS_DIE2 */
+    STATE_ENTRY(SPR_SPOS, 9, 5, a_fall, S_SPOS_DIE4),       /* S_SPOS_DIE3 */
     STATE_ENTRY(SPR_SPOS, 10, 5, NULL, S_SPOS_DIE5),        /* S_SPOS_DIE4 */
     STATE_ENTRY(SPR_SPOS, 11, -1, NULL, S_NULL),            /* S_SPOS_DIE5 */
     STATE_ENTRY(SPR_SPOS, 12, 5, NULL, S_SPOS_XDIE2),       /* S_SPOS_XDIE1 */
-    STATE_ENTRY(SPR_SPOS, 13, 5, A_XScream, S_SPOS_XDIE3),  /* S_SPOS_XDIE2 */
-    STATE_ENTRY(SPR_SPOS, 14, 5, A_Fall, S_SPOS_XDIE4),     /* S_SPOS_XDIE3 */
+    STATE_ENTRY(SPR_SPOS, 13, 5, a_xscream, S_SPOS_XDIE3),  /* S_SPOS_XDIE2 */
+    STATE_ENTRY(SPR_SPOS, 14, 5, a_fall, S_SPOS_XDIE4),     /* S_SPOS_XDIE3 */
     STATE_ENTRY(SPR_SPOS, 15, 5, NULL, S_SPOS_XDIE5),       /* S_SPOS_XDIE4 */
     STATE_ENTRY(SPR_SPOS, 16, 5, NULL, S_SPOS_XDIE6),       /* S_SPOS_XDIE5 */
     STATE_ENTRY(SPR_SPOS, 17, 5, NULL, S_SPOS_XDIE7),       /* S_SPOS_XDIE6 */
@@ -418,39 +418,39 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_SPOS, 9, 5, NULL, S_SPOS_RAISE4),       /* S_SPOS_RAISE3 */
     STATE_ENTRY(SPR_SPOS, 8, 5, NULL, S_SPOS_RAISE5),       /* S_SPOS_RAISE4 */
     STATE_ENTRY(SPR_SPOS, 7, 5, NULL, S_SPOS_RUN1),         /* S_SPOS_RAISE5 */
-    STATE_ENTRY(SPR_VILE, 0, 10, A_Look, S_VILE_STND2),     /* S_VILE_STND */
-    STATE_ENTRY(SPR_VILE, 1, 10, A_Look, S_VILE_STND),      /* S_VILE_STND2 */
-    STATE_ENTRY(SPR_VILE, 0, 2, A_VileChase, S_VILE_RUN2),  /* S_VILE_RUN1 */
-    STATE_ENTRY(SPR_VILE, 0, 2, A_VileChase, S_VILE_RUN3),  /* S_VILE_RUN2 */
-    STATE_ENTRY(SPR_VILE, 1, 2, A_VileChase, S_VILE_RUN4),  /* S_VILE_RUN3 */
-    STATE_ENTRY(SPR_VILE, 1, 2, A_VileChase, S_VILE_RUN5),  /* S_VILE_RUN4 */
-    STATE_ENTRY(SPR_VILE, 2, 2, A_VileChase, S_VILE_RUN6),  /* S_VILE_RUN5 */
-    STATE_ENTRY(SPR_VILE, 2, 2, A_VileChase, S_VILE_RUN7),  /* S_VILE_RUN6 */
-    STATE_ENTRY(SPR_VILE, 3, 2, A_VileChase, S_VILE_RUN8),  /* S_VILE_RUN7 */
-    STATE_ENTRY(SPR_VILE, 3, 2, A_VileChase, S_VILE_RUN9),  /* S_VILE_RUN8 */
-    STATE_ENTRY(SPR_VILE, 4, 2, A_VileChase, S_VILE_RUN10), /* S_VILE_RUN9 */
-    STATE_ENTRY(SPR_VILE, 4, 2, A_VileChase, S_VILE_RUN11), /* S_VILE_RUN10 */
-    STATE_ENTRY(SPR_VILE, 5, 2, A_VileChase, S_VILE_RUN12), /* S_VILE_RUN11 */
-    STATE_ENTRY(SPR_VILE, 5, 2, A_VileChase, S_VILE_RUN1),  /* S_VILE_RUN12 */
-    STATE_ENTRY(SPR_VILE, 32774, 0, A_VileStart, S_VILE_ATK2), /* S_VILE_ATK1 */
-    STATE_ENTRY(SPR_VILE, 32774, 10, A_FaceTarget, S_VILE_ATK3), /* S_VILE_ATK2 */
-    STATE_ENTRY(SPR_VILE, 32775, 8, A_VileTarget, S_VILE_ATK4), /* S_VILE_ATK3 */
-    STATE_ENTRY(SPR_VILE, 32776, 8, A_FaceTarget, S_VILE_ATK5), /* S_VILE_ATK4 */
-    STATE_ENTRY(SPR_VILE, 32777, 8, A_FaceTarget, S_VILE_ATK6), /* S_VILE_ATK5 */
-    STATE_ENTRY(SPR_VILE, 32778, 8, A_FaceTarget, S_VILE_ATK7), /* S_VILE_ATK6 */
-    STATE_ENTRY(SPR_VILE, 32779, 8, A_FaceTarget, S_VILE_ATK8), /* S_VILE_ATK7 */
-    STATE_ENTRY(SPR_VILE, 32780, 8, A_FaceTarget, S_VILE_ATK9), /* S_VILE_ATK8 */
-    STATE_ENTRY(SPR_VILE, 32781, 8, A_FaceTarget, S_VILE_ATK10), /* S_VILE_ATK9 */
-    STATE_ENTRY(SPR_VILE, 32782, 8, A_VileAttack, S_VILE_ATK11), /* S_VILE_ATK10 */
+    STATE_ENTRY(SPR_VILE, 0, 10, a_look, S_VILE_STND2),     /* S_VILE_STND */
+    STATE_ENTRY(SPR_VILE, 1, 10, a_look, S_VILE_STND),      /* S_VILE_STND2 */
+    STATE_ENTRY(SPR_VILE, 0, 2, a_vile_chase, S_VILE_RUN2),  /* S_VILE_RUN1 */
+    STATE_ENTRY(SPR_VILE, 0, 2, a_vile_chase, S_VILE_RUN3),  /* S_VILE_RUN2 */
+    STATE_ENTRY(SPR_VILE, 1, 2, a_vile_chase, S_VILE_RUN4),  /* S_VILE_RUN3 */
+    STATE_ENTRY(SPR_VILE, 1, 2, a_vile_chase, S_VILE_RUN5),  /* S_VILE_RUN4 */
+    STATE_ENTRY(SPR_VILE, 2, 2, a_vile_chase, S_VILE_RUN6),  /* S_VILE_RUN5 */
+    STATE_ENTRY(SPR_VILE, 2, 2, a_vile_chase, S_VILE_RUN7),  /* S_VILE_RUN6 */
+    STATE_ENTRY(SPR_VILE, 3, 2, a_vile_chase, S_VILE_RUN8),  /* S_VILE_RUN7 */
+    STATE_ENTRY(SPR_VILE, 3, 2, a_vile_chase, S_VILE_RUN9),  /* S_VILE_RUN8 */
+    STATE_ENTRY(SPR_VILE, 4, 2, a_vile_chase, S_VILE_RUN10), /* S_VILE_RUN9 */
+    STATE_ENTRY(SPR_VILE, 4, 2, a_vile_chase, S_VILE_RUN11), /* S_VILE_RUN10 */
+    STATE_ENTRY(SPR_VILE, 5, 2, a_vile_chase, S_VILE_RUN12), /* S_VILE_RUN11 */
+    STATE_ENTRY(SPR_VILE, 5, 2, a_vile_chase, S_VILE_RUN1),  /* S_VILE_RUN12 */
+    STATE_ENTRY(SPR_VILE, 32774, 0, a_vile_start, S_VILE_ATK2), /* S_VILE_ATK1 */
+    STATE_ENTRY(SPR_VILE, 32774, 10, a_face_target, S_VILE_ATK3), /* S_VILE_ATK2 */
+    STATE_ENTRY(SPR_VILE, 32775, 8, a_vile_target, S_VILE_ATK4), /* S_VILE_ATK3 */
+    STATE_ENTRY(SPR_VILE, 32776, 8, a_face_target, S_VILE_ATK5), /* S_VILE_ATK4 */
+    STATE_ENTRY(SPR_VILE, 32777, 8, a_face_target, S_VILE_ATK6), /* S_VILE_ATK5 */
+    STATE_ENTRY(SPR_VILE, 32778, 8, a_face_target, S_VILE_ATK7), /* S_VILE_ATK6 */
+    STATE_ENTRY(SPR_VILE, 32779, 8, a_face_target, S_VILE_ATK8), /* S_VILE_ATK7 */
+    STATE_ENTRY(SPR_VILE, 32780, 8, a_face_target, S_VILE_ATK9), /* S_VILE_ATK8 */
+    STATE_ENTRY(SPR_VILE, 32781, 8, a_face_target, S_VILE_ATK10), /* S_VILE_ATK9 */
+    STATE_ENTRY(SPR_VILE, 32782, 8, a_vile_attack, S_VILE_ATK11), /* S_VILE_ATK10 */
     STATE_ENTRY(SPR_VILE, 32783, 20, NULL, S_VILE_RUN1),      /* S_VILE_ATK11 */
     STATE_ENTRY(SPR_VILE, 32794, 10, NULL, S_VILE_HEAL2),     /* S_VILE_HEAL1 */
     STATE_ENTRY(SPR_VILE, 32795, 10, NULL, S_VILE_HEAL3),     /* S_VILE_HEAL2 */
     STATE_ENTRY(SPR_VILE, 32796, 10, NULL, S_VILE_RUN1),      /* S_VILE_HEAL3 */
     STATE_ENTRY(SPR_VILE, 16, 5, NULL, S_VILE_PAIN2),         /* S_VILE_PAIN */
-    STATE_ENTRY(SPR_VILE, 16, 5, A_Pain, S_VILE_RUN1),        /* S_VILE_PAIN2 */
+    STATE_ENTRY(SPR_VILE, 16, 5, a_pain, S_VILE_RUN1),        /* S_VILE_PAIN2 */
     STATE_ENTRY(SPR_VILE, 16, 7, NULL, S_VILE_DIE2),          /* S_VILE_DIE1 */
-    STATE_ENTRY(SPR_VILE, 17, 7, A_Scream, S_VILE_DIE3),      /* S_VILE_DIE2 */
-    STATE_ENTRY(SPR_VILE, 18, 7, A_Fall, S_VILE_DIE4),        /* S_VILE_DIE3 */
+    STATE_ENTRY(SPR_VILE, 17, 7, a_scream, S_VILE_DIE3),      /* S_VILE_DIE2 */
+    STATE_ENTRY(SPR_VILE, 18, 7, a_fall, S_VILE_DIE4),        /* S_VILE_DIE3 */
     STATE_ENTRY(SPR_VILE, 19, 7, NULL, S_VILE_DIE5),          /* S_VILE_DIE4 */
     STATE_ENTRY(SPR_VILE, 20, 7, NULL, S_VILE_DIE6),          /* S_VILE_DIE5 */
     STATE_ENTRY(SPR_VILE, 21, 7, NULL, S_VILE_DIE7),          /* S_VILE_DIE6 */
@@ -458,74 +458,74 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_VILE, 23, 5, NULL, S_VILE_DIE9),          /* S_VILE_DIE8 */
     STATE_ENTRY(SPR_VILE, 24, 5, NULL, S_VILE_DIE10),         /* S_VILE_DIE9 */
     STATE_ENTRY(SPR_VILE, 25, -1, NULL, S_NULL),              /* S_VILE_DIE10 */
-    STATE_ENTRY(SPR_FIRE, 32768, 2, A_StartFire, S_FIRE2),    /* S_FIRE1 */
-    STATE_ENTRY(SPR_FIRE, 32769, 2, A_Fire, S_FIRE3),         /* S_FIRE2 */
-    STATE_ENTRY(SPR_FIRE, 32768, 2, A_Fire, S_FIRE4),         /* S_FIRE3 */
-    STATE_ENTRY(SPR_FIRE, 32769, 2, A_Fire, S_FIRE5),         /* S_FIRE4 */
-    STATE_ENTRY(SPR_FIRE, 32770, 2, A_FireCrackle, S_FIRE6),  /* S_FIRE5 */
-    STATE_ENTRY(SPR_FIRE, 32769, 2, A_Fire, S_FIRE7),         /* S_FIRE6 */
-    STATE_ENTRY(SPR_FIRE, 32770, 2, A_Fire, S_FIRE8),         /* S_FIRE7 */
-    STATE_ENTRY(SPR_FIRE, 32769, 2, A_Fire, S_FIRE9),         /* S_FIRE8 */
-    STATE_ENTRY(SPR_FIRE, 32770, 2, A_Fire, S_FIRE10),        /* S_FIRE9 */
-    STATE_ENTRY(SPR_FIRE, 32771, 2, A_Fire, S_FIRE11),        /* S_FIRE10 */
-    STATE_ENTRY(SPR_FIRE, 32770, 2, A_Fire, S_FIRE12),        /* S_FIRE11 */
-    STATE_ENTRY(SPR_FIRE, 32771, 2, A_Fire, S_FIRE13),        /* S_FIRE12 */
-    STATE_ENTRY(SPR_FIRE, 32770, 2, A_Fire, S_FIRE14),        /* S_FIRE13 */
-    STATE_ENTRY(SPR_FIRE, 32771, 2, A_Fire, S_FIRE15),        /* S_FIRE14 */
-    STATE_ENTRY(SPR_FIRE, 32772, 2, A_Fire, S_FIRE16),        /* S_FIRE15 */
-    STATE_ENTRY(SPR_FIRE, 32771, 2, A_Fire, S_FIRE17),        /* S_FIRE16 */
-    STATE_ENTRY(SPR_FIRE, 32772, 2, A_Fire, S_FIRE18),        /* S_FIRE17 */
-    STATE_ENTRY(SPR_FIRE, 32771, 2, A_Fire, S_FIRE19),        /* S_FIRE18 */
-    STATE_ENTRY(SPR_FIRE, 32772, 2, A_FireCrackle, S_FIRE20), /* S_FIRE19 */
-    STATE_ENTRY(SPR_FIRE, 32773, 2, A_Fire, S_FIRE21),        /* S_FIRE20 */
-    STATE_ENTRY(SPR_FIRE, 32772, 2, A_Fire, S_FIRE22),        /* S_FIRE21 */
-    STATE_ENTRY(SPR_FIRE, 32773, 2, A_Fire, S_FIRE23),        /* S_FIRE22 */
-    STATE_ENTRY(SPR_FIRE, 32772, 2, A_Fire, S_FIRE24),        /* S_FIRE23 */
-    STATE_ENTRY(SPR_FIRE, 32773, 2, A_Fire, S_FIRE25),        /* S_FIRE24 */
-    STATE_ENTRY(SPR_FIRE, 32774, 2, A_Fire, S_FIRE26),        /* S_FIRE25 */
-    STATE_ENTRY(SPR_FIRE, 32775, 2, A_Fire, S_FIRE27),        /* S_FIRE26 */
-    STATE_ENTRY(SPR_FIRE, 32774, 2, A_Fire, S_FIRE28),        /* S_FIRE27 */
-    STATE_ENTRY(SPR_FIRE, 32775, 2, A_Fire, S_FIRE29),        /* S_FIRE28 */
-    STATE_ENTRY(SPR_FIRE, 32774, 2, A_Fire, S_FIRE30),        /* S_FIRE29 */
-    STATE_ENTRY(SPR_FIRE, 32775, 2, A_Fire, S_NULL),          /* S_FIRE30 */
+    STATE_ENTRY(SPR_FIRE, 32768, 2, a_start_fire, S_FIRE2),    /* S_FIRE1 */
+    STATE_ENTRY(SPR_FIRE, 32769, 2, a_fire, S_FIRE3),         /* S_FIRE2 */
+    STATE_ENTRY(SPR_FIRE, 32768, 2, a_fire, S_FIRE4),         /* S_FIRE3 */
+    STATE_ENTRY(SPR_FIRE, 32769, 2, a_fire, S_FIRE5),         /* S_FIRE4 */
+    STATE_ENTRY(SPR_FIRE, 32770, 2, a_fire_crackle, S_FIRE6),  /* S_FIRE5 */
+    STATE_ENTRY(SPR_FIRE, 32769, 2, a_fire, S_FIRE7),         /* S_FIRE6 */
+    STATE_ENTRY(SPR_FIRE, 32770, 2, a_fire, S_FIRE8),         /* S_FIRE7 */
+    STATE_ENTRY(SPR_FIRE, 32769, 2, a_fire, S_FIRE9),         /* S_FIRE8 */
+    STATE_ENTRY(SPR_FIRE, 32770, 2, a_fire, S_FIRE10),        /* S_FIRE9 */
+    STATE_ENTRY(SPR_FIRE, 32771, 2, a_fire, S_FIRE11),        /* S_FIRE10 */
+    STATE_ENTRY(SPR_FIRE, 32770, 2, a_fire, S_FIRE12),        /* S_FIRE11 */
+    STATE_ENTRY(SPR_FIRE, 32771, 2, a_fire, S_FIRE13),        /* S_FIRE12 */
+    STATE_ENTRY(SPR_FIRE, 32770, 2, a_fire, S_FIRE14),        /* S_FIRE13 */
+    STATE_ENTRY(SPR_FIRE, 32771, 2, a_fire, S_FIRE15),        /* S_FIRE14 */
+    STATE_ENTRY(SPR_FIRE, 32772, 2, a_fire, S_FIRE16),        /* S_FIRE15 */
+    STATE_ENTRY(SPR_FIRE, 32771, 2, a_fire, S_FIRE17),        /* S_FIRE16 */
+    STATE_ENTRY(SPR_FIRE, 32772, 2, a_fire, S_FIRE18),        /* S_FIRE17 */
+    STATE_ENTRY(SPR_FIRE, 32771, 2, a_fire, S_FIRE19),        /* S_FIRE18 */
+    STATE_ENTRY(SPR_FIRE, 32772, 2, a_fire_crackle, S_FIRE20), /* S_FIRE19 */
+    STATE_ENTRY(SPR_FIRE, 32773, 2, a_fire, S_FIRE21),        /* S_FIRE20 */
+    STATE_ENTRY(SPR_FIRE, 32772, 2, a_fire, S_FIRE22),        /* S_FIRE21 */
+    STATE_ENTRY(SPR_FIRE, 32773, 2, a_fire, S_FIRE23),        /* S_FIRE22 */
+    STATE_ENTRY(SPR_FIRE, 32772, 2, a_fire, S_FIRE24),        /* S_FIRE23 */
+    STATE_ENTRY(SPR_FIRE, 32773, 2, a_fire, S_FIRE25),        /* S_FIRE24 */
+    STATE_ENTRY(SPR_FIRE, 32774, 2, a_fire, S_FIRE26),        /* S_FIRE25 */
+    STATE_ENTRY(SPR_FIRE, 32775, 2, a_fire, S_FIRE27),        /* S_FIRE26 */
+    STATE_ENTRY(SPR_FIRE, 32774, 2, a_fire, S_FIRE28),        /* S_FIRE27 */
+    STATE_ENTRY(SPR_FIRE, 32775, 2, a_fire, S_FIRE29),        /* S_FIRE28 */
+    STATE_ENTRY(SPR_FIRE, 32774, 2, a_fire, S_FIRE30),        /* S_FIRE29 */
+    STATE_ENTRY(SPR_FIRE, 32775, 2, a_fire, S_NULL),          /* S_FIRE30 */
     STATE_ENTRY(SPR_PUFF, 1, 4, NULL, S_SMOKE2),              /* S_SMOKE1 */
     STATE_ENTRY(SPR_PUFF, 2, 4, NULL, S_SMOKE3),              /* S_SMOKE2 */
     STATE_ENTRY(SPR_PUFF, 1, 4, NULL, S_SMOKE4),              /* S_SMOKE3 */
     STATE_ENTRY(SPR_PUFF, 2, 4, NULL, S_SMOKE5),              /* S_SMOKE4 */
     STATE_ENTRY(SPR_PUFF, 3, 4, NULL, S_NULL),                /* S_SMOKE5 */
-    STATE_ENTRY(SPR_FATB, 32768, 2, A_Tracer, S_TRACER2),     /* S_TRACER */
-    STATE_ENTRY(SPR_FATB, 32769, 2, A_Tracer, S_TRACER),      /* S_TRACER2 */
+    STATE_ENTRY(SPR_FATB, 32768, 2, a_tracer, S_TRACER2),     /* S_TRACER */
+    STATE_ENTRY(SPR_FATB, 32769, 2, a_tracer, S_TRACER),      /* S_TRACER2 */
     STATE_ENTRY(SPR_FBXP, 32768, 8, NULL, S_TRACEEXP2),       /* S_TRACEEXP1 */
     STATE_ENTRY(SPR_FBXP, 32769, 6, NULL, S_TRACEEXP3),       /* S_TRACEEXP2 */
     STATE_ENTRY(SPR_FBXP, 32770, 4, NULL, S_NULL),            /* S_TRACEEXP3 */
-    STATE_ENTRY(SPR_SKEL, 0, 10, A_Look, S_SKEL_STND2),       /* S_SKEL_STND */
-    STATE_ENTRY(SPR_SKEL, 1, 10, A_Look, S_SKEL_STND),        /* S_SKEL_STND2 */
-    STATE_ENTRY(SPR_SKEL, 0, 2, A_Chase, S_SKEL_RUN2),        /* S_SKEL_RUN1 */
-    STATE_ENTRY(SPR_SKEL, 0, 2, A_Chase, S_SKEL_RUN3),        /* S_SKEL_RUN2 */
-    STATE_ENTRY(SPR_SKEL, 1, 2, A_Chase, S_SKEL_RUN4),        /* S_SKEL_RUN3 */
-    STATE_ENTRY(SPR_SKEL, 1, 2, A_Chase, S_SKEL_RUN5),        /* S_SKEL_RUN4 */
-    STATE_ENTRY(SPR_SKEL, 2, 2, A_Chase, S_SKEL_RUN6),        /* S_SKEL_RUN5 */
-    STATE_ENTRY(SPR_SKEL, 2, 2, A_Chase, S_SKEL_RUN7),        /* S_SKEL_RUN6 */
-    STATE_ENTRY(SPR_SKEL, 3, 2, A_Chase, S_SKEL_RUN8),        /* S_SKEL_RUN7 */
-    STATE_ENTRY(SPR_SKEL, 3, 2, A_Chase, S_SKEL_RUN9),        /* S_SKEL_RUN8 */
-    STATE_ENTRY(SPR_SKEL, 4, 2, A_Chase, S_SKEL_RUN10),       /* S_SKEL_RUN9 */
-    STATE_ENTRY(SPR_SKEL, 4, 2, A_Chase, S_SKEL_RUN11),       /* S_SKEL_RUN10 */
-    STATE_ENTRY(SPR_SKEL, 5, 2, A_Chase, S_SKEL_RUN12),       /* S_SKEL_RUN11 */
-    STATE_ENTRY(SPR_SKEL, 5, 2, A_Chase, S_SKEL_RUN1),        /* S_SKEL_RUN12 */
-    STATE_ENTRY(SPR_SKEL, 6, 0, A_FaceTarget, S_SKEL_FIST2),  /* S_SKEL_FIST1 */
-    STATE_ENTRY(SPR_SKEL, 6, 6, A_SkelWhoosh, S_SKEL_FIST3),  /* S_SKEL_FIST2 */
-    STATE_ENTRY(SPR_SKEL, 7, 6, A_FaceTarget, S_SKEL_FIST4),  /* S_SKEL_FIST3 */
-    STATE_ENTRY(SPR_SKEL, 8, 6, A_SkelFist, S_SKEL_RUN1),     /* S_SKEL_FIST4 */
-    STATE_ENTRY(SPR_SKEL, 32777, 0, A_FaceTarget, S_SKEL_MISS2),  /* S_SKEL_MISS1 */
-    STATE_ENTRY(SPR_SKEL, 32777, 10, A_FaceTarget, S_SKEL_MISS3), /* S_SKEL_MISS2 */
-    STATE_ENTRY(SPR_SKEL, 10, 10, A_SkelMissile, S_SKEL_MISS4),   /* S_SKEL_MISS3 */
-    STATE_ENTRY(SPR_SKEL, 10, 10, A_FaceTarget, S_SKEL_RUN1), /* S_SKEL_MISS4 */
+    STATE_ENTRY(SPR_SKEL, 0, 10, a_look, S_SKEL_STND2),       /* S_SKEL_STND */
+    STATE_ENTRY(SPR_SKEL, 1, 10, a_look, S_SKEL_STND),        /* S_SKEL_STND2 */
+    STATE_ENTRY(SPR_SKEL, 0, 2, a_chase, S_SKEL_RUN2),        /* S_SKEL_RUN1 */
+    STATE_ENTRY(SPR_SKEL, 0, 2, a_chase, S_SKEL_RUN3),        /* S_SKEL_RUN2 */
+    STATE_ENTRY(SPR_SKEL, 1, 2, a_chase, S_SKEL_RUN4),        /* S_SKEL_RUN3 */
+    STATE_ENTRY(SPR_SKEL, 1, 2, a_chase, S_SKEL_RUN5),        /* S_SKEL_RUN4 */
+    STATE_ENTRY(SPR_SKEL, 2, 2, a_chase, S_SKEL_RUN6),        /* S_SKEL_RUN5 */
+    STATE_ENTRY(SPR_SKEL, 2, 2, a_chase, S_SKEL_RUN7),        /* S_SKEL_RUN6 */
+    STATE_ENTRY(SPR_SKEL, 3, 2, a_chase, S_SKEL_RUN8),        /* S_SKEL_RUN7 */
+    STATE_ENTRY(SPR_SKEL, 3, 2, a_chase, S_SKEL_RUN9),        /* S_SKEL_RUN8 */
+    STATE_ENTRY(SPR_SKEL, 4, 2, a_chase, S_SKEL_RUN10),       /* S_SKEL_RUN9 */
+    STATE_ENTRY(SPR_SKEL, 4, 2, a_chase, S_SKEL_RUN11),       /* S_SKEL_RUN10 */
+    STATE_ENTRY(SPR_SKEL, 5, 2, a_chase, S_SKEL_RUN12),       /* S_SKEL_RUN11 */
+    STATE_ENTRY(SPR_SKEL, 5, 2, a_chase, S_SKEL_RUN1),        /* S_SKEL_RUN12 */
+    STATE_ENTRY(SPR_SKEL, 6, 0, a_face_target, S_SKEL_FIST2),  /* S_SKEL_FIST1 */
+    STATE_ENTRY(SPR_SKEL, 6, 6, a_skel_woosh, S_SKEL_FIST3),  /* S_SKEL_FIST2 */
+    STATE_ENTRY(SPR_SKEL, 7, 6, a_face_target, S_SKEL_FIST4),  /* S_SKEL_FIST3 */
+    STATE_ENTRY(SPR_SKEL, 8, 6, a_skel_fist, S_SKEL_RUN1),     /* S_SKEL_FIST4 */
+    STATE_ENTRY(SPR_SKEL, 32777, 0, a_face_target, S_SKEL_MISS2),  /* S_SKEL_MISS1 */
+    STATE_ENTRY(SPR_SKEL, 32777, 10, a_face_target, S_SKEL_MISS3), /* S_SKEL_MISS2 */
+    STATE_ENTRY(SPR_SKEL, 10, 10, a_skel_missile, S_SKEL_MISS4),   /* S_SKEL_MISS3 */
+    STATE_ENTRY(SPR_SKEL, 10, 10, a_face_target, S_SKEL_RUN1), /* S_SKEL_MISS4 */
     STATE_ENTRY(SPR_SKEL, 11, 5, NULL, S_SKEL_PAIN2),         /* S_SKEL_PAIN */
-    STATE_ENTRY(SPR_SKEL, 11, 5, A_Pain, S_SKEL_RUN1),        /* S_SKEL_PAIN2 */
+    STATE_ENTRY(SPR_SKEL, 11, 5, a_pain, S_SKEL_RUN1),        /* S_SKEL_PAIN2 */
     STATE_ENTRY(SPR_SKEL, 11, 7, NULL, S_SKEL_DIE2),          /* S_SKEL_DIE1 */
     STATE_ENTRY(SPR_SKEL, 12, 7, NULL, S_SKEL_DIE3),          /* S_SKEL_DIE2 */
-    STATE_ENTRY(SPR_SKEL, 13, 7, A_Scream, S_SKEL_DIE4),      /* S_SKEL_DIE3 */
-    STATE_ENTRY(SPR_SKEL, 14, 7, A_Fall, S_SKEL_DIE5),        /* S_SKEL_DIE4 */
+    STATE_ENTRY(SPR_SKEL, 13, 7, a_scream, S_SKEL_DIE4),      /* S_SKEL_DIE3 */
+    STATE_ENTRY(SPR_SKEL, 14, 7, a_fall, S_SKEL_DIE5),        /* S_SKEL_DIE4 */
     STATE_ENTRY(SPR_SKEL, 15, 7, NULL, S_SKEL_DIE6),          /* S_SKEL_DIE5 */
     STATE_ENTRY(SPR_SKEL, 16, -1, NULL, S_NULL),              /* S_SKEL_DIE6 */
     STATE_ENTRY(SPR_SKEL, 16, 5, NULL, S_SKEL_RAISE2),        /* S_SKEL_RAISE1 */
@@ -539,42 +539,42 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_MISL, 32769, 8, NULL, S_FATSHOTX2),       /* S_FATSHOTX1 */
     STATE_ENTRY(SPR_MISL, 32770, 6, NULL, S_FATSHOTX3),       /* S_FATSHOTX2 */
     STATE_ENTRY(SPR_MISL, 32771, 4, NULL, S_NULL),            /* S_FATSHOTX3 */
-    STATE_ENTRY(SPR_FATT, 0, 15, A_Look, S_FATT_STND2),       /* S_FATT_STND */
-    STATE_ENTRY(SPR_FATT, 1, 15, A_Look, S_FATT_STND),        /* S_FATT_STND2 */
-    STATE_ENTRY(SPR_FATT, 0, 4, A_Chase, S_FATT_RUN2),        /* S_FATT_RUN1 */
-    STATE_ENTRY(SPR_FATT, 0, 4, A_Chase, S_FATT_RUN3),        /* S_FATT_RUN2 */
-    STATE_ENTRY(SPR_FATT, 1, 4, A_Chase, S_FATT_RUN4),        /* S_FATT_RUN3 */
-    STATE_ENTRY(SPR_FATT, 1, 4, A_Chase, S_FATT_RUN5),        /* S_FATT_RUN4 */
-    STATE_ENTRY(SPR_FATT, 2, 4, A_Chase, S_FATT_RUN6),        /* S_FATT_RUN5 */
-    STATE_ENTRY(SPR_FATT, 2, 4, A_Chase, S_FATT_RUN7),        /* S_FATT_RUN6 */
-    STATE_ENTRY(SPR_FATT, 3, 4, A_Chase, S_FATT_RUN8),        /* S_FATT_RUN7 */
-    STATE_ENTRY(SPR_FATT, 3, 4, A_Chase, S_FATT_RUN9),        /* S_FATT_RUN8 */
-    STATE_ENTRY(SPR_FATT, 4, 4, A_Chase, S_FATT_RUN10),       /* S_FATT_RUN9 */
-    STATE_ENTRY(SPR_FATT, 4, 4, A_Chase, S_FATT_RUN11),       /* S_FATT_RUN10 */
-    STATE_ENTRY(SPR_FATT, 5, 4, A_Chase, S_FATT_RUN12),       /* S_FATT_RUN11 */
-    STATE_ENTRY(SPR_FATT, 5, 4, A_Chase, S_FATT_RUN1),        /* S_FATT_RUN12 */
-    STATE_ENTRY(SPR_FATT, 6, 20, A_FatRaise, S_FATT_ATK2),    /* S_FATT_ATK1 */
-    STATE_ENTRY(SPR_FATT, 32775, 10, A_FatAttack1, S_FATT_ATK3), /* S_FATT_ATK2 */
-    STATE_ENTRY(SPR_FATT, 8, 5, A_FaceTarget, S_FATT_ATK4), /* S_FATT_ATK3 */
-    STATE_ENTRY(SPR_FATT, 6, 5, A_FaceTarget, S_FATT_ATK5), /* S_FATT_ATK4 */
-    STATE_ENTRY(SPR_FATT, 32775, 10, A_FatAttack2, S_FATT_ATK6), /* S_FATT_ATK5 */
-    STATE_ENTRY(SPR_FATT, 8, 5, A_FaceTarget, S_FATT_ATK7), /* S_FATT_ATK6 */
-    STATE_ENTRY(SPR_FATT, 6, 5, A_FaceTarget, S_FATT_ATK8), /* S_FATT_ATK7 */
-    STATE_ENTRY(SPR_FATT, 32775, 10, A_FatAttack3, S_FATT_ATK9), /* S_FATT_ATK8 */
-    STATE_ENTRY(SPR_FATT, 8, 5, A_FaceTarget, S_FATT_ATK10), /* S_FATT_ATK9 */
-    STATE_ENTRY(SPR_FATT, 6, 5, A_FaceTarget, S_FATT_RUN1),  /* S_FATT_ATK10 */
+    STATE_ENTRY(SPR_FATT, 0, 15, a_look, S_FATT_STND2),       /* S_FATT_STND */
+    STATE_ENTRY(SPR_FATT, 1, 15, a_look, S_FATT_STND),        /* S_FATT_STND2 */
+    STATE_ENTRY(SPR_FATT, 0, 4, a_chase, S_FATT_RUN2),        /* S_FATT_RUN1 */
+    STATE_ENTRY(SPR_FATT, 0, 4, a_chase, S_FATT_RUN3),        /* S_FATT_RUN2 */
+    STATE_ENTRY(SPR_FATT, 1, 4, a_chase, S_FATT_RUN4),        /* S_FATT_RUN3 */
+    STATE_ENTRY(SPR_FATT, 1, 4, a_chase, S_FATT_RUN5),        /* S_FATT_RUN4 */
+    STATE_ENTRY(SPR_FATT, 2, 4, a_chase, S_FATT_RUN6),        /* S_FATT_RUN5 */
+    STATE_ENTRY(SPR_FATT, 2, 4, a_chase, S_FATT_RUN7),        /* S_FATT_RUN6 */
+    STATE_ENTRY(SPR_FATT, 3, 4, a_chase, S_FATT_RUN8),        /* S_FATT_RUN7 */
+    STATE_ENTRY(SPR_FATT, 3, 4, a_chase, S_FATT_RUN9),        /* S_FATT_RUN8 */
+    STATE_ENTRY(SPR_FATT, 4, 4, a_chase, S_FATT_RUN10),       /* S_FATT_RUN9 */
+    STATE_ENTRY(SPR_FATT, 4, 4, a_chase, S_FATT_RUN11),       /* S_FATT_RUN10 */
+    STATE_ENTRY(SPR_FATT, 5, 4, a_chase, S_FATT_RUN12),       /* S_FATT_RUN11 */
+    STATE_ENTRY(SPR_FATT, 5, 4, a_chase, S_FATT_RUN1),        /* S_FATT_RUN12 */
+    STATE_ENTRY(SPR_FATT, 6, 20, a_fat_raise, S_FATT_ATK2),    /* S_FATT_ATK1 */
+    STATE_ENTRY(SPR_FATT, 32775, 10, a_fat_attack1, S_FATT_ATK3), /* S_FATT_ATK2 */
+    STATE_ENTRY(SPR_FATT, 8, 5, a_face_target, S_FATT_ATK4), /* S_FATT_ATK3 */
+    STATE_ENTRY(SPR_FATT, 6, 5, a_face_target, S_FATT_ATK5), /* S_FATT_ATK4 */
+    STATE_ENTRY(SPR_FATT, 32775, 10, a_fat_attack2, S_FATT_ATK6), /* S_FATT_ATK5 */
+    STATE_ENTRY(SPR_FATT, 8, 5, a_face_target, S_FATT_ATK7), /* S_FATT_ATK6 */
+    STATE_ENTRY(SPR_FATT, 6, 5, a_face_target, S_FATT_ATK8), /* S_FATT_ATK7 */
+    STATE_ENTRY(SPR_FATT, 32775, 10, a_fat_attack3, S_FATT_ATK9), /* S_FATT_ATK8 */
+    STATE_ENTRY(SPR_FATT, 8, 5, a_face_target, S_FATT_ATK10), /* S_FATT_ATK9 */
+    STATE_ENTRY(SPR_FATT, 6, 5, a_face_target, S_FATT_RUN1),  /* S_FATT_ATK10 */
     STATE_ENTRY(SPR_FATT, 9, 3, NULL, S_FATT_PAIN2),         /* S_FATT_PAIN */
-    STATE_ENTRY(SPR_FATT, 9, 3, A_Pain, S_FATT_RUN1),        /* S_FATT_PAIN2 */
+    STATE_ENTRY(SPR_FATT, 9, 3, a_pain, S_FATT_RUN1),        /* S_FATT_PAIN2 */
     STATE_ENTRY(SPR_FATT, 10, 6, NULL, S_FATT_DIE2),         /* S_FATT_DIE1 */
-    STATE_ENTRY(SPR_FATT, 11, 6, A_Scream, S_FATT_DIE3),     /* S_FATT_DIE2 */
-    STATE_ENTRY(SPR_FATT, 12, 6, A_Fall, S_FATT_DIE4),       /* S_FATT_DIE3 */
+    STATE_ENTRY(SPR_FATT, 11, 6, a_scream, S_FATT_DIE3),     /* S_FATT_DIE2 */
+    STATE_ENTRY(SPR_FATT, 12, 6, a_fall, S_FATT_DIE4),       /* S_FATT_DIE3 */
     STATE_ENTRY(SPR_FATT, 13, 6, NULL, S_FATT_DIE5),         /* S_FATT_DIE4 */
     STATE_ENTRY(SPR_FATT, 14, 6, NULL, S_FATT_DIE6),         /* S_FATT_DIE5 */
     STATE_ENTRY(SPR_FATT, 15, 6, NULL, S_FATT_DIE7),         /* S_FATT_DIE6 */
     STATE_ENTRY(SPR_FATT, 16, 6, NULL, S_FATT_DIE8),         /* S_FATT_DIE7 */
     STATE_ENTRY(SPR_FATT, 17, 6, NULL, S_FATT_DIE9),         /* S_FATT_DIE8 */
     STATE_ENTRY(SPR_FATT, 18, 6, NULL, S_FATT_DIE10),        /* S_FATT_DIE9 */
-    STATE_ENTRY(SPR_FATT, 19, -1, A_BossDeath, S_NULL),      /* S_FATT_DIE10 */
+    STATE_ENTRY(SPR_FATT, 19, -1, a_boss_death, S_NULL),      /* S_FATT_DIE10 */
     STATE_ENTRY(SPR_FATT, 17, 5, NULL, S_FATT_RAISE2),       /* S_FATT_RAISE1 */
     STATE_ENTRY(SPR_FATT, 16, 5, NULL, S_FATT_RAISE3),       /* S_FATT_RAISE2 */
     STATE_ENTRY(SPR_FATT, 15, 5, NULL, S_FATT_RAISE4),       /* S_FATT_RAISE3 */
@@ -583,32 +583,32 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_FATT, 12, 5, NULL, S_FATT_RAISE7),       /* S_FATT_RAISE6 */
     STATE_ENTRY(SPR_FATT, 11, 5, NULL, S_FATT_RAISE8),       /* S_FATT_RAISE7 */
     STATE_ENTRY(SPR_FATT, 10, 5, NULL, S_FATT_RUN1),         /* S_FATT_RAISE8 */
-    STATE_ENTRY(SPR_CPOS, 0, 10, A_Look, S_CPOS_STND2),      /* S_CPOS_STND */
-    STATE_ENTRY(SPR_CPOS, 1, 10, A_Look, S_CPOS_STND),       /* S_CPOS_STND2 */
-    STATE_ENTRY(SPR_CPOS, 0, 3, A_Chase, S_CPOS_RUN2),       /* S_CPOS_RUN1 */
-    STATE_ENTRY(SPR_CPOS, 0, 3, A_Chase, S_CPOS_RUN3),       /* S_CPOS_RUN2 */
-    STATE_ENTRY(SPR_CPOS, 1, 3, A_Chase, S_CPOS_RUN4),       /* S_CPOS_RUN3 */
-    STATE_ENTRY(SPR_CPOS, 1, 3, A_Chase, S_CPOS_RUN5),       /* S_CPOS_RUN4 */
-    STATE_ENTRY(SPR_CPOS, 2, 3, A_Chase, S_CPOS_RUN6),       /* S_CPOS_RUN5 */
-    STATE_ENTRY(SPR_CPOS, 2, 3, A_Chase, S_CPOS_RUN7),       /* S_CPOS_RUN6 */
-    STATE_ENTRY(SPR_CPOS, 3, 3, A_Chase, S_CPOS_RUN8),       /* S_CPOS_RUN7 */
-    STATE_ENTRY(SPR_CPOS, 3, 3, A_Chase, S_CPOS_RUN1),       /* S_CPOS_RUN8 */
-    STATE_ENTRY(SPR_CPOS, 4, 10, A_FaceTarget, S_CPOS_ATK2), /* S_CPOS_ATK1 */
-    STATE_ENTRY(SPR_CPOS, 32773, 4, A_CPosAttack, S_CPOS_ATK3), /* S_CPOS_ATK2 */
-    STATE_ENTRY(SPR_CPOS, 32772, 4, A_CPosAttack, S_CPOS_ATK4), /* S_CPOS_ATK3 */
-    STATE_ENTRY(SPR_CPOS, 5, 1, A_CPosRefire, S_CPOS_ATK2),     /* S_CPOS_ATK4 */
+    STATE_ENTRY(SPR_CPOS, 0, 10, a_look, S_CPOS_STND2),      /* S_CPOS_STND */
+    STATE_ENTRY(SPR_CPOS, 1, 10, a_look, S_CPOS_STND),       /* S_CPOS_STND2 */
+    STATE_ENTRY(SPR_CPOS, 0, 3, a_chase, S_CPOS_RUN2),       /* S_CPOS_RUN1 */
+    STATE_ENTRY(SPR_CPOS, 0, 3, a_chase, S_CPOS_RUN3),       /* S_CPOS_RUN2 */
+    STATE_ENTRY(SPR_CPOS, 1, 3, a_chase, S_CPOS_RUN4),       /* S_CPOS_RUN3 */
+    STATE_ENTRY(SPR_CPOS, 1, 3, a_chase, S_CPOS_RUN5),       /* S_CPOS_RUN4 */
+    STATE_ENTRY(SPR_CPOS, 2, 3, a_chase, S_CPOS_RUN6),       /* S_CPOS_RUN5 */
+    STATE_ENTRY(SPR_CPOS, 2, 3, a_chase, S_CPOS_RUN7),       /* S_CPOS_RUN6 */
+    STATE_ENTRY(SPR_CPOS, 3, 3, a_chase, S_CPOS_RUN8),       /* S_CPOS_RUN7 */
+    STATE_ENTRY(SPR_CPOS, 3, 3, a_chase, S_CPOS_RUN1),       /* S_CPOS_RUN8 */
+    STATE_ENTRY(SPR_CPOS, 4, 10, a_face_target, S_CPOS_ATK2), /* S_CPOS_ATK1 */
+    STATE_ENTRY(SPR_CPOS, 32773, 4, a_c_pos_attack, S_CPOS_ATK3), /* S_CPOS_ATK2 */
+    STATE_ENTRY(SPR_CPOS, 32772, 4, a_c_pos_attack, S_CPOS_ATK4), /* S_CPOS_ATK3 */
+    STATE_ENTRY(SPR_CPOS, 5, 1, a_c_pos_refire, S_CPOS_ATK2),     /* S_CPOS_ATK4 */
     STATE_ENTRY(SPR_CPOS, 6, 3, NULL, S_CPOS_PAIN2),            /* S_CPOS_PAIN */
-    STATE_ENTRY(SPR_CPOS, 6, 3, A_Pain, S_CPOS_RUN1),        /* S_CPOS_PAIN2 */
+    STATE_ENTRY(SPR_CPOS, 6, 3, a_pain, S_CPOS_RUN1),        /* S_CPOS_PAIN2 */
     STATE_ENTRY(SPR_CPOS, 7, 5, NULL, S_CPOS_DIE2),          /* S_CPOS_DIE1 */
-    STATE_ENTRY(SPR_CPOS, 8, 5, A_Scream, S_CPOS_DIE3),      /* S_CPOS_DIE2 */
-    STATE_ENTRY(SPR_CPOS, 9, 5, A_Fall, S_CPOS_DIE4),        /* S_CPOS_DIE3 */
+    STATE_ENTRY(SPR_CPOS, 8, 5, a_scream, S_CPOS_DIE3),      /* S_CPOS_DIE2 */
+    STATE_ENTRY(SPR_CPOS, 9, 5, a_fall, S_CPOS_DIE4),        /* S_CPOS_DIE3 */
     STATE_ENTRY(SPR_CPOS, 10, 5, NULL, S_CPOS_DIE5),         /* S_CPOS_DIE4 */
     STATE_ENTRY(SPR_CPOS, 11, 5, NULL, S_CPOS_DIE6),         /* S_CPOS_DIE5 */
     STATE_ENTRY(SPR_CPOS, 12, 5, NULL, S_CPOS_DIE7),         /* S_CPOS_DIE6 */
     STATE_ENTRY(SPR_CPOS, 13, -1, NULL, S_NULL),             /* S_CPOS_DIE7 */
     STATE_ENTRY(SPR_CPOS, 14, 5, NULL, S_CPOS_XDIE2),        /* S_CPOS_XDIE1 */
-    STATE_ENTRY(SPR_CPOS, 15, 5, A_XScream, S_CPOS_XDIE3),   /* S_CPOS_XDIE2 */
-    STATE_ENTRY(SPR_CPOS, 16, 5, A_Fall, S_CPOS_XDIE4),      /* S_CPOS_XDIE3 */
+    STATE_ENTRY(SPR_CPOS, 15, 5, a_xscream, S_CPOS_XDIE3),   /* S_CPOS_XDIE2 */
+    STATE_ENTRY(SPR_CPOS, 16, 5, a_fall, S_CPOS_XDIE4),      /* S_CPOS_XDIE3 */
     STATE_ENTRY(SPR_CPOS, 17, 5, NULL, S_CPOS_XDIE5),        /* S_CPOS_XDIE4 */
     STATE_ENTRY(SPR_CPOS, 18, 5, NULL, S_CPOS_XDIE6),        /* S_CPOS_XDIE5 */
     STATE_ENTRY(SPR_CPOS, 19, -1, NULL, S_NULL),             /* S_CPOS_XDIE6 */
@@ -619,30 +619,30 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_CPOS, 9, 5, NULL, S_CPOS_RAISE6),        /* S_CPOS_RAISE5 */
     STATE_ENTRY(SPR_CPOS, 8, 5, NULL, S_CPOS_RAISE7),        /* S_CPOS_RAISE6 */
     STATE_ENTRY(SPR_CPOS, 7, 5, NULL, S_CPOS_RUN1),          /* S_CPOS_RAISE7 */
-    STATE_ENTRY(SPR_TROO, 0, 10, A_Look, S_TROO_STND2),      /* S_TROO_STND */
-    STATE_ENTRY(SPR_TROO, 1, 10, A_Look, S_TROO_STND),       /* S_TROO_STND2 */
-    STATE_ENTRY(SPR_TROO, 0, 3, A_Chase, S_TROO_RUN2),       /* S_TROO_RUN1 */
-    STATE_ENTRY(SPR_TROO, 0, 3, A_Chase, S_TROO_RUN3),       /* S_TROO_RUN2 */
-    STATE_ENTRY(SPR_TROO, 1, 3, A_Chase, S_TROO_RUN4),       /* S_TROO_RUN3 */
-    STATE_ENTRY(SPR_TROO, 1, 3, A_Chase, S_TROO_RUN5),       /* S_TROO_RUN4 */
-    STATE_ENTRY(SPR_TROO, 2, 3, A_Chase, S_TROO_RUN6),       /* S_TROO_RUN5 */
-    STATE_ENTRY(SPR_TROO, 2, 3, A_Chase, S_TROO_RUN7),       /* S_TROO_RUN6 */
-    STATE_ENTRY(SPR_TROO, 3, 3, A_Chase, S_TROO_RUN8),       /* S_TROO_RUN7 */
-    STATE_ENTRY(SPR_TROO, 3, 3, A_Chase, S_TROO_RUN1),       /* S_TROO_RUN8 */
-    STATE_ENTRY(SPR_TROO, 4, 8, A_FaceTarget, S_TROO_ATK2),  /* S_TROO_ATK1 */
-    STATE_ENTRY(SPR_TROO, 5, 8, A_FaceTarget, S_TROO_ATK3),  /* S_TROO_ATK2 */
-    STATE_ENTRY(SPR_TROO, 6, 6, A_TroopAttack, S_TROO_RUN1), /* S_TROO_ATK3 */
+    STATE_ENTRY(SPR_TROO, 0, 10, a_look, S_TROO_STND2),      /* S_TROO_STND */
+    STATE_ENTRY(SPR_TROO, 1, 10, a_look, S_TROO_STND),       /* S_TROO_STND2 */
+    STATE_ENTRY(SPR_TROO, 0, 3, a_chase, S_TROO_RUN2),       /* S_TROO_RUN1 */
+    STATE_ENTRY(SPR_TROO, 0, 3, a_chase, S_TROO_RUN3),       /* S_TROO_RUN2 */
+    STATE_ENTRY(SPR_TROO, 1, 3, a_chase, S_TROO_RUN4),       /* S_TROO_RUN3 */
+    STATE_ENTRY(SPR_TROO, 1, 3, a_chase, S_TROO_RUN5),       /* S_TROO_RUN4 */
+    STATE_ENTRY(SPR_TROO, 2, 3, a_chase, S_TROO_RUN6),       /* S_TROO_RUN5 */
+    STATE_ENTRY(SPR_TROO, 2, 3, a_chase, S_TROO_RUN7),       /* S_TROO_RUN6 */
+    STATE_ENTRY(SPR_TROO, 3, 3, a_chase, S_TROO_RUN8),       /* S_TROO_RUN7 */
+    STATE_ENTRY(SPR_TROO, 3, 3, a_chase, S_TROO_RUN1),       /* S_TROO_RUN8 */
+    STATE_ENTRY(SPR_TROO, 4, 8, a_face_target, S_TROO_ATK2),  /* S_TROO_ATK1 */
+    STATE_ENTRY(SPR_TROO, 5, 8, a_face_target, S_TROO_ATK3),  /* S_TROO_ATK2 */
+    STATE_ENTRY(SPR_TROO, 6, 6, a_troop_attack, S_TROO_RUN1), /* S_TROO_ATK3 */
     STATE_ENTRY(SPR_TROO, 7, 2, NULL, S_TROO_PAIN2),         /* S_TROO_PAIN */
-    STATE_ENTRY(SPR_TROO, 7, 2, A_Pain, S_TROO_RUN1),        /* S_TROO_PAIN2 */
+    STATE_ENTRY(SPR_TROO, 7, 2, a_pain, S_TROO_RUN1),        /* S_TROO_PAIN2 */
     STATE_ENTRY(SPR_TROO, 8, 8, NULL, S_TROO_DIE2),          /* S_TROO_DIE1 */
-    STATE_ENTRY(SPR_TROO, 9, 8, A_Scream, S_TROO_DIE3),      /* S_TROO_DIE2 */
+    STATE_ENTRY(SPR_TROO, 9, 8, a_scream, S_TROO_DIE3),      /* S_TROO_DIE2 */
     STATE_ENTRY(SPR_TROO, 10, 6, NULL, S_TROO_DIE4),         /* S_TROO_DIE3 */
-    STATE_ENTRY(SPR_TROO, 11, 6, A_Fall, S_TROO_DIE5),       /* S_TROO_DIE4 */
+    STATE_ENTRY(SPR_TROO, 11, 6, a_fall, S_TROO_DIE5),       /* S_TROO_DIE4 */
     STATE_ENTRY(SPR_TROO, 12, -1, NULL, S_NULL),             /* S_TROO_DIE5 */
     STATE_ENTRY(SPR_TROO, 13, 5, NULL, S_TROO_XDIE2),        /* S_TROO_XDIE1 */
-    STATE_ENTRY(SPR_TROO, 14, 5, A_XScream, S_TROO_XDIE3),   /* S_TROO_XDIE2 */
+    STATE_ENTRY(SPR_TROO, 14, 5, a_xscream, S_TROO_XDIE3),   /* S_TROO_XDIE2 */
     STATE_ENTRY(SPR_TROO, 15, 5, NULL, S_TROO_XDIE4),        /* S_TROO_XDIE3 */
-    STATE_ENTRY(SPR_TROO, 16, 5, A_Fall, S_TROO_XDIE5),      /* S_TROO_XDIE4 */
+    STATE_ENTRY(SPR_TROO, 16, 5, a_fall, S_TROO_XDIE5),      /* S_TROO_XDIE4 */
     STATE_ENTRY(SPR_TROO, 17, 5, NULL, S_TROO_XDIE6),        /* S_TROO_XDIE5 */
     STATE_ENTRY(SPR_TROO, 18, 5, NULL, S_TROO_XDIE7),        /* S_TROO_XDIE6 */
     STATE_ENTRY(SPR_TROO, 19, 5, NULL, S_TROO_XDIE8),        /* S_TROO_XDIE7 */
@@ -652,25 +652,25 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_TROO, 10, 6, NULL, S_TROO_RAISE4),       /* S_TROO_RAISE3 */
     STATE_ENTRY(SPR_TROO, 9, 6, NULL, S_TROO_RAISE5),        /* S_TROO_RAISE4 */
     STATE_ENTRY(SPR_TROO, 8, 6, NULL, S_TROO_RUN1),          /* S_TROO_RAISE5 */
-    STATE_ENTRY(SPR_SARG, 0, 10, A_Look, S_SARG_STND2),      /* S_SARG_STND */
-    STATE_ENTRY(SPR_SARG, 1, 10, A_Look, S_SARG_STND),       /* S_SARG_STND2 */
-    STATE_ENTRY(SPR_SARG, 0, 2, A_Chase, S_SARG_RUN2),       /* S_SARG_RUN1 */
-    STATE_ENTRY(SPR_SARG, 0, 2, A_Chase, S_SARG_RUN3),       /* S_SARG_RUN2 */
-    STATE_ENTRY(SPR_SARG, 1, 2, A_Chase, S_SARG_RUN4),       /* S_SARG_RUN3 */
-    STATE_ENTRY(SPR_SARG, 1, 2, A_Chase, S_SARG_RUN5),       /* S_SARG_RUN4 */
-    STATE_ENTRY(SPR_SARG, 2, 2, A_Chase, S_SARG_RUN6),       /* S_SARG_RUN5 */
-    STATE_ENTRY(SPR_SARG, 2, 2, A_Chase, S_SARG_RUN7),       /* S_SARG_RUN6 */
-    STATE_ENTRY(SPR_SARG, 3, 2, A_Chase, S_SARG_RUN8),       /* S_SARG_RUN7 */
-    STATE_ENTRY(SPR_SARG, 3, 2, A_Chase, S_SARG_RUN1),       /* S_SARG_RUN8 */
-    STATE_ENTRY(SPR_SARG, 4, 8, A_FaceTarget, S_SARG_ATK2),  /* S_SARG_ATK1 */
-    STATE_ENTRY(SPR_SARG, 5, 8, A_FaceTarget, S_SARG_ATK3),  /* S_SARG_ATK2 */
-    STATE_ENTRY(SPR_SARG, 6, 8, A_SargAttack, S_SARG_RUN1),  /* S_SARG_ATK3 */
+    STATE_ENTRY(SPR_SARG, 0, 10, a_look, S_SARG_STND2),      /* S_SARG_STND */
+    STATE_ENTRY(SPR_SARG, 1, 10, a_look, S_SARG_STND),       /* S_SARG_STND2 */
+    STATE_ENTRY(SPR_SARG, 0, 2, a_chase, S_SARG_RUN2),       /* S_SARG_RUN1 */
+    STATE_ENTRY(SPR_SARG, 0, 2, a_chase, S_SARG_RUN3),       /* S_SARG_RUN2 */
+    STATE_ENTRY(SPR_SARG, 1, 2, a_chase, S_SARG_RUN4),       /* S_SARG_RUN3 */
+    STATE_ENTRY(SPR_SARG, 1, 2, a_chase, S_SARG_RUN5),       /* S_SARG_RUN4 */
+    STATE_ENTRY(SPR_SARG, 2, 2, a_chase, S_SARG_RUN6),       /* S_SARG_RUN5 */
+    STATE_ENTRY(SPR_SARG, 2, 2, a_chase, S_SARG_RUN7),       /* S_SARG_RUN6 */
+    STATE_ENTRY(SPR_SARG, 3, 2, a_chase, S_SARG_RUN8),       /* S_SARG_RUN7 */
+    STATE_ENTRY(SPR_SARG, 3, 2, a_chase, S_SARG_RUN1),       /* S_SARG_RUN8 */
+    STATE_ENTRY(SPR_SARG, 4, 8, a_face_target, S_SARG_ATK2),  /* S_SARG_ATK1 */
+    STATE_ENTRY(SPR_SARG, 5, 8, a_face_target, S_SARG_ATK3),  /* S_SARG_ATK2 */
+    STATE_ENTRY(SPR_SARG, 6, 8, a_sarg_attack, S_SARG_RUN1),  /* S_SARG_ATK3 */
     STATE_ENTRY(SPR_SARG, 7, 2, NULL, S_SARG_PAIN2),         /* S_SARG_PAIN */
-    STATE_ENTRY(SPR_SARG, 7, 2, A_Pain, S_SARG_RUN1),        /* S_SARG_PAIN2 */
+    STATE_ENTRY(SPR_SARG, 7, 2, a_pain, S_SARG_RUN1),        /* S_SARG_PAIN2 */
     STATE_ENTRY(SPR_SARG, 8, 8, NULL, S_SARG_DIE2),          /* S_SARG_DIE1 */
-    STATE_ENTRY(SPR_SARG, 9, 8, A_Scream, S_SARG_DIE3),      /* S_SARG_DIE2 */
+    STATE_ENTRY(SPR_SARG, 9, 8, a_scream, S_SARG_DIE3),      /* S_SARG_DIE2 */
     STATE_ENTRY(SPR_SARG, 10, 4, NULL, S_SARG_DIE4),         /* S_SARG_DIE3 */
-    STATE_ENTRY(SPR_SARG, 11, 4, A_Fall, S_SARG_DIE5),       /* S_SARG_DIE4 */
+    STATE_ENTRY(SPR_SARG, 11, 4, a_fall, S_SARG_DIE5),       /* S_SARG_DIE4 */
     STATE_ENTRY(SPR_SARG, 12, 4, NULL, S_SARG_DIE6),         /* S_SARG_DIE5 */
     STATE_ENTRY(SPR_SARG, 13, -1, NULL, S_NULL),             /* S_SARG_DIE6 */
     STATE_ENTRY(SPR_SARG, 13, 5, NULL, S_SARG_RAISE2),       /* S_SARG_RAISE1 */
@@ -679,19 +679,19 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_SARG, 10, 5, NULL, S_SARG_RAISE5),       /* S_SARG_RAISE4 */
     STATE_ENTRY(SPR_SARG, 9, 5, NULL, S_SARG_RAISE6),        /* S_SARG_RAISE5 */
     STATE_ENTRY(SPR_SARG, 8, 5, NULL, S_SARG_RUN1),          /* S_SARG_RAISE6 */
-    STATE_ENTRY(SPR_HEAD, 0, 10, A_Look, S_HEAD_STND),       /* S_HEAD_STND */
-    STATE_ENTRY(SPR_HEAD, 0, 3, A_Chase, S_HEAD_RUN1),       /* S_HEAD_RUN1 */
-    STATE_ENTRY(SPR_HEAD, 1, 5, A_FaceTarget, S_HEAD_ATK2),  /* S_HEAD_ATK1 */
-    STATE_ENTRY(SPR_HEAD, 2, 5, A_FaceTarget, S_HEAD_ATK3),  /* S_HEAD_ATK2 */
-    STATE_ENTRY(SPR_HEAD, 32771, 5, A_HeadAttack, S_HEAD_RUN1), /* S_HEAD_ATK3 */
+    STATE_ENTRY(SPR_HEAD, 0, 10, a_look, S_HEAD_STND),       /* S_HEAD_STND */
+    STATE_ENTRY(SPR_HEAD, 0, 3, a_chase, S_HEAD_RUN1),       /* S_HEAD_RUN1 */
+    STATE_ENTRY(SPR_HEAD, 1, 5, a_face_target, S_HEAD_ATK2),  /* S_HEAD_ATK1 */
+    STATE_ENTRY(SPR_HEAD, 2, 5, a_face_target, S_HEAD_ATK3),  /* S_HEAD_ATK2 */
+    STATE_ENTRY(SPR_HEAD, 32771, 5, a_head_attack, S_HEAD_RUN1), /* S_HEAD_ATK3 */
     STATE_ENTRY(SPR_HEAD, 4, 3, NULL, S_HEAD_PAIN2),            /* S_HEAD_PAIN */
-    STATE_ENTRY(SPR_HEAD, 4, 3, A_Pain, S_HEAD_PAIN3),       /* S_HEAD_PAIN2 */
+    STATE_ENTRY(SPR_HEAD, 4, 3, a_pain, S_HEAD_PAIN3),       /* S_HEAD_PAIN2 */
     STATE_ENTRY(SPR_HEAD, 5, 6, NULL, S_HEAD_RUN1),          /* S_HEAD_PAIN3 */
     STATE_ENTRY(SPR_HEAD, 6, 8, NULL, S_HEAD_DIE2),          /* S_HEAD_DIE1 */
-    STATE_ENTRY(SPR_HEAD, 7, 8, A_Scream, S_HEAD_DIE3),      /* S_HEAD_DIE2 */
+    STATE_ENTRY(SPR_HEAD, 7, 8, a_scream, S_HEAD_DIE3),      /* S_HEAD_DIE2 */
     STATE_ENTRY(SPR_HEAD, 8, 8, NULL, S_HEAD_DIE4),          /* S_HEAD_DIE3 */
     STATE_ENTRY(SPR_HEAD, 9, 8, NULL, S_HEAD_DIE5),          /* S_HEAD_DIE4 */
-    STATE_ENTRY(SPR_HEAD, 10, 8, A_Fall, S_HEAD_DIE6),       /* S_HEAD_DIE5 */
+    STATE_ENTRY(SPR_HEAD, 10, 8, a_fall, S_HEAD_DIE6),       /* S_HEAD_DIE5 */
     STATE_ENTRY(SPR_HEAD, 11, -1, NULL, S_NULL),             /* S_HEAD_DIE6 */
     STATE_ENTRY(SPR_HEAD, 11, 8, NULL, S_HEAD_RAISE2),       /* S_HEAD_RAISE1 */
     STATE_ENTRY(SPR_HEAD, 10, 8, NULL, S_HEAD_RAISE3),       /* S_HEAD_RAISE2 */
@@ -704,28 +704,28 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_BAL7, 32770, 6, NULL, S_BRBALLX2),       /* S_BRBALLX1 */
     STATE_ENTRY(SPR_BAL7, 32771, 6, NULL, S_BRBALLX3),       /* S_BRBALLX2 */
     STATE_ENTRY(SPR_BAL7, 32772, 6, NULL, S_NULL),           /* S_BRBALLX3 */
-    STATE_ENTRY(SPR_BOSS, 0, 10, A_Look, S_BOSS_STND2),      /* S_BOSS_STND */
-    STATE_ENTRY(SPR_BOSS, 1, 10, A_Look, S_BOSS_STND),       /* S_BOSS_STND2 */
-    STATE_ENTRY(SPR_BOSS, 0, 3, A_Chase, S_BOSS_RUN2),       /* S_BOSS_RUN1 */
-    STATE_ENTRY(SPR_BOSS, 0, 3, A_Chase, S_BOSS_RUN3),       /* S_BOSS_RUN2 */
-    STATE_ENTRY(SPR_BOSS, 1, 3, A_Chase, S_BOSS_RUN4),       /* S_BOSS_RUN3 */
-    STATE_ENTRY(SPR_BOSS, 1, 3, A_Chase, S_BOSS_RUN5),       /* S_BOSS_RUN4 */
-    STATE_ENTRY(SPR_BOSS, 2, 3, A_Chase, S_BOSS_RUN6),       /* S_BOSS_RUN5 */
-    STATE_ENTRY(SPR_BOSS, 2, 3, A_Chase, S_BOSS_RUN7),       /* S_BOSS_RUN6 */
-    STATE_ENTRY(SPR_BOSS, 3, 3, A_Chase, S_BOSS_RUN8),       /* S_BOSS_RUN7 */
-    STATE_ENTRY(SPR_BOSS, 3, 3, A_Chase, S_BOSS_RUN1),       /* S_BOSS_RUN8 */
-    STATE_ENTRY(SPR_BOSS, 4, 8, A_FaceTarget, S_BOSS_ATK2),  /* S_BOSS_ATK1 */
-    STATE_ENTRY(SPR_BOSS, 5, 8, A_FaceTarget, S_BOSS_ATK3),  /* S_BOSS_ATK2 */
-    STATE_ENTRY(SPR_BOSS, 6, 8, A_BruisAttack, S_BOSS_RUN1), /* S_BOSS_ATK3 */
+    STATE_ENTRY(SPR_BOSS, 0, 10, a_look, S_BOSS_STND2),      /* S_BOSS_STND */
+    STATE_ENTRY(SPR_BOSS, 1, 10, a_look, S_BOSS_STND),       /* S_BOSS_STND2 */
+    STATE_ENTRY(SPR_BOSS, 0, 3, a_chase, S_BOSS_RUN2),       /* S_BOSS_RUN1 */
+    STATE_ENTRY(SPR_BOSS, 0, 3, a_chase, S_BOSS_RUN3),       /* S_BOSS_RUN2 */
+    STATE_ENTRY(SPR_BOSS, 1, 3, a_chase, S_BOSS_RUN4),       /* S_BOSS_RUN3 */
+    STATE_ENTRY(SPR_BOSS, 1, 3, a_chase, S_BOSS_RUN5),       /* S_BOSS_RUN4 */
+    STATE_ENTRY(SPR_BOSS, 2, 3, a_chase, S_BOSS_RUN6),       /* S_BOSS_RUN5 */
+    STATE_ENTRY(SPR_BOSS, 2, 3, a_chase, S_BOSS_RUN7),       /* S_BOSS_RUN6 */
+    STATE_ENTRY(SPR_BOSS, 3, 3, a_chase, S_BOSS_RUN8),       /* S_BOSS_RUN7 */
+    STATE_ENTRY(SPR_BOSS, 3, 3, a_chase, S_BOSS_RUN1),       /* S_BOSS_RUN8 */
+    STATE_ENTRY(SPR_BOSS, 4, 8, a_face_target, S_BOSS_ATK2),  /* S_BOSS_ATK1 */
+    STATE_ENTRY(SPR_BOSS, 5, 8, a_face_target, S_BOSS_ATK3),  /* S_BOSS_ATK2 */
+    STATE_ENTRY(SPR_BOSS, 6, 8, a_bruis_attack, S_BOSS_RUN1), /* S_BOSS_ATK3 */
     STATE_ENTRY(SPR_BOSS, 7, 2, NULL, S_BOSS_PAIN2),         /* S_BOSS_PAIN */
-    STATE_ENTRY(SPR_BOSS, 7, 2, A_Pain, S_BOSS_RUN1),        /* S_BOSS_PAIN2 */
+    STATE_ENTRY(SPR_BOSS, 7, 2, a_pain, S_BOSS_RUN1),        /* S_BOSS_PAIN2 */
     STATE_ENTRY(SPR_BOSS, 8, 8, NULL, S_BOSS_DIE2),          /* S_BOSS_DIE1 */
-    STATE_ENTRY(SPR_BOSS, 9, 8, A_Scream, S_BOSS_DIE3),      /* S_BOSS_DIE2 */
+    STATE_ENTRY(SPR_BOSS, 9, 8, a_scream, S_BOSS_DIE3),      /* S_BOSS_DIE2 */
     STATE_ENTRY(SPR_BOSS, 10, 8, NULL, S_BOSS_DIE4),         /* S_BOSS_DIE3 */
-    STATE_ENTRY(SPR_BOSS, 11, 8, A_Fall, S_BOSS_DIE5),       /* S_BOSS_DIE4 */
+    STATE_ENTRY(SPR_BOSS, 11, 8, a_fall, S_BOSS_DIE5),       /* S_BOSS_DIE4 */
     STATE_ENTRY(SPR_BOSS, 12, 8, NULL, S_BOSS_DIE6),         /* S_BOSS_DIE5 */
     STATE_ENTRY(SPR_BOSS, 13, 8, NULL, S_BOSS_DIE7),         /* S_BOSS_DIE6 */
-    STATE_ENTRY(SPR_BOSS, 14, -1, A_BossDeath, S_NULL),      /* S_BOSS_DIE7 */
+    STATE_ENTRY(SPR_BOSS, 14, -1, a_boss_death, S_NULL),      /* S_BOSS_DIE7 */
     STATE_ENTRY(SPR_BOSS, 14, 8, NULL, S_BOSS_RAISE2),       /* S_BOSS_RAISE1 */
     STATE_ENTRY(SPR_BOSS, 13, 8, NULL, S_BOSS_RAISE3),       /* S_BOSS_RAISE2 */
     STATE_ENTRY(SPR_BOSS, 12, 8, NULL, S_BOSS_RAISE4),       /* S_BOSS_RAISE3 */
@@ -733,25 +733,25 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_BOSS, 10, 8, NULL, S_BOSS_RAISE6),       /* S_BOSS_RAISE5 */
     STATE_ENTRY(SPR_BOSS, 9, 8, NULL, S_BOSS_RAISE7),        /* S_BOSS_RAISE6 */
     STATE_ENTRY(SPR_BOSS, 8, 8, NULL, S_BOSS_RUN1),          /* S_BOSS_RAISE7 */
-    STATE_ENTRY(SPR_BOS2, 0, 10, A_Look, S_BOS2_STND2),      /* S_BOS2_STND */
-    STATE_ENTRY(SPR_BOS2, 1, 10, A_Look, S_BOS2_STND),       /* S_BOS2_STND2 */
-    STATE_ENTRY(SPR_BOS2, 0, 3, A_Chase, S_BOS2_RUN2),       /* S_BOS2_RUN1 */
-    STATE_ENTRY(SPR_BOS2, 0, 3, A_Chase, S_BOS2_RUN3),       /* S_BOS2_RUN2 */
-    STATE_ENTRY(SPR_BOS2, 1, 3, A_Chase, S_BOS2_RUN4),       /* S_BOS2_RUN3 */
-    STATE_ENTRY(SPR_BOS2, 1, 3, A_Chase, S_BOS2_RUN5),       /* S_BOS2_RUN4 */
-    STATE_ENTRY(SPR_BOS2, 2, 3, A_Chase, S_BOS2_RUN6),       /* S_BOS2_RUN5 */
-    STATE_ENTRY(SPR_BOS2, 2, 3, A_Chase, S_BOS2_RUN7),       /* S_BOS2_RUN6 */
-    STATE_ENTRY(SPR_BOS2, 3, 3, A_Chase, S_BOS2_RUN8),       /* S_BOS2_RUN7 */
-    STATE_ENTRY(SPR_BOS2, 3, 3, A_Chase, S_BOS2_RUN1),       /* S_BOS2_RUN8 */
-    STATE_ENTRY(SPR_BOS2, 4, 8, A_FaceTarget, S_BOS2_ATK2),  /* S_BOS2_ATK1 */
-    STATE_ENTRY(SPR_BOS2, 5, 8, A_FaceTarget, S_BOS2_ATK3),  /* S_BOS2_ATK2 */
-    STATE_ENTRY(SPR_BOS2, 6, 8, A_BruisAttack, S_BOS2_RUN1), /* S_BOS2_ATK3 */
+    STATE_ENTRY(SPR_BOS2, 0, 10, a_look, S_BOS2_STND2),      /* S_BOS2_STND */
+    STATE_ENTRY(SPR_BOS2, 1, 10, a_look, S_BOS2_STND),       /* S_BOS2_STND2 */
+    STATE_ENTRY(SPR_BOS2, 0, 3, a_chase, S_BOS2_RUN2),       /* S_BOS2_RUN1 */
+    STATE_ENTRY(SPR_BOS2, 0, 3, a_chase, S_BOS2_RUN3),       /* S_BOS2_RUN2 */
+    STATE_ENTRY(SPR_BOS2, 1, 3, a_chase, S_BOS2_RUN4),       /* S_BOS2_RUN3 */
+    STATE_ENTRY(SPR_BOS2, 1, 3, a_chase, S_BOS2_RUN5),       /* S_BOS2_RUN4 */
+    STATE_ENTRY(SPR_BOS2, 2, 3, a_chase, S_BOS2_RUN6),       /* S_BOS2_RUN5 */
+    STATE_ENTRY(SPR_BOS2, 2, 3, a_chase, S_BOS2_RUN7),       /* S_BOS2_RUN6 */
+    STATE_ENTRY(SPR_BOS2, 3, 3, a_chase, S_BOS2_RUN8),       /* S_BOS2_RUN7 */
+    STATE_ENTRY(SPR_BOS2, 3, 3, a_chase, S_BOS2_RUN1),       /* S_BOS2_RUN8 */
+    STATE_ENTRY(SPR_BOS2, 4, 8, a_face_target, S_BOS2_ATK2),  /* S_BOS2_ATK1 */
+    STATE_ENTRY(SPR_BOS2, 5, 8, a_face_target, S_BOS2_ATK3),  /* S_BOS2_ATK2 */
+    STATE_ENTRY(SPR_BOS2, 6, 8, a_bruis_attack, S_BOS2_RUN1), /* S_BOS2_ATK3 */
     STATE_ENTRY(SPR_BOS2, 7, 2, NULL, S_BOS2_PAIN2),         /* S_BOS2_PAIN */
-    STATE_ENTRY(SPR_BOS2, 7, 2, A_Pain, S_BOS2_RUN1),        /* S_BOS2_PAIN2 */
+    STATE_ENTRY(SPR_BOS2, 7, 2, a_pain, S_BOS2_RUN1),        /* S_BOS2_PAIN2 */
     STATE_ENTRY(SPR_BOS2, 8, 8, NULL, S_BOS2_DIE2),          /* S_BOS2_DIE1 */
-    STATE_ENTRY(SPR_BOS2, 9, 8, A_Scream, S_BOS2_DIE3),      /* S_BOS2_DIE2 */
+    STATE_ENTRY(SPR_BOS2, 9, 8, a_scream, S_BOS2_DIE3),      /* S_BOS2_DIE2 */
     STATE_ENTRY(SPR_BOS2, 10, 8, NULL, S_BOS2_DIE4),         /* S_BOS2_DIE3 */
-    STATE_ENTRY(SPR_BOS2, 11, 8, A_Fall, S_BOS2_DIE5),       /* S_BOS2_DIE4 */
+    STATE_ENTRY(SPR_BOS2, 11, 8, a_fall, S_BOS2_DIE5),       /* S_BOS2_DIE4 */
     STATE_ENTRY(SPR_BOS2, 12, 8, NULL, S_BOS2_DIE6),         /* S_BOS2_DIE5 */
     STATE_ENTRY(SPR_BOS2, 13, 8, NULL, S_BOS2_DIE7),         /* S_BOS2_DIE6 */
     STATE_ENTRY(SPR_BOS2, 14, -1, NULL, S_NULL),             /* S_BOS2_DIE7 */
@@ -762,44 +762,44 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_BOS2, 10, 8, NULL, S_BOS2_RAISE6),       /* S_BOS2_RAISE5 */
     STATE_ENTRY(SPR_BOS2, 9, 8, NULL, S_BOS2_RAISE7),        /* S_BOS2_RAISE6 */
     STATE_ENTRY(SPR_BOS2, 8, 8, NULL, S_BOS2_RUN1),          /* S_BOS2_RAISE7 */
-    STATE_ENTRY(SPR_SKUL, 32768, 10, A_Look, S_SKULL_STND2), /* S_SKULL_STND */
-    STATE_ENTRY(SPR_SKUL, 32769, 10, A_Look, S_SKULL_STND),  /* S_SKULL_STND2 */
-    STATE_ENTRY(SPR_SKUL, 32768, 6, A_Chase, S_SKULL_RUN2),  /* S_SKULL_RUN1 */
-    STATE_ENTRY(SPR_SKUL, 32769, 6, A_Chase, S_SKULL_RUN1),  /* S_SKULL_RUN2 */
-    STATE_ENTRY(SPR_SKUL, 32770, 10, A_FaceTarget, S_SKULL_ATK2), /* S_SKULL_ATK1 */
-    STATE_ENTRY(SPR_SKUL, 32771, 4, A_SkullAttack, S_SKULL_ATK3), /* S_SKULL_ATK2 */
+    STATE_ENTRY(SPR_SKUL, 32768, 10, a_look, S_SKULL_STND2), /* S_SKULL_STND */
+    STATE_ENTRY(SPR_SKUL, 32769, 10, a_look, S_SKULL_STND),  /* S_SKULL_STND2 */
+    STATE_ENTRY(SPR_SKUL, 32768, 6, a_chase, S_SKULL_RUN2),  /* S_SKULL_RUN1 */
+    STATE_ENTRY(SPR_SKUL, 32769, 6, a_chase, S_SKULL_RUN1),  /* S_SKULL_RUN2 */
+    STATE_ENTRY(SPR_SKUL, 32770, 10, a_face_target, S_SKULL_ATK2), /* S_SKULL_ATK1 */
+    STATE_ENTRY(SPR_SKUL, 32771, 4, a_skull_attack, S_SKULL_ATK3), /* S_SKULL_ATK2 */
     STATE_ENTRY(SPR_SKUL, 32770, 4, NULL, S_SKULL_ATK4),     /* S_SKULL_ATK3 */
     STATE_ENTRY(SPR_SKUL, 32771, 4, NULL, S_SKULL_ATK3),     /* S_SKULL_ATK4 */
     STATE_ENTRY(SPR_SKUL, 32772, 3, NULL, S_SKULL_PAIN2),    /* S_SKULL_PAIN */
-    STATE_ENTRY(SPR_SKUL, 32772, 3, A_Pain, S_SKULL_RUN1),   /* S_SKULL_PAIN2 */
+    STATE_ENTRY(SPR_SKUL, 32772, 3, a_pain, S_SKULL_RUN1),   /* S_SKULL_PAIN2 */
     STATE_ENTRY(SPR_SKUL, 32773, 6, NULL, S_SKULL_DIE2),     /* S_SKULL_DIE1 */
-    STATE_ENTRY(SPR_SKUL, 32774, 6, A_Scream, S_SKULL_DIE3), /* S_SKULL_DIE2 */
+    STATE_ENTRY(SPR_SKUL, 32774, 6, a_scream, S_SKULL_DIE3), /* S_SKULL_DIE2 */
     STATE_ENTRY(SPR_SKUL, 32775, 6, NULL, S_SKULL_DIE4),     /* S_SKULL_DIE3 */
-    STATE_ENTRY(SPR_SKUL, 32776, 6, A_Fall, S_SKULL_DIE5),   /* S_SKULL_DIE4 */
+    STATE_ENTRY(SPR_SKUL, 32776, 6, a_fall, S_SKULL_DIE5),   /* S_SKULL_DIE4 */
     STATE_ENTRY(SPR_SKUL, 9, 6, NULL, S_SKULL_DIE6),         /* S_SKULL_DIE5 */
     STATE_ENTRY(SPR_SKUL, 10, 6, NULL, S_NULL),              /* S_SKULL_DIE6 */
-    STATE_ENTRY(SPR_SPID, 0, 10, A_Look, S_SPID_STND2),      /* S_SPID_STND */
-    STATE_ENTRY(SPR_SPID, 1, 10, A_Look, S_SPID_STND),       /* S_SPID_STND2 */
-    STATE_ENTRY(SPR_SPID, 0, 3, A_Metal, S_SPID_RUN2),       /* S_SPID_RUN1 */
-    STATE_ENTRY(SPR_SPID, 0, 3, A_Chase, S_SPID_RUN3),       /* S_SPID_RUN2 */
-    STATE_ENTRY(SPR_SPID, 1, 3, A_Chase, S_SPID_RUN4),       /* S_SPID_RUN3 */
-    STATE_ENTRY(SPR_SPID, 1, 3, A_Chase, S_SPID_RUN5),       /* S_SPID_RUN4 */
-    STATE_ENTRY(SPR_SPID, 2, 3, A_Metal, S_SPID_RUN6),       /* S_SPID_RUN5 */
-    STATE_ENTRY(SPR_SPID, 2, 3, A_Chase, S_SPID_RUN7),       /* S_SPID_RUN6 */
-    STATE_ENTRY(SPR_SPID, 3, 3, A_Chase, S_SPID_RUN8),       /* S_SPID_RUN7 */
-    STATE_ENTRY(SPR_SPID, 3, 3, A_Chase, S_SPID_RUN9),       /* S_SPID_RUN8 */
-    STATE_ENTRY(SPR_SPID, 4, 3, A_Metal, S_SPID_RUN10),      /* S_SPID_RUN9 */
-    STATE_ENTRY(SPR_SPID, 4, 3, A_Chase, S_SPID_RUN11),      /* S_SPID_RUN10 */
-    STATE_ENTRY(SPR_SPID, 5, 3, A_Chase, S_SPID_RUN12),      /* S_SPID_RUN11 */
-    STATE_ENTRY(SPR_SPID, 5, 3, A_Chase, S_SPID_RUN1),       /* S_SPID_RUN12 */
-    STATE_ENTRY(SPR_SPID, 32768, 20, A_FaceTarget, S_SPID_ATK2), /* S_SPID_ATK1 */
-    STATE_ENTRY(SPR_SPID, 32774, 4, A_SPosAttack, S_SPID_ATK3), /* S_SPID_ATK2 */
-    STATE_ENTRY(SPR_SPID, 32775, 4, A_SPosAttack, S_SPID_ATK4), /* S_SPID_ATK3 */
-    STATE_ENTRY(SPR_SPID, 32775, 1, A_SpidRefire, S_SPID_ATK2), /* S_SPID_ATK4 */
+    STATE_ENTRY(SPR_SPID, 0, 10, a_look, S_SPID_STND2),      /* S_SPID_STND */
+    STATE_ENTRY(SPR_SPID, 1, 10, a_look, S_SPID_STND),       /* S_SPID_STND2 */
+    STATE_ENTRY(SPR_SPID, 0, 3, a_metal, S_SPID_RUN2),       /* S_SPID_RUN1 */
+    STATE_ENTRY(SPR_SPID, 0, 3, a_chase, S_SPID_RUN3),       /* S_SPID_RUN2 */
+    STATE_ENTRY(SPR_SPID, 1, 3, a_chase, S_SPID_RUN4),       /* S_SPID_RUN3 */
+    STATE_ENTRY(SPR_SPID, 1, 3, a_chase, S_SPID_RUN5),       /* S_SPID_RUN4 */
+    STATE_ENTRY(SPR_SPID, 2, 3, a_metal, S_SPID_RUN6),       /* S_SPID_RUN5 */
+    STATE_ENTRY(SPR_SPID, 2, 3, a_chase, S_SPID_RUN7),       /* S_SPID_RUN6 */
+    STATE_ENTRY(SPR_SPID, 3, 3, a_chase, S_SPID_RUN8),       /* S_SPID_RUN7 */
+    STATE_ENTRY(SPR_SPID, 3, 3, a_chase, S_SPID_RUN9),       /* S_SPID_RUN8 */
+    STATE_ENTRY(SPR_SPID, 4, 3, a_metal, S_SPID_RUN10),      /* S_SPID_RUN9 */
+    STATE_ENTRY(SPR_SPID, 4, 3, a_chase, S_SPID_RUN11),      /* S_SPID_RUN10 */
+    STATE_ENTRY(SPR_SPID, 5, 3, a_chase, S_SPID_RUN12),      /* S_SPID_RUN11 */
+    STATE_ENTRY(SPR_SPID, 5, 3, a_chase, S_SPID_RUN1),       /* S_SPID_RUN12 */
+    STATE_ENTRY(SPR_SPID, 32768, 20, a_face_target, S_SPID_ATK2), /* S_SPID_ATK1 */
+    STATE_ENTRY(SPR_SPID, 32774, 4, a_s_pos_attack, S_SPID_ATK3), /* S_SPID_ATK2 */
+    STATE_ENTRY(SPR_SPID, 32775, 4, a_s_pos_attack, S_SPID_ATK4), /* S_SPID_ATK3 */
+    STATE_ENTRY(SPR_SPID, 32775, 1, a_spid_refire, S_SPID_ATK2), /* S_SPID_ATK4 */
     STATE_ENTRY(SPR_SPID, 8, 3, NULL, S_SPID_PAIN2),            /* S_SPID_PAIN */
-    STATE_ENTRY(SPR_SPID, 8, 3, A_Pain, S_SPID_RUN1),      /* S_SPID_PAIN2 */
-    STATE_ENTRY(SPR_SPID, 9, 20, A_Scream, S_SPID_DIE2),   /* S_SPID_DIE1 */
-    STATE_ENTRY(SPR_SPID, 10, 10, A_Fall, S_SPID_DIE3),    /* S_SPID_DIE2 */
+    STATE_ENTRY(SPR_SPID, 8, 3, a_pain, S_SPID_RUN1),      /* S_SPID_PAIN2 */
+    STATE_ENTRY(SPR_SPID, 9, 20, a_scream, S_SPID_DIE2),   /* S_SPID_DIE1 */
+    STATE_ENTRY(SPR_SPID, 10, 10, a_fall, S_SPID_DIE3),    /* S_SPID_DIE2 */
     STATE_ENTRY(SPR_SPID, 11, 10, NULL, S_SPID_DIE4),      /* S_SPID_DIE3 */
     STATE_ENTRY(SPR_SPID, 12, 10, NULL, S_SPID_DIE5),      /* S_SPID_DIE4 */
     STATE_ENTRY(SPR_SPID, 13, 10, NULL, S_SPID_DIE6),      /* S_SPID_DIE5 */
@@ -808,35 +808,35 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_SPID, 16, 10, NULL, S_SPID_DIE9),      /* S_SPID_DIE8 */
     STATE_ENTRY(SPR_SPID, 17, 10, NULL, S_SPID_DIE10),     /* S_SPID_DIE9 */
     STATE_ENTRY(SPR_SPID, 18, 30, NULL, S_SPID_DIE11),     /* S_SPID_DIE10 */
-    STATE_ENTRY(SPR_SPID, 18, -1, A_BossDeath, S_NULL),    /* S_SPID_DIE11 */
-    STATE_ENTRY(SPR_BSPI, 0, 10, A_Look, S_BSPI_STND2),    /* S_BSPI_STND */
-    STATE_ENTRY(SPR_BSPI, 1, 10, A_Look, S_BSPI_STND),     /* S_BSPI_STND2 */
+    STATE_ENTRY(SPR_SPID, 18, -1, a_boss_death, S_NULL),    /* S_SPID_DIE11 */
+    STATE_ENTRY(SPR_BSPI, 0, 10, a_look, S_BSPI_STND2),    /* S_BSPI_STND */
+    STATE_ENTRY(SPR_BSPI, 1, 10, a_look, S_BSPI_STND),     /* S_BSPI_STND2 */
     STATE_ENTRY(SPR_BSPI, 0, 20, NULL, S_BSPI_RUN1),       /* S_BSPI_SIGHT */
-    STATE_ENTRY(SPR_BSPI, 0, 3, A_BabyMetal, S_BSPI_RUN2), /* S_BSPI_RUN1 */
-    STATE_ENTRY(SPR_BSPI, 0, 3, A_Chase, S_BSPI_RUN3),     /* S_BSPI_RUN2 */
-    STATE_ENTRY(SPR_BSPI, 1, 3, A_Chase, S_BSPI_RUN4),     /* S_BSPI_RUN3 */
-    STATE_ENTRY(SPR_BSPI, 1, 3, A_Chase, S_BSPI_RUN5),     /* S_BSPI_RUN4 */
-    STATE_ENTRY(SPR_BSPI, 2, 3, A_Chase, S_BSPI_RUN6),     /* S_BSPI_RUN5 */
-    STATE_ENTRY(SPR_BSPI, 2, 3, A_Chase, S_BSPI_RUN7),     /* S_BSPI_RUN6 */
-    STATE_ENTRY(SPR_BSPI, 3, 3, A_BabyMetal, S_BSPI_RUN8), /* S_BSPI_RUN7 */
-    STATE_ENTRY(SPR_BSPI, 3, 3, A_Chase, S_BSPI_RUN9),     /* S_BSPI_RUN8 */
-    STATE_ENTRY(SPR_BSPI, 4, 3, A_Chase, S_BSPI_RUN10),    /* S_BSPI_RUN9 */
-    STATE_ENTRY(SPR_BSPI, 4, 3, A_Chase, S_BSPI_RUN11),    /* S_BSPI_RUN10 */
-    STATE_ENTRY(SPR_BSPI, 5, 3, A_Chase, S_BSPI_RUN12),    /* S_BSPI_RUN11 */
-    STATE_ENTRY(SPR_BSPI, 5, 3, A_Chase, S_BSPI_RUN1),     /* S_BSPI_RUN12 */
-    STATE_ENTRY(SPR_BSPI, 32768, 20, A_FaceTarget, S_BSPI_ATK2), /* S_BSPI_ATK1 */
-    STATE_ENTRY(SPR_BSPI, 32774, 4, A_BspiAttack, S_BSPI_ATK3), /* S_BSPI_ATK2 */
+    STATE_ENTRY(SPR_BSPI, 0, 3, a_baby_metal, S_BSPI_RUN2), /* S_BSPI_RUN1 */
+    STATE_ENTRY(SPR_BSPI, 0, 3, a_chase, S_BSPI_RUN3),     /* S_BSPI_RUN2 */
+    STATE_ENTRY(SPR_BSPI, 1, 3, a_chase, S_BSPI_RUN4),     /* S_BSPI_RUN3 */
+    STATE_ENTRY(SPR_BSPI, 1, 3, a_chase, S_BSPI_RUN5),     /* S_BSPI_RUN4 */
+    STATE_ENTRY(SPR_BSPI, 2, 3, a_chase, S_BSPI_RUN6),     /* S_BSPI_RUN5 */
+    STATE_ENTRY(SPR_BSPI, 2, 3, a_chase, S_BSPI_RUN7),     /* S_BSPI_RUN6 */
+    STATE_ENTRY(SPR_BSPI, 3, 3, a_baby_metal, S_BSPI_RUN8), /* S_BSPI_RUN7 */
+    STATE_ENTRY(SPR_BSPI, 3, 3, a_chase, S_BSPI_RUN9),     /* S_BSPI_RUN8 */
+    STATE_ENTRY(SPR_BSPI, 4, 3, a_chase, S_BSPI_RUN10),    /* S_BSPI_RUN9 */
+    STATE_ENTRY(SPR_BSPI, 4, 3, a_chase, S_BSPI_RUN11),    /* S_BSPI_RUN10 */
+    STATE_ENTRY(SPR_BSPI, 5, 3, a_chase, S_BSPI_RUN12),    /* S_BSPI_RUN11 */
+    STATE_ENTRY(SPR_BSPI, 5, 3, a_chase, S_BSPI_RUN1),     /* S_BSPI_RUN12 */
+    STATE_ENTRY(SPR_BSPI, 32768, 20, a_face_target, S_BSPI_ATK2), /* S_BSPI_ATK1 */
+    STATE_ENTRY(SPR_BSPI, 32774, 4, a_bspi_attack, S_BSPI_ATK3), /* S_BSPI_ATK2 */
     STATE_ENTRY(SPR_BSPI, 32775, 4, NULL, S_BSPI_ATK4),         /* S_BSPI_ATK3 */
-    STATE_ENTRY(SPR_BSPI, 32775, 1, A_SpidRefire, S_BSPI_ATK2), /* S_BSPI_ATK4 */
+    STATE_ENTRY(SPR_BSPI, 32775, 1, a_spid_refire, S_BSPI_ATK2), /* S_BSPI_ATK4 */
     STATE_ENTRY(SPR_BSPI, 8, 3, NULL, S_BSPI_PAIN2),            /* S_BSPI_PAIN */
-    STATE_ENTRY(SPR_BSPI, 8, 3, A_Pain, S_BSPI_RUN1),        /* S_BSPI_PAIN2 */
-    STATE_ENTRY(SPR_BSPI, 9, 20, A_Scream, S_BSPI_DIE2),     /* S_BSPI_DIE1 */
-    STATE_ENTRY(SPR_BSPI, 10, 7, A_Fall, S_BSPI_DIE3),       /* S_BSPI_DIE2 */
+    STATE_ENTRY(SPR_BSPI, 8, 3, a_pain, S_BSPI_RUN1),        /* S_BSPI_PAIN2 */
+    STATE_ENTRY(SPR_BSPI, 9, 20, a_scream, S_BSPI_DIE2),     /* S_BSPI_DIE1 */
+    STATE_ENTRY(SPR_BSPI, 10, 7, a_fall, S_BSPI_DIE3),       /* S_BSPI_DIE2 */
     STATE_ENTRY(SPR_BSPI, 11, 7, NULL, S_BSPI_DIE4),         /* S_BSPI_DIE3 */
     STATE_ENTRY(SPR_BSPI, 12, 7, NULL, S_BSPI_DIE5),         /* S_BSPI_DIE4 */
     STATE_ENTRY(SPR_BSPI, 13, 7, NULL, S_BSPI_DIE6),         /* S_BSPI_DIE5 */
     STATE_ENTRY(SPR_BSPI, 14, 7, NULL, S_BSPI_DIE7),         /* S_BSPI_DIE6 */
-    STATE_ENTRY(SPR_BSPI, 15, -1, A_BossDeath, S_NULL),      /* S_BSPI_DIE7 */
+    STATE_ENTRY(SPR_BSPI, 15, -1, a_boss_death, S_NULL),      /* S_BSPI_DIE7 */
     STATE_ENTRY(SPR_BSPI, 15, 5, NULL, S_BSPI_RAISE2),       /* S_BSPI_RAISE1 */
     STATE_ENTRY(SPR_BSPI, 14, 5, NULL, S_BSPI_RAISE3),       /* S_BSPI_RAISE2 */
     STATE_ENTRY(SPR_BSPI, 13, 5, NULL, S_BSPI_RAISE4),       /* S_BSPI_RAISE3 */
@@ -851,51 +851,51 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_APBX, 32770, 5, NULL, S_ARACH_PLEX4),    /* S_ARACH_PLEX3 */
     STATE_ENTRY(SPR_APBX, 32771, 5, NULL, S_ARACH_PLEX5),    /* S_ARACH_PLEX4 */
     STATE_ENTRY(SPR_APBX, 32772, 5, NULL, S_NULL),           /* S_ARACH_PLEX5 */
-    STATE_ENTRY(SPR_CYBR, 0, 10, A_Look, S_CYBER_STND2),     /* S_CYBER_STND */
-    STATE_ENTRY(SPR_CYBR, 1, 10, A_Look, S_CYBER_STND),      /* S_CYBER_STND2 */
-    STATE_ENTRY(SPR_CYBR, 0, 3, A_Hoof, S_CYBER_RUN2),       /* S_CYBER_RUN1 */
-    STATE_ENTRY(SPR_CYBR, 0, 3, A_Chase, S_CYBER_RUN3),      /* S_CYBER_RUN2 */
-    STATE_ENTRY(SPR_CYBR, 1, 3, A_Chase, S_CYBER_RUN4),      /* S_CYBER_RUN3 */
-    STATE_ENTRY(SPR_CYBR, 1, 3, A_Chase, S_CYBER_RUN5),      /* S_CYBER_RUN4 */
-    STATE_ENTRY(SPR_CYBR, 2, 3, A_Chase, S_CYBER_RUN6),      /* S_CYBER_RUN5 */
-    STATE_ENTRY(SPR_CYBR, 2, 3, A_Chase, S_CYBER_RUN7),      /* S_CYBER_RUN6 */
-    STATE_ENTRY(SPR_CYBR, 3, 3, A_Metal, S_CYBER_RUN8),      /* S_CYBER_RUN7 */
-    STATE_ENTRY(SPR_CYBR, 3, 3, A_Chase, S_CYBER_RUN1),      /* S_CYBER_RUN8 */
-    STATE_ENTRY(SPR_CYBR, 4, 6, A_FaceTarget, S_CYBER_ATK2), /* S_CYBER_ATK1 */
-    STATE_ENTRY(SPR_CYBR, 5, 12, A_CyberAttack, S_CYBER_ATK3), /* S_CYBER_ATK2 */
-    STATE_ENTRY(SPR_CYBR, 4, 12, A_FaceTarget, S_CYBER_ATK4),  /* S_CYBER_ATK3 */
-    STATE_ENTRY(SPR_CYBR, 5, 12, A_CyberAttack, S_CYBER_ATK5), /* S_CYBER_ATK4 */
-    STATE_ENTRY(SPR_CYBR, 4, 12, A_FaceTarget, S_CYBER_ATK6),  /* S_CYBER_ATK5 */
-    STATE_ENTRY(SPR_CYBR, 5, 12, A_CyberAttack, S_CYBER_RUN1), /* S_CYBER_ATK6 */
-    STATE_ENTRY(SPR_CYBR, 6, 10, A_Pain, S_CYBER_RUN1),        /* S_CYBER_PAIN */
+    STATE_ENTRY(SPR_CYBR, 0, 10, a_look, S_CYBER_STND2),     /* S_CYBER_STND */
+    STATE_ENTRY(SPR_CYBR, 1, 10, a_look, S_CYBER_STND),      /* S_CYBER_STND2 */
+    STATE_ENTRY(SPR_CYBR, 0, 3, a_hoof, S_CYBER_RUN2),       /* S_CYBER_RUN1 */
+    STATE_ENTRY(SPR_CYBR, 0, 3, a_chase, S_CYBER_RUN3),      /* S_CYBER_RUN2 */
+    STATE_ENTRY(SPR_CYBR, 1, 3, a_chase, S_CYBER_RUN4),      /* S_CYBER_RUN3 */
+    STATE_ENTRY(SPR_CYBR, 1, 3, a_chase, S_CYBER_RUN5),      /* S_CYBER_RUN4 */
+    STATE_ENTRY(SPR_CYBR, 2, 3, a_chase, S_CYBER_RUN6),      /* S_CYBER_RUN5 */
+    STATE_ENTRY(SPR_CYBR, 2, 3, a_chase, S_CYBER_RUN7),      /* S_CYBER_RUN6 */
+    STATE_ENTRY(SPR_CYBR, 3, 3, a_metal, S_CYBER_RUN8),      /* S_CYBER_RUN7 */
+    STATE_ENTRY(SPR_CYBR, 3, 3, a_chase, S_CYBER_RUN1),      /* S_CYBER_RUN8 */
+    STATE_ENTRY(SPR_CYBR, 4, 6, a_face_target, S_CYBER_ATK2), /* S_CYBER_ATK1 */
+    STATE_ENTRY(SPR_CYBR, 5, 12, a_cyber_attack, S_CYBER_ATK3), /* S_CYBER_ATK2 */
+    STATE_ENTRY(SPR_CYBR, 4, 12, a_face_target, S_CYBER_ATK4),  /* S_CYBER_ATK3 */
+    STATE_ENTRY(SPR_CYBR, 5, 12, a_cyber_attack, S_CYBER_ATK5), /* S_CYBER_ATK4 */
+    STATE_ENTRY(SPR_CYBR, 4, 12, a_face_target, S_CYBER_ATK6),  /* S_CYBER_ATK5 */
+    STATE_ENTRY(SPR_CYBR, 5, 12, a_cyber_attack, S_CYBER_RUN1), /* S_CYBER_ATK6 */
+    STATE_ENTRY(SPR_CYBR, 6, 10, a_pain, S_CYBER_RUN1),        /* S_CYBER_PAIN */
     STATE_ENTRY(SPR_CYBR, 7, 10, NULL, S_CYBER_DIE2),          /* S_CYBER_DIE1 */
-    STATE_ENTRY(SPR_CYBR, 8, 10, A_Scream, S_CYBER_DIE3),      /* S_CYBER_DIE2 */
+    STATE_ENTRY(SPR_CYBR, 8, 10, a_scream, S_CYBER_DIE3),      /* S_CYBER_DIE2 */
     STATE_ENTRY(SPR_CYBR, 9, 10, NULL, S_CYBER_DIE4),          /* S_CYBER_DIE3 */
     STATE_ENTRY(SPR_CYBR, 10, 10, NULL, S_CYBER_DIE5),         /* S_CYBER_DIE4 */
     STATE_ENTRY(SPR_CYBR, 11, 10, NULL, S_CYBER_DIE6),         /* S_CYBER_DIE5 */
-    STATE_ENTRY(SPR_CYBR, 12, 10, A_Fall, S_CYBER_DIE7),       /* S_CYBER_DIE6 */
+    STATE_ENTRY(SPR_CYBR, 12, 10, a_fall, S_CYBER_DIE7),       /* S_CYBER_DIE6 */
     STATE_ENTRY(SPR_CYBR, 13, 10, NULL, S_CYBER_DIE8),         /* S_CYBER_DIE7 */
     STATE_ENTRY(SPR_CYBR, 14, 10, NULL, S_CYBER_DIE9),         /* S_CYBER_DIE8 */
     STATE_ENTRY(SPR_CYBR, 15, 30, NULL, S_CYBER_DIE10),        /* S_CYBER_DIE9 */
-    STATE_ENTRY(SPR_CYBR, 15, -1, A_BossDeath, S_NULL),     /* S_CYBER_DIE10 */
-    STATE_ENTRY(SPR_PAIN, 0, 10, A_Look, S_PAIN_STND),      /* S_PAIN_STND */
-    STATE_ENTRY(SPR_PAIN, 0, 3, A_Chase, S_PAIN_RUN2),      /* S_PAIN_RUN1 */
-    STATE_ENTRY(SPR_PAIN, 0, 3, A_Chase, S_PAIN_RUN3),      /* S_PAIN_RUN2 */
-    STATE_ENTRY(SPR_PAIN, 1, 3, A_Chase, S_PAIN_RUN4),      /* S_PAIN_RUN3 */
-    STATE_ENTRY(SPR_PAIN, 1, 3, A_Chase, S_PAIN_RUN5),      /* S_PAIN_RUN4 */
-    STATE_ENTRY(SPR_PAIN, 2, 3, A_Chase, S_PAIN_RUN6),      /* S_PAIN_RUN5 */
-    STATE_ENTRY(SPR_PAIN, 2, 3, A_Chase, S_PAIN_RUN1),      /* S_PAIN_RUN6 */
-    STATE_ENTRY(SPR_PAIN, 3, 5, A_FaceTarget, S_PAIN_ATK2), /* S_PAIN_ATK1 */
-    STATE_ENTRY(SPR_PAIN, 4, 5, A_FaceTarget, S_PAIN_ATK3), /* S_PAIN_ATK2 */
-    STATE_ENTRY(SPR_PAIN, 32773, 5, A_FaceTarget, S_PAIN_ATK4), /* S_PAIN_ATK3 */
-    STATE_ENTRY(SPR_PAIN, 32773, 0, A_PainAttack, S_PAIN_RUN1), /* S_PAIN_ATK4 */
+    STATE_ENTRY(SPR_CYBR, 15, -1, a_boss_death, S_NULL),     /* S_CYBER_DIE10 */
+    STATE_ENTRY(SPR_PAIN, 0, 10, a_look, S_PAIN_STND),      /* S_PAIN_STND */
+    STATE_ENTRY(SPR_PAIN, 0, 3, a_chase, S_PAIN_RUN2),      /* S_PAIN_RUN1 */
+    STATE_ENTRY(SPR_PAIN, 0, 3, a_chase, S_PAIN_RUN3),      /* S_PAIN_RUN2 */
+    STATE_ENTRY(SPR_PAIN, 1, 3, a_chase, S_PAIN_RUN4),      /* S_PAIN_RUN3 */
+    STATE_ENTRY(SPR_PAIN, 1, 3, a_chase, S_PAIN_RUN5),      /* S_PAIN_RUN4 */
+    STATE_ENTRY(SPR_PAIN, 2, 3, a_chase, S_PAIN_RUN6),      /* S_PAIN_RUN5 */
+    STATE_ENTRY(SPR_PAIN, 2, 3, a_chase, S_PAIN_RUN1),      /* S_PAIN_RUN6 */
+    STATE_ENTRY(SPR_PAIN, 3, 5, a_face_target, S_PAIN_ATK2), /* S_PAIN_ATK1 */
+    STATE_ENTRY(SPR_PAIN, 4, 5, a_face_target, S_PAIN_ATK3), /* S_PAIN_ATK2 */
+    STATE_ENTRY(SPR_PAIN, 32773, 5, a_face_target, S_PAIN_ATK4), /* S_PAIN_ATK3 */
+    STATE_ENTRY(SPR_PAIN, 32773, 0, a_pain_attack, S_PAIN_RUN1), /* S_PAIN_ATK4 */
     STATE_ENTRY(SPR_PAIN, 6, 6, NULL, S_PAIN_PAIN2),            /* S_PAIN_PAIN */
-    STATE_ENTRY(SPR_PAIN, 6, 6, A_Pain, S_PAIN_RUN1),        /* S_PAIN_PAIN2 */
+    STATE_ENTRY(SPR_PAIN, 6, 6, a_pain, S_PAIN_RUN1),        /* S_PAIN_PAIN2 */
     STATE_ENTRY(SPR_PAIN, 32775, 8, NULL, S_PAIN_DIE2),      /* S_PAIN_DIE1 */
-    STATE_ENTRY(SPR_PAIN, 32776, 8, A_Scream, S_PAIN_DIE3),  /* S_PAIN_DIE2 */
+    STATE_ENTRY(SPR_PAIN, 32776, 8, a_scream, S_PAIN_DIE3),  /* S_PAIN_DIE2 */
     STATE_ENTRY(SPR_PAIN, 32777, 8, NULL, S_PAIN_DIE4),      /* S_PAIN_DIE3 */
     STATE_ENTRY(SPR_PAIN, 32778, 8, NULL, S_PAIN_DIE5),      /* S_PAIN_DIE4 */
-    STATE_ENTRY(SPR_PAIN, 32779, 8, A_PainDie, S_PAIN_DIE6), /* S_PAIN_DIE5 */
+    STATE_ENTRY(SPR_PAIN, 32779, 8, a_pain_die, S_PAIN_DIE6), /* S_PAIN_DIE5 */
     STATE_ENTRY(SPR_PAIN, 32780, 8, NULL, S_NULL),           /* S_PAIN_DIE6 */
     STATE_ENTRY(SPR_PAIN, 12, 8, NULL, S_PAIN_RAISE2),       /* S_PAIN_RAISE1 */
     STATE_ENTRY(SPR_PAIN, 11, 8, NULL, S_PAIN_RAISE3),       /* S_PAIN_RAISE2 */
@@ -903,32 +903,32 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_PAIN, 9, 8, NULL, S_PAIN_RAISE5),        /* S_PAIN_RAISE4 */
     STATE_ENTRY(SPR_PAIN, 8, 8, NULL, S_PAIN_RAISE6),        /* S_PAIN_RAISE5 */
     STATE_ENTRY(SPR_PAIN, 7, 8, NULL, S_PAIN_RUN1),          /* S_PAIN_RAISE6 */
-    STATE_ENTRY(SPR_SSWV, 0, 10, A_Look, S_SSWV_STND2),      /* S_SSWV_STND */
-    STATE_ENTRY(SPR_SSWV, 1, 10, A_Look, S_SSWV_STND),       /* S_SSWV_STND2 */
-    STATE_ENTRY(SPR_SSWV, 0, 3, A_Chase, S_SSWV_RUN2),       /* S_SSWV_RUN1 */
-    STATE_ENTRY(SPR_SSWV, 0, 3, A_Chase, S_SSWV_RUN3),       /* S_SSWV_RUN2 */
-    STATE_ENTRY(SPR_SSWV, 1, 3, A_Chase, S_SSWV_RUN4),       /* S_SSWV_RUN3 */
-    STATE_ENTRY(SPR_SSWV, 1, 3, A_Chase, S_SSWV_RUN5),       /* S_SSWV_RUN4 */
-    STATE_ENTRY(SPR_SSWV, 2, 3, A_Chase, S_SSWV_RUN6),       /* S_SSWV_RUN5 */
-    STATE_ENTRY(SPR_SSWV, 2, 3, A_Chase, S_SSWV_RUN7),       /* S_SSWV_RUN6 */
-    STATE_ENTRY(SPR_SSWV, 3, 3, A_Chase, S_SSWV_RUN8),       /* S_SSWV_RUN7 */
-    STATE_ENTRY(SPR_SSWV, 3, 3, A_Chase, S_SSWV_RUN1),       /* S_SSWV_RUN8 */
-    STATE_ENTRY(SPR_SSWV, 4, 10, A_FaceTarget, S_SSWV_ATK2), /* S_SSWV_ATK1 */
-    STATE_ENTRY(SPR_SSWV, 5, 10, A_FaceTarget, S_SSWV_ATK3), /* S_SSWV_ATK2 */
-    STATE_ENTRY(SPR_SSWV, 32774, 4, A_CPosAttack, S_SSWV_ATK4), /* S_SSWV_ATK3 */
-    STATE_ENTRY(SPR_SSWV, 5, 6, A_FaceTarget, S_SSWV_ATK5),     /* S_SSWV_ATK4 */
-    STATE_ENTRY(SPR_SSWV, 32774, 4, A_CPosAttack, S_SSWV_ATK6), /* S_SSWV_ATK5 */
-    STATE_ENTRY(SPR_SSWV, 5, 1, A_CPosRefire, S_SSWV_ATK2),     /* S_SSWV_ATK6 */
+    STATE_ENTRY(SPR_SSWV, 0, 10, a_look, S_SSWV_STND2),      /* S_SSWV_STND */
+    STATE_ENTRY(SPR_SSWV, 1, 10, a_look, S_SSWV_STND),       /* S_SSWV_STND2 */
+    STATE_ENTRY(SPR_SSWV, 0, 3, a_chase, S_SSWV_RUN2),       /* S_SSWV_RUN1 */
+    STATE_ENTRY(SPR_SSWV, 0, 3, a_chase, S_SSWV_RUN3),       /* S_SSWV_RUN2 */
+    STATE_ENTRY(SPR_SSWV, 1, 3, a_chase, S_SSWV_RUN4),       /* S_SSWV_RUN3 */
+    STATE_ENTRY(SPR_SSWV, 1, 3, a_chase, S_SSWV_RUN5),       /* S_SSWV_RUN4 */
+    STATE_ENTRY(SPR_SSWV, 2, 3, a_chase, S_SSWV_RUN6),       /* S_SSWV_RUN5 */
+    STATE_ENTRY(SPR_SSWV, 2, 3, a_chase, S_SSWV_RUN7),       /* S_SSWV_RUN6 */
+    STATE_ENTRY(SPR_SSWV, 3, 3, a_chase, S_SSWV_RUN8),       /* S_SSWV_RUN7 */
+    STATE_ENTRY(SPR_SSWV, 3, 3, a_chase, S_SSWV_RUN1),       /* S_SSWV_RUN8 */
+    STATE_ENTRY(SPR_SSWV, 4, 10, a_face_target, S_SSWV_ATK2), /* S_SSWV_ATK1 */
+    STATE_ENTRY(SPR_SSWV, 5, 10, a_face_target, S_SSWV_ATK3), /* S_SSWV_ATK2 */
+    STATE_ENTRY(SPR_SSWV, 32774, 4, a_c_pos_attack, S_SSWV_ATK4), /* S_SSWV_ATK3 */
+    STATE_ENTRY(SPR_SSWV, 5, 6, a_face_target, S_SSWV_ATK5),     /* S_SSWV_ATK4 */
+    STATE_ENTRY(SPR_SSWV, 32774, 4, a_c_pos_attack, S_SSWV_ATK6), /* S_SSWV_ATK5 */
+    STATE_ENTRY(SPR_SSWV, 5, 1, a_c_pos_refire, S_SSWV_ATK2),     /* S_SSWV_ATK6 */
     STATE_ENTRY(SPR_SSWV, 7, 3, NULL, S_SSWV_PAIN2),            /* S_SSWV_PAIN */
-    STATE_ENTRY(SPR_SSWV, 7, 3, A_Pain, S_SSWV_RUN1),      /* S_SSWV_PAIN2 */
+    STATE_ENTRY(SPR_SSWV, 7, 3, a_pain, S_SSWV_RUN1),      /* S_SSWV_PAIN2 */
     STATE_ENTRY(SPR_SSWV, 8, 5, NULL, S_SSWV_DIE2),        /* S_SSWV_DIE1 */
-    STATE_ENTRY(SPR_SSWV, 9, 5, A_Scream, S_SSWV_DIE3),    /* S_SSWV_DIE2 */
-    STATE_ENTRY(SPR_SSWV, 10, 5, A_Fall, S_SSWV_DIE4),     /* S_SSWV_DIE3 */
+    STATE_ENTRY(SPR_SSWV, 9, 5, a_scream, S_SSWV_DIE3),    /* S_SSWV_DIE2 */
+    STATE_ENTRY(SPR_SSWV, 10, 5, a_fall, S_SSWV_DIE4),     /* S_SSWV_DIE3 */
     STATE_ENTRY(SPR_SSWV, 11, 5, NULL, S_SSWV_DIE5),       /* S_SSWV_DIE4 */
     STATE_ENTRY(SPR_SSWV, 12, -1, NULL, S_NULL),           /* S_SSWV_DIE5 */
     STATE_ENTRY(SPR_SSWV, 13, 5, NULL, S_SSWV_XDIE2),      /* S_SSWV_XDIE1 */
-    STATE_ENTRY(SPR_SSWV, 14, 5, A_XScream, S_SSWV_XDIE3), /* S_SSWV_XDIE2 */
-    STATE_ENTRY(SPR_SSWV, 15, 5, A_Fall, S_SSWV_XDIE4),    /* S_SSWV_XDIE3 */
+    STATE_ENTRY(SPR_SSWV, 14, 5, a_xscream, S_SSWV_XDIE3), /* S_SSWV_XDIE2 */
+    STATE_ENTRY(SPR_SSWV, 15, 5, a_fall, S_SSWV_XDIE4),    /* S_SSWV_XDIE3 */
     STATE_ENTRY(SPR_SSWV, 16, 5, NULL, S_SSWV_XDIE5),      /* S_SSWV_XDIE4 */
     STATE_ENTRY(SPR_SSWV, 17, 5, NULL, S_SSWV_XDIE6),      /* S_SSWV_XDIE5 */
     STATE_ENTRY(SPR_SSWV, 18, 5, NULL, S_SSWV_XDIE7),      /* S_SSWV_XDIE6 */
@@ -943,7 +943,7 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_KEEN, 0, -1, NULL, S_KEENSTND),        /* S_KEENSTND */
     STATE_ENTRY(SPR_KEEN, 0, 6, NULL, S_COMMKEEN2),        /* S_COMMKEEN */
     STATE_ENTRY(SPR_KEEN, 1, 6, NULL, S_COMMKEEN3),        /* S_COMMKEEN2 */
-    STATE_ENTRY(SPR_KEEN, 2, 6, A_Scream, S_COMMKEEN4),    /* S_COMMKEEN3 */
+    STATE_ENTRY(SPR_KEEN, 2, 6, a_scream, S_COMMKEEN4),    /* S_COMMKEEN3 */
     STATE_ENTRY(SPR_KEEN, 3, 6, NULL, S_COMMKEEN5),        /* S_COMMKEEN4 */
     STATE_ENTRY(SPR_KEEN, 4, 6, NULL, S_COMMKEEN6),        /* S_COMMKEEN5 */
     STATE_ENTRY(SPR_KEEN, 5, 6, NULL, S_COMMKEEN7),        /* S_COMMKEEN6 */
@@ -951,34 +951,34 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_KEEN, 7, 6, NULL, S_COMMKEEN9),        /* S_COMMKEEN8 */
     STATE_ENTRY(SPR_KEEN, 8, 6, NULL, S_COMMKEEN10),       /* S_COMMKEEN9 */
     STATE_ENTRY(SPR_KEEN, 9, 6, NULL, S_COMMKEEN11),       /* S_COMMKEEN10 */
-    STATE_ENTRY(SPR_KEEN, 10, 6, A_KeenDie, S_COMMKEEN12), /* S_COMMKEEN11 */
+    STATE_ENTRY(SPR_KEEN, 10, 6, a_keen_die, S_COMMKEEN12), /* S_COMMKEEN11 */
     STATE_ENTRY(SPR_KEEN, 11, -1, NULL, S_NULL),           /* S_COMMKEEN12 */
     STATE_ENTRY(SPR_KEEN, 12, 4, NULL, S_KEENPAIN2),       /* S_KEENPAIN */
-    STATE_ENTRY(SPR_KEEN, 12, 8, A_Pain, S_KEENSTND),      /* S_KEENPAIN2 */
+    STATE_ENTRY(SPR_KEEN, 12, 8, a_pain, S_KEENSTND),      /* S_KEENPAIN2 */
     STATE_ENTRY(SPR_BBRN, 0, -1, NULL, S_NULL),            /* S_BRAIN */
-    STATE_ENTRY(SPR_BBRN, 1, 36, A_BrainPain, S_BRAIN),    /* S_BRAIN_PAIN */
-    STATE_ENTRY(SPR_BBRN, 0, 100, A_BrainScream, S_BRAIN_DIE2), /* S_BRAIN_DIE1 */
+    STATE_ENTRY(SPR_BBRN, 1, 36, a_brain_pain, S_BRAIN),    /* S_BRAIN_PAIN */
+    STATE_ENTRY(SPR_BBRN, 0, 100, a_brain_scream, S_BRAIN_DIE2), /* S_BRAIN_DIE1 */
     STATE_ENTRY(SPR_BBRN, 0, 10, NULL, S_BRAIN_DIE3),         /* S_BRAIN_DIE2 */
     STATE_ENTRY(SPR_BBRN, 0, 10, NULL, S_BRAIN_DIE4),         /* S_BRAIN_DIE3 */
-    STATE_ENTRY(SPR_BBRN, 0, -1, A_BrainDie, S_NULL),         /* S_BRAIN_DIE4 */
-    STATE_ENTRY(SPR_SSWV, 0, 10, A_Look, S_BRAINEYE),         /* S_BRAINEYE */
-    STATE_ENTRY(SPR_SSWV, 0, 181, A_BrainAwake, S_BRAINEYE1), /* S_BRAINEYESEE */
-    STATE_ENTRY(SPR_SSWV, 0, 150, A_BrainSpit, S_BRAINEYE1),  /* S_BRAINEYE1 */
-    STATE_ENTRY(SPR_BOSF, 32768, 3, A_SpawnSound, S_SPAWN2),  /* S_SPAWN1 */
-    STATE_ENTRY(SPR_BOSF, 32769, 3, A_SpawnFly, S_SPAWN3),    /* S_SPAWN2 */
-    STATE_ENTRY(SPR_BOSF, 32770, 3, A_SpawnFly, S_SPAWN4),    /* S_SPAWN3 */
-    STATE_ENTRY(SPR_BOSF, 32771, 3, A_SpawnFly, S_SPAWN1),    /* S_SPAWN4 */
-    STATE_ENTRY(SPR_FIRE, 32768, 4, A_Fire, S_SPAWNFIRE2),    /* S_SPAWNFIRE1 */
-    STATE_ENTRY(SPR_FIRE, 32769, 4, A_Fire, S_SPAWNFIRE3),    /* S_SPAWNFIRE2 */
-    STATE_ENTRY(SPR_FIRE, 32770, 4, A_Fire, S_SPAWNFIRE4),    /* S_SPAWNFIRE3 */
-    STATE_ENTRY(SPR_FIRE, 32771, 4, A_Fire, S_SPAWNFIRE5),    /* S_SPAWNFIRE4 */
-    STATE_ENTRY(SPR_FIRE, 32772, 4, A_Fire, S_SPAWNFIRE6),    /* S_SPAWNFIRE5 */
-    STATE_ENTRY(SPR_FIRE, 32773, 4, A_Fire, S_SPAWNFIRE7),    /* S_SPAWNFIRE6 */
-    STATE_ENTRY(SPR_FIRE, 32774, 4, A_Fire, S_SPAWNFIRE8),    /* S_SPAWNFIRE7 */
-    STATE_ENTRY(SPR_FIRE, 32775, 4, A_Fire, S_NULL),          /* S_SPAWNFIRE8 */
+    STATE_ENTRY(SPR_BBRN, 0, -1, a_brain_die, S_NULL),         /* S_BRAIN_DIE4 */
+    STATE_ENTRY(SPR_SSWV, 0, 10, a_look, S_BRAINEYE),         /* S_BRAINEYE */
+    STATE_ENTRY(SPR_SSWV, 0, 181, a_brain_awake, S_BRAINEYE1), /* S_BRAINEYESEE */
+    STATE_ENTRY(SPR_SSWV, 0, 150, a_brain_split, S_BRAINEYE1),  /* S_BRAINEYE1 */
+    STATE_ENTRY(SPR_BOSF, 32768, 3, a_spawn_sound, S_SPAWN2),  /* S_SPAWN1 */
+    STATE_ENTRY(SPR_BOSF, 32769, 3, a_spawn_fly, S_SPAWN3),    /* S_SPAWN2 */
+    STATE_ENTRY(SPR_BOSF, 32770, 3, a_spawn_fly, S_SPAWN4),    /* S_SPAWN3 */
+    STATE_ENTRY(SPR_BOSF, 32771, 3, a_spawn_fly, S_SPAWN1),    /* S_SPAWN4 */
+    STATE_ENTRY(SPR_FIRE, 32768, 4, a_fire, S_SPAWNFIRE2),    /* S_SPAWNFIRE1 */
+    STATE_ENTRY(SPR_FIRE, 32769, 4, a_fire, S_SPAWNFIRE3),    /* S_SPAWNFIRE2 */
+    STATE_ENTRY(SPR_FIRE, 32770, 4, a_fire, S_SPAWNFIRE4),    /* S_SPAWNFIRE3 */
+    STATE_ENTRY(SPR_FIRE, 32771, 4, a_fire, S_SPAWNFIRE5),    /* S_SPAWNFIRE4 */
+    STATE_ENTRY(SPR_FIRE, 32772, 4, a_fire, S_SPAWNFIRE6),    /* S_SPAWNFIRE5 */
+    STATE_ENTRY(SPR_FIRE, 32773, 4, a_fire, S_SPAWNFIRE7),    /* S_SPAWNFIRE6 */
+    STATE_ENTRY(SPR_FIRE, 32774, 4, a_fire, S_SPAWNFIRE8),    /* S_SPAWNFIRE7 */
+    STATE_ENTRY(SPR_FIRE, 32775, 4, a_fire, S_NULL),          /* S_SPAWNFIRE8 */
     STATE_ENTRY(SPR_MISL, 32769, 10, NULL, S_BRAINEXPLODE2),  /* S_BRAINEXPLODE1 */
     STATE_ENTRY(SPR_MISL, 32770, 10, NULL, S_BRAINEXPLODE3),  /* S_BRAINEXPLODE2 */
-    STATE_ENTRY(SPR_MISL, 32771, 10, A_BrainExplode, S_NULL), /* S_BRAINEXPLODE3 */
+    STATE_ENTRY(SPR_MISL, 32771, 10, a_brain_explode, S_NULL), /* S_BRAINEXPLODE3 */
     STATE_ENTRY(SPR_ARM1, 0, 6, NULL, S_ARM1A),               /* S_ARM1 */
     STATE_ENTRY(SPR_ARM1, 32769, 7, NULL, S_ARM1),            /* S_ARM1A */
     STATE_ENTRY(SPR_ARM2, 0, 6, NULL, S_ARM2A),               /* S_ARM2 */
@@ -986,9 +986,9 @@ state_t states[NUMSTATES] = {
     STATE_ENTRY(SPR_BAR1, 0, 6, NULL, S_BAR2),                /* S_BAR1 */
     STATE_ENTRY(SPR_BAR1, 1, 6, NULL, S_BAR1),                /* S_BAR2 */
     STATE_ENTRY(SPR_BEXP, 32768, 5, NULL, S_BEXP2),           /* S_BEXP */
-    STATE_ENTRY(SPR_BEXP, 32769, 5, A_Scream, S_BEXP3),       /* S_BEXP2 */
+    STATE_ENTRY(SPR_BEXP, 32769, 5, a_scream, S_BEXP3),       /* S_BEXP2 */
     STATE_ENTRY(SPR_BEXP, 32770, 5, NULL, S_BEXP4),           /* S_BEXP3 */
-    STATE_ENTRY(SPR_BEXP, 32771, 10, A_Explode, S_BEXP5),     /* S_BEXP4 */
+    STATE_ENTRY(SPR_BEXP, 32771, 10, a_explode, S_BEXP5),     /* S_BEXP4 */
     STATE_ENTRY(SPR_BEXP, 32772, 10, NULL, S_NULL),           /* S_BEXP5 */
     STATE_ENTRY(SPR_FCAN, 32768, 4, NULL, S_BBAR2),           /* S_BBAR1 */
     STATE_ENTRY(SPR_FCAN, 32769, 4, NULL, S_BBAR3),           /* S_BBAR2 */
