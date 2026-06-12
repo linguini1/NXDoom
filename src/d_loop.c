@@ -239,8 +239,10 @@ static boolean build_new_tic(void)
     }
 #endif
 
-  ticdata[maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].cmds[localplayer] = cmd;
-  ticdata[maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].ingame[localplayer] = true;
+  ticdata[maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].cmds[localplayer] =
+      cmd;
+  ticdata[maketic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].ingame[localplayer] =
+      true;
 
   ++maketic;
 
@@ -542,8 +544,10 @@ void d_receive_tic(ticcmd_t *ticcmds, boolean *players_mask)
         }
       else
         {
-          ticdata[recvtic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].cmds[i] = ticcmds[i];
-          ticdata[recvtic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].ingame[i] = players_mask[i];
+          ticdata[recvtic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].cmds[i] =
+              ticcmds[i];
+          ticdata[recvtic % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS].ingame[i] =
+              players_mask[i];
         }
     }
 
@@ -863,7 +867,8 @@ void try_run_tics(void)
           return;
         }
 
-      set = &ticdata[(gametic / ticdup) % CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
+      set = &ticdata[(gametic / ticdup) %
+                     CONFIG_GAMES_NXDOOM_NET_BACKUPTICS];
 
       if (!net_client_connected)
         {
