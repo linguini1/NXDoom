@@ -1065,7 +1065,7 @@ void A_VileChase(mobj_t *actor)
               // Call PIT_VileCheck to check
               // whether object is a corpse
               // that canbe raised.
-              if (!P_BlockThingsIterator(bx, by, PIT_VileCheck))
+              if (!p_block_things_iterator(bx, by, PIT_VileCheck))
                 {
                   // got one!
                   temp = actor->target;

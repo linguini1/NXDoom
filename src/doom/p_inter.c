@@ -274,9 +274,9 @@ boolean p_give_power(player_t *player, int /*powertype_t*/ power)
 }
 
 //
-// P_TouchSpecialThing
+// p_touch_special_thing
 //
-void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
+void p_touch_special_thing(mobj_t *special, mobj_t *toucher)
 {
   player_t *player;
   int i;

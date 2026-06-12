@@ -144,11 +144,9 @@ extern intercept_t *intercept_p;
 typedef boolean (*traverser_t)(intercept_t *in);
 
 fixed_t p_approx_distance(fixed_t dx, fixed_t dy);
-int P_PointOnLineSide(fixed_t x, fixed_t y, line_t *line);
-int P_PointOnDivlineSide(fixed_t x, fixed_t y, divline_t *line);
-void P_MakeDivline(line_t *li, divline_t *dl);
-fixed_t P_InterceptVector(divline_t *v2, divline_t *v1);
-int P_BoxOnLineSide(fixed_t *tmbox, line_t *ld);
+int p_point_on_line_side(fixed_t x, fixed_t y, line_t *line);
+int p_point_on_divline_side(fixed_t x, fixed_t y, divline_t *line);
+int p_box_on_line_side(fixed_t *tmbox, line_t *ld);
 
 extern fixed_t opentop;
 extern fixed_t openbottom;
@@ -157,8 +155,8 @@ extern fixed_t lowfloor;
 
 void p_line_opening(line_t *linedef);
 
-boolean P_BlockLinesIterator(int x, int y, boolean (*func)(line_t *));
-boolean P_BlockThingsIterator(int x, int y, boolean (*func)(mobj_t *));
+boolean p_block_lines_iterator(int x, int y, boolean (*func)(line_t *));
+boolean p_block_things_iterator(int x, int y, boolean (*func)(mobj_t *));
 
 #define PT_ADDLINES 1
 #define PT_ADDTHINGS 2
@@ -240,7 +238,7 @@ extern mobj_t **blocklinks; // for thing chains
 extern int maxammo[NUMAMMO];
 extern int clipammo[NUMAMMO];
 
-void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher);
+void p_touch_special_thing(mobj_t *special, mobj_t *toucher);
 
 void p_damage_mobj(mobj_t *target, mobj_t *inflictor, mobj_t *source,
                   int damage);

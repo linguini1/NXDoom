@@ -38,19 +38,19 @@ int deh_initial_bullets = DEH_DEFAULT_INITIAL_BULLETS;
 
 // Dehacked: "Max Health"
 // This is the maximum health that can be reached using health
-// potions. See P_TouchSpecialThing in p_inter.c
+// potions. See p_touch_special_thing in p_inter.c
 
 int deh_max_health = DEH_DEFAULT_MAX_HEALTH;
 
 // Dehacked: "Max Armor"
 // This is the maximum armor which can be reached by picking up
-// armor helmets. See P_TouchSpecialThing in p_inter.c
+// armor helmets. See p_touch_special_thing in p_inter.c
 
 int deh_max_armor = DEH_DEFAULT_MAX_ARMOR;
 
 // Dehacked: "Green Armor Class"
 // This is the armor class that is given when picking up the green
-// armor or an armor helmet. See P_TouchSpecialThing in p_inter.c
+// armor or an armor helmet. See p_touch_special_thing in p_inter.c
 //
 // DOS dehacked only modifies the behavior of the green armor shirt,
 // the armor class set by armor helmets is not affected.
@@ -59,7 +59,7 @@ int deh_green_armor_class = DEH_DEFAULT_GREEN_ARMOR_CLASS;
 
 // Dehacked: "Blue Armor Class"
 // This is the armor class that is given when picking up the blue
-// armor or a megasphere. See P_TouchSpecialThing in p_inter.c
+// armor or a megasphere. See p_touch_special_thing in p_inter.c
 //
 // DOS dehacked only modifies the MegaArmor behavior and not
 // the MegaSphere, which always gives armor type 2.
@@ -68,19 +68,19 @@ int deh_blue_armor_class = DEH_DEFAULT_BLUE_ARMOR_CLASS;
 
 // Dehacked: "Max soulsphere"
 // The maximum health which can be reached by picking up the
-// soulsphere.  See P_TouchSpecialThing in p_inter.c
+// soulsphere.  See p_touch_special_thing in p_inter.c
 
 int deh_max_soulsphere = DEH_DEFAULT_MAX_SOULSPHERE;
 
 // Dehacked: "Soulsphere health"
 // The amount of health bonus that picking up a soulsphere
-// gives.  See P_TouchSpecialThing in p_inter.c
+// gives.  See p_touch_special_thing in p_inter.c
 
 int deh_soulsphere_health = DEH_DEFAULT_SOULSPHERE_HEALTH;
 
 // Dehacked: "Megasphere health"
 // This is what the health is set to after picking up a
-// megasphere.  See P_TouchSpecialThing in p_inter.c
+// megasphere.  See p_touch_special_thing in p_inter.c
 
 int deh_megasphere_health = DEH_DEFAULT_MEGASPHERE_HEALTH;
 

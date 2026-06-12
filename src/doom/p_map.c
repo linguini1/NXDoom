@@ -312,8 +312,15 @@ boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y)
   yh = (tmbbox[BOXTOP] - bmaporgy + MAXRADIUS) >> MAPBLOCKSHIFT;
 
   for (bx = xl; bx <= xh; bx++)
-    for (by = yl; by <= yh; by++)
-      if (!P_BlockThingsIterator(bx, by, pit_stomp_thing)) return false;
+    {
+      for (by = yl; by <= yh; by++)
+        {
+          if (!p_block_things_iterator(bx, by, pit_stomp_thing))
+            {
+              return false;
+            }
+        }
+    }
 
   /* the move is ok,
    * so link the thing into its new position
@@ -331,11 +338,11 @@ boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y)
   return true;
 }
 
-/* PIT_CheckLine
+/* pit_check_line
  * Adjusts tmfloorz and tmceilingz as lines are contacted
  */
 
-boolean PIT_CheckLine(line_t *ld)
+static boolean pit_check_line(line_t *ld)
 {
   if (tmbbox[BOXRIGHT] <= ld->bbox[BOXLEFT] ||
       tmbbox[BOXLEFT] >= ld->bbox[BOXRIGHT] ||
@@ -343,7 +350,7 @@ boolean PIT_CheckLine(line_t *ld)
       tmbbox[BOXBOTTOM] >= ld->bbox[BOXTOP])
     return true;
 
-  if (P_BoxOnLineSide(tmbbox, ld) != -1) return true;
+  if (p_box_on_line_side(tmbbox, ld) != -1) return true;
 
   /* A line has been hit */
 
@@ -500,7 +507,7 @@ boolean PIT_CheckThing(mobj_t *thing)
         {
           /* can remove thing */
 
-          P_TouchSpecialThing(thing, tmthing);
+          p_touch_special_thing(thing, tmthing);
         }
       return !solid;
     }
@@ -586,8 +593,15 @@ boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y)
   yh = (tmbbox[BOXTOP] - bmaporgy + MAXRADIUS) >> MAPBLOCKSHIFT;
 
   for (bx = xl; bx <= xh; bx++)
-    for (by = yl; by <= yh; by++)
-      if (!P_BlockThingsIterator(bx, by, PIT_CheckThing)) return false;
+    {
+      for (by = yl; by <= yh; by++)
+        {
+          if (!p_block_things_iterator(bx, by, PIT_CheckThing))
+            {
+              return false;
+            }
+        }
+    }
 
   /* check lines */
 
@@ -597,8 +611,15 @@ boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y)
   yh = (tmbbox[BOXTOP] - bmaporgy) >> MAPBLOCKSHIFT;
 
   for (bx = xl; bx <= xh; bx++)
-    for (by = yl; by <= yh; by++)
-      if (!P_BlockLinesIterator(bx, by, PIT_CheckLine)) return false;
+    {
+      for (by = yl; by <= yh; by++)
+        {
+          if (!p_block_lines_iterator(bx, by, pit_check_line))
+            {
+              return false;
+            }
+        }
+    }
 
   return true;
 }
@@ -663,8 +684,8 @@ boolean p_try_move(mobj_t *thing, fixed_t x, fixed_t y)
           /* see if the line was crossed */
 
           ld = spechit[numspechit];
-          side = P_PointOnLineSide(thing->x, thing->y, ld);
-          oldside = P_PointOnLineSide(oldx, oldy, ld);
+          side = p_point_on_line_side(thing->x, thing->y, ld);
+          oldside = p_point_on_line_side(oldx, oldy, ld);
           if (side != oldside)
             {
               if (ld->special) p_cross_special_line(ld - lines, oldside, thing);
@@ -746,7 +767,7 @@ void P_HitSlideLine(line_t *ld)
       return;
     }
 
-  side = P_PointOnLineSide(slidemo->x, slidemo->y, ld);
+  side = p_point_on_line_side(slidemo->x, slidemo->y, ld);
 
   lineangle = r_point_to_angle2(0, 0, ld->dx, ld->dy);
 
@@ -781,7 +802,7 @@ boolean PTR_SlideTraverse(intercept_t *in)
 
   if (!(li->flags & ML_TWOSIDED))
     {
-      if (P_PointOnLineSide(slidemo->x, slidemo->y, li))
+      if (p_point_on_line_side(slidemo->x, slidemo->y, li))
         {
           /* don't hit the back side */
           return true;
@@ -1221,7 +1242,7 @@ boolean PTR_UseTraverse(intercept_t *in)
     }
 
   side = 0;
-  if (P_PointOnLineSide(usething->x, usething->y, in->d.line) == 1) side = 1;
+  if (p_point_on_line_side(usething->x, usething->y, in->d.line) == 1) side = 1;
 
   /*	return false;		don't use back side */
 
@@ -1322,7 +1343,7 @@ void P_RadiusAttack(mobj_t *spot, mobj_t *source, int damage)
 
   for (y = yl; y <= yh; y++)
     for (x = xl; x <= xh; x++)
-      P_BlockThingsIterator(x, y, PIT_RadiusAttack);
+      p_block_things_iterator(x, y, PIT_RadiusAttack);
 }
 
 /* PIT_ChangeSector */
@@ -1399,7 +1420,7 @@ boolean P_ChangeSector(sector_t *sector, boolean crunch)
 
   for (x = sector->blockbox[BOXLEFT]; x <= sector->blockbox[BOXRIGHT]; x++)
     for (y = sector->blockbox[BOXBOTTOM]; y <= sector->blockbox[BOXTOP]; y++)
-      P_BlockThingsIterator(x, y, PIT_ChangeSector);
+      p_block_things_iterator(x, y, PIT_ChangeSector);
 
   return nofit;
 }
