@@ -96,13 +96,13 @@ void p_respawn_specials(void);
 mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type);
 
 void p_remove_mobj(mobj_t *th);
-mobj_t *P_SubstNullMobj(mobj_t *th);
+mobj_t *p_subst_null_mobj(mobj_t *th);
 boolean p_set_mobj_state(mobj_t *mobj, statenum_t state);
 void p_mobj_thinker(mobj_t *mobj);
 
-void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z);
-void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage);
-mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type);
+void p_spawn_puff(fixed_t x, fixed_t y, fixed_t z);
+void p_spawn_blood(fixed_t x, fixed_t y, fixed_t z, int damage);
+mobj_t *p_spawn_missile(mobj_t *source, mobj_t *dest, mobjtype_t type);
 void p_spawn_player_missile(mobj_t *source, mobjtype_t type);
 
 //
@@ -143,7 +143,7 @@ extern intercept_t *intercept_p;
 
 typedef boolean (*traverser_t)(intercept_t *in);
 
-fixed_t P_AproxDistance(fixed_t dx, fixed_t dy);
+fixed_t p_approx_distance(fixed_t dx, fixed_t dy);
 int P_PointOnLineSide(fixed_t x, fixed_t y, line_t *line);
 int P_PointOnDivlineSide(fixed_t x, fixed_t y, divline_t *line);
 void P_MakeDivline(line_t *li, divline_t *dl);
@@ -169,7 +169,7 @@ extern divline_t trace;
 boolean p_path_traverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2,
                        int flags, boolean (*trav)(intercept_t *));
 
-void P_UnsetThingPosition(mobj_t *thing);
+void p_unset_thing_position(mobj_t *thing);
 void p_set_thing_position(mobj_t *thing);
 
 //
@@ -199,9 +199,9 @@ extern line_t *spechit[MAXSPECIALCROSS];
 extern int numspechit;
 
 boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y);
-boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y);
+boolean p_try_move(mobj_t *thing, fixed_t x, fixed_t y);
 boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y);
-void P_SlideMove(mobj_t *mo);
+void p_slide_move(mobj_t *mo);
 boolean p_check_sight(mobj_t *t1, mobj_t *t2);
 void p_use_lines(player_t *player);
 

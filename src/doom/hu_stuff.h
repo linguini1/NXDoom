@@ -72,7 +72,7 @@ extern boolean chat_on;
 /* HEADS UP TEXT */
 
 void hu_init(void);
-void HU_Start(void);
+void hu_start(void);
 
 boolean hu_responder(event_t *ev);
 

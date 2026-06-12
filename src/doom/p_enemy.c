@@ -145,7 +145,7 @@ boolean P_CheckMeleeRange(mobj_t *actor)
   if (!actor->target) return false;
 
   pl = actor->target;
-  dist = P_AproxDistance(pl->x - actor->x, pl->y - actor->y);
+  dist = p_approx_distance(pl->x - actor->x, pl->y - actor->y);
 
   if (gameversion < exe_doom_1_5)
     range = MELEERANGE;
@@ -179,7 +179,7 @@ boolean P_CheckMissileRange(mobj_t *actor)
   if (actor->reactiontime) return false; // do not attack yet
 
   // OPTIMIZE: get this from a global checksight
-  dist = P_AproxDistance(actor->x - actor->target->x,
+  dist = p_approx_distance(actor->x - actor->target->x,
                          actor->y - actor->target->y) -
          64 * FRACUNIT;
 
@@ -241,7 +241,7 @@ boolean P_Move(mobj_t *actor)
   tryx = actor->x + actor->info->speed * xspeed[actor->movedir];
   tryy = actor->y + actor->info->speed * yspeed[actor->movedir];
 
-  try_ok = P_TryMove(actor, tryx, tryy);
+  try_ok = p_try_move(actor, tryx, tryy);
 
   if (!try_ok)
     {
@@ -456,7 +456,7 @@ boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 
           if (an > ANG90 && an < ANG270)
             {
-              dist = P_AproxDistance(player->mo->x - actor->x,
+              dist = p_approx_distance(player->mo->x - actor->x,
                                      player->mo->y - actor->y);
               // if real close, react anyway
               if (dist > MELEERANGE) continue; // behind back
@@ -789,7 +789,7 @@ void A_BspiAttack(mobj_t *actor)
   A_FaceTarget(actor);
 
   // launch a missile
-  P_SpawnMissile(actor, actor->target, MT_ARACHPLAZ);
+  p_spawn_missile(actor, actor->target, MT_ARACHPLAZ);
 }
 
 //
@@ -813,7 +813,7 @@ void A_TroopAttack(mobj_t *actor)
     }
 
   // launch a missile
-  P_SpawnMissile(actor, actor->target, MT_TROOPSHOT);
+  p_spawn_missile(actor, actor->target, MT_TROOPSHOT);
 }
 
 void A_SargAttack(mobj_t *actor)
@@ -852,7 +852,7 @@ void A_HeadAttack(mobj_t *actor)
     }
 
   // launch a missile
-  P_SpawnMissile(actor, actor->target, MT_HEADSHOT);
+  p_spawn_missile(actor, actor->target, MT_HEADSHOT);
 }
 
 void A_CyberAttack(mobj_t *actor)
@@ -860,7 +860,7 @@ void A_CyberAttack(mobj_t *actor)
   if (!actor->target) return;
 
   A_FaceTarget(actor);
-  P_SpawnMissile(actor, actor->target, MT_ROCKET);
+  p_spawn_missile(actor, actor->target, MT_ROCKET);
 }
 
 void A_BruisAttack(mobj_t *actor)
@@ -880,7 +880,7 @@ void A_BruisAttack(mobj_t *actor)
     }
 
   // launch a missile
-  P_SpawnMissile(actor, actor->target, MT_BRUISERSHOT);
+  p_spawn_missile(actor, actor->target, MT_BRUISERSHOT);
 }
 
 //
@@ -894,7 +894,7 @@ void A_SkelMissile(mobj_t *actor)
 
   A_FaceTarget(actor);
   actor->z += 16 * FRACUNIT; // so missile spawns higher
-  mo = P_SpawnMissile(actor, actor->target, MT_TRACER);
+  mo = p_spawn_missile(actor, actor->target, MT_TRACER);
   actor->z -= 16 * FRACUNIT; // back to normal
 
   mo->x += mo->momx;
@@ -915,7 +915,7 @@ void A_Tracer(mobj_t *actor)
   if (gametic & 3) return;
 
   // spawn a puff of smoke behind the rocket
-  P_SpawnPuff(actor->x, actor->y, actor->z);
+  p_spawn_puff(actor->x, actor->y, actor->z);
 
   th = p_spawn_mobj(actor->x - actor->momx, actor->y - actor->momy, actor->z,
                    MT_SMOKE);
@@ -951,7 +951,7 @@ void A_Tracer(mobj_t *actor)
   actor->momy = fixed_mul(actor->info->speed, finesine[exact]);
 
   // change slope
-  dist = P_AproxDistance(dest->x - actor->x, dest->y - actor->y);
+  dist = p_approx_distance(dest->x - actor->x, dest->y - actor->y);
 
   dist = dist / actor->info->speed;
 
@@ -1136,14 +1136,14 @@ void A_Fire(mobj_t *actor)
   dest = actor->tracer;
   if (!dest) return;
 
-  target = P_SubstNullMobj(actor->target);
+  target = p_subst_null_mobj(actor->target);
 
   // don't move it if the vile lost sight
   if (!p_check_sight(target, dest)) return;
 
   an = dest->angle >> ANGLETOFINESHIFT;
 
-  P_UnsetThingPosition(actor);
+  p_unset_thing_position(actor);
   actor->x = dest->x + fixed_mul(24 * FRACUNIT, finecosine[an]);
   actor->y = dest->y + fixed_mul(24 * FRACUNIT, finesine[an]);
   actor->z = dest->z;
@@ -1229,10 +1229,10 @@ void A_FatAttack1(mobj_t *actor)
 
   // Change direction  to ...
   actor->angle += FATSPREAD;
-  target = P_SubstNullMobj(actor->target);
-  P_SpawnMissile(actor, target, MT_FATSHOT);
+  target = p_subst_null_mobj(actor->target);
+  p_spawn_missile(actor, target, MT_FATSHOT);
 
-  mo = P_SpawnMissile(actor, target, MT_FATSHOT);
+  mo = p_spawn_missile(actor, target, MT_FATSHOT);
   mo->angle += FATSPREAD;
   an = mo->angle >> ANGLETOFINESHIFT;
   mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
@@ -1248,10 +1248,10 @@ void A_FatAttack2(mobj_t *actor)
   A_FaceTarget(actor);
   // Now here choose opposite deviation.
   actor->angle -= FATSPREAD;
-  target = P_SubstNullMobj(actor->target);
-  P_SpawnMissile(actor, target, MT_FATSHOT);
+  target = p_subst_null_mobj(actor->target);
+  p_spawn_missile(actor, target, MT_FATSHOT);
 
-  mo = P_SpawnMissile(actor, target, MT_FATSHOT);
+  mo = p_spawn_missile(actor, target, MT_FATSHOT);
   mo->angle -= FATSPREAD * 2;
   an = mo->angle >> ANGLETOFINESHIFT;
   mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
@@ -1266,15 +1266,15 @@ void A_FatAttack3(mobj_t *actor)
 
   A_FaceTarget(actor);
 
-  target = P_SubstNullMobj(actor->target);
+  target = p_subst_null_mobj(actor->target);
 
-  mo = P_SpawnMissile(actor, target, MT_FATSHOT);
+  mo = p_spawn_missile(actor, target, MT_FATSHOT);
   mo->angle -= FATSPREAD / 2;
   an = mo->angle >> ANGLETOFINESHIFT;
   mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
   mo->momy = fixed_mul(mo->info->speed, finesine[an]);
 
-  mo = P_SpawnMissile(actor, target, MT_FATSHOT);
+  mo = p_spawn_missile(actor, target, MT_FATSHOT);
   mo->angle += FATSPREAD / 2;
   an = mo->angle >> ANGLETOFINESHIFT;
   mo->momx = fixed_mul(mo->info->speed, finecosine[an]);
@@ -1305,7 +1305,7 @@ void A_SkullAttack(mobj_t *actor)
   an = actor->angle >> ANGLETOFINESHIFT;
   actor->momx = fixed_mul(SKULLSPEED, finecosine[an]);
   actor->momy = fixed_mul(SKULLSPEED, finesine[an]);
-  dist = P_AproxDistance(dest->x - actor->x, dest->y - actor->y);
+  dist = p_approx_distance(dest->x - actor->x, dest->y - actor->y);
   dist = dist / SKULLSPEED;
 
   if (dist < 1) dist = 1;
@@ -1357,7 +1357,7 @@ void A_PainShootSkull(mobj_t *actor, angle_t angle)
   newmobj = p_spawn_mobj(x, y, z, MT_SKULL);
 
   // Check for movements.
-  if (!P_TryMove(newmobj, newmobj->x, newmobj->y))
+  if (!p_try_move(newmobj, newmobj->x, newmobj->y))
     {
       // kill it immediately
       p_damage_mobj(newmobj, actor, actor, 10000);
@@ -1759,7 +1759,7 @@ void A_BrainSpit(mobj_t *mo)
   braintargeton = (braintargeton + 1) % numbraintargets;
 
   // spawn brain missile
-  newmobj = P_SpawnMissile(mo, targ, MT_SPAWNSHOT);
+  newmobj = p_spawn_missile(mo, targ, MT_SPAWNSHOT);
   newmobj->target = targ;
   newmobj->reactiontime =
       ((targ->y - mo->y) / newmobj->momy) / newmobj->state->tics;
@@ -1790,7 +1790,7 @@ void A_SpawnFly(mobj_t *mo)
 
   if (--mo->reactiontime) return; // still flying
 
-  targ = P_SubstNullMobj(mo->target);
+  targ = p_subst_null_mobj(mo->target);
 
   // First spawn teleport fog.
   fog = p_spawn_mobj(targ->x, targ->y, targ->z, MT_SPAWNFIRE);

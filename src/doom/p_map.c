@@ -319,7 +319,7 @@ boolean p_teleport_move(mobj_t *thing, fixed_t x, fixed_t y)
    * so link the thing into its new position
    */
 
-  P_UnsetThingPosition(thing);
+  p_unset_thing_position(thing);
 
   thing->floorz = tmfloorz;
   thing->ceilingz = tmceilingz;
@@ -603,12 +603,12 @@ boolean p_check_position(mobj_t *thing, fixed_t x, fixed_t y)
   return true;
 }
 
-/* P_TryMove
+/* p_try_move
  * Attempt to move to a new position,
  * crossing special lines unless MF_TELEPORT is set.
  */
 
-boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y)
+boolean p_try_move(mobj_t *thing, fixed_t x, fixed_t y)
 {
   fixed_t oldx;
   fixed_t oldy;
@@ -643,7 +643,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y)
    * so link the thing into its new position
    */
 
-  P_UnsetThingPosition(thing);
+  p_unset_thing_position(thing);
 
   oldx = thing->x;
   oldy = thing->y;
@@ -762,7 +762,7 @@ void P_HitSlideLine(line_t *ld)
   lineangle >>= ANGLETOFINESHIFT;
   deltaangle >>= ANGLETOFINESHIFT;
 
-  movelen = P_AproxDistance(tmxmove, tmymove);
+  movelen = p_approx_distance(tmxmove, tmymove);
   newlen = fixed_mul(movelen, finecosine[deltaangle]);
 
   tmxmove = fixed_mul(newlen, finecosine[lineangle]);
@@ -821,7 +821,7 @@ isblocking:
   return false; /* stop */
 }
 
-/* P_SlideMove
+/* p_slide_move
  * The momx / momy move is bad, so try to slide
  * along a wall.
  * Find the first line hit, move flush to it,
@@ -830,7 +830,7 @@ isblocking:
  * This is a kludgy mess.
  */
 
-void P_SlideMove(mobj_t *mo)
+void p_slide_move(mobj_t *mo)
 {
   fixed_t leadx;
   fixed_t leady;
@@ -886,8 +886,8 @@ retry:
       /* the move most have hit the middle, so stairstep */
 
     stairstep:
-      if (!P_TryMove(mo, mo->x, mo->y + mo->momy))
-        P_TryMove(mo, mo->x + mo->momx, mo->y);
+      if (!p_try_move(mo, mo->x, mo->y + mo->momy))
+        p_try_move(mo, mo->x + mo->momx, mo->y);
       return;
     }
 
@@ -899,7 +899,7 @@ retry:
       newx = fixed_mul(mo->momx, bestslidefrac);
       newy = fixed_mul(mo->momy, bestslidefrac);
 
-      if (!P_TryMove(mo, mo->x + newx, mo->y + newy)) goto stairstep;
+      if (!p_try_move(mo, mo->x + newx, mo->y + newy)) goto stairstep;
     }
 
   /* Now continue along the wall.
@@ -920,7 +920,7 @@ retry:
   mo->momx = tmxmove;
   mo->momy = tmymove;
 
-  if (!P_TryMove(mo, mo->x + tmxmove, mo->y + tmymove))
+  if (!p_try_move(mo, mo->x + tmxmove, mo->y + tmymove))
     {
       goto retry;
     }
@@ -1093,7 +1093,7 @@ boolean PTR_ShootTraverse(intercept_t *in)
 
       /* Spawn bullet puffs. */
 
-      P_SpawnPuff(x, y, z);
+      p_spawn_puff(x, y, z);
 
       /* don't go any farther */
 
@@ -1131,9 +1131,9 @@ boolean PTR_ShootTraverse(intercept_t *in)
    */
 
   if (in->d.thing->flags & MF_NOBLOOD)
-    P_SpawnPuff(x, y, z);
+    p_spawn_puff(x, y, z);
   else
-    P_SpawnBlood(x, y, z, la_damage);
+    p_spawn_blood(x, y, z, la_damage);
 
   if (la_damage) p_damage_mobj(th, shootthing, shootthing, la_damage);
 
@@ -1149,7 +1149,7 @@ fixed_t p_aim_line_attack(mobj_t *t1, angle_t angle, fixed_t distance)
   fixed_t x2;
   fixed_t y2;
 
-  t1 = P_SubstNullMobj(t1);
+  t1 = p_subst_null_mobj(t1);
 
   angle >>= ANGLETOFINESHIFT;
   shootthing = t1;

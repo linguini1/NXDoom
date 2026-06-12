@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/p_mobj.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Moving object handling. Spawn functions.
- */
+ *  Moving object handling. Spawn functions.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -44,8 +49,8 @@
  ****************************************************************************/
 
 /* Use a heuristic approach to detect infinite state cycles: Count the number
- * of times the loop in p_set_mobj_state() executes and exit with an error once
- * an arbitrary very large limit is reached.
+ * of times the loop in p_set_mobj_state() executes and exit with an error
+ * once an arbitrary very large limit is reached.
  */
 
 #define MOBJ_CYCLE_LIMIT 1000000
@@ -72,56 +77,14 @@ void g_player_reborn(int player);
 void p_spawn_map_thing(mapthing_t *mthing);
 
 /****************************************************************************
- * Name: p_set_mobj_state
- *
- * Description:
- *  Returns true if the mobj is still present.
- *
+ * Private Functions
  ****************************************************************************/
-
-boolean p_set_mobj_state(mobj_t *mobj, statenum_t state)
-{
-  state_t *st;
-  int cycle_counter = 0;
-
-  do
-    {
-      if (state == S_NULL)
-        {
-          mobj->state = (state_t *)S_NULL;
-          p_remove_mobj(mobj);
-          return false;
-        }
-
-      st = &states[state];
-      mobj->state = st;
-      mobj->tics = st->tics;
-      mobj->sprite = st->sprite;
-      mobj->frame = st->frame;
-
-      /* Modified handling.
-       * Call action functions when the state is set
-       */
-
-      if (st->action.acp1) st->action.acp1(mobj);
-
-      state = st->nextstate;
-
-      if (cycle_counter++ > MOBJ_CYCLE_LIMIT)
-        {
-          i_error("p_set_mobj_state: Infinite state cycle detected!");
-        }
-    }
-  while (!mobj->tics);
-
-  return true;
-}
 
 /****************************************************************************
- * Name: P_ExplodeMissile
+ * Name: p_explode_missile
  ****************************************************************************/
 
-void P_ExplodeMissile(mobj_t *mo)
+static void p_explode_missile(mobj_t *mo)
 {
   mo->momx = mo->momy = mo->momz = 0;
 
@@ -139,10 +102,10 @@ void P_ExplodeMissile(mobj_t *mo)
 }
 
 /****************************************************************************
- * Name: P_XYMovement
+ * Name: p_xy_movement
  ****************************************************************************/
 
-void P_XYMovement(mobj_t *mo)
+static void p_xy_movement(mobj_t *mo)
 {
   fixed_t ptryx;
   fixed_t ptryy;
@@ -154,12 +117,14 @@ void P_XYMovement(mobj_t *mo)
     {
       if (mo->flags & MF_SKULLFLY)
         {
-          // the skull slammed into something
+          /* the skull slammed into something */
+
           mo->flags &= ~MF_SKULLFLY;
           mo->momx = mo->momy = mo->momz = 0;
 
           p_set_mobj_state(mo, mo->info->spawnstate);
         }
+
       return;
     }
 
@@ -194,7 +159,7 @@ void P_XYMovement(mobj_t *mo)
           xmove = ymove = 0;
         }
 
-      if (!P_TryMove(mo, ptryx, ptryy))
+      if (!p_try_move(mo, ptryx, ptryy))
         {
           /* blocked move */
 
@@ -202,7 +167,7 @@ void P_XYMovement(mobj_t *mo)
             {
               /* try to slide along it */
 
-              P_SlideMove(mo);
+              p_slide_move(mo);
             }
           else if (mo->flags & MF_MISSILE)
             {
@@ -219,7 +184,8 @@ void P_XYMovement(mobj_t *mo)
                   p_remove_mobj(mo);
                   return;
                 }
-              P_ExplodeMissile(mo);
+
+              p_explode_missile(mo);
             }
           else
             mo->momx = mo->momy = 0;
@@ -277,10 +243,10 @@ void P_XYMovement(mobj_t *mo)
 }
 
 /****************************************************************************
- * Name: P_ZMovement
+ * Name: p_z_movement
  ****************************************************************************/
 
-void P_ZMovement(mobj_t *mo)
+static void p_z_movement(mobj_t *mo)
 {
   fixed_t dist;
   fixed_t delta;
@@ -303,8 +269,8 @@ void P_ZMovement(mobj_t *mo)
 
       if (!(mo->flags & MF_SKULLFLY) && !(mo->flags & MF_INFLOAT))
         {
-          dist =
-              P_AproxDistance(mo->x - mo->target->x, mo->y - mo->target->y);
+          dist = p_approx_distance(mo->x - mo->target->x,
+                  mo->y - mo->target->y);
 
           delta = (mo->target->z + (mo->height >> 1)) - mo->z;
 
@@ -359,17 +325,19 @@ void P_ZMovement(mobj_t *mo)
           if (mo->player && mo->momz < -GRAVITY * 8)
             {
               /* Squat down.
-               * Decrease viewheight for a moment
-               * after hitting the ground (hard),
-               * and utter appropriate sound.
+               * Decrease viewheight for a moment after hitting the ground
+               * (hard), and utter appropriate sound.
                */
+
               mo->player->deltaviewheight = mo->momz >> 3;
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
               s_start_sound(mo, SFX_OOF);
 #endif
             }
+
           mo->momz = 0;
         }
+
       mo->z = mo->floorz;
 
       /* cph 2001/05/26 -
@@ -383,7 +351,7 @@ void P_ZMovement(mobj_t *mo)
 
       if ((mo->flags & MF_MISSILE) && !(mo->flags & MF_NOCLIP))
         {
-          P_ExplodeMissile(mo);
+          p_explode_missile(mo);
           return;
         }
     }
@@ -399,10 +367,12 @@ void P_ZMovement(mobj_t *mo)
     {
       /* hit the ceiling */
 
-      if (mo->momz > 0) mo->momz = 0;
-      {
-        mo->z = mo->ceilingz - mo->height;
-      }
+      if (mo->momz > 0)
+        {
+          mo->momz = 0;
+        }
+
+      mo->z = mo->ceilingz - mo->height;
 
       if (mo->flags & MF_SKULLFLY)
         {
@@ -413,17 +383,17 @@ void P_ZMovement(mobj_t *mo)
 
       if ((mo->flags & MF_MISSILE) && !(mo->flags & MF_NOCLIP))
         {
-          P_ExplodeMissile(mo);
+          p_explode_missile(mo);
           return;
         }
     }
 }
 
 /****************************************************************************
- * Name: P_NightmareRespawn
+ * Name: p_nightmare_respawn
  ****************************************************************************/
 
-void P_NightmareRespawn(mobj_t *mobj)
+static void p_nightmare_respawn(mobj_t *mobj)
 {
   fixed_t x;
   fixed_t y;
@@ -437,12 +407,12 @@ void P_NightmareRespawn(mobj_t *mobj)
 
   /* something is occupying it's position? */
 
-  if (!p_check_position(mobj, x, y)) return; /* no respwan */
+  if (!p_check_position(mobj, x, y)) return; /* no respawn */
 
   /* spawn a teleport fog at old spot because of removal of the body? */
 
   mo = p_spawn_mobj(mobj->x, mobj->y, mobj->subsector->sector->floorheight,
-                   MT_TFOG);
+                    MT_TFOG);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   /* initiate teleport sound */
@@ -485,6 +455,80 @@ void P_NightmareRespawn(mobj_t *mobj)
 }
 
 /****************************************************************************
+ * Name: p_check_missile_spawn
+ *
+ * Description:
+ *  Moves the missile forward a bit and possibly explodes it right there.
+ *
+ ****************************************************************************/
+
+static void p_check_missile_spawn(mobj_t *th)
+{
+  th->tics -= p_random() & 3;
+  if (th->tics < 1) th->tics = 1;
+
+  /* move a little forward so an angle can be computed if it immediately
+   * explodes
+   */
+
+  th->x += (th->momx >> 1);
+  th->y += (th->momy >> 1);
+  th->z += (th->momz >> 1);
+
+  if (!p_try_move(th, th->x, th->y)) p_explode_missile(th);
+}
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/****************************************************************************
+ * Name: p_set_mobj_state
+ *
+ * Description:
+ *  Returns true if the mobj is still present.
+ *
+ ****************************************************************************/
+
+boolean p_set_mobj_state(mobj_t *mobj, statenum_t state)
+{
+  state_t *st;
+  int cycle_counter = 0;
+
+  do
+    {
+      if (state == S_NULL)
+        {
+          mobj->state = (state_t *)S_NULL;
+          p_remove_mobj(mobj);
+          return false;
+        }
+
+      st = &states[state];
+      mobj->state = st;
+      mobj->tics = st->tics;
+      mobj->sprite = st->sprite;
+      mobj->frame = st->frame;
+
+      /* Modified handling.
+       * Call action functions when the state is set
+       */
+
+      if (st->action.acp1) st->action.acp1(mobj);
+
+      state = st->nextstate;
+
+      if (cycle_counter++ > MOBJ_CYCLE_LIMIT)
+        {
+          i_error("p_set_mobj_state: Infinite state cycle detected!");
+        }
+    }
+  while (!mobj->tics);
+
+  return true;
+}
+
+/****************************************************************************
  * Name: p_mobj_thinker
  ****************************************************************************/
 
@@ -494,7 +538,7 @@ void p_mobj_thinker(mobj_t *mobj)
 
   if (mobj->momx || mobj->momy || (mobj->flags & MF_SKULLFLY))
     {
-      P_XYMovement(mobj);
+      p_xy_movement(mobj);
 
       /* FIXME: decent NOP/NULL/Nil function pointer please. */
 
@@ -504,7 +548,7 @@ void p_mobj_thinker(mobj_t *mobj)
 
   if ((mobj->z != mobj->floorz) || mobj->momz)
     {
-      P_ZMovement(mobj);
+      p_z_movement(mobj);
 
       /* FIXME: decent NOP/NULL/Nil function pointer please. */
 
@@ -521,8 +565,12 @@ void p_mobj_thinker(mobj_t *mobj)
       /* you can cycle through multiple states in a tic */
 
       if (!mobj->tics)
-        if (!p_set_mobj_state(mobj, mobj->state->nextstate))
-          return; /* freed itself */
+        {
+          if (!p_set_mobj_state(mobj, mobj->state->nextstate))
+            {
+              return; /* freed itself */
+            }
+        }
     }
   else
     {
@@ -540,7 +588,7 @@ void p_mobj_thinker(mobj_t *mobj)
 
       if (p_random() > 4) return;
 
-      P_NightmareRespawn(mobj);
+      p_nightmare_respawn(mobj);
     }
 }
 
@@ -617,12 +665,16 @@ void p_remove_mobj(mobj_t *mobj)
       iquehead = (iquehead + 1) & (ITEMQUESIZE - 1);
 
       /* lose one off the end? */
-      if (iquehead == iquetail) iquetail = (iquetail + 1) & (ITEMQUESIZE - 1);
+
+      if (iquehead == iquetail)
+        {
+          iquetail = (iquetail + 1) & (ITEMQUESIZE - 1);
+        }
     }
 
   /* unlink from sector and block lists */
 
-  P_UnsetThingPosition(mobj);
+  p_unset_thing_position(mobj);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   /* stop any playing sound */
@@ -766,14 +818,17 @@ void p_spawn_player(mapthing_t *mthing)
   /* give all cards in death match mode */
 
   if (deathmatch)
-    for (i = 0; i < NUMCARDS; i++)
-      p->cards[i] = true;
+    {
+      for (i = 0; i < NUMCARDS; i++)
+        {
+          p->cards[i] = true;
+        }
+    }
 
   if (mthing->type - 1 == consoleplayer)
     {
-
       st_start(); /* wake up the status bar */
-      HU_Start(); /* wake up the heads up text */
+      hu_start(); /* wake up the heads up text */
     }
 }
 
@@ -803,6 +858,7 @@ void p_spawn_map_thing(mapthing_t *mthing)
           memcpy(deathmatch_p, mthing, sizeof(*mthing));
           deathmatch_p++;
         }
+
       return;
     }
 
@@ -833,24 +889,32 @@ void p_spawn_map_thing(mapthing_t *mthing)
   if (!netgame && (mthing->options & 16)) return;
 
   if (gameskill == sk_baby)
-    bit = 1;
+    {
+      bit = 1;
+    }
   else if (gameskill == sk_nightmare)
-    bit = 4;
+    {
+      bit = 4;
+    }
   else
-    /* avoid undefined behavior (left shift by negative value and rhs too big)
-     * by accurately emulating what doom.exe did: reduce mod 32.
-     * For more details check:
-     * https://github.com/chocolate-doom/chocolate-doom/issues/1677
-     */
+    {
+      /* avoid undefined behavior (left shift by negative value and rhs too
+       * big) by accurately emulating what doom.exe did: reduce mod 32. For
+       * more details check:
+       * https://github.com/chocolate-doom/chocolate-doom/issues/1677
+       */
 
-    bit = (int)(1U << ((gameskill - 1) & 0x1F));
+      bit = (int)(1U << ((gameskill - 1) & 0x1f));
+    }
 
   if (!(mthing->options & bit)) return;
 
   /* find which type to spawn */
 
   for (i = 0; i < NUMMOBJTYPES; i++)
-    if (mthing->type == mobjinfo[i].doomednum) break;
+    {
+      if (mthing->type == mobjinfo[i].doomednum) break;
+    }
 
   if (i == NUMMOBJTYPES)
     i_error("p_spawn_map_thing: Unknown type %i at (%i, %i)", mthing->type,
@@ -891,10 +955,10 @@ void p_spawn_map_thing(mapthing_t *mthing)
 /* GAME SPAWN FUNCTIONS */
 
 /****************************************************************************
- * Name: P_SpawnPuff
+ * Name: p_spawn_puff
  ****************************************************************************/
 
-void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
+void p_spawn_puff(fixed_t x, fixed_t y, fixed_t z)
 {
   mobj_t *th;
 
@@ -906,15 +970,16 @@ void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
 
   if (th->tics < 1) th->tics = 1;
 
-  // don't make punches spark on the wall
+  /* don't make punches spark on the wall */
+
   if (attackrange == MELEERANGE) p_set_mobj_state(th, S_PUFF3);
 }
 
 /****************************************************************************
- * Name: P_SpawnBlood
+ * Name: p_spawn_blood
  ****************************************************************************/
 
-void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage)
+void p_spawn_blood(fixed_t x, fixed_t y, fixed_t z, int damage)
 {
   mobj_t *th;
 
@@ -932,31 +997,7 @@ void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage)
 }
 
 /****************************************************************************
- * Name: P_CheckMissileSpawn
- *
- * Description:
- *  Moves the missile forward a bit and possibly explodes it right there.
- *
- ****************************************************************************/
-
-void P_CheckMissileSpawn(mobj_t *th)
-{
-  th->tics -= p_random() & 3;
-  if (th->tics < 1) th->tics = 1;
-
-  /* move a little forward so an angle can be computed if it immediately
-   * explodes
-   */
-
-  th->x += (th->momx >> 1);
-  th->y += (th->momy >> 1);
-  th->z += (th->momz >> 1);
-
-  if (!P_TryMove(th, th->x, th->y)) P_ExplodeMissile(th);
-}
-
-/****************************************************************************
- * Name: r_clip_solid_wall_segment
+ * Name: p_subst_null_mobj
  *
  * Description:
  *  Certain functions assume that a mobj_t pointer is non-NULL,
@@ -967,7 +1008,7 @@ void P_CheckMissileSpawn(mobj_t *th)
  *
  ****************************************************************************/
 
-mobj_t *P_SubstNullMobj(mobj_t *mobj)
+mobj_t *p_subst_null_mobj(mobj_t *mobj)
 {
   if (mobj == NULL)
     {
@@ -985,16 +1026,17 @@ mobj_t *P_SubstNullMobj(mobj_t *mobj)
 }
 
 /****************************************************************************
- * Name: P_SpawnMissile
+ * Name: p_spawn_missile
  ****************************************************************************/
 
-mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
+mobj_t *p_spawn_missile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 {
   mobj_t *th;
   angle_t an;
   int dist;
 
-  th = p_spawn_mobj(source->x, source->y, source->z + 4 * 8 * FRACUNIT, type);
+  th = p_spawn_mobj(source->x, source->y,
+          source->z + 4 * 8 * FRACUNIT, type);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   if (th->info->seesound) s_start_sound(th, th->info->seesound);
@@ -1012,13 +1054,13 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
   th->momx = fixed_mul(th->info->speed, finecosine[an]);
   th->momy = fixed_mul(th->info->speed, finesine[an]);
 
-  dist = P_AproxDistance(dest->x - source->x, dest->y - source->y);
+  dist = p_approx_distance(dest->x - source->x, dest->y - source->y);
   dist = dist / th->info->speed;
 
   if (dist < 1) dist = 1;
 
   th->momz = (dest->z - source->z) / dist;
-  P_CheckMissileSpawn(th);
+  p_check_missile_spawn(th);
 
   return th;
 }
@@ -1080,5 +1122,5 @@ void p_spawn_player_missile(mobj_t *source, mobjtype_t type)
   th->momy = fixed_mul(th->info->speed, finesine[an >> ANGLETOFINESHIFT]);
   th->momz = fixed_mul(th->info->speed, slope);
 
-  P_CheckMissileSpawn(th);
+  p_check_missile_spawn(th);
 }

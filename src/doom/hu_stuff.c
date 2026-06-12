@@ -190,7 +190,7 @@ void hu_init(void)
 
 void HU_Stop(void) { headsupactive = false; }
 
-void HU_Start(void)
+void hu_start(void)
 {
 
   int i;

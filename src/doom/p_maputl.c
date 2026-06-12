@@ -33,11 +33,11 @@
 #include "r_state.h"
 
 //
-// P_AproxDistance
+// p_approx_distance
 // Gives an estimation of distance (not exact)
 //
 
-fixed_t P_AproxDistance(fixed_t dx, fixed_t dy)
+fixed_t p_approx_distance(fixed_t dx, fixed_t dy)
 {
   dx = abs(dx);
   dy = abs(dy);
@@ -286,13 +286,13 @@ void p_line_opening(line_t *p_linedef)
 //
 
 //
-// P_UnsetThingPosition
+// p_unset_thing_position
 // Unlinks a thing from block map and sectors.
 // On each position change, BLOCKMAP and other
 // lookups maintaining lists ot things inside
 // these structures need to be updated.
 //
-void P_UnsetThingPosition(mobj_t *thing)
+void p_unset_thing_position(mobj_t *thing)
 {
   int blockx;
   int blocky;
