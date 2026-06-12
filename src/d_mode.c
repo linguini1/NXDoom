@@ -1,53 +1,98 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// DESCRIPTION:
-//   Functions and definitions relating to the game type and operational
-//   mode.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/d_mode.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *   Functions and definitions relating to the game type and operational
+ *   mode.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include "d_mode.h"
 #include "doomtype.h"
 
-// Valid game mode/mission combinations, with the number of
-// episodes/maps for each.
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
 
-static struct
+/* Valid game mode/mission combinations, with the number of
+ * episodes/maps for each.
+ */
+
+struct modemission
 {
   gamemission_t mission;
   game_mode_t mode;
   int episode;
   int map;
-} valid_modes[] = {
-    {pack_chex, retail, 1, 5},      {doom, shareware, 1, 9},
-    {doom, registered, 3, 9},       {doom, retail, 4, 9},
-    {doom2, commercial, 1, 32},     {pack_tnt, commercial, 1, 32},
-    {pack_plut, commercial, 1, 32}, {pack_hacx, commercial, 1, 32},
-    {heretic, shareware, 1, 9},     {heretic, registered, 3, 9},
-    {heretic, retail, 5, 9},        {hexen, commercial, 1, 60},
-    {strife, commercial, 1, 34},
 };
 
-// Check that a gamemode+gamemission received over the network is valid.
+struct gameversion
+{
+  gamemission_t mission;
+  game_version_t version;
+};
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+static struct modemission g_valid_modes[] =
+{
+  {.mission = doom, .mode = shareware, .episode = 1, .map = 9},
+  {.mission = doom, .mode = registered, .episode = 3, .map = 9},
+  {.mission = doom, .mode = retail, .episode = 4, .map = 9},
+  {.mission = doom2, .mode = commercial, .episode = 1, .map = 32},
+};
+
+/* Table of valid versions */
+
+static struct gameversion g_valid_versions[] =
+{
+  {.mission = doom, .version = exe_doom_1_2},
+  {.mission = doom, .version = exe_doom_1_5},
+  {.mission = doom, .version = exe_doom_1_666},
+  {.mission = doom, .version = exe_doom_1_7},
+  {.mission = doom, .version = exe_doom_1_8},
+  {.mission = doom, .version = exe_doom_1_9},
+  {.mission = doom, .version = exe_hacx},
+  {.mission = doom, .version = exe_ultimate},
+  {.mission = doom, .version = exe_final},
+  {.mission = doom, .version = exe_final2},
+  {.mission = doom, .version = exe_chex},
+};
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/* Check that a gamemode + gamemission received over the network is valid. */
 
 boolean d_valid_game_mode(gamemission_t mission, game_mode_t mode)
 {
   int i;
 
-  for (i = 0; i < arrlen(valid_modes); ++i)
+  for (i = 0; i < arrlen(g_valid_modes); ++i)
     {
-      if (valid_modes[i].mode == mode && valid_modes[i].mission == mission)
+      if (g_valid_modes[i].mode == mode &&
+          g_valid_modes[i].mission == mission)
         {
           return true;
         }
@@ -56,12 +101,12 @@ boolean d_valid_game_mode(gamemission_t mission, game_mode_t mode)
   return false;
 }
 
-boolean d_valid_episode_map(gamemission_t mission, game_mode_t mode, int episode,
-                          int map)
+boolean d_valid_episode_map(gamemission_t mission, game_mode_t mode,
+                            int episode, int map)
 {
   int i;
 
-  // Hacks for Heretic secret episodes
+  /* Hacks for Heretic secret episodes */
 
   if (mission == heretic)
     {
@@ -75,25 +120,26 @@ boolean d_valid_episode_map(gamemission_t mission, game_mode_t mode, int episode
         }
     }
 
-  // Find the table entry for this mission/mode combination.
+  /* Find the table entry for this mission/mode combination. */
 
-  for (i = 0; i < arrlen(valid_modes); ++i)
+  for (i = 0; i < arrlen(g_valid_modes); ++i)
     {
-      if (mission == valid_modes[i].mission && mode == valid_modes[i].mode)
+      if (mission == g_valid_modes[i].mission &&
+          mode == g_valid_modes[i].mode)
         {
-          return episode >= 1 && episode <= valid_modes[i].episode &&
-                 map >= 1 && map <= valid_modes[i].map;
+          return episode >= 1 && episode <= g_valid_modes[i].episode &&
+                 map >= 1 && map <= g_valid_modes[i].map;
         }
     }
 
-  // Unknown mode/mission combination
+  /* Unknown mode/mission combination */
 
   return false;
 }
 
-// Get the number of valid episodes for the specified mission/mode.
+/* Get the number of valid episodes for the specified mission/mode. */
 
-int D_GetNumEpisodes(gamemission_t mission, game_mode_t mode)
+int d_get_num_episodes(gamemission_t mission, game_mode_t mode)
 {
   int episode;
 
@@ -107,28 +153,11 @@ int D_GetNumEpisodes(gamemission_t mission, game_mode_t mode)
   return episode - 1;
 }
 
-// Table of valid versions
-
-static struct
-{
-  gamemission_t mission;
-  game_version_t version;
-} valid_versions[] = {
-    {doom, exe_doom_1_2},     {doom, exe_doom_1_5},
-    {doom, exe_doom_1_666},   {doom, exe_doom_1_7},
-    {doom, exe_doom_1_8},     {doom, exe_doom_1_9},
-    {doom, exe_hacx},         {doom, exe_ultimate},
-    {doom, exe_final},        {doom, exe_final2},
-    {doom, exe_chex},         {heretic, exe_heretic_1_3},
-    {hexen, exe_hexen_1_1},   {hexen, exe_hexen_1_1r2},
-    {strife, exe_strife_1_2}, {strife, exe_strife_1_31},
-};
-
 boolean d_valid_game_version(gamemission_t mission, game_version_t version)
 {
   int i;
 
-  // All Doom variants can use the Doom versions.
+  /* All Doom variants can use the Doom versions. */
 
   if (mission == doom2 || mission == pack_plut || mission == pack_tnt ||
       mission == pack_hacx || mission == pack_chex)
@@ -136,10 +165,10 @@ boolean d_valid_game_version(gamemission_t mission, game_version_t version)
       mission = doom;
     }
 
-  for (i = 0; i < arrlen(valid_versions); ++i)
+  for (i = 0; i < arrlen(g_valid_versions); ++i)
     {
-      if (valid_versions[i].mission == mission &&
-          valid_versions[i].version == version)
+      if (g_valid_versions[i].mission == mission &&
+          g_valid_versions[i].version == version)
         {
           return true;
         }
@@ -148,7 +177,7 @@ boolean d_valid_game_version(gamemission_t mission, game_version_t version)
   return false;
 }
 
-// Does this mission type use ExMy form, rather than MAPxy form?
+/* Does this mission type use ExMy form, rather than MAPxy form? */
 
 boolean d_is_episode_map(gamemission_t mission)
 {
