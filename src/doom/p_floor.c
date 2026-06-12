@@ -58,11 +58,11 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
             {
               lastpos = sector->floorheight;
               sector->floorheight = dest;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
               if (flag == true)
                 {
                   sector->floorheight = lastpos;
-                  P_ChangeSector(sector, crush);
+                  p_change_sector(sector, crush);
                   // return crushed;
                 }
               return pastdest;
@@ -71,11 +71,11 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
             {
               lastpos = sector->floorheight;
               sector->floorheight -= speed;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
               if (flag == true)
                 {
                   sector->floorheight = lastpos;
-                  P_ChangeSector(sector, crush);
+                  p_change_sector(sector, crush);
                   return crushed;
                 }
             }
@@ -87,11 +87,11 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
             {
               lastpos = sector->floorheight;
               sector->floorheight = dest;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
               if (flag == true)
                 {
                   sector->floorheight = lastpos;
-                  P_ChangeSector(sector, crush);
+                  p_change_sector(sector, crush);
                   // return crushed;
                 }
               return pastdest;
@@ -101,12 +101,12 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
               // COULD GET CRUSHED
               lastpos = sector->floorheight;
               sector->floorheight += speed;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
               if (flag == true)
                 {
                   if (crush == true) return crushed;
                   sector->floorheight = lastpos;
-                  P_ChangeSector(sector, crush);
+                  p_change_sector(sector, crush);
                   return crushed;
                 }
             }
@@ -124,12 +124,12 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
             {
               lastpos = sector->ceilingheight;
               sector->ceilingheight = dest;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
 
               if (flag == true)
                 {
                   sector->ceilingheight = lastpos;
-                  P_ChangeSector(sector, crush);
+                  p_change_sector(sector, crush);
                   // return crushed;
                 }
               return pastdest;
@@ -139,13 +139,13 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
               // COULD GET CRUSHED
               lastpos = sector->ceilingheight;
               sector->ceilingheight -= speed;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
 
               if (flag == true)
                 {
                   if (crush == true) return crushed;
                   sector->ceilingheight = lastpos;
-                  P_ChangeSector(sector, crush);
+                  p_change_sector(sector, crush);
                   return crushed;
                 }
             }
@@ -157,11 +157,11 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
             {
               lastpos = sector->ceilingheight;
               sector->ceilingheight = dest;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
               if (flag == true)
                 {
                   sector->ceilingheight = lastpos;
-                  P_ChangeSector(sector, crush);
+                  p_change_sector(sector, crush);
                   // return crushed;
                 }
               return pastdest;
@@ -170,13 +170,13 @@ result_e t_move_plane(sector_t *sector, fixed_t speed, fixed_t dest,
             {
               lastpos = sector->ceilingheight;
               sector->ceilingheight += speed;
-              flag = P_ChangeSector(sector, crush);
+              flag = p_change_sector(sector, crush);
 // UNUSED
 #if 0
 		if (flag == true)
 		{
 		    sector->ceilingheight = lastpos;
-		    P_ChangeSector(sector,crush);
+		    p_change_sector(sector,crush);
 		    return crushed;
 		}
 #endif

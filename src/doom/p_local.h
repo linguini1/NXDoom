@@ -203,7 +203,7 @@ void p_slide_move(mobj_t *mo);
 boolean p_check_sight(mobj_t *t1, mobj_t *t2);
 void p_use_lines(player_t *player);
 
-boolean P_ChangeSector(sector_t *sector, boolean crunch);
+boolean p_change_sector(sector_t *sector, boolean crunch);
 
 extern mobj_t *linetarget; // who got hit (or NULL)
 
@@ -218,7 +218,7 @@ fixed_t p_aim_line_attack(mobj_t *t1, angle_t angle, fixed_t distance);
 void p_line_attack(mobj_t *t1, angle_t angle, fixed_t distance, fixed_t slope,
                   int damage);
 
-void P_RadiusAttack(mobj_t *spot, mobj_t *source, int damage);
+void p_radius_attack(mobj_t *spot, mobj_t *source, int damage);
 
 //
 // P_SETUP

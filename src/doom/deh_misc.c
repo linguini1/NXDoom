@@ -126,7 +126,7 @@ int deh_bfg_cells_per_shot = DEH_DEFAULT_BFG_CELLS_PER_SHOT;
 // imps.  The value of this in dehacked patches is weird - '202' means
 // off, while '221' means on.
 //
-// See PIT_CheckThing in p_map.c
+// See pit_check_thing in p_map.c
 
 int deh_species_infighting = DEH_DEFAULT_SPECIES_INFIGHTING;
 
