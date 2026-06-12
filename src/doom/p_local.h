@@ -61,21 +61,21 @@
 // both the head and tail of the thinker list
 extern thinker_t thinkercap;
 
-void p_initThinkers(void);
-void P_AddThinker(thinker_t *thinker);
-void P_RemoveThinker(thinker_t *thinker);
+void p_init_thinkers(void);
+void p_add_thinker(thinker_t *thinker);
+void p_remove_thinker(thinker_t *thinker);
 
 //
 // P_PSPR
 //
 void P_SetupPsprites(player_t *curplayer);
-void P_MovePsprites(player_t *curplayer);
+void p_move_psprites(player_t *curplayer);
 void P_DropWeapon(player_t *player);
 
 //
 // P_USER
 //
-void P_PlayerThink(player_t *player);
+void p_player_think(player_t *player);
 
 //
 // P_MOBJ
@@ -97,7 +97,7 @@ mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type);
 
 void p_remove_mobj(mobj_t *th);
 mobj_t *P_SubstNullMobj(mobj_t *th);
-boolean P_SetMobjState(mobj_t *mobj, statenum_t state);
+boolean p_set_mobj_state(mobj_t *mobj, statenum_t state);
 void p_mobj_thinker(mobj_t *mobj);
 
 void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z);
@@ -203,7 +203,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y);
 boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y);
 void P_SlideMove(mobj_t *mo);
 boolean P_CheckSight(mobj_t *t1, mobj_t *t2);
-void P_UseLines(player_t *player);
+void p_use_lines(player_t *player);
 
 boolean P_ChangeSector(sector_t *sector, boolean crunch);
 

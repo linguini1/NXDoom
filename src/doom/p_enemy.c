@@ -565,7 +565,7 @@ seeyou:
     }
 #endif
 
-  P_SetMobjState(actor, actor->info->seestate);
+  p_set_mobj_state(actor, actor->info->seestate);
 }
 
 //
@@ -608,7 +608,7 @@ void A_Chase(mobj_t *actor)
       // look for a new target
       if (P_LookForPlayers(actor, true)) return; // got a new target
 
-      P_SetMobjState(actor, actor->info->spawnstate);
+      p_set_mobj_state(actor, actor->info->spawnstate);
       return;
     }
 
@@ -628,7 +628,7 @@ void A_Chase(mobj_t *actor)
         s_start_sound(actor, actor->info->attacksound);
 #endif
 
-      P_SetMobjState(actor, actor->info->meleestate);
+      p_set_mobj_state(actor, actor->info->meleestate);
       return;
     }
 
@@ -642,7 +642,7 @@ void A_Chase(mobj_t *actor)
 
       if (!P_CheckMissileRange(actor)) goto nomissile;
 
-      P_SetMobjState(actor, actor->info->missilestate);
+      p_set_mobj_state(actor, actor->info->missilestate);
       actor->flags |= MF_JUSTATTACKED;
       return;
     }
@@ -764,7 +764,7 @@ void A_CPosRefire(mobj_t *actor)
   if (!actor->target || actor->target->health <= 0 ||
       !P_CheckSight(actor, actor->target))
     {
-      P_SetMobjState(actor, actor->info->seestate);
+      p_set_mobj_state(actor, actor->info->seestate);
     }
 }
 
@@ -778,7 +778,7 @@ void A_SpidRefire(mobj_t *actor)
   if (!actor->target || actor->target->health <= 0 ||
       !P_CheckSight(actor, actor->target))
     {
-      P_SetMobjState(actor, actor->info->seestate);
+      p_set_mobj_state(actor, actor->info->seestate);
     }
 }
 
@@ -1073,13 +1073,13 @@ void A_VileChase(mobj_t *actor)
                   A_FaceTarget(actor);
                   actor->target = temp;
 
-                  P_SetMobjState(actor, S_VILE_HEAL1);
+                  p_set_mobj_state(actor, S_VILE_HEAL1);
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
                   s_start_sound(corpsehit, sfx_slop);
 #endif
                   info = corpsehit->info;
 
-                  P_SetMobjState(corpsehit, info->raisestate);
+                  p_set_mobj_state(corpsehit, info->raisestate);
                   corpsehit->height <<= 2;
                   corpsehit->flags = info->flags;
                   corpsehit->health = info->spawnhealth;
@@ -1708,7 +1708,7 @@ void A_BrainScream(mobj_t *mo)
       th = p_spawn_mobj(x, y, z, MT_ROCKET);
       th->momz = p_random() * 512;
 
-      P_SetMobjState(th, S_BRAINEXPLODE1);
+      p_set_mobj_state(th, S_BRAINEXPLODE1);
 
       th->tics -= p_random() & 7;
       if (th->tics < 1) th->tics = 1;
@@ -1732,7 +1732,7 @@ void A_BrainExplode(mobj_t *mo)
   th = p_spawn_mobj(x, y, z, MT_ROCKET);
   th->momz = p_random() * 512;
 
-  P_SetMobjState(th, S_BRAINEXPLODE1);
+  p_set_mobj_state(th, S_BRAINEXPLODE1);
 
   th->tics -= p_random() & 7;
   if (th->tics < 1) th->tics = 1;
@@ -1830,7 +1830,7 @@ void A_SpawnFly(mobj_t *mo)
 
   newmobj = p_spawn_mobj(targ->x, targ->y, targ->z, type);
   if (P_LookForPlayers(newmobj, true))
-    P_SetMobjState(newmobj, newmobj->info->seestate);
+    p_set_mobj_state(newmobj, newmobj->info->seestate);
 
   // telefrag anything in this spot
   P_TeleportMove(newmobj, newmobj->x, newmobj->y);

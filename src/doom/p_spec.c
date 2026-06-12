@@ -938,11 +938,11 @@ void P_ShootSpecialLine(mobj_t *thing, line_t *line)
 }
 
 //
-// P_PlayerInSpecialSector
+// p_player_in_special_sector
 // Called every tic frame
 //  that the player origin is in a special sector
 //
-void P_PlayerInSpecialSector(player_t *player)
+void p_player_in_special_sector(player_t *player)
 {
   sector_t *sector;
 
@@ -992,7 +992,7 @@ void P_PlayerInSpecialSector(player_t *player)
       break;
 
     default:
-      i_error("P_PlayerInSpecialSector: "
+      i_error("p_player_in_special_sector: "
               "unknown special %i",
               sector->special);
       break;
@@ -1235,7 +1235,7 @@ int EV_DoDonut(line_t *line)
 
           //	Spawn rising slime
           floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
-          P_AddThinker(&floor->thinker);
+          p_add_thinker(&floor->thinker);
           s2->specialdata = floor;
           floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
           floor->type = donutRaise;
@@ -1249,7 +1249,7 @@ int EV_DoDonut(line_t *line)
 
           //	Spawn lowering donut-hole
           floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
-          P_AddThinker(&floor->thinker);
+          p_add_thinker(&floor->thinker);
           s1->specialdata = floor;
           floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
           floor->type = lowerFloor;

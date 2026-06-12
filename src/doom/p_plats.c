@@ -158,7 +158,7 @@ int EV_DoPlat(line_t *line, plattype_e type, int amount)
       // Find lowest & highest floors around sector
       rtn = 1;
       plat = z_malloc(sizeof(*plat), PU_LEVSPEC, 0);
-      P_AddThinker(&plat->thinker);
+      p_add_thinker(&plat->thinker);
 
       plat->type = type;
       plat->sector = sec;
@@ -293,7 +293,7 @@ void P_RemoveActivePlat(plat_t *plat)
     if (plat == activeplats[i])
       {
         (activeplats[i])->sector->specialdata = NULL;
-        P_RemoveThinker(&(activeplats[i])->thinker);
+        p_remove_thinker(&(activeplats[i])->thinker);
         activeplats[i] = NULL;
 
         return;

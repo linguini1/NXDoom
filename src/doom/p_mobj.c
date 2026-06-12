@@ -44,7 +44,7 @@
  ****************************************************************************/
 
 /* Use a heuristic approach to detect infinite state cycles: Count the number
- * of times the loop in P_SetMobjState() executes and exit with an error once
+ * of times the loop in p_set_mobj_state() executes and exit with an error once
  * an arbitrary very large limit is reached.
  */
 
@@ -72,14 +72,14 @@ void g_player_reborn(int player);
 void P_SpawnMapThing(mapthing_t *mthing);
 
 /****************************************************************************
- * Name: P_SetMobjState
+ * Name: p_set_mobj_state
  *
  * Description:
  *  Returns true if the mobj is still present.
  *
  ****************************************************************************/
 
-boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
+boolean p_set_mobj_state(mobj_t *mobj, statenum_t state)
 {
   state_t *st;
   int cycle_counter = 0;
@@ -109,7 +109,7 @@ boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
 
       if (cycle_counter++ > MOBJ_CYCLE_LIMIT)
         {
-          i_error("P_SetMobjState: Infinite state cycle detected!");
+          i_error("p_set_mobj_state: Infinite state cycle detected!");
         }
     }
   while (!mobj->tics);
@@ -125,7 +125,7 @@ void P_ExplodeMissile(mobj_t *mo)
 {
   mo->momx = mo->momy = mo->momz = 0;
 
-  P_SetMobjState(mo, mobjinfo[mo->type].deathstate);
+  p_set_mobj_state(mo, mobjinfo[mo->type].deathstate);
 
   mo->tics -= p_random() & 3;
 
@@ -158,7 +158,7 @@ void P_XYMovement(mobj_t *mo)
           mo->flags &= ~MF_SKULLFLY;
           mo->momx = mo->momy = mo->momz = 0;
 
-          P_SetMobjState(mo, mo->info->spawnstate);
+          p_set_mobj_state(mo, mo->info->spawnstate);
         }
       return;
     }
@@ -264,7 +264,7 @@ void P_XYMovement(mobj_t *mo)
 
       if (player &&
           (unsigned)((player->mo->state - states) - S_PLAY_RUN1) < 4)
-        P_SetMobjState(player->mo, S_PLAY);
+        p_set_mobj_state(player->mo, S_PLAY);
 
       mo->momx = 0;
       mo->momy = 0;
@@ -521,7 +521,7 @@ void p_mobj_thinker(mobj_t *mobj)
       /* you can cycle through multiple states in a tic */
 
       if (!mobj->tics)
-        if (!P_SetMobjState(mobj, mobj->state->nextstate))
+        if (!p_set_mobj_state(mobj, mobj->state->nextstate))
           return; /* freed itself */
     }
   else
@@ -571,7 +571,7 @@ mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 
   mobj->lastlook = p_random() % MAXPLAYERS;
 
-  /* do not set the state with P_SetMobjState,
+  /* do not set the state with p_set_mobj_state,
    * because action routines can not be called yet
    */
 
@@ -598,7 +598,7 @@ mobj_t *p_spawn_mobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 
   mobj->thinker.function.acp1 = (actionf_p1)p_mobj_thinker;
 
-  P_AddThinker(&mobj->thinker);
+  p_add_thinker(&mobj->thinker);
 
   return mobj;
 }
@@ -630,7 +630,7 @@ void p_remove_mobj(mobj_t *mobj)
   s_stop_sound(mobj);
 #endif
 
-  P_RemoveThinker((thinker_t *)mobj); /* free block */
+  p_remove_thinker((thinker_t *)mobj); /* free block */
 }
 
 /****************************************************************************
@@ -907,7 +907,7 @@ void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
   if (th->tics < 1) th->tics = 1;
 
   // don't make punches spark on the wall
-  if (attackrange == MELEERANGE) P_SetMobjState(th, S_PUFF3);
+  if (attackrange == MELEERANGE) p_set_mobj_state(th, S_PUFF3);
 }
 
 /****************************************************************************
@@ -926,9 +926,9 @@ void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage)
   if (th->tics < 1) th->tics = 1;
 
   if (damage <= 12 && damage >= 9)
-    P_SetMobjState(th, S_BLOOD2);
+    p_set_mobj_state(th, S_BLOOD2);
   else if (damage < 9)
-    P_SetMobjState(th, S_BLOOD3);
+    p_set_mobj_state(th, S_BLOOD3);
 }
 
 /****************************************************************************

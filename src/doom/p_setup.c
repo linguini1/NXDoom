@@ -721,7 +721,7 @@ void p_setup_level(int episode, int map, int playermask, skill_t skill)
   z_free_tags(PU_LEVEL, PU_PURGELEVEL - 1);
 
   // UNUSED w_profile ();
-  p_initThinkers();
+  p_init_thinkers();
 
   // if working with a devlopment map, reload it
   w_reload();

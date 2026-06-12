@@ -225,7 +225,7 @@ void P_FireWeapon(player_t *player)
 
   if (!P_CheckAmmo(player)) return;
 
-  P_SetMobjState(player->mo, S_PLAY_ATK1);
+  p_set_mobj_state(player->mo, S_PLAY_ATK1);
   newstate = weaponinfo[player->readyweapon].atkstate;
   P_SetPsprite(player, ps_weapon, newstate);
   P_NoiseAlert(player->mo, player->mo);
@@ -256,7 +256,7 @@ void A_WeaponReady(player_t *player, pspdef_t *psp)
   if (player->mo->state == &states[S_PLAY_ATK1] ||
       player->mo->state == &states[S_PLAY_ATK2])
     {
-      P_SetMobjState(player->mo, S_PLAY);
+      p_set_mobj_state(player->mo, S_PLAY);
     }
 
   if (player->readyweapon == wp_chainsaw && psp->state == &states[S_SAW])
@@ -391,7 +391,7 @@ void A_Raise(player_t *player, pspdef_t *psp)
 //
 void A_GunFlash(player_t *player, pspdef_t *psp)
 {
-  P_SetMobjState(player->mo, S_PLAY_ATK2);
+  p_set_mobj_state(player->mo, S_PLAY_ATK2);
   P_SetPsprite(player, ps_flash, weaponinfo[player->readyweapon].flashstate);
 }
 
@@ -578,7 +578,7 @@ void A_FirePistol(player_t *player, pspdef_t *psp)
   s_start_sound(player->mo, sfx_pistol);
 #endif
 
-  P_SetMobjState(player->mo, S_PLAY_ATK2);
+  p_set_mobj_state(player->mo, S_PLAY_ATK2);
   DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 1);
 
   P_SetPsprite(player, ps_flash, weaponinfo[player->readyweapon].flashstate);
@@ -597,7 +597,7 @@ void A_FireShotgun(player_t *player, pspdef_t *psp)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(player->mo, sfx_shotgn);
 #endif
-  P_SetMobjState(player->mo, S_PLAY_ATK2);
+  p_set_mobj_state(player->mo, S_PLAY_ATK2);
 
   DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 1);
 
@@ -621,7 +621,7 @@ void A_FireShotgun2(player_t *player, pspdef_t *psp)
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
   s_start_sound(player->mo, sfx_dshtgn);
 #endif
-  P_SetMobjState(player->mo, S_PLAY_ATK2);
+  p_set_mobj_state(player->mo, S_PLAY_ATK2);
 
   DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 2);
 
@@ -650,7 +650,7 @@ void A_FireCGun(player_t *player, pspdef_t *psp)
 
   if (!player->ammo[weaponinfo[player->readyweapon].ammo]) return;
 
-  P_SetMobjState(player->mo, S_PLAY_ATK2);
+  p_set_mobj_state(player->mo, S_PLAY_ATK2);
   DecreaseAmmo(player, weaponinfo[player->readyweapon].ammo, 1);
 
   P_SetPsprite(player, ps_flash,
@@ -732,10 +732,10 @@ void P_SetupPsprites(player_t *player)
 }
 
 //
-// P_MovePsprites
+// p_move_psprites
 // Called every tic by player thinking routine.
 //
-void P_MovePsprites(player_t *player)
+void p_move_psprites(player_t *player)
 {
   int i;
   pspdef_t *psp;

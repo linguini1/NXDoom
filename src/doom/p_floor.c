@@ -228,7 +228,7 @@ void T_MoveFloor(floormove_t *floor)
               break;
             }
         }
-      P_RemoveThinker(&floor->thinker);
+      p_remove_thinker(&floor->thinker);
 
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
       s_start_sound(&floor->sector->soundorg, sfx_pstop);
@@ -259,7 +259,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
       // new floor thinker
       rtn = 1;
       floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
-      P_AddThinker(&floor->thinker);
+      p_add_thinker(&floor->thinker);
       sec->specialdata = floor;
       floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
       floor->type = floortype;
@@ -444,7 +444,7 @@ int EV_BuildStairs(line_t *line, stair_e type)
       // new floor thinker
       rtn = 1;
       floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
-      P_AddThinker(&floor->thinker);
+      p_add_thinker(&floor->thinker);
       sec->specialdata = floor;
       floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
       floor->direction = 1;
@@ -500,7 +500,7 @@ int EV_BuildStairs(line_t *line, stair_e type)
               secnum = newsecnum;
               floor = z_malloc(sizeof(*floor), PU_LEVSPEC, 0);
 
-              P_AddThinker(&floor->thinker);
+              p_add_thinker(&floor->thinker);
 
               sec->specialdata = floor;
               floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;

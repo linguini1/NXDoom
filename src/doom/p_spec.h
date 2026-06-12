@@ -47,7 +47,7 @@ void P_ShootSpecialLine(mobj_t *thing, line_t *line);
 
 void P_CrossSpecialLine(int linenum, int side, mobj_t *thing);
 
-void P_PlayerInSpecialSector(player_t *player);
+void p_player_in_special_sector(player_t *player);
 
 int twoSided(int sector, int line);
 

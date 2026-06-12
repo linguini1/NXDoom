@@ -31,7 +31,7 @@
 #include "doomtype.h"
 
 /****************************************************************************
- * Public Functions
+ * Public Function Prototypes
  ****************************************************************************/
 
 extern void w_checksum(sha1_digest_t digest);

@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/z_zone.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Zone Memory Allocation. Neat.
- */
+ *  Zone Memory Allocation. Neat.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -32,8 +37,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-/*
- * ZONE MEMORY ALLOCATION
+/* ZONE MEMORY ALLOCATION
  *
  * There is never any space between memblocks,
  *  and there will never be two contiguous free memblocks.
@@ -65,13 +69,14 @@ typedef struct memblock_s
 typedef struct
 {
   /* total bytes malloced, including header */
+
   int size;
 
   /* start / end cap for linked list */
+
   memblock_t blocklist;
 
   memblock_t *rover;
-
 } memzone_t;
 
 /****************************************************************************
@@ -90,8 +95,8 @@ static boolean scan_on_free;
  * Name: scan_for_block
  *
  * Description:
- *  Scan the zone heap for pointers within the specified range, and warn about
- *  any remaining pointers.
+ *  Scan the zone heap for pointers within the specified range, and warn
+ *  about any remaining pointers.
  *
  ****************************************************************************/
 
@@ -99,7 +104,9 @@ static void scan_for_block(void *start, void *end)
 {
   memblock_t *block;
   void **mem;
-  int i, len, tag;
+  int i;
+  int len;
+  int tag;
 
   block = mainzone->blocklist.next;
 
@@ -109,8 +116,10 @@ static void scan_for_block(void *start, void *end)
 
       if (tag == PU_STATIC || tag == PU_LEVEL || tag == PU_LEVSPEC)
         {
-          // Scan for pointers on the assumption that pointers are aligned
-          // on word boundaries (word size depending on pointer size):
+          /* Scan for pointers on the assumption that pointers are aligned
+           * on word boundaries (word size depending on pointer size):
+           */
+
           mem = (void **)((byte *)block + sizeof(memblock_t));
           len = (block->size - sizeof(memblock_t)) / sizeof(void *);
 
@@ -208,6 +217,7 @@ void z_free(void *ptr)
     {
       memset(ptr, 0, block->size - sizeof(memblock_t));
     }
+
   if (scan_on_free)
     {
       scan_for_block(ptr, (byte *)ptr + block->size - sizeof(memblock_t));
@@ -397,7 +407,7 @@ void z_dump_heap(int lowtag, int hightag)
 
   printf("tag range: %i to %i\n", lowtag, hightag);
 
-  for (block = mainzone->blocklist.next;; block = block->next)
+  for (block = mainzone->blocklist.next; ; block = block->next)
     {
       if (block->tag >= lowtag && block->tag <= hightag)
         printf("block:%p    size:%7i    user:%p    tag:%3i\n", block,
@@ -429,7 +439,7 @@ void z_file_dump_heap(FILE *f)
 
   fprintf(f, "zone size: %i  location: %p\n", mainzone->size, mainzone);
 
-  for (block = mainzone->blocklist.next;; block = block->next)
+  for (block = mainzone->blocklist.next; ; block = block->next)
     {
       fprintf(f, "block:%p    size:%7i    user:%p    tag:%3i\n", block,
               block->size, block->user, block->tag);
@@ -458,7 +468,7 @@ void z_check_heap(void)
 {
   memblock_t *block;
 
-  for (block = mainzone->blocklist.next;; block = block->next)
+  for (block = mainzone->blocklist.next; ; block = block->next)
     {
       if (block->next == &mainzone->blocklist)
         {
@@ -541,4 +551,7 @@ int z_free_memory(void)
  * Name: z_zone_size
  ****************************************************************************/
 
-unsigned int z_zone_size(void) { return mainzone->size; }
+unsigned int z_zone_size(void)
+{
+  return mainzone->size;
+}

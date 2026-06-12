@@ -434,7 +434,7 @@ boolean PIT_CheckThing(mobj_t *thing)
       tmthing->flags &= ~MF_SKULLFLY;
       tmthing->momx = tmthing->momy = tmthing->momz = 0;
 
-      P_SetMobjState(tmthing, tmthing->info->spawnstate);
+      p_set_mobj_state(tmthing, tmthing->info->spawnstate);
 
       return false; /* stop moving */
     }
@@ -1232,11 +1232,11 @@ boolean PTR_UseTraverse(intercept_t *in)
   return false;
 }
 
-/* P_UseLines
+/* p_use_lines
  * Looks for special lines in front of the player to activate.
  */
 
-void P_UseLines(player_t *player)
+void p_use_lines(player_t *player)
 {
   int angle;
   fixed_t x1;
@@ -1340,7 +1340,7 @@ boolean PIT_ChangeSector(mobj_t *thing)
 
   if (thing->health <= 0)
     {
-      P_SetMobjState(thing, S_GIBS);
+      p_set_mobj_state(thing, S_GIBS);
 
       if (gameversion > exe_doom_1_2) thing->flags &= ~MF_SOLID;
       thing->height = 0;

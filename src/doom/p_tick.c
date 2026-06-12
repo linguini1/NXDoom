@@ -1,50 +1,64 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Archiving: SaveGame I/O.
-//	Thinker, Ticker.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/p_tick.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  Archiving: SaveGame I/O.
+ *  Thinker, Ticker.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include "p_local.h"
 #include "z_zone.h"
 
 #include "doomstat.h"
 
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
 int leveltime;
 
-//
-// THINKERS
-// All thinkers should be allocated by z_malloc
-// so they can be operated on uniformly.
-// The actual structures will vary in size,
-// but the first element must be thinker_t.
-//
+/* THINKERS
+ * All thinkers should be allocated by z_malloc
+ * so they can be operated on uniformly.
+ * The actual structures will vary in size,
+ * but the first element must be thinker_t.
+ */
 
-// Both the head and tail of the thinker list.
+/* Both the head and tail of the thinker list. */
+
 thinker_t thinkercap;
 
-//
-// p_initThinkers
-//
-void p_initThinkers(void) { thinkercap.prev = thinkercap.next = &thinkercap; }
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
-//
-// P_AddThinker
-// Adds a new thinker at the end of the list.
-//
-void P_AddThinker(thinker_t *thinker)
+void p_init_thinkers(void) { thinkercap.prev = thinkercap.next = &thinkercap; }
+
+/* p_add_thinker
+ * Adds a new thinker at the end of the list.
+ */
+
+void p_add_thinker(thinker_t *thinker)
 {
   thinkercap.prev->next = thinker;
   thinker->next = &thinkercap;
@@ -52,26 +66,23 @@ void P_AddThinker(thinker_t *thinker)
   thinkercap.prev = thinker;
 }
 
-//
-// P_RemoveThinker
-// Deallocation is lazy -- it will not actually be freed
-// until its thinking turn comes up.
-//
-void P_RemoveThinker(thinker_t *thinker)
+/* p_remove_thinker Deallocation is lazy -- it will not actually be freed
+ * until its thinking turn comes up.
+ */
+
+void p_remove_thinker(thinker_t *thinker)
 {
-  // FIXME: NOP.
+  /* FIXME: NOP. */
+
   thinker->function.acv = (actionf_v)(-1);
 }
 
-//
-// P_AllocateThinker
-// Allocates memory and adds a new thinker at the end of the list.
-//
+/* P_AllocateThinker
+ * Allocates memory and adds a new thinker at the end of the list.
+ */
+
 void P_AllocateThinker(thinker_t *thinker) {}
 
-//
-// P_RunThinkers
-//
 void P_RunThinkers(void)
 {
   thinker_t *currentthinker, *nextthinker;
@@ -116,7 +127,7 @@ void p_ticker(void)
     }
 
   for (i = 0; i < MAXPLAYERS; i++)
-    if (playeringame[i]) P_PlayerThink(&players[i]);
+    if (playeringame[i]) p_player_think(&players[i]);
 
   P_RunThinkers();
   P_UpdateSpecials();

@@ -1603,7 +1603,7 @@ void p_unarchive_thinkers(void)
 
       currentthinker = next;
     }
-  p_initThinkers();
+  p_init_thinkers();
 
   // read in saved thinkers
   while (1)
@@ -1626,7 +1626,7 @@ void p_unarchive_thinkers(void)
           mobj->floorz = mobj->subsector->sector->floorheight;
           mobj->ceilingz = mobj->subsector->sector->ceilingheight;
           mobj->thinker.function.acp1 = (actionf_p1)p_mobj_thinker;
-          P_AddThinker(&mobj->thinker);
+          p_add_thinker(&mobj->thinker);
           break;
 
         default:
@@ -1778,7 +1778,7 @@ void p_unarchive_specials(void)
           if (ceiling->thinker.function.acp1)
             ceiling->thinker.function.acp1 = (actionf_p1)T_MoveCeiling;
 
-          P_AddThinker(&ceiling->thinker);
+          p_add_thinker(&ceiling->thinker);
           P_AddActiveCeiling(ceiling);
           break;
 
@@ -1788,7 +1788,7 @@ void p_unarchive_specials(void)
           saveg_read_vldoor_t(door);
           door->sector->specialdata = door;
           door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
-          P_AddThinker(&door->thinker);
+          p_add_thinker(&door->thinker);
           break;
 
         case tc_floor:
@@ -1797,7 +1797,7 @@ void p_unarchive_specials(void)
           saveg_read_floormove_t(floor);
           floor->sector->specialdata = floor;
           floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
-          P_AddThinker(&floor->thinker);
+          p_add_thinker(&floor->thinker);
           break;
 
         case tc_plat:
@@ -1809,7 +1809,7 @@ void p_unarchive_specials(void)
           if (plat->thinker.function.acp1)
             plat->thinker.function.acp1 = (actionf_p1)T_PlatRaise;
 
-          P_AddThinker(&plat->thinker);
+          p_add_thinker(&plat->thinker);
           P_AddActivePlat(plat);
           break;
 
@@ -1818,7 +1818,7 @@ void p_unarchive_specials(void)
           flash = z_malloc(sizeof(*flash), PU_LEVEL, NULL);
           saveg_read_lightflash_t(flash);
           flash->thinker.function.acp1 = (actionf_p1)T_LightFlash;
-          P_AddThinker(&flash->thinker);
+          p_add_thinker(&flash->thinker);
           break;
 
         case tc_strobe:
@@ -1826,7 +1826,7 @@ void p_unarchive_specials(void)
           strobe = z_malloc(sizeof(*strobe), PU_LEVEL, NULL);
           saveg_read_strobe_t(strobe);
           strobe->thinker.function.acp1 = (actionf_p1)T_StrobeFlash;
-          P_AddThinker(&strobe->thinker);
+          p_add_thinker(&strobe->thinker);
           break;
 
         case tc_glow:
@@ -1834,7 +1834,7 @@ void p_unarchive_specials(void)
           glow = z_malloc(sizeof(*glow), PU_LEVEL, NULL);
           saveg_read_glow_t(glow);
           glow->thinker.function.acp1 = (actionf_p1)T_Glow;
-          P_AddThinker(&glow->thinker);
+          p_add_thinker(&glow->thinker);
           break;
 
         default:
