@@ -1,19 +1,27 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// Parses "Ammo" sections in dehacked files
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/deh_ammo.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Parses "Ammo" sections in dehacked files
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +34,34 @@
 #include "doomtype.h"
 #include "p_local.h"
 
-static void *DEH_AmmoStart(deh_context_t *context, char *line)
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
+
+static void *deh_ammo_start(deh_context_t *context, char *line);
+static void deh_ammo_parse_line(deh_context_t *context, char *line,
+                                void *tag);
+static void deh_ammo_sha1_hash(SHA1_CTX *context);
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+deh_section_t deh_section_ammo =
+{
+  "Ammo",
+  NULL,
+  deh_ammo_start,
+  deh_ammo_parse_line,
+  NULL,
+  deh_ammo_sha1_hash,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void *deh_ammo_start(deh_context_t *context, char *line)
 {
   int ammo_number = 0;
 
@@ -45,9 +80,11 @@ static void *DEH_AmmoStart(deh_context_t *context, char *line)
   return &maxammo[ammo_number];
 }
 
-static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
+static void deh_ammo_parse_line(deh_context_t *context, char *line,
+        void *tag)
 {
-  char *variable_name, *value;
+  char *variable_name;
+  char *value;
   int ivalue;
   int ammo_number;
 
@@ -55,11 +92,11 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
 
   ammo_number = ((int *)tag) - maxammo;
 
-  // Parse the assignment
+  /* Parse the assignment */
 
   if (!deh_parse_assignment(line, &variable_name, &value))
     {
-      // Failed to parse
+      /* Failed to parse */
 
       deh_warning(context, "Failed to parse assignment");
       return;
@@ -67,7 +104,7 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
 
   ivalue = atoi(value);
 
-  // maxammo
+  /* maxammo */
 
   if (!strcasecmp(variable_name, "Per ammo"))
     clipammo[ammo_number] = ivalue;
@@ -79,7 +116,7 @@ static void DEH_AmmoParseLine(deh_context_t *context, char *line, void *tag)
     }
 }
 
-static void DEH_AmmoSHA1Hash(SHA1_CTX *context)
+static void deh_ammo_sha1_hash(SHA1_CTX *context)
 {
   int i;
 
@@ -89,7 +126,3 @@ static void DEH_AmmoSHA1Hash(SHA1_CTX *context)
       sha1_updateint32(context, maxammo[i]);
     }
 }
-
-deh_section_t deh_section_ammo = {
-    "Ammo", NULL, DEH_AmmoStart, DEH_AmmoParseLine, NULL, DEH_AmmoSHA1Hash,
-};
