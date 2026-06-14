@@ -172,7 +172,7 @@ static boolean check_signatures(deh_context_t *context)
 
   /* Read the first line */
 
-  line = DEH_ReadLine(context, false);
+  line = deh_read_line(context, false);
 
   if (line == NULL)
     {
@@ -262,7 +262,7 @@ static void deh_parse_context(deh_context_t *context)
 
   /* Read the file */
 
-  while (!DEH_HadError(context))
+  while (!deh_had_error(context))
     {
       /* Read the next line. We only allow the special extended parsing
        * for the BEX [STRINGS] section.
@@ -270,7 +270,7 @@ static void deh_parse_context(deh_context_t *context)
 
       extended = current_section != NULL &&
                  !strcasecmp(current_section->name, "[STRINGS]");
-      line = DEH_ReadLine(context, extended);
+      line = deh_read_line(context, extended);
 
       /* end of file? */
 
@@ -416,7 +416,7 @@ int deh_loadfile(const char *filename)
 
   printf(" loading %s\n", filename);
 
-  context = DEH_OpenFile(filename);
+  context = deh_open_file(filename);
 
   if (context == NULL)
     {
@@ -426,9 +426,9 @@ int deh_loadfile(const char *filename)
 
   deh_parse_context(context);
 
-  had_error = DEH_HadError(context);
+  had_error = deh_had_error(context);
 
-  DEH_CloseFile(context);
+  deh_close_file(context);
 
   if (had_error)
     {
@@ -447,7 +447,7 @@ void deh_auto_load_patches(const char *path)
 
   glob = i_start_multi_glob(path, GLOB_FLAG_NOCASE | GLOB_FLAG_SORTED,
                             "*.deh", "*.hhe", "*.seh", NULL);
-  for (;;)
+  for (; ; )
     {
       filename = i_next_glob(glob);
       if (filename == NULL)
@@ -482,7 +482,7 @@ int deh_load_lump(int lumpnum, boolean allow_long, boolean allow_error)
   deh_allow_long_cheats = allow_long;
   deh_allow_extended_strings = false;
 
-  context = DEH_OpenLump(lumpnum);
+  context = deh_open_lump(lumpnum);
 
   if (context == NULL)
     {
@@ -492,9 +492,9 @@ int deh_load_lump(int lumpnum, boolean allow_long, boolean allow_error)
 
   deh_parse_context(context);
 
-  had_error = DEH_HadError(context);
+  had_error = deh_had_error(context);
 
-  DEH_CloseFile(context);
+  deh_close_file(context);
 
   /* If there was an error while parsing, abort with an error, but allow
    * errors to just be ignored if allow_error=true.

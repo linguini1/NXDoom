@@ -20,15 +20,15 @@
 
 #include "deh_defs.h"
 
-deh_context_t *DEH_OpenFile(const char *filename);
-deh_context_t *DEH_OpenLump(int lumpnum);
-void DEH_CloseFile(deh_context_t *context);
+deh_context_t *deh_open_file(const char *filename);
+deh_context_t *deh_open_lump(int lumpnum);
+void deh_close_file(deh_context_t *context);
 int deh_get_char(deh_context_t *context);
-char *DEH_ReadLine(deh_context_t *context, boolean extended);
+char *deh_read_line(deh_context_t *context, boolean extended);
 void deh_error(deh_context_t *context, const char *msg, ...)
     PRINTF_ATTR(2, 3);
 void deh_warning(deh_context_t *context, const char *msg, ...)
     PRINTF_ATTR(2, 3);
-boolean DEH_HadError(deh_context_t *context);
+boolean deh_had_error(deh_context_t *context);
 
 #endif /* #ifndef DEH_IO_H */

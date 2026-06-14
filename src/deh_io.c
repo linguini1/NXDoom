@@ -53,7 +53,7 @@ struct deh_context_s
   // Current line number that we have reached:
   int linenum;
 
-  // Used by DEH_ReadLine:
+  // Used by deh_read_line:
   boolean last_was_newline;
   char *readbuffer;
   int readbuffer_size;
@@ -83,7 +83,7 @@ static deh_context_t *DEH_NewContext(void)
 // Open a dehacked file for reading
 // Returns NULL if open failed
 
-deh_context_t *DEH_OpenFile(const char *filename)
+deh_context_t *deh_open_file(const char *filename)
 {
   FILE *fstream;
   deh_context_t *context;
@@ -103,7 +103,7 @@ deh_context_t *DEH_OpenFile(const char *filename)
 
 // Open a WAD lump for reading.
 
-deh_context_t *DEH_OpenLump(int lumpnum)
+deh_context_t *deh_open_lump(int lumpnum)
 {
   deh_context_t *context;
   void *lump;
@@ -126,7 +126,7 @@ deh_context_t *DEH_OpenLump(int lumpnum)
 
 // Close dehacked file
 
-void DEH_CloseFile(deh_context_t *context)
+void deh_close_file(deh_context_t *context)
 {
   if (context->type == DEH_INPUT_FILE)
     {
@@ -244,7 +244,7 @@ static void IncreaseReadBuffer(deh_context_t *context)
 
 // Read a whole line
 
-char *DEH_ReadLine(deh_context_t *context, boolean extended)
+char *deh_read_line(deh_context_t *context, boolean extended)
 {
   int c;
   int pos;
@@ -349,4 +349,4 @@ void deh_error(deh_context_t *context, const char *msg, ...)
   context->had_error = true;
 }
 
-boolean DEH_HadError(deh_context_t *context) { return context->had_error; }
+boolean deh_had_error(deh_context_t *context) { return context->had_error; }
