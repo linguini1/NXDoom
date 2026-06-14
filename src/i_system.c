@@ -18,6 +18,10 @@
  *
  ****************************************************************************/
 
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,13 +75,12 @@ static atexit_listentry_t *exit_funcs = NULL;
 
 static boolean already_quitting = false;
 
-/*
- * Read Access Violation emulation.
+/* Read Access Violation emulation.
  *
  * From PrBoom+, by entryway.
  */
 
- /* C:\>debug
+/* C:\>debug
  * -d 0:0
  *
  * DOS 6.22:
@@ -90,22 +93,24 @@ static boolean already_quitting = false;
  * 0000:0000  (00 00 00 F1) ?? ?? ?? 00-(07 00)
  */
 
-static const unsigned char mem_dump_dos622[DOS_MEM_DUMP_SIZE] = {
-    0x57, 0x92, 0x19, 0x00, 0xF4, 0x06, 0x70, 0x00, 0x16, 0x00,
+static const unsigned char mem_dump_dos622[DOS_MEM_DUMP_SIZE] =
+{
+  0x57, 0x92, 0x19, 0x00, 0xf4, 0x06, 0x70, 0x00, 0x16, 0x00,
 };
 
-static const unsigned char mem_dump_win98[DOS_MEM_DUMP_SIZE] = {
-    0x9E, 0x0F, 0xC9, 0x00, 0x65, 0x04, 0x70, 0x00, 0x16, 0x00,
+static const unsigned char mem_dump_win98[DOS_MEM_DUMP_SIZE] =
+{
+  0x9e, 0x0f, 0xc9, 0x00, 0x65, 0x04, 0x70, 0x00, 0x16, 0x00,
 };
 
-static const unsigned char mem_dump_dosbox[DOS_MEM_DUMP_SIZE] = {
-    0x00, 0x00, 0x00, 0xF1, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00,
+static const unsigned char mem_dump_dosbox[DOS_MEM_DUMP_SIZE] =
+{
+  0x00, 0x00, 0x00, 0xf1, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00,
 };
 
 static unsigned char mem_dump_custom[DOS_MEM_DUMP_SIZE];
 
 static const unsigned char *dos_mem_dump = mem_dump_dos622;
-
 
 /****************************************************************************
  * Private Functions
@@ -174,12 +179,15 @@ void i_at_exit(atexit_func_t func, boolean run_on_error)
 
 /* Tactile feedback function, probably used for the Logitech Cyberman */
 
-void i_tactile(int on, int off, int total) {}
+void i_tactile(int on, int off, int total)
+{
+}
 
 byte *i_zone_base(int *size)
 {
   byte *zonemem;
-  int min_ram, default_ram;
+  int min_ram;
+  int default_ram;
   int p;
 
   /* @category obscure
@@ -213,6 +221,7 @@ byte *i_zone_base(int *size)
         {
           default_ram = DEFAULT_RAM;
         }
+
       min_ram = MIN_RAM;
     }
 
@@ -269,7 +278,10 @@ void i_print_startup_banner(const char *gamedescription)
  * Returns true if stdout is a real console, false if it is a file
  */
 
-boolean i_console_stdout(void) { return isatty(fileno(stdout)); }
+boolean i_console_stdout(void)
+{
+  return isatty(fileno(stdout));
+}
 
 /* i_init */
 
@@ -380,7 +392,7 @@ void i_error(const char *error, ...)
 #endif
     }
 
-    /* abort(); */
+  /* abort(); */
 
 #if 0
     SDL_Quit();
@@ -409,7 +421,9 @@ boolean i_get_memory_value(unsigned int offset, void *value, int size)
 
   if (firsttime)
     {
-      int p, i, val;
+      int p;
+      int i;
+      int val;
 
       firsttime = false;
       i = 0;
@@ -430,6 +444,7 @@ boolean i_get_memory_value(unsigned int offset, void *value, int size)
             {
               dos_mem_dump = mem_dump_dos622;
             }
+
           if (!strcasecmp(myargv[p + 1], "dos71"))
             {
               dos_mem_dump = mem_dump_win98;
@@ -470,7 +485,8 @@ boolean i_get_memory_value(unsigned int offset, void *value, int size)
     case 4:
       *((unsigned int *)value) =
           dos_mem_dump[offset] | (dos_mem_dump[offset + 1] << 8) |
-          (dos_mem_dump[offset + 2] << 16) | (dos_mem_dump[offset + 3] << 24);
+          (dos_mem_dump[offset + 2] << 16) |
+          (dos_mem_dump[offset + 3] << 24);
       return true;
     }
 
