@@ -57,7 +57,9 @@ typedef struct
 typedef struct
 {
   const char *name;
-  int axes, buttons, hats;
+  int axes;
+  int buttons;
+  int hats;
   const joystick_config_t *configs;
 } known_joystick_t;
 
@@ -104,8 +106,8 @@ static int joystick_strafe_invert = 0;
 static int joystick_look_axis = -1;
 static int joystick_look_invert = 0;
 
-/* Configurable dead zone for each axis, specified as a percentage of the axis
- * max value.
+/* Configurable dead zone for each axis, specified as a percentage of the
+ * axis max value.
  */
 
 static int joystick_x_dead_zone = 33;
@@ -121,8 +123,9 @@ int joystick_look_sensitivity = 10;
 
 /* Virtual to physical mapping. */
 
-int joystick_physical_buttons[NUM_VIRTUAL_BUTTONS] = {
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+int joystick_physical_buttons[NUM_VIRTUAL_BUTTONS] =
+{
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
 };
 
 static txt_button_t *joystick_button;
@@ -166,7 +169,8 @@ static int all_joysticks_len = 0;
 /* Always loaded before others, to get a known starting configuration.
  */
 
-static const joystick_config_t empty_defaults[] = {
+static const joystick_config_t empty_defaults[] =
+{
     {"joystick_x_axis", -1},
     {"joystick_x_invert", 0},
     {"joystick_y_axis", -1},
@@ -212,7 +216,8 @@ static const joystick_config_t empty_defaults[] = {
     {NULL, 0},
 };
 
-static const joystick_config_t ps3_controller[] = {
+static const joystick_config_t ps3_controller[] =
+{
     {"joystick_x_axis", CREATE_BUTTON_AXIS(7, 5)},
     {"joystick_y_axis", CREATE_BUTTON_AXIS(4, 6)},
     {"joyb_fire", 15},      /* Square */
@@ -229,7 +234,8 @@ static const joystick_config_t ps3_controller[] = {
 
 /* Playstation 4 Dual Shock 4 (DS4) */
 
-static const joystick_config_t ps4_ds4_controller[] = {
+static const joystick_config_t ps4_ds4_controller[] =
+{
     {"joystick_x_axis", CREATE_HAT_AXIS(0, HAT_AXIS_HORIZONTAL)},
     {"joystick_y_axis", CREATE_HAT_AXIS(0, HAT_AXIS_VERTICAL)},
     {"joyb_fire", 0},       /* Square */
@@ -243,7 +249,8 @@ static const joystick_config_t ps4_ds4_controller[] = {
     {"joyb_menu_activate", 12}, /* Playstation logo button */
 };
 
-static const joystick_config_t airflo_controller[] = {
+static const joystick_config_t airflo_controller[] =
+{
     {"joystick_x_axis", CREATE_HAT_AXIS(0, HAT_AXIS_HORIZONTAL)},
     {"joystick_y_axis", CREATE_HAT_AXIS(0, HAT_AXIS_VERTICAL)},
     {"joyb_fire", 2},       /* "3" */
@@ -265,7 +272,8 @@ static const joystick_config_t airflo_controller[] = {
 
 /* When using WJoy on OS X. */
 
-static const joystick_config_t wii_controller_wjoy[] = {
+static const joystick_config_t wii_controller_wjoy[] =
+{
     {"joystick_x_axis", CREATE_BUTTON_AXIS(2, 3)},
     {"joystick_y_axis", CREATE_BUTTON_AXIS(1, 0)},
     {"joyb_fire", 9},          /* Button 1 */
@@ -279,7 +287,8 @@ static const joystick_config_t wii_controller_wjoy[] = {
 
 /* Xbox 360 controller. Thanks to Brad Harding for the details. */
 
-static const joystick_config_t xbox360_controller[] = {
+static const joystick_config_t xbox360_controller[] =
+{
     {"joystick_x_axis", CREATE_HAT_AXIS(0, HAT_AXIS_HORIZONTAL)},
     {"joystick_y_axis", CREATE_HAT_AXIS(0, HAT_AXIS_VERTICAL)},
     {"joystick_strafe_axis", 2}, /* Trigger buttons form an axis(???) */
@@ -295,30 +304,65 @@ static const joystick_config_t xbox360_controller[] = {
 
 /* Xbox 360 controller under Linux. */
 
-static const joystick_config_t xbox360_controller_linux[] = {
-    {"joystick_x_axis", CREATE_HAT_AXIS(0, HAT_AXIS_HORIZONTAL)},
-    {"joystick_y_axis", CREATE_HAT_AXIS(0, HAT_AXIS_VERTICAL)},
+static const joystick_config_t xbox360_controller_linux[] =
+{
+    {
+        "joystick_x_axis",
+        CREATE_HAT_AXIS(0, HAT_AXIS_HORIZONTAL),
+    },
+    {
+        "joystick_y_axis",
+        CREATE_HAT_AXIS(0, HAT_AXIS_VERTICAL),
+    },
 
-    /* Ideally we'd like the trigger buttons to be strafe left/right
-     * But Linux presents each trigger button as its own axis, which
-     * we can't really work with. So we have to settle for a
-     * suboptimal setup.
-     */
+  /* Ideally we'd like the trigger buttons to be strafe left/right
+   * But Linux presents each trigger button as its own axis, which
+   * we can't really work with. So we have to settle for a
+   * suboptimal setup.
+   */
 
-    {"joyb_fire", 2},          /* X */
-    {"joyb_speed", 0},         /* A */
-    {"joyb_jump", 3},          /* Y */
-    {"joyb_use", 1},           /* B */
-    {"joyb_strafeleft", 4},    /* LB */
-    {"joyb_straferight", 5},   /* RB */
-    {"joyb_menu_activate", 7}, /* Start */
-    {"joyb_prevweapon", 6},    /* Back */
-    {NULL, 0},
+    {
+        "joyb_fire",
+        2,
+    }, /* X */
+    {
+        "joyb_speed",
+        0,
+    }, /* A */
+    {
+        "joyb_jump",
+        3,
+    }, /* Y */
+    {
+        "joyb_use",
+        1,
+    }, /* B */
+    {
+        "joyb_strafeleft",
+        4,
+    }, /* LB */
+    {
+        "joyb_straferight",
+        5,
+    }, /* RB */
+    {
+        "joyb_menu_activate",
+        7,
+    }, /* Start */
+    {
+        "joyb_prevweapon",
+        6,
+    }, /* Back */
+    {
+        NULL,
+        0,
+    },
 };
 
 /* Logitech Dual Action (F310, F710). Thanks to Brad Harding for details. */
 
-static const joystick_config_t logitech_f310_controller[] = {
+static const joystick_config_t logitech_f310_controller[] =
+{
     {"joystick_x_axis", CREATE_HAT_AXIS(0, HAT_AXIS_HORIZONTAL)},
     {"joystick_y_axis", CREATE_HAT_AXIS(0, HAT_AXIS_VERTICAL)},
     {"joyb_fire", 0},           /* X */
@@ -335,7 +379,8 @@ static const joystick_config_t logitech_f310_controller[] = {
 
 /* Multilaser JS030 gamepad, similar to a PS2 controller. */
 
-static const joystick_config_t multilaser_js030_controller[] = {
+static const joystick_config_t multilaser_js030_controller[] =
+{
     {"joystick_x_axis", 0}, /* Left stick / D-pad */
     {"joystick_y_axis", 1},
     {"joyb_fire", 3},       /* Square */
@@ -352,7 +397,8 @@ static const joystick_config_t multilaser_js030_controller[] = {
 
 /* Buffalo Classic USB Gamepad (thanks Fabian Greffrath). */
 
-static const joystick_config_t buffalo_classic_controller[] = {
+static const joystick_config_t buffalo_classic_controller[] =
+{
     {"joystick_x_axis", 0},
     {"joystick_y_axis", 1},
     {"joyb_use", 0},           /* A */
@@ -370,26 +416,49 @@ static const joystick_config_t buffalo_classic_controller[] = {
  * probably via a USB-Gameport adapter.
  */
 
-static const joystick_config_t pc_gameport_controller[] = {
-    {"joystick_x_axis", 0},
-    {"joystick_y_axis", 1},
+static const joystick_config_t pc_gameport_controller[] =
+{
+    {
+        "joystick_x_axis",
+        0,
+    },
+    {
+        "joystick_y_axis",
+        1,
+    },
 
-    /* Button configuration is the default as used for Vanilla Doom,
-     * Heretic and Hexen. When playing with a Gravis Gamepad, this
-     * layout should also be vaguely similar to the standard layout
-     * described above.
-     */
+  /* Button configuration is the default as used for Vanilla Doom,
+   * Heretic and Hexen. When playing with a Gravis Gamepad, this
+   * layout should also be vaguely similar to the standard layout
+   * described above.
+   */
 
-    {"joyb_fire", 0},
-    {"joyb_strafe", 1},
-    {"joyb_use", 3},
-    {"joyb_speed", 2},
-    {NULL, 0},
+    {
+        "joyb_fire",
+        0,
+    },
+    {
+        "joyb_strafe",
+        1,
+    },
+    {
+        "joyb_use",
+        3,
+    },
+    {
+        "joyb_speed",
+        2,
+    },
+    {
+        NULL,
+        0,
+    },
 };
 
 /* http://www.8bitdo.com/nes30pro/ and http://www.8bitdo.com/fc30pro/ */
 
-static const joystick_config_t nes30_pro_controller[] = {
+static const joystick_config_t nes30_pro_controller[] =
+{
     {"joystick_x_axis", CREATE_HAT_AXIS(0, HAT_AXIS_HORIZONTAL)},
     {"joystick_y_axis", CREATE_HAT_AXIS(0, HAT_AXIS_VERTICAL)},
     {"joyb_fire", 4},            /* Y */
@@ -409,7 +478,8 @@ static const joystick_config_t nes30_pro_controller[] = {
  * and http: *www.nes30.com/ and http: *www.fc30.com/
  */
 
-static const joystick_config_t sfc30_controller[] = {
+static const joystick_config_t sfc30_controller[] =
+{
     {"joystick_x_axis", 0},
     {"joystick_y_axis", 1},
     {"joyb_fire", 4},            /* Y */
@@ -423,7 +493,8 @@ static const joystick_config_t sfc30_controller[] = {
     {NULL, 0},
 };
 
-static const known_joystick_t known_joysticks[] = {
+static const known_joystick_t known_joysticks[] =
+{
     {
         "PLAYSTATION(R)3 Controller",
         4,
@@ -464,7 +535,7 @@ static const known_joystick_t known_joysticks[] = {
         xbox360_controller,
     },
 
-    /* Xbox 360 controller as it appears on Linux. */
+  /* Xbox 360 controller as it appears on Linux. */
 
     {
         "Microsoft X-Box 360 pad",
@@ -474,7 +545,7 @@ static const known_joystick_t known_joysticks[] = {
         xbox360_controller_linux,
     },
 
-    /* Xbox One controller as it appears on Linux. */
+  /* Xbox One controller as it appears on Linux. */
 
     {
         "Microsoft X-Box One pad",
@@ -508,10 +579,10 @@ static const known_joystick_t known_joysticks[] = {
         buffalo_classic_controller,
     },
 
-    /* PS4 controller just appears as the generic-sounding "Wireless
-     * Controller". Hopefully the number of buttons/axes/hats should be
-     * enough to distinguish it from other gamepads.
-     */
+  /* PS4 controller just appears as the generic-sounding "Wireless
+   * Controller". Hopefully the number of buttons/axes/hats should be
+   * enough to distinguish it from other gamepads.
+   */
 
     {
         "Wireless Controller",
@@ -521,13 +592,13 @@ static const known_joystick_t known_joysticks[] = {
         ps4_ds4_controller,
     },
 
-    /* This is the configuration for the USB-Gameport adapter listed on
-     * this page as the "Mayflash USB to Gameport Adapter" (though the
-     * device is labeled as "Super Joy Box 7"):
-     * https: *sites.google.com/site/joystickrehab/itemcatal
-     * TODO: Add extra configurations here for other USB-Gameport adapters,
-     * which should just be the same configuration.
-     */
+  /* This is the configuration for the USB-Gameport adapter listed on
+   * this page as the "Mayflash USB to Gameport Adapter" (though the
+   * device is labeled as "Super Joy Box 7"):
+   * https: *sites.google.com/site/joystickrehab/itemcatal
+   * TODO: Add extra configurations here for other USB-Gameport adapters,
+   * which should just be the same configuration.
+   */
 
     {
         "WiseGroup.,Ltd Gameport to USB Controller",
@@ -537,7 +608,7 @@ static const known_joystick_t known_joysticks[] = {
         pc_gameport_controller,
     },
 
-    /* How the Super Joy Box 7 appears on Mac OS X. */
+  /* How the Super Joy Box 7 appears on Mac OS X. */
 
     {
         "Gameport to USB Controller",
@@ -547,7 +618,7 @@ static const known_joystick_t known_joysticks[] = {
         pc_gameport_controller,
     },
 
-    /* 8Bitdo NES30 Pro, http://www.8bitdo.com/nes30pro/ */
+  /* 8Bitdo NES30 Pro, http://www.8bitdo.com/nes30pro/ */
 
     {
         "8Bitdo NES30 Pro",
@@ -557,7 +628,7 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* the above, NES variant, via USB on Linux/Raspbian (odd values) */
+  /* the above, NES variant, via USB on Linux/Raspbian (odd values) */
 
     {
         "8Bitdo NES30 Pro*",
@@ -567,7 +638,7 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* the above, NES variant, connected over bluetooth */
+  /* the above, NES variant, connected over bluetooth */
 
     {
         "8Bitdo NES30 Pro",
@@ -577,10 +648,10 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* 8bitdo NES30 Pro, in joystick mode (R1+Power), swaps the D-Pad
-     * and analog stick inputs.  Only applicable over Bluetooth. On USB,
-     * this mode registers the device as an Xbox 360 pad.
-     */
+  /* 8bitdo NES30 Pro, in joystick mode (R1+Power), swaps the D-Pad
+   * and analog stick inputs.  Only applicable over Bluetooth. On USB,
+   * this mode registers the device as an Xbox 360 pad.
+   */
 
     {
         "8Bitdo NES30 Pro Joystick",
@@ -590,10 +661,10 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* variant of the above, via USB on Mac
-     * Note: untested, but theorized to exist based on us comparing
-     * a NES30 Pro tested on Linux with a FC30 Pro tested with Mac & Linux
-     */
+  /* variant of the above, via USB on Mac
+   * Note: untested, but theorized to exist based on us comparing
+   * a NES30 Pro tested on Linux with a FC30 Pro tested with Mac & Linux
+   */
 
     {
         "8Bitdo NES30 Pro",
@@ -603,9 +674,9 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* 8Bitdo FC30 Pro, http://8bitdo.cn/fc30pro/
-     * connected over bluetooth
-     */
+  /* 8Bitdo FC30 Pro, http://8bitdo.cn/fc30pro/
+   * connected over bluetooth
+   */
 
     {
         "8Bitdo FC30 Pro",
@@ -615,7 +686,7 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* variant of the above, via USB on Linux/Raspbian */
+  /* variant of the above, via USB on Linux/Raspbian */
 
     {
         "8Bitdo FC30 Pro*",
@@ -625,7 +696,7 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* variant of the above, Linux/bluetooth */
+  /* variant of the above, Linux/bluetooth */
 
     {
         "8Bitdo FC30 Pro",
@@ -635,7 +706,7 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* variant of the above, via USB on Mac */
+  /* variant of the above, via USB on Mac */
 
     {
         "8Bitdo FC30 Pro",
@@ -645,11 +716,11 @@ static const known_joystick_t known_joysticks[] = {
         nes30_pro_controller,
     },
 
-    /* 8Bitdo SFC30 SNES replica controller
-     * in default mode and in controller mode (Start+R)
-     * the latter suffixes "Joystick" to the name
-     * http: *www.8bitdo.com/sfc30/
-     */
+  /* 8Bitdo SFC30 SNES replica controller
+   * in default mode and in controller mode (Start+R)
+   * the latter suffixes "Joystick" to the name
+   * http: *www.8bitdo.com/sfc30/
+   */
 
     {
         "8Bitdo SFC30 GamePad*",
@@ -659,7 +730,7 @@ static const known_joystick_t known_joysticks[] = {
         sfc30_controller,
     },
 
-    /* As above, but as detected on RHEL Linux (odd extra axes) */
+  /* As above, but as detected on RHEL Linux (odd extra axes) */
 
     {
         "8Bitdo SFC30 GamePad*",
@@ -669,9 +740,9 @@ static const known_joystick_t known_joysticks[] = {
         sfc30_controller,
     },
 
-    /* SNES30 colour variation of the above
-     * http: *www.8bitdo.com/snes30/
-     */
+  /* SNES30 colour variation of the above
+   * http: *www.8bitdo.com/snes30/
+   */
 
     {
         "8Bitdo SNES30 GamePad*",
@@ -681,14 +752,14 @@ static const known_joystick_t known_joysticks[] = {
         sfc30_controller,
     },
 
-    /* 8Bitdo SFC30 SNES replica controller in USB controller mode
-     * tested with firmware V2.68 (Beta); latest stable V2.65 doesn't work on
-     * OS X in USB controller mode
-     * Names seen so far:
-     *     'SFC30 Joystick' (OS X)
-     *     'SFC30              SFC30 Joystick' (Fedora 24; RHEL7)
-     * XXX: there is probably a SNES30 variant of this too
-     */
+  /* 8Bitdo SFC30 SNES replica controller in USB controller mode
+   * tested with firmware V2.68 (Beta); latest stable V2.65 doesn't work on
+   * OS X in USB controller mode
+   * Names seen so far:
+   *     'SFC30 Joystick' (OS X)
+   *     'SFC30              SFC30 Joystick' (Fedora 24; RHEL7)
+   * XXX: there is probably a SNES30 variant of this too
+   */
 
     {
         "SFC30 *",
@@ -698,10 +769,10 @@ static const known_joystick_t known_joysticks[] = {
         sfc30_controller,
     },
 
-    /* NES30 (not pro), tested in default and "hold R whilst turning on"
-     * mode, with whatever firmware it came with out of the box. Latter
-     * mode puts " Joystick" suffix on the name string
-     */
+  /* NES30 (not pro), tested in default and "hold R whilst turning on"
+   * mode, with whatever firmware it came with out of the box. Latter
+   * mode puts " Joystick" suffix on the name string
+   */
 
     {
         "8Bitdo NES30 GamePad*",
@@ -744,59 +815,62 @@ static const known_joystick_t known_joysticks[] = {
 
 /* Based on Unity Doom mapping */
 
-static const joystick_config_t modern_gamepad[] = {
-    {"joystick_x_axis", SDL_CONTROLLER_AXIS_RIGHTX},
-    {"joystick_y_axis", SDL_CONTROLLER_AXIS_LEFTY},
-    {"joystick_strafe_axis", SDL_CONTROLLER_AXIS_LEFTX},
-    {"joystick_look_axis", SDL_CONTROLLER_AXIS_RIGHTY},
-    {"joyb_fire", GAMEPAD_BUTTON_TRIGGERRIGHT},
-    {"joyb_speed", GAMEPAD_BUTTON_TRIGGERLEFT},
-    {"joyb_use", SDL_CONTROLLER_BUTTON_B},
-    {"joyb_jump", SDL_CONTROLLER_BUTTON_A},
-    {"joyb_prevweapon", SDL_CONTROLLER_BUTTON_LEFTSHOULDER},
-    {"joyb_nextweapon", SDL_CONTROLLER_BUTTON_RIGHTSHOULDER},
-    {"joyb_menu_activate", SDL_CONTROLLER_BUTTON_START},
-    {"joyb_toggle_automap", SDL_CONTROLLER_BUTTON_Y},
-    {"joyb_useartifact", SDL_CONTROLLER_BUTTON_X},
-    {"joyb_invleft", SDL_CONTROLLER_BUTTON_DPAD_LEFT},
-    {"joyb_invright", SDL_CONTROLLER_BUTTON_DPAD_RIGHT},
-    {"joyb_flyup", SDL_CONTROLLER_BUTTON_DPAD_UP},
-    {"joyb_flydown", SDL_CONTROLLER_BUTTON_DPAD_DOWN},
-    {"joyb_flycenter", SDL_CONTROLLER_BUTTON_LEFTSTICK},
-    {NULL, 0},
+static const joystick_config_t modern_gamepad[] =
+{
+  {"joystick_x_axis", SDL_CONTROLLER_AXIS_RIGHTX},
+  {"joystick_y_axis", SDL_CONTROLLER_AXIS_LEFTY},
+  {"joystick_strafe_axis", SDL_CONTROLLER_AXIS_LEFTX},
+  {"joystick_look_axis", SDL_CONTROLLER_AXIS_RIGHTY},
+  {"joyb_fire", GAMEPAD_BUTTON_TRIGGERRIGHT},
+  {"joyb_speed", GAMEPAD_BUTTON_TRIGGERLEFT},
+  {"joyb_use", SDL_CONTROLLER_BUTTON_B},
+  {"joyb_jump", SDL_CONTROLLER_BUTTON_A},
+  {"joyb_prevweapon", SDL_CONTROLLER_BUTTON_LEFTSHOULDER},
+  {"joyb_nextweapon", SDL_CONTROLLER_BUTTON_RIGHTSHOULDER},
+  {"joyb_menu_activate", SDL_CONTROLLER_BUTTON_START},
+  {"joyb_toggle_automap", SDL_CONTROLLER_BUTTON_Y},
+  {"joyb_useartifact", SDL_CONTROLLER_BUTTON_X},
+  {"joyb_invleft", SDL_CONTROLLER_BUTTON_DPAD_LEFT},
+  {"joyb_invright", SDL_CONTROLLER_BUTTON_DPAD_RIGHT},
+  {"joyb_flyup", SDL_CONTROLLER_BUTTON_DPAD_UP},
+  {"joyb_flydown", SDL_CONTROLLER_BUTTON_DPAD_DOWN},
+  {"joyb_flycenter", SDL_CONTROLLER_BUTTON_LEFTSTICK},
+  {NULL, 0},
 };
 
 /* Based on the SNES Doom mapping */
 
-static const joystick_config_t classic_gamepad[] = {
-    {"joystick_x_axis", SDL_CONTROLLER_AXIS_LEFTX},
-    {"joystick_y_axis", SDL_CONTROLLER_AXIS_LEFTY},
-    {"joyb_fire", SDL_CONTROLLER_BUTTON_X},                    /* SNES Y */
-    {"joyb_speed", SDL_CONTROLLER_BUTTON_A},                   /* SNES B */
-    {"joyb_use", SDL_CONTROLLER_BUTTON_B},                     /* SNES A */
-    {"joyb_strafeleft", SDL_CONTROLLER_BUTTON_LEFTSHOULDER},   /* SNES L */
-    {"joyb_straferight", SDL_CONTROLLER_BUTTON_RIGHTSHOULDER}, /* SNES R */
-    {"joyb_nextweapon", SDL_CONTROLLER_BUTTON_Y},              /* SNES X */
-    {"joyb_menu_activate", SDL_CONTROLLER_BUTTON_START}, /* SNES Start */
-    {"joyb_toggle_automap", SDL_CONTROLLER_BUTTON_BACK}, /* SNES Select */
-    {NULL, 0},
+static const joystick_config_t classic_gamepad[] =
+{
+  {"joystick_x_axis", SDL_CONTROLLER_AXIS_LEFTX},
+  {"joystick_y_axis", SDL_CONTROLLER_AXIS_LEFTY},
+  {"joyb_fire", SDL_CONTROLLER_BUTTON_X},                    /* SNES Y */
+  {"joyb_speed", SDL_CONTROLLER_BUTTON_A},                   /* SNES B */
+  {"joyb_use", SDL_CONTROLLER_BUTTON_B},                     /* SNES A */
+  {"joyb_strafeleft", SDL_CONTROLLER_BUTTON_LEFTSHOULDER},   /* SNES L */
+  {"joyb_straferight", SDL_CONTROLLER_BUTTON_RIGHTSHOULDER}, /* SNES R */
+  {"joyb_nextweapon", SDL_CONTROLLER_BUTTON_Y},              /* SNES X */
+  {"joyb_menu_activate", SDL_CONTROLLER_BUTTON_START},       /* SNES Start */
+  {"joyb_toggle_automap", SDL_CONTROLLER_BUTTON_BACK},       /* SNES Select */
+  {NULL, 0},
 };
 
 /* SNES Doom mapping with extra shoulder buttons */
 
-static const joystick_config_t classic_gamepad_plus[] = {
-    {"joystick_x_axis", SDL_CONTROLLER_AXIS_LEFTX},
-    {"joystick_y_axis", SDL_CONTROLLER_AXIS_LEFTY},
-    {"joyb_fire", SDL_CONTROLLER_BUTTON_X},                    /* SNES Y */
-    {"joyb_speed", SDL_CONTROLLER_BUTTON_A},                   /* SNES B */
-    {"joyb_use", SDL_CONTROLLER_BUTTON_B},                     /* SNES A */
-    {"joyb_strafeleft", SDL_CONTROLLER_BUTTON_LEFTSHOULDER},   /* L1 */
-    {"joyb_straferight", SDL_CONTROLLER_BUTTON_RIGHTSHOULDER}, /* R1 */
-    {"joyb_prevweapon", GAMEPAD_BUTTON_TRIGGERLEFT},           /* L2 */
-    {"joyb_nextweapon", GAMEPAD_BUTTON_TRIGGERRIGHT},          /* R2 */
-    {"joyb_menu_activate", SDL_CONTROLLER_BUTTON_START}, /* SNES Start */
-    {"joyb_toggle_automap", SDL_CONTROLLER_BUTTON_BACK}, /* SNES Select */
-    {NULL, 0},
+static const joystick_config_t classic_gamepad_plus[] =
+{
+  {"joystick_x_axis", SDL_CONTROLLER_AXIS_LEFTX},
+  {"joystick_y_axis", SDL_CONTROLLER_AXIS_LEFTY},
+  {"joyb_fire", SDL_CONTROLLER_BUTTON_X},                    /* SNES Y */
+  {"joyb_speed", SDL_CONTROLLER_BUTTON_A},                   /* SNES B */
+  {"joyb_use", SDL_CONTROLLER_BUTTON_B},                     /* SNES A */
+  {"joyb_strafeleft", SDL_CONTROLLER_BUTTON_LEFTSHOULDER},   /* L1 */
+  {"joyb_straferight", SDL_CONTROLLER_BUTTON_RIGHTSHOULDER}, /* R1 */
+  {"joyb_prevweapon", GAMEPAD_BUTTON_TRIGGERLEFT},           /* L2 */
+  {"joyb_nextweapon", GAMEPAD_BUTTON_TRIGGERRIGHT},          /* R2 */
+  {"joyb_menu_activate", SDL_CONTROLLER_BUTTON_START},       /* SNES Start */
+  {"joyb_toggle_automap", SDL_CONTROLLER_BUTTON_BACK},       /* SNES Select */
+  {NULL, 0},
 };
 
 /****************************************************************************
@@ -824,7 +898,9 @@ static const known_joystick_t *get_joystick_type(int index)
 {
   SDL_Joystick *joystick;
   const char *name;
-  int axes, buttons, hats;
+  int axes;
+  int buttons;
+  int hats;
   int i;
 
   joystick = all_joysticks[index];
@@ -1327,12 +1403,15 @@ static void adjust_analog(TXT_UNCAST_ARG(widget), TXT_UNCAST_ARG(unused))
       txt_newspin_control(&joystick_move_sensitivity, 0, 20),
       txt_new_label("Turn"),
       txt_newspin_control(&joystick_turn_sensitivity, 0, 20), NULL);
-  if (gamemission == heretic || gamemission == hexen || gamemission == strife)
+
+  if (gamemission == heretic ||
+      gamemission == hexen || gamemission == strife)
     {
       txt_add_widgets(window, txt_new_label("Look"),
                       txt_newspin_control(&joystick_look_sensitivity, 0, 20),
                       NULL);
     }
+
   txt_set_window_action(window, TXT_HORIZ_LEFT, NULL);
   txt_set_window_action(window, TXT_HORIZ_CENTER,
                         txt_new_window_escape_action(window));
@@ -1386,7 +1465,7 @@ void config_joystick(TXT_UNCAST_ARG(widget), void *user_data)
       txt_new_separator("Axes"), txt_new_label("Forward/backward"),
       y_axis_widget =
           txt_newjoystick_axis(&joystick_y_axis, &joystick_y_invert,
-                               &joystick_y_dead_zone, JOYSTICK_AXIS_VERTICAL),
+                       &joystick_y_dead_zone, JOYSTICK_AXIS_VERTICAL),
       TXT_TABLE_OVERFLOW_RIGHT, TXT_TABLE_OVERFLOW_RIGHT, TXT_TABLE_EMPTY,
       TXT_TABLE_EMPTY,
 
@@ -1404,7 +1483,8 @@ void config_joystick(TXT_UNCAST_ARG(widget), void *user_data)
       TXT_TABLE_OVERFLOW_RIGHT, TXT_TABLE_OVERFLOW_RIGHT, TXT_TABLE_EMPTY,
       TXT_TABLE_EMPTY, NULL);
 
-  if (gamemission == heretic || gamemission == hexen || gamemission == strife)
+  if (gamemission == heretic ||
+      gamemission == hexen || gamemission == strife)
     {
       txt_add_widgets(window, txt_new_label("Look up/down"),
                       txt_newjoystick_axis(
@@ -1456,10 +1536,11 @@ void config_joystick(TXT_UNCAST_ARG(widget), void *user_data)
 
   add_joystick_control(window, "Toggle Automap", &joybautomap);
 
-  if (gamemission == heretic || gamemission == hexen || gamemission == strife)
+  if (gamemission == heretic ||
+      gamemission == hexen || gamemission == strife)
     {
-      txt_add_widget(window,
-                     txt_new_button2("More controls...", MoreControls, NULL));
+      txt_add_widget(
+          window, txt_new_button2("More controls...", more_controls, NULL));
       txt_add_widget(window, TXT_TABLE_EOL);
     }
 
