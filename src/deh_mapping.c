@@ -125,7 +125,7 @@ boolean deh_set_mapping(deh_context_t *context, deh_mapping_t *mapping,
 // Set the value of a string field in a structure by name
 //
 
-boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
+boolean deh_set_string_mapping(deh_context_t *context, deh_mapping_t *mapping,
                              void *structptr, char *name, char *value)
 {
   deh_mapping_entry_t *entry;
