@@ -1,19 +1,27 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// Parses Text substitution sections in dehacked files
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/deh_text.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Parses Text substitution sections in dehacked files
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,42 +35,69 @@
 #include "deh_io.h"
 #include "deh_main.h"
 
-// Given a string length, find the maximum length of a
-// string that can replace it.
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
 
-static int TXT_MaxStringLength(int len)
+static void deh_text_parse_line(deh_context_t *context, char *line,
+                                void *tag);
+static void *deh_text_start(deh_context_t *context, char *line);
+static void *deh_text_start(deh_context_t *context, char *line);
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+deh_section_t deh_section_text =
 {
-  // Enough bytes for the string and the NUL terminator
+  "Text", NULL, deh_text_start, deh_text_parse_line, NULL, NULL,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+/* Given a string length, find the maximum length of a string that can
+ * replace it.
+ */
+
+static int txt_max_string_length(int len)
+{
+  /* Enough bytes for the string and the NUL terminator */
 
   len += 1;
 
-  // All strings in doom.exe are on 4-byte boundaries, so we may be able
-  // to support a slightly longer string.
-  // Extend up to the next 4-byte boundary
+  /* All strings in doom.exe are on 4-byte boundaries, so we may be able
+   * to support a slightly longer string.
+   * Extend up to the next 4-byte boundary
+   */
 
   len += (4 - (len % 4)) % 4;
 
-  // Less one for the NUL terminator.
+  /* Less one for the NUL terminator. */
 
   return len - 1;
 }
 
-static void *DEH_TextStart(deh_context_t *context, char *line)
+static void *deh_text_start(deh_context_t *context, char *line)
 {
-  char *from_text, *to_text;
-  int fromlen, tolen;
+  char *from_text;
+  char *to_text;
+  int fromlen;
+  int to_len;
   int i;
 
-  if (sscanf(line, "Text %i %i", &fromlen, &tolen) != 2)
+  if (sscanf(line, "Text %i %i", &fromlen, &to_len) != 2)
     {
       deh_warning(context, "Parse error on section start");
       return NULL;
     }
 
-  // Only allow string replacements that are possible in Vanilla Doom.
-  // Chocolate Doom is unforgiving!
+  /* Only allow string replacements that are possible in Vanilla Doom.
+   * Chocolate Doom is unforgiving!
+   */
 
-  if (!deh_allow_long_strings && tolen > TXT_MaxStringLength(fromlen))
+  if (!deh_allow_long_strings && to_len > txt_max_string_length(fromlen))
     {
       deh_error(context, "Replacement string is longer than the maximum "
                          "possible in doom.exe");
@@ -70,23 +105,25 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
     }
 
   from_text = malloc(fromlen + 1);
-  to_text = malloc(tolen + 1);
+  to_text = malloc(to_len + 1);
 
-  // read in the "from" text
+  /* read in the "from" text */
 
   for (i = 0; i < fromlen; ++i)
     {
-      from_text[i] = DEH_GetChar(context);
+      from_text[i] = deh_get_char(context);
     }
+
   from_text[fromlen] = '\0';
 
-  // read in the "to" text
+  /* read in the "to" text */
 
-  for (i = 0; i < tolen; ++i)
+  for (i = 0; i < to_len; ++i)
     {
-      to_text[i] = DEH_GetChar(context);
+      to_text[i] = deh_get_char(context);
     }
-  to_text[tolen] = '\0';
+
+  to_text[to_len] = '\0';
 
   deh_add_string_replacement(from_text, to_text);
 
@@ -96,11 +133,8 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
   return NULL;
 }
 
-static void DEH_TextParseLine(deh_context_t *context, char *line, void *tag)
+static void deh_text_parse_line(deh_context_t *context, char *line,
+        void *tag)
 {
-  // not used
+  /* not used */
 }
-
-deh_section_t deh_section_text = {
-    "Text", NULL, DEH_TextStart, DEH_TextParseLine, NULL, NULL,
-};

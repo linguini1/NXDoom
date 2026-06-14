@@ -142,7 +142,7 @@ void DEH_CloseFile(deh_context_t *context)
   z_free(context);
 }
 
-int DEH_GetCharFile(deh_context_t *context)
+int deh_get_charFile(deh_context_t *context)
 {
   if (feof(context->stream))
     {
@@ -154,7 +154,7 @@ int DEH_GetCharFile(deh_context_t *context)
   return fgetc(context->stream);
 }
 
-int DEH_GetCharLump(deh_context_t *context)
+int deh_get_charLump(deh_context_t *context)
 {
   int result;
 
@@ -171,7 +171,7 @@ int DEH_GetCharLump(deh_context_t *context)
 
 // Reads a single character from a dehacked file
 
-int DEH_GetChar(deh_context_t *context)
+int deh_get_char(deh_context_t *context)
 {
   int result = 0;
   boolean last_was_cr = false;
@@ -190,11 +190,11 @@ int DEH_GetChar(deh_context_t *context)
       switch (context->type)
         {
         case DEH_INPUT_FILE:
-          result = DEH_GetCharFile(context);
+          result = deh_get_charFile(context);
           break;
 
         case DEH_INPUT_LUMP:
-          result = DEH_GetCharLump(context);
+          result = deh_get_charLump(context);
           break;
         }
 
@@ -252,7 +252,7 @@ char *DEH_ReadLine(deh_context_t *context, boolean extended)
 
   for (pos = 0;;)
     {
-      c = DEH_GetChar(context);
+      c = deh_get_char(context);
 
       if (c < 0 && pos == 0)
         {
@@ -271,7 +271,7 @@ char *DEH_ReadLine(deh_context_t *context, boolean extended)
       // extended string support
       if (extended && c == '\\')
         {
-          c = DEH_GetChar(context);
+          c = deh_get_char(context);
 
           // "\n" in the middle of a string indicates an internal linefeed
           if (c == 'n')
