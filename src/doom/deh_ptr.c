@@ -1,19 +1,27 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// Parses Action Pointer entries in dehacked files
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/deh_ptr.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Parses Action Pointer entries in dehacked files
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,9 +34,41 @@
 #include "deh_io.h"
 #include "deh_main.h"
 
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
+
+static void deh_pointer_init(void);
+static void *deh_pointer_start(deh_context_t *context, char *line);
+static void deh_pointer_parse_line(deh_context_t *context, char *line,
+                                 void *tag);
+static void deh_pointer_sha1_sum(SHA1_CTX *context);
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
 static actionf_t codeptrs[NUMSTATES];
 
-static int CodePointerIndex(actionf_t *ptr)
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+deh_section_t deh_section_pointer =
+{
+  "Pointer",
+  deh_pointer_init,
+  deh_pointer_start,
+  deh_pointer_parse_line,
+  NULL,
+  deh_pointer_sha1_sum,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static int code_pointer_index(actionf_t *ptr)
 {
   int i;
 
@@ -43,22 +83,23 @@ static int CodePointerIndex(actionf_t *ptr)
   return -1;
 }
 
-static void DEH_PointerInit(void)
+static void deh_pointer_init(void)
 {
   int i;
 
-  // Initialize list of dehacked pointers
+  /* Initialize list of dehacked pointers */
 
   for (i = 0; i < NUMSTATES; ++i)
     codeptrs[i] = states[i].action;
 }
 
-static void *DEH_PointerStart(deh_context_t *context, char *line)
+static void *deh_pointer_start(deh_context_t *context, char *line)
 {
   int frame_number = 0;
 
-  // FIXME: can the third argument here be something other than "Frame"
-  // or are we ok?
+  /* FIXME: can the third argument here be something other than "Frame"
+   * or are we ok?
+   */
 
   if (sscanf(line, "Pointer %*i (%*s %i)", &frame_number) != 1)
     {
@@ -75,33 +116,33 @@ static void *DEH_PointerStart(deh_context_t *context, char *line)
   return &states[frame_number];
 }
 
-static void DEH_PointerParseLine(deh_context_t *context, char *line,
+static void deh_pointer_parse_line(deh_context_t *context, char *line,
                                  void *tag)
 {
   state_t *state;
-  char *variable_name, *value;
+  char *variable_name;
+  char *value;
   int ivalue;
 
   if (tag == NULL) return;
 
   state = (state_t *)tag;
 
-  // Parse the assignment
+  /* Parse the assignment */
 
   if (!deh_parse_assignment(line, &variable_name, &value))
     {
-      // Failed to parse
+      /* Failed to parse */
+
       deh_warning(context, "Failed to parse assignment");
       return;
     }
 
-  //    printf("Set %s to %s for state\n", variable_name, value);
-
-  // all values are integers
+  /* all values are integers */
 
   ivalue = atoi(value);
 
-  // set the appropriate field
+  /* set the appropriate field */
 
   if (!strcasecmp(variable_name, "Codep frame"))
     {
@@ -120,17 +161,12 @@ static void DEH_PointerParseLine(deh_context_t *context, char *line,
     }
 }
 
-static void DEH_PointerSHA1Sum(SHA1_CTX *context)
+static void deh_pointer_sha1_sum(SHA1_CTX *context)
 {
   int i;
 
   for (i = 0; i < NUMSTATES; ++i)
     {
-      sha1_updateint32(context, CodePointerIndex(&states[i].action));
+      sha1_updateint32(context, code_pointer_index(&states[i].action));
     }
 }
-
-deh_section_t deh_section_pointer = {
-    "Pointer", DEH_PointerInit,    DEH_PointerStart, DEH_PointerParseLine,
-    NULL,      DEH_PointerSHA1Sum,
-};

@@ -52,6 +52,10 @@ DEH_END_MAPPING
  * Private Function Prototypes
  ****************************************************************************/
 
+static void *deh_sound_start(deh_context_t *context, char *line);
+static void deh_sound_parse_line(deh_context_t *context, char *line,
+                                 void *tag);
+
 /****************************************************************************
  * Public Data
  ****************************************************************************/
