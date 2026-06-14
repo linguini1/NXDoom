@@ -121,7 +121,7 @@ static void DEH_CheatParseLine(deh_context_t *context, char *line, void *tag)
 
       if (i >= MAX_CHEAT_LEN - cheat->seq->parameter_chars)
         {
-          DEH_Error(context, "Cheat sequence too long!");
+          deh_error(context, "Cheat sequence too long!");
           return;
         }
     }

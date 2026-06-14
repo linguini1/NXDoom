@@ -1,19 +1,27 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// Parses "Frame" sections in dehacked files
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/deh_frame.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Parses "Frame" sections in dehacked files
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +35,10 @@
 #include "deh_main.h"
 #include "deh_mapping.h"
 
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
+
 DEH_BEGIN_MAPPING(state_mapping, state_t)
 DEH_MAPPING("Sprite number", sprite)
 DEH_MAPPING("Sprite subnumber", frame)
@@ -39,7 +51,36 @@ DEH_MAPPING("Unknown 2", misc2)
 DEH_UNSUPPORTED_MAPPING("Codep frame")
 DEH_END_MAPPING
 
-static void *DEH_FrameStart(deh_context_t *context, char *line)
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
+
+static void *deh_frame_start(deh_context_t *context, char *line);
+static void deh_frame_overflow(deh_context_t *context, char *varname,
+                              int value);
+static void deh_frame_parse_line(deh_context_t *context, char *line,
+                                 void *tag);
+static void deh_frame_sha1_sum(SHA1_CTX *context);
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
+
+deh_section_t deh_section_frame =
+{
+  "Frame",
+  NULL,
+  deh_frame_start,
+  deh_frame_parse_line,
+  NULL,
+  deh_frame_sha1_sum,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void *deh_frame_start(deh_context_t *context, char *line)
 {
   int frame_number = 0;
   state_t *state;
@@ -69,15 +110,16 @@ static void *DEH_FrameStart(deh_context_t *context, char *line)
   return state;
 }
 
-// Simulate a frame overflow: Doom has 967 frames in the states[] array, but
-// DOS dehacked internally only allocates memory for 966.  As a result,
-// attempts to set frame 966 (the last frame) will overflow the dehacked
-// array and overwrite the weaponinfo[] array instead.
-//
-// This is noticable in Batman Doom where it is impossible to switch weapons
-// away from the fist once selected.
+/* Simulate a frame overflow: Doom has 967 frames in the states[] array, but
+ * DOS dehacked internally only allocates memory for 966.  As a result,
+ * attempts to set frame 966 (the last frame) will overflow the dehacked
+ * array and overwrite the weaponinfo[] array instead.
+ *
+ * This is noticeable in Batman Doom where it is impossible to switch weapons
+ * away from the fist once selected.
+ */
 
-static void DEH_FrameOverflow(deh_context_t *context, char *varname,
+static void deh_frame_overflow(deh_context_t *context, char *varname,
                               int value)
 {
   if (!strcasecmp(varname, "Duration"))
@@ -102,48 +144,50 @@ static void DEH_FrameOverflow(deh_context_t *context, char *varname,
     }
   else
     {
-      DEH_Error(context, "Unable to simulate frame overflow: field '%s'",
+      deh_error(context, "Unable to simulate frame overflow: field '%s'",
                 varname);
     }
 }
 
-static void DEH_FrameParseLine(deh_context_t *context, char *line, void *tag)
+static void deh_frame_parse_line(deh_context_t *context, char *line,
+                                 void *tag)
 {
   state_t *state;
-  char *variable_name, *value;
+  char *variable_name;
+  char *value;
   int ivalue;
 
   if (tag == NULL) return;
 
   state = (state_t *)tag;
 
-  // Parse the assignment
+  /* Parse the assignment */
 
   if (!deh_parse_assignment(line, &variable_name, &value))
     {
-      // Failed to parse
+      /* Failed to parse */
 
       deh_warning(context, "Failed to parse assignment");
       return;
     }
 
-  // all values are integers
+  /* all values are integers */
 
   ivalue = atoi(value);
 
   if (state == &states[NUMSTATES - 1])
     {
-      DEH_FrameOverflow(context, variable_name, ivalue);
+      deh_frame_overflow(context, variable_name, ivalue);
     }
   else
     {
-      // set the appropriate field
+      /* set the appropriate field */
 
       deh_set_mapping(context, &state_mapping, state, variable_name, ivalue);
     }
 }
 
-static void DEH_FrameSHA1Sum(SHA1_CTX *context)
+static void deh_frame_sha1_sum(SHA1_CTX *context)
 {
   int i;
 
@@ -152,7 +196,3 @@ static void DEH_FrameSHA1Sum(SHA1_CTX *context)
       deh_struct_sha1_sum(context, &state_mapping, &states[i]);
     }
 }
-
-deh_section_t deh_section_frame = {
-    "Frame", NULL, DEH_FrameStart, DEH_FrameParseLine, NULL, DEH_FrameSHA1Sum,
-};

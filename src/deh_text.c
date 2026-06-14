@@ -64,7 +64,7 @@ static void *DEH_TextStart(deh_context_t *context, char *line)
 
   if (!deh_allow_long_strings && tolen > TXT_MaxStringLength(fromlen))
     {
-      DEH_Error(context, "Replacement string is longer than the maximum "
+      deh_error(context, "Replacement string is longer than the maximum "
                          "possible in doom.exe");
       return NULL;
     }

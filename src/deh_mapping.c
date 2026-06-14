@@ -91,7 +91,7 @@ boolean deh_set_mapping(deh_context_t *context, deh_mapping_t *mapping,
 
   if (entry->is_string)
     {
-      DEH_Error(context, "Tried to set '%s' as integer (BUG)", name);
+      deh_error(context, "Tried to set '%s' as integer (BUG)", name);
       return false;
     }
 
@@ -114,7 +114,7 @@ boolean deh_set_mapping(deh_context_t *context, deh_mapping_t *mapping,
       *((uint32_t *)location) = value;
       break;
     default:
-      DEH_Error(context, "Unknown field type for '%s' (BUG)", name);
+      deh_error(context, "Unknown field type for '%s' (BUG)", name);
       return false;
     }
 
@@ -142,7 +142,7 @@ boolean DEH_SetStringMapping(deh_context_t *context, deh_mapping_t *mapping,
 
   if (!entry->is_string)
     {
-      DEH_Error(context, "Tried to set '%s' as string (BUG)", name);
+      deh_error(context, "Tried to set '%s' as string (BUG)", name);
       return false;
     }
 
