@@ -379,15 +379,12 @@ static menu_t *g_current_menu;
 
 static menuitem_t g_main_menu[] =
 {
-    {1, "M_NGAME", m_new_game, 'n'},
-    {1, "M_OPTION", m_options, 'o'},
-    {1, "M_LOADG", m_load_game, 'l'},
-    {1, "M_SAVEG", m_save_game, 's'},
-
-    /* Another hickup with Special edition. */
-
-    {1, "M_RDTHIS", m_read_this, 'r'},
-    {1, "M_QUITG", m_quit_doom, 'q'},
+  {1, "M_NGAME", m_new_game, 'n'},
+  {1, "M_OPTION", m_options, 'o'},
+  {1, "M_LOADG", m_load_game, 'l'},
+  {1, "M_SAVEG", m_save_game, 's'},
+  {1, "M_RDTHIS", m_read_this, 'r'}, /* Another hiccup with Special edition. */
+  {1, "M_QUITG", m_quit_doom, 'q'},
 };
 
 static menu_t g_main_def =
@@ -416,9 +413,11 @@ static menu_t g_epi_def =
 
 static menuitem_t new_game_menu[] =
 {
-    {1, "M_JKILL", m_choose_skill, 'i'}, {1, "M_ROUGH", m_choose_skill, 'h'},
-    {1, "M_HURT", m_choose_skill, 'h'},  {1, "M_ULTRA", m_choose_skill, 'u'},
-    {1, "M_NMARE", m_choose_skill, 'n'},
+  {1, "M_JKILL", m_choose_skill, 'i'},
+  {1, "M_ROUGH", m_choose_skill, 'h'},
+  {1, "M_HURT", m_choose_skill, 'h'},
+  {1, "M_ULTRA", m_choose_skill, 'u'},
+  {1, "M_NMARE", m_choose_skill, 'n'},
 };
 
 static menu_t g_new_def =
@@ -488,22 +487,29 @@ static menu_t g_sound_def =
 
 static menuitem_t g_load_menu[] =
 {
-    {1, "", m_load_select, '1'}, {1, "", m_load_select, '2'},
-    {1, "", m_load_select, '3'}, {1, "", m_load_select, '4'},
-    {1, "", m_load_select, '5'}, {1, "", m_load_select, '6'},
+  {1, "", m_load_select, '1'},
+  {1, "", m_load_select, '2'},
+  {1, "", m_load_select, '3'},
+  {1, "", m_load_select, '4'},
+  {1, "", m_load_select, '5'},
+  {1, "", m_load_select, '6'},
 };
 
-static menu_t g_load_def = {
-    LOAD_END, &g_main_def, g_load_menu, m_draw_load, 80, 54, 0,
+static menu_t g_load_def =
+{
+  LOAD_END, &g_main_def, g_load_menu, m_draw_load, 80, 54, 0,
 };
 
 /* SAVE GAME MENU */
 
 static menuitem_t g_save_menu[] =
 {
-    {1, "", m_save_select, '1'}, {1, "", m_save_select, '2'},
-    {1, "", m_save_select, '3'}, {1, "", m_save_select, '4'},
-    {1, "", m_save_select, '5'}, {1, "", m_save_select, '6'},
+  {1, "", m_save_select, '1'},
+  {1, "", m_save_select, '2'},
+  {1, "", m_save_select, '3'},
+  {1, "", m_save_select, '4'},
+  {1, "", m_save_select, '5'},
+  {1, "", m_save_select, '6'},
 };
 
 static menu_t g_save_def =
