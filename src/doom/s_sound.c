@@ -303,9 +303,9 @@ static int s_adjust_sound_params(mobj_t *listener, mobj_t *source, int *vol,
     {
       /* distance effect */
 
-      *vol =
-          (g_snd_sfx_volume * ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) /
-          S_ATTENUATOR;
+      *vol = (g_snd_sfx_volume *
+              ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)
+              ) / S_ATTENUATOR;
     }
 
   return (*vol > 0);
@@ -712,7 +712,10 @@ void s_set_sfx_volume(int volume)
 
 /* Starts some music with the music id found in sounds.h. */
 
-void s_start_music(int m_id) { s_change_music(m_id, false); }
+void s_start_music(int m_id)
+{
+  s_change_music(m_id, false);
+}
 
 void s_change_music(int musicnum, int looping)
 {
