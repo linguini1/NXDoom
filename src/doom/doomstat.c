@@ -1,5 +1,5 @@
 /****************************************************************************
- * src/doom/doomstat.c
+ * apps/games/NXDoom/src/doom/doomstat.c
  *
  * SPDX-License-Identifer: GPLv2
  *
@@ -43,3 +43,7 @@ game_variant_t gamevariant = vanilla;
 /* Set if homebrew PWAD stuff has been added. */
 
 boolean modifiedgame;
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/

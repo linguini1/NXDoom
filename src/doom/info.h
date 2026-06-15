@@ -1323,8 +1323,8 @@ typedef enum
   NUMMOBJTYPES
 } mobjtype_t;
 
-/* Ranges for these members were obtained by analyzing the `mobjinfo` array at
- * game startup.
+/* Ranges for these members were obtained by analyzing the `mobjinfo`
+ * array at game startup.
  */
 
 begin_packed_struct typedef struct
