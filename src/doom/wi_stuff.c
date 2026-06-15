@@ -234,7 +234,8 @@ typedef void (*load_callback_t)(const char *lumpname, patch_t **variable);
  * Private Data
  ****************************************************************************/
 
-static point_t lnodes[NUMEPISODES][NUMMAPS] = {
+static point_t lnodes[NUMEPISODES][NUMMAPS] =
+{
     /* Episode 0 World Map */
 
     {
@@ -278,7 +279,8 @@ static point_t lnodes[NUMEPISODES][NUMMAPS] = {
     },
 };
 
-static anim_t epsd0animinfo[] = {
+static anim_t epsd0animinfo[] =
+{
     ANIM(ANIM_ALWAYS, TICRATE / 3, 3, 224, 104, 0),
     ANIM(ANIM_ALWAYS, TICRATE / 3, 3, 184, 160, 0),
     ANIM(ANIM_ALWAYS, TICRATE / 3, 3, 112, 136, 0),
@@ -291,7 +293,8 @@ static anim_t epsd0animinfo[] = {
     ANIM(ANIM_ALWAYS, TICRATE / 3, 3, 64, 24, 0),
 };
 
-static anim_t epsd1animinfo[] = {
+static anim_t epsd1animinfo[] =
+{
     ANIM(ANIM_LEVEL, TICRATE / 3, 1, 128, 136, 1),
     ANIM(ANIM_LEVEL, TICRATE / 3, 1, 128, 136, 2),
     ANIM(ANIM_LEVEL, TICRATE / 3, 1, 128, 136, 3),
@@ -303,7 +306,8 @@ static anim_t epsd1animinfo[] = {
     ANIM(ANIM_LEVEL, TICRATE / 3, 1, 128, 136, 8),
 };
 
-static anim_t epsd2animinfo[] = {
+static anim_t epsd2animinfo[] =
+{
     ANIM(ANIM_ALWAYS, TICRATE / 3, 3, 104, 168, 0),
     ANIM(ANIM_ALWAYS, TICRATE / 3, 3, 40, 136, 0),
     ANIM(ANIM_ALWAYS, TICRATE / 3, 3, 160, 96, 0),
@@ -312,13 +316,15 @@ static anim_t epsd2animinfo[] = {
     ANIM(ANIM_ALWAYS, TICRATE / 4, 3, 40, 0, 0),
 };
 
-static int NUMANIMS[NUMEPISODES] = {
+static int NUMANIMS[NUMEPISODES] =
+{
     arrlen(epsd0animinfo),
     arrlen(epsd1animinfo),
     arrlen(epsd2animinfo),
 };
 
-static anim_t *anims[NUMEPISODES] = {
+static anim_t *anims[NUMEPISODES] =
+{
     epsd0animinfo,
     epsd1animinfo,
     epsd2animinfo,
@@ -369,17 +375,19 @@ static int NUMCMAPS;
 
 /* You Are Here graphic */
 
-static patch_t *yah[3] = {
-    NULL,
-    NULL,
-    NULL,
+static patch_t *yah[3] =
+{
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* splat */
 
-static patch_t *splat[2] = {
-    NULL,
-    NULL,
+static patch_t *splat[2] =
+{
+  NULL,
+  NULL,
 };
 
 /* %, : graphics */
@@ -515,8 +523,8 @@ static void wi_load_unload_data(load_callback_t callback)
                     {
                       /* animations */
 
-                      snprintf(name, sizeof(name), "WIA%d%.2d%.2d", wbs->epsd,
-                               j, i);
+                      snprintf(name, sizeof(name), "WIA%d%.2d%.2d",
+                               wbs->epsd, j, i);
                       callback(name, &a->p[i]);
                     }
                   else
@@ -666,8 +674,8 @@ static void wi_load_data(void)
   if (gamemode == commercial)
     {
       NUMCMAPS = 32;
-      lnames =
-          (patch_t **)z_malloc(sizeof(patch_t *) * NUMCMAPS, PU_STATIC, NULL);
+      lnames = (patch_t **)z_malloc(sizeof(patch_t *) * NUMCMAPS,
+                                    PU_STATIC, NULL);
     }
   else
     {
@@ -705,7 +713,10 @@ static void wi_unload_data(void)
 
 /* slam background */
 
-static void wi_slam_background(void) { v_draw_patch(0, 0, background); }
+static void wi_slam_background(void)
+{
+  v_draw_patch(0, 0, background);
+}
 
 /* Draws "<Levelname> Finished!" */
 
@@ -740,22 +751,16 @@ static void wi_draw_lf(void)
        * anyway.  This deliberately triggers a v_draw_patch error.
        */
 
-      patch_t tmp = {
+      patch_t tmp =
+        {
           SCREENWIDTH,
           SCREENHEIGHT,
           1,
           1,
-          {
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-          },
-      };
+            {
+              0, 0, 0, 0, 0, 0, 0, 0
+            },
+        };
 
       v_draw_patch(0, y, &tmp);
     }
@@ -1735,7 +1740,8 @@ static void wi_draw_stats(void)
   wi_draw_percent(SCREENWIDTH - SP_STATSX, SP_STATSY + lh, cnt_items[0]);
 
   v_draw_patch(SP_STATSX, SP_STATSY + 2 * lh, sp_secret);
-  wi_draw_percent(SCREENWIDTH - SP_STATSX, SP_STATSY + 2 * lh, cnt_secret[0]);
+  wi_draw_percent(SCREENWIDTH - SP_STATSX, SP_STATSY + 2 * lh,
+          cnt_secret[0]);
 
   v_draw_patch(SP_TIMEX, SP_TIMEY, timepatch);
   wi_draw_time(SCREENWIDTH / 2 - SP_TIMEX, SP_TIMEY, cnt_time);
@@ -1802,7 +1808,10 @@ static void wi_init_variables(wbstartstruct_t *wbstartstruct)
  * Public Functions
  ****************************************************************************/
 
-void wi_end(void) { wi_unload_data(); }
+void wi_end(void)
+{
+  wi_unload_data();
+}
 
 /* Updates stuff each tick */
 
