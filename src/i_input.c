@@ -416,7 +416,7 @@ void i_handle_keyboard_event(struct keyboard_event_s *kevent)
 
       if (event.data1 != 0)
         {
-          D_PostEvent(&event);
+          d_post_event(&event);
         }
       break;
 
@@ -436,7 +436,7 @@ void i_handle_keyboard_event(struct keyboard_event_s *kevent)
 
       if (event.data1 != 0)
         {
-          D_PostEvent(&event);
+          d_post_event(&event);
         }
       break;
 
@@ -528,7 +528,7 @@ static void UpdateMouseButtonState(unsigned int button, boolean on)
     event.type = ev_mouse;
     event.data1 = mouse_button_state;
     event.data2 = event.data3 = 0;
-    D_PostEvent(&event);
+    d_post_event(&event);
 }
 #endif
 
@@ -558,7 +558,7 @@ static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
     down.type = ev_mouse;
     down.data1 = mouse_button_state;
     down.data2 = down.data3 = 0;
-    D_PostEvent(&down);
+    d_post_event(&down);
 
     /* post a button up event */
 
@@ -566,7 +566,7 @@ static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
     up.type = ev_mouse;
     up.data1 = mouse_button_state;
     up.data2 = up.data3 = 0;
-    D_PostEvent(&up);
+    d_post_event(&up);
 }
 #endif
 
@@ -647,7 +647,7 @@ void i_read_mouse(void)
          * this function
          */
 
-        D_PostEvent(&ev);
+        d_post_event(&ev);
     }
 #endif
 }

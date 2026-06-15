@@ -103,8 +103,8 @@ extern int joystick_move_sensitivity;
 extern int joystick_look_sensitivity;
 
 void i_init_joystick(void);
-void I_ShutdownJoystick(void);
-void I_UpdateJoystick(void);
+void i_shutdown_joystick(void);
+void i_update_joystick(void);
 
 void i_bind_joystick_variables(void);
 
