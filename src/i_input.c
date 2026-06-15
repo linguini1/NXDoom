@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_input.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *     SDL implementation of system-specific input interface.
- */
+ *   SDL implementation of system-specific input interface.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -51,9 +56,10 @@ struct keyboard_dev
  ****************************************************************************/
 
 #ifdef CONFIG_GAMES_NXDOOM_KEYBOARD
-struct keyboard_dev g_kbd_dev = {
-    .fd = -1,
-    .inited = false,
+struct keyboard_dev g_kbd_dev =
+{
+  .fd = -1,
+  .inited = false,
 };
 #endif
 
@@ -61,8 +67,8 @@ struct keyboard_dev g_kbd_dev = {
 static const int g_scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
 
 /* Lookup table for mapping ASCII characters to their equivalent when
-* shift is pressed on a US layout keyboard. This is the original table
-* as found in the Doom sources, comments and all.
+ * shift is pressed on a US layout keyboard. This is the original table
+ * as found in the Doom sources, comments and all.
  */
 
 static const char shiftxform[] =
@@ -71,42 +77,42 @@ static const char shiftxform[] =
     11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
     21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
     31, ' ', '!', '"', '#', '$', '%', '&',
-    '"', // shift-'
+    '"', /* shift-' */
     '(', ')', '*', '+',
-    '<', // shift-,
-    '_', // shift--
-    '>', // shift-.
-    '?', // shift-/
-    ')', // shift-0
-    '!', // shift-1
-    '@', // shift-2
-    '#', // shift-3
-    '$', // shift-4
-    '%', // shift-5
-    '^', // shift-6
-    '&', // shift-7
-    '*', // shift-8
-    '(', // shift-9
+    '<', /* shift-, */
+    '_', /* shift-- */
+    '>', /* shift-. */
+    '?', /* shift-/ */
+    ')', /* shift-0 */
+    '!', /* shift-1 */
+    '@', /* shift-2 */
+    '#', /* shift-3 */
+    '$', /* shift-4 */
+    '%', /* shift-5 */
+    '^', /* shift-6 */
+    '&', /* shift-7 */
+    '*', /* shift-8 */
+    '(', /* shift-9 */
     ':',
-    ':', // shift-;
+    ':', /* shift-; */
     '<',
-    '+', // shift-=
+    '+', /* shift-= */
     '>', '?', '@',
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '[', // shift-[
-    '!', // shift-backslash - OH MY GOD DOES WATCOM SUCK
-    ']', // shift-]
+    '[', /* shift-[ */
+    '!', /* shift-backslash - OH MY GOD DOES WATCOM SUCK */
+    ']', /* shift-] */
     '"', '_',
-    '\'', // shift-`
+    '\'', /* shift-` */
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
     'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     '{', '|', '}', '~', 127
 };
 
 /* If true, i_start_text_input() has been called, and we are populating
-* the data3 field of ev_keydown events.
-*/
+ * the data3 field of ev_keydown events.
+ */
 
 static boolean text_input_enabled = true;
 
@@ -250,99 +256,215 @@ static int get_localized_key(uint32_t sym)
 static int get_typed_char(uint32_t sym)
 {
 #if 0
-    /* We only return typed characters when entering text, after
-     * i_start_text_input() has been called. Otherwise we return nothing.
-     */
+  /* We only return typed characters when entering text, after
+   * i_start_text_input() has been called. Otherwise we return nothing.
+   */
 
-    if (!text_input_enabled)
+  if (!text_input_enabled)
     {
-        return 0;
+      return 0;
     }
 
-    /* If we're strictly emulating Vanilla, we should always act like
-     * we're using a US layout keyboard (in ev_keydown, data1=data2).
-     * Otherwise we should use the native key mapping.
-     */
+  /* If we're strictly emulating Vanilla, we should always act like
+   * we're using a US layout keyboard (in ev_keydown, data1=data2).
+   * Otherwise we should use the native key mapping.
+   */
 
-    if (vanilla_keyboard_mapping)
+  if (vanilla_keyboard_mapping)
     {
-        int result = TranslateKey(sym);
+      int result = TranslateKey(sym);
 
-        /* If shift is held down, apply the original uppercase
-         * translation table used under DOS.
-         */
+      /* If shift is held down, apply the original uppercase
+       * translation table used under DOS.
+       */
 
-        if ((SDL_GetModState() & KMOD_SHIFT) != 0
-         && result >= 0 && result < arrlen(shiftxform))
+      if ((SDL_GetModState() & KMOD_SHIFT) != 0 && result >= 0 &&
+          result < arrlen(shiftxform))
         {
-            result = shiftxform[result];
+          result = shiftxform[result];
         }
 
-        return result;
+      return result;
     }
-    else
+  else
     {
-        SDL_Event next_event;
+      SDL_Event next_event;
 
-        /* Special cases, where we always return a fixed value. */
+      /* Special cases, where we always return a fixed value. */
 
-        switch (sym->sym)
+      switch (sym->sym)
         {
-            case SDLK_BACKSPACE: return KEY_BACKSPACE;
-            case SDLK_RETURN:    return KEY_ENTER;
-            default:
-                break;
+        case SDLK_BACKSPACE:
+          return KEY_BACKSPACE;
+        case SDLK_RETURN:
+          return KEY_ENTER;
+        default:
+          break;
         }
 
-        /* The following is a gross hack, but I don't see an easier way
-         * of doing this within the SDL2 API (in SDL1 it was easier).
-         * We want to get the fully transformed input character associated
-         * with this keypress - correct keyboard layout, appropriately
-         * transformed by any modifier keys, etc. So peek ahead in the SDL
-         * event queue and see if the key press is immediately followed by
-         * an SDL_TEXTINPUT event. If it is, it's reasonable to assume the
-         * key press and the text input are connected. Technically the SDL
-         * API does not guarantee anything of the sort, but in practice this
-         * is what happens and I've verified it through manual inspect of
-         * the SDL source code.
-         *
-         * In an ideal world we'd split out ev_keydown into a separate
-         * ev_textinput event, as SDL2 has done. But this doesn't work
-         * (I experimented with the idea), because lots of Doom's code is
-         * based around different responders "eating" events to stop them
-         * being passed on to another responder. If code is listening for
-         * a text input, it cannot block the corresponding keydown events
-         * which can affect other responders.
-         *
-         * So we're stuck with this as a rather fragile alternative.
-         */
+      /* The following is a gross hack, but I don't see an easier way
+       * of doing this within the SDL2 API (in SDL1 it was easier).
+       * We want to get the fully transformed input character associated
+       * with this keypress - correct keyboard layout, appropriately
+       * transformed by any modifier keys, etc. So peek ahead in the SDL
+       * event queue and see if the key press is immediately followed by
+       * an SDL_TEXTINPUT event. If it is, it's reasonable to assume the
+       * key press and the text input are connected. Technically the SDL
+       * API does not guarantee anything of the sort, but in practice this
+       * is what happens and I've verified it through manual inspect of
+       * the SDL source code.
+       *
+       * In an ideal world we'd split out ev_keydown into a separate
+       * ev_textinput event, as SDL2 has done. But this doesn't work
+       * (I experimented with the idea), because lots of Doom's code is
+       * based around different responders "eating" events to stop them
+       * being passed on to another responder. If code is listening for
+       * a text input, it cannot block the corresponding keydown events
+       * which can affect other responders.
+       *
+       * So we're stuck with this as a rather fragile alternative.
+       */
 
-        if (SDL_PeepEvents(&next_event, 1, SDL_PEEKEVENT,
-                           SDL_FIRSTEVENT, SDL_LASTEVENT) == 1
-         && next_event.type == SDL_TEXTINPUT)
+      if (SDL_PeepEvents(&next_event, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT,
+                         SDL_LASTEVENT) == 1 &&
+          next_event.type == SDL_TEXTINPUT)
         {
-            /* If an SDL_TEXTINPUT event is found, we always assume it
-             * matches the key press. The input text must be a single
-             * ASCII character - if it isn't, it's possible the input
-             * char is a Unicode value instead; better to send a null
-             * character than the unshifted key.
-             */
+          /* If an SDL_TEXTINPUT event is found, we always assume it
+           * matches the key press. The input text must be a single
+           * ASCII character - if it isn't, it's possible the input
+           * char is a Unicode value instead; better to send a null
+           * character than the unshifted key.
+           */
 
-            if (strlen(next_event.text.text) == 1
-             && (next_event.text.text[0] & 0x80) == 0)
+          if (strlen(next_event.text.text) == 1 &&
+              (next_event.text.text[0] & 0x80) == 0)
             {
-                return next_event.text.text[0];
+              return next_event.text.text[0];
             }
         }
 
-        /* Failed to find anything :/ */
+      /* Failed to find anything :/ */
 
-        return 0;
+      return 0;
     }
-    return 0;
+
+  return 0;
 #endif
   return 0;
 }
+
+#if 0
+static void update_mouse_button_state(unsigned int button, boolean on)
+{
+  static event_t event;
+
+  if (button < SDL_BUTTON_LEFT || button > MAX_MOUSE_BUTTONS)
+    {
+      return;
+    }
+
+  /* Note: button "0" is left, button "1" is right,
+   * button "2" is middle for Doom.  This is different
+   * to how SDL sees things.
+   * In the end: Left=0, Right=1, Middle=2,
+   * WheelUp=3 WheelDown=4, XButton1=5, XButton2=6
+   */
+
+  switch (button)
+    {
+    case SDL_BUTTON_LEFT:
+      button = 0;
+      break;
+
+    case SDL_BUTTON_RIGHT:
+      button = 1;
+      break;
+
+    case SDL_BUTTON_MIDDLE:
+      button = 2;
+      break;
+
+    default:
+      /* SDL buttons are indexed from 1.
+       * And the wheel is mapped to button 3/4
+       * So we have to increment 2 and decrement 1 => inc 1.
+       */
+
+      button++;
+      break;
+    }
+
+  /* Turn bit representing this button on or off. */
+
+  if (on)
+    {
+      mouse_button_state |= (1 << button);
+    }
+  else
+    {
+      mouse_button_state &= ~(1 << button);
+    }
+
+  /* Post an event with the new button state. */
+
+  event.type = ev_mouse;
+  event.data1 = mouse_button_state;
+  event.data2 = event.data3 = 0;
+  d_post_event(&event);
+}
+
+static void map_mouse_wheel_to_buttons(SDL_MouseWheelEvent *wheel)
+{
+  /* SDL2 distinguishes button events from mouse wheel events.
+   * We want to treat the mouse wheel as two buttons, as per
+   * SDL1
+   */
+
+  static event_t up;
+  static event_t down;
+  int button;
+
+  if (wheel->y <= 0)
+    {
+      button = 4; /* scroll down */
+    }
+  else
+    {
+      button = 3; /* scroll up */
+    }
+
+  /* post a button down event */
+
+  mouse_button_state |= (1 << button);
+  down.type = ev_mouse;
+  down.data1 = mouse_button_state;
+  down.data2 = down.data3 = 0;
+  d_post_event(&down);
+
+  /* post a button up event */
+
+  mouse_button_state &= ~(1 << button);
+  up.type = ev_mouse;
+  up.data1 = mouse_button_state;
+  up.data2 = up.data3 = 0;
+  d_post_event(&up);
+}
+
+static int accelerate_mouse(int val)
+{
+  if (val < 0) return -accelerate_mouse(-val);
+
+  if (val > mouse_threshold)
+    {
+      return (int)((val - mouse_threshold) * mouse_acceleration +
+                   mouse_threshold);
+    }
+  else
+    {
+      return val;
+    }
+}
+#endif
 
 /****************************************************************************
  * Public Functions
@@ -448,13 +570,13 @@ void i_handle_keyboard_event(struct keyboard_event_s *kevent)
 void i_start_text_input(int x1, int y1, int x2, int y2)
 {
 #if 0
-    text_input_enabled = true;
+  text_input_enabled = true;
 
-    if (!vanilla_keyboard_mapping)
+  if (!vanilla_keyboard_mapping)
     {
-        /* SDL2-TODO: SDL_SetTextInputRect(...); */
+      /* SDL2-TODO: SDL_SetTextInputRect(...); */
 
-        SDL_StartTextInput();
+      SDL_StartTextInput();
     }
 #endif
 }
@@ -462,192 +584,77 @@ void i_start_text_input(int x1, int y1, int x2, int y2)
 void i_stop_text_input(void)
 {
 #if 0
-    text_input_enabled = false;
+  text_input_enabled = false;
 
-    if (!vanilla_keyboard_mapping)
+  if (!vanilla_keyboard_mapping)
     {
-        SDL_StopTextInput();
+      SDL_StopTextInput();
     }
 #endif
 }
-
-#if 0
-static void UpdateMouseButtonState(unsigned int button, boolean on)
-{
-    static event_t event;
-
-    if (button < SDL_BUTTON_LEFT || button > MAX_MOUSE_BUTTONS)
-    {
-        return;
-    }
-
-    /* Note: button "0" is left, button "1" is right,
-     * button "2" is middle for Doom.  This is different
-     * to how SDL sees things.
-     * In the end: Left=0, Right=1, Middle=2,
-     * WheelUp=3 WheelDown=4, XButton1=5, XButton2=6
-     */
-
-    switch (button)
-    {
-        case SDL_BUTTON_LEFT:
-            button = 0;
-            break;
-
-        case SDL_BUTTON_RIGHT:
-            button = 1;
-            break;
-
-        case SDL_BUTTON_MIDDLE:
-            button = 2;
-            break;
-
-        default:
-            /* SDL buttons are indexed from 1.
-             * And the wheel is mapped to button 3/4
-             * So we have to increment 2 and decrement 1 => inc 1.
-             */
-
-            button++;
-            break;
-    }
-
-    /* Turn bit representing this button on or off. */
-
-    if (on)
-    {
-        mouse_button_state |= (1 << button);
-    }
-    else
-    {
-        mouse_button_state &= ~(1 << button);
-    }
-
-    /* Post an event with the new button state. */
-
-    event.type = ev_mouse;
-    event.data1 = mouse_button_state;
-    event.data2 = event.data3 = 0;
-    d_post_event(&event);
-}
-#endif
-
-#if 0
-static void MapMouseWheelToButtons(SDL_MouseWheelEvent *wheel)
-{
-    /* SDL2 distinguishes button events from mouse wheel events.
-     * We want to treat the mouse wheel as two buttons, as per
-     * SDL1
-     */
-
-    static event_t up, down;
-    int button;
-
-    if (wheel->y <= 0)
-    {
-        button = 4; /* scroll down */
-    }
-    else
-    {
-        button = 3; /* scroll up */
-    }
-
-    /* post a button down event */
-
-    mouse_button_state |= (1 << button);
-    down.type = ev_mouse;
-    down.data1 = mouse_button_state;
-    down.data2 = down.data3 = 0;
-    d_post_event(&down);
-
-    /* post a button up event */
-
-    mouse_button_state &= ~(1 << button);
-    up.type = ev_mouse;
-    up.data1 = mouse_button_state;
-    up.data2 = up.data3 = 0;
-    d_post_event(&up);
-}
-#endif
 
 void i_handle_mouse_event(void)
 {
   /* Argument was SDL_Event *sdlevent */
 #if 0
-    switch (sdlevent->type)
+  switch (sdlevent->type)
     {
-        case SDL_MOUSEBUTTONDOWN:
-            UpdateMouseButtonState(sdlevent->button.button, true);
-            break;
+    case SDL_MOUSEBUTTONDOWN:
+      update_mouse_button_state(sdlevent->button.button, true);
+      break;
 
-        case SDL_MOUSEBUTTONUP:
-            UpdateMouseButtonState(sdlevent->button.button, false);
-            break;
+    case SDL_MOUSEBUTTONUP:
+      update_mouse_button_state(sdlevent->button.button, false);
+      break;
 
-        case SDL_MOUSEWHEEL:
-            MapMouseWheelToButtons(&(sdlevent->wheel));
-            break;
+    case SDL_MOUSEWHEEL:
+      map_mouse_wheel_to_buttons(&(sdlevent->wheel));
+      break;
 
-        default:
-            break;
+    default:
+      break;
     }
 #endif
 }
-
-#if 0
-static int AccelerateMouse(int val)
-{
-    if (val < 0)
-        return -AccelerateMouse(-val);
-
-    if (val > mouse_threshold)
-    {
-        return (int)((val - mouse_threshold) * mouse_acceleration + mouse_threshold);
-    }
-    else
-    {
-        return val;
-    }
-}
-#endif
 
 /****************************************************************************
  * Name: i_read_mouse
  *
  * Description:
- *  Read the change in mouse state to generate mouse motion events. This is to
- *  combine all mouse movement for a tic into one mouse motion event.
+ *  Read the change in mouse state to generate mouse motion events. This is
+ *  to combine all mouse movement for a tic into one mouse motion event.
  *
  ****************************************************************************/
 
 void i_read_mouse(void)
 {
 #if 0
-    int x, y;
-    event_t ev;
+  int x;
+  int y;
+  event_t ev;
 
-    SDL_GetRelativeMouseState(&x, &y);
+  SDL_GetRelativeMouseState(&x, &y);
 
-    if (x != 0 || y != 0) 
+  if (x != 0 || y != 0)
     {
-        ev.type = ev_mouse;
-        ev.data1 = mouse_button_state;
-        ev.data2 = AccelerateMouse(x);
+      ev.type = ev_mouse;
+      ev.data1 = mouse_button_state;
+      ev.data2 = accelerate_mouse(x);
 
-        if (!novert)
+      if (!novert)
         {
-            ev.data3 = -AccelerateMouse(y);
+          ev.data3 = -accelerate_mouse(y);
         }
-        else
+      else
         {
-            ev.data3 = 0;
+          ev.data3 = 0;
         }
 
-        /* XXX: undefined behaviour since event is scoped to
-         * this function
-         */
+      /* XXX: undefined behaviour since event is scoped to
+       * this function
+       */
 
-        d_post_event(&ev);
+      d_post_event(&ev);
     }
 #endif
 }
