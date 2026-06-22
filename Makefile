@@ -34,7 +34,6 @@ BASESRCS =        \
   d_mode.c        \
   deh_str.c       \
   gusconf.c       \
-  i_cdmus.c       \
   i_glob.c        \
   i_input.c       \
   i_joystick.c    \
@@ -55,7 +54,6 @@ BASESRCS =        \
   w_wad.c         \
   w_file.c        \
   w_file_stdc.c   \
-  w_file_posix.c  \
   w_merge.c       \
 
 # Only add ENDOOM stuff if the user wants it

@@ -1,20 +1,29 @@
-//
-// Copyright(C) 1993-1996 Id Software, Inc.
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//	Mission begin melt/wipe screen special effect.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/f_wipe.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 1993-1996 Id Software, Inc.
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *  Mission begin melt/wipe screen special effect.
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <string.h>
 
@@ -27,18 +36,45 @@
 
 #include "f_wipe.h"
 
-//
-//                       SCREEN WIPE PACKAGE
-//
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
 
-// when zero, stop the wipe
+static void wipe_shitty_col_major_xform(dpixel_t *array, int width,
+                                        int height);
+static int wip_init_colour_xform(int width, int height, int ticks);
+static int wipe_do_colour_xform(int width, int height, int ticks);
+static int wip_exit_color_xform(int width, int height, int ticks);
+static int wipe_init_melt(int width, int height, int ticks);
+static int wipe_do_melt(int width, int height, int ticks);
+static int wipe_exit_melt(int width, int height, int ticks);
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+/* when zero, stop the wipe */
+
 static boolean go = 0;
 
 static pixel_t *wipe_scr_start;
 static pixel_t *wipe_scr_end;
 static pixel_t *wipe_scr;
 
-void wipe_shittyColMajorXform(dpixel_t *array, int width, int height)
+static int *g_y;
+
+static int (*g_wipes[])(int, int, int) =
+{
+  wip_init_colour_xform, wipe_do_colour_xform, wip_exit_color_xform,
+  wipe_init_melt,        wipe_do_melt,         wipe_exit_melt,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static void wipe_shitty_col_major_xform(dpixel_t *array, int width,
+                                        int height)
 {
   int x;
   int y;
@@ -47,21 +83,25 @@ void wipe_shittyColMajorXform(dpixel_t *array, int width, int height)
   dest = (dpixel_t *)z_malloc(width * height * sizeof(*dest), PU_STATIC, 0);
 
   for (y = 0; y < height; y++)
-    for (x = 0; x < width; x++)
-      dest[x * height + y] = array[y * width + x];
+    {
+      for (x = 0; x < width; x++)
+        {
+          dest[x * height + y] = array[y * width + x];
+        }
+    }
 
   memcpy(array, dest, width * height * sizeof(*dest));
 
   z_free(dest);
 }
 
-int wipe_initColorXForm(int width, int height, int ticks)
+static int wip_init_colour_xform(int width, int height, int ticks)
 {
   memcpy(wipe_scr, wipe_scr_start, width * height * sizeof(*wipe_scr));
   return 0;
 }
 
-int wipe_doColorXForm(int width, int height, int ticks)
+static int wipe_do_colour_xform(int width, int height, int ticks)
 {
   boolean changed;
   pixel_t *w;
@@ -95,6 +135,7 @@ int wipe_doColorXForm(int width, int height, int ticks)
               changed = true;
             }
         }
+
       w++;
       e++;
     }
@@ -102,24 +143,31 @@ int wipe_doColorXForm(int width, int height, int ticks)
   return !changed;
 }
 
-int wipe_exitColorXForm(int width, int height, int ticks) { return 0; }
-
-static int *g_y;
-
-int wipe_initMelt(int width, int height, int ticks)
+static int wip_exit_color_xform(int width, int height, int ticks)
 {
-  int i, r;
+  return 0;
+}
 
-  // copy start screen to main screen
+static int wipe_init_melt(int width, int height, int ticks)
+{
+  int i;
+  int r;
+
+  /* copy start screen to main screen */
+
   memcpy(wipe_scr, wipe_scr_start, width * height * sizeof(*wipe_scr));
 
-  // makes this wipe faster (in theory)
-  // to have stuff in column-major format
-  wipe_shittyColMajorXform((dpixel_t *)wipe_scr_start, width / 2, height);
-  wipe_shittyColMajorXform((dpixel_t *)wipe_scr_end, width / 2, height);
+  /* makes this wipe faster (in theory)
+   * to have stuff in column-major format
+   */
 
-  // setup initial column positions
-  // (y<0 => not ready to scroll yet)
+  wipe_shitty_col_major_xform((dpixel_t *)wipe_scr_start, width / 2, height);
+  wipe_shitty_col_major_xform((dpixel_t *)wipe_scr_end, width / 2, height);
+
+  /* setup initial column positions
+   * (y<0 => not ready to scroll yet)
+   */
+
   g_y = (int *)z_malloc(width * sizeof(int), PU_STATIC, 0);
   g_y[0] = -(m_random() % 16);
   for (i = 1; i < width; i++)
@@ -135,7 +183,7 @@ int wipe_initMelt(int width, int height, int ticks)
   return 0;
 }
 
-int wipe_doMelt(int width, int height, int ticks)
+static int wipe_do_melt(int width, int height, int ticks)
 {
   int i;
   int j;
@@ -169,6 +217,7 @@ int wipe_doMelt(int width, int height, int ticks)
                   d[idx] = *(s++);
                   idx += width;
                 }
+
               g_y[i] += dy;
               s = &((dpixel_t *)wipe_scr_start)[i * height];
               d = &((dpixel_t *)wipe_scr)[g_y[i] * width + i];
@@ -178,6 +227,7 @@ int wipe_doMelt(int width, int height, int ticks)
                   d[idx] = *(s++);
                   idx += width;
                 }
+
               done = false;
             }
         }
@@ -186,13 +236,17 @@ int wipe_doMelt(int width, int height, int ticks)
   return done;
 }
 
-int wipe_exitMelt(int width, int height, int ticks)
+static int wipe_exit_melt(int width, int height, int ticks)
 {
   z_free(g_y);
   z_free(wipe_scr_start);
   z_free(wipe_scr_end);
   return 0;
 }
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 int wipe_start_screen(int x, int y, int width, int height)
 {
@@ -207,37 +261,35 @@ int wipe_endscreen(int x, int y, int width, int height)
   wipe_scr_end = z_malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end),
                           PU_STATIC, NULL);
   i_read_screen(wipe_scr_end);
-  v_draw_block(x, y, width, height, wipe_scr_start); // restore start scr.
+  v_draw_block(x, y, width, height, wipe_scr_start); /* restore start scr. */
   return 0;
 }
 
 int wipe_screen_wipe(int wipeno, int x, int y, int width, int height,
-                    int ticks)
+                     int ticks)
 {
   int rc;
-  static int (*wipes[])(int, int, int) = {
-      wipe_initColorXForm, wipe_doColorXForm, wipe_exitColorXForm,
-      wipe_initMelt,       wipe_doMelt,       wipe_exitMelt};
 
-  // initial stuff
+  /* initial stuff */
+
   if (!go)
     {
       go = 1;
-      // wipe_scr = (pixel_t *) z_malloc(width*height, PU_STATIC, 0); // DEBUG
       wipe_scr = i_video_buffer;
-      (*wipes[wipeno * 3])(width, height, ticks);
+      (*g_wipes[wipeno * 3])(width, height, ticks);
     }
 
-  // do a piece of wipe-in
-  v_mark_rect(0, 0, width, height);
-  rc = (*wipes[wipeno * 3 + 1])(width, height, ticks);
-  //  v_draw_block(x, y, 0, width, height, wipe_scr); // DEBUG
+  /* do a piece of wipe-in */
 
-  // final stuff
+  v_mark_rect(0, 0, width, height);
+  rc = (*g_wipes[wipeno * 3 + 1])(width, height, ticks);
+
+  /* final stuff */
+
   if (rc)
     {
       go = 0;
-      (*wipes[wipeno * 3 + 2])(width, height, ticks);
+      (*g_wipes[wipeno * 3 + 2])(width, height, ticks);
     }
 
   return !go;

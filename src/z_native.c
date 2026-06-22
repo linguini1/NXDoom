@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/z_native.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,12 +17,12 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Zone Memory Allocation. Neat.
+ *  Zone Memory Allocation. Neat.
  *
- *	This is an implementation of the zone memory API which
- *	uses native calls to malloc() and free().
+ *  This is an implementation of the zone memory API which
+ *  uses native calls to malloc() and free().
  *
- */
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -118,6 +122,7 @@ static void z_remove_block(memblock_t *block)
         {
           i_error("Z_RemoveBlock: Doubly-linked list corrupted!");
         }
+
       block->prev->next = block->next;
     }
 
@@ -127,6 +132,7 @@ static void z_remove_block(memblock_t *block)
         {
           i_error("Z_RemoveBlock: Doubly-linked list corrupted!");
         }
+
       block->next->prev = block->prev;
     }
 }
@@ -300,7 +306,7 @@ void *z_malloc(int size, int tag, void *user)
 
   if (user == NULL && tag >= PU_PURGELEVEL)
     {
-      i_error("z_malloc: an owner is required for purgable blocks");
+      i_error("z_malloc: an owner is required for purgeable blocks");
     }
 
   /* Malloc a block of the required size */
@@ -356,7 +362,7 @@ void z_free_tags(int lowtag, int hightag)
 
       /* Free all in this chain */
 
-      for (block = allocated_blocks[i]; block != NULL;)
+      for (block = allocated_blocks[i]; block != NULL; )
         {
           next = block->next;
 
@@ -389,34 +395,33 @@ void z_dump_heap(int lowtag, int hightag)
   /* WARN: broken */
 
 #if 0
-    memblock_t*	block;
-	
-    printf ("zone size: %i  location: %p\n",
-	    mainzone->size,mainzone);
-    
-    printf ("tag range: %i to %i\n",
-	    lowtag, hightag);
-	
-    for (block = mainzone->blocklist.next ; ; block = block->next)
+  memblock_t *block;
+
+  printf("zone size: %i  location: %p\n", mainzone->size, mainzone);
+
+  printf("tag range: %i to %i\n", lowtag, hightag);
+
+  for (block = mainzone->blocklist.next; ; block = block->next)
     {
-	if (block->tag >= lowtag && block->tag <= hightag)
-	    printf ("block:%p    size:%7i    user:%p    tag:%3i\n",
-		    block, block->size, block->user, block->tag);
-		
-	if (block->next == &mainzone->blocklist)
-	{
-	    // all blocks have been hit
-	    break;
-	}
-	
-	if ( (byte *)block + block->size != (byte *)block->next)
-	    printf ("ERROR: block size does not touch the next block\n");
+      if (block->tag >= lowtag && block->tag <= hightag)
+        printf("block:%p    size:%7i    user:%p    tag:%3i\n", block,
+               block->size, block->user, block->tag);
 
-	if ( block->next->prev != block)
-	    printf ("ERROR: next block doesn't have proper back link\n");
+      if (block->next == &mainzone->blocklist)
+        {
+          /* all blocks have been hit */
 
-	if (block->tag == PU_FREE && block->next->tag == PU_FREE)
-	    printf ("ERROR: two consecutive free blocks\n");
+          break;
+        }
+
+      if ((byte *)block + block->size != (byte *)block->next)
+        printf("ERROR: block size does not touch the next block\n");
+
+      if (block->next->prev != block)
+        printf("ERROR: next block doesn't have proper back link\n");
+
+      if (block->tag == PU_FREE && block->next->tag == PU_FREE)
+        printf("ERROR: two consecutive free blocks\n");
     }
 #endif
 }
@@ -429,29 +434,30 @@ void z_file_dump_heap(FILE *f)
 {
   /* WARN: broken */
 #if 0
-    memblock_t*	block;
-	
-    fprintf (f,"zone size: %i  location: %p\n",mainzone->size,mainzone);
-	
-    for (block = mainzone->blocklist.next ; ; block = block->next)
+  memblock_t *block;
+
+  fprintf(f, "zone size: %i  location: %p\n", mainzone->size, mainzone);
+
+  for (block = mainzone->blocklist.next; ; block = block->next)
     {
-	fprintf (f,"block:%p    size:%7i    user:%p    tag:%3i\n",
-		 block, block->size, block->user, block->tag);
-		
-	if (block->next == &mainzone->blocklist)
-	{
-	    // all blocks have been hit
-	    break;
-	}
-	
-	if ( (byte *)block + block->size != (byte *)block->next)
-	    fprintf (f,"ERROR: block size does not touch the next block\n");
+      fprintf(f, "block:%p    size:%7i    user:%p    tag:%3i\n", block,
+              block->size, block->user, block->tag);
 
-	if ( block->next->prev != block)
-	    fprintf (f,"ERROR: next block doesn't have proper back link\n");
+      if (block->next == &mainzone->blocklist)
+        {
+          /* all blocks have been hit */
 
-	if (block->tag == PU_FREE && block->next->tag == PU_FREE)
-	    fprintf (f,"ERROR: two consecutive free blocks\n");
+          break;
+        }
+
+      if ((byte *)block + block->size != (byte *)block->next)
+        fprintf(f, "ERROR: block size does not touch the next block\n");
+
+      if (block->next->prev != block)
+        fprintf(f, "ERROR: next block doesn't have proper back link\n");
+
+      if (block->tag == PU_FREE && block->next->tag == PU_FREE)
+        fprintf(f, "ERROR: two consecutive free blocks\n");
     }
 #endif
 }
@@ -504,7 +510,7 @@ void z_change_tag2(void *ptr, int tag, const char *file, int line)
 
   if (tag >= PU_PURGELEVEL && block->user == NULL)
     i_error("%s:%i: z_change_tag: an owner is required "
-            "for purgable blocks",
+            "for purgeable blocks",
             file, line);
 
   /* Remove the block from its current list, and rehook it into
@@ -535,10 +541,16 @@ void z_change_user(void *ptr, void **user)
  * Name: z_free_memory
  ****************************************************************************/
 
-int z_free_memory(void) { return -1; /* Limited by the system?? */ }
+int z_free_memory(void)
+{
+  return -1; /* Limited by the system?? */
+}
 
 /****************************************************************************
  * Name: z_zone_size
  ****************************************************************************/
 
-unsigned int z_zone_size(void) { return 0; }
+unsigned int z_zone_size(void)
+{
+  return 0;
+}

@@ -56,6 +56,26 @@ struct txt_window_action_s
   int key;
 };
 
+/* A window.
+ *
+ * A window contains widgets, and may also be treated as a table
+ * (@ref txt_table_t) containing a single column.
+ *
+ * Windows can be created using @ref txt_new_window and closed using
+ * @ref txt_close_window.  When a window is closed, it emits the
+ * "closed" signal.
+ *
+ * In addition to the widgets within a window, windows also have
+ * a "tray" area at their bottom containing window action widgets.
+ * These widgets allow keyboard shortcuts to trigger common actions.
+ * Each window has three slots for keyboard shortcuts. By default,
+ * the left slot contains an action to close the window when the
+ * escape button is pressed, while the right slot contains an
+ * action to activate the currently-selected widget.
+ */
+
+typedef struct txt_window_s txt_window_t; /* Forward definition */
+
 /****************************************************************************
  * Public Function Prototypes
  ****************************************************************************/

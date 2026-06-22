@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_swap.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Endianess handling, swapping 16bit and 32bit.
- */
+ *  Endianness handling, swapping 16bit and 32bit.
+ *
+ ****************************************************************************/
 
 #ifndef __I_SWAP__
 #define __I_SWAP__
@@ -29,7 +34,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-/* Endianess handling.
+/* Endianness handling.
  * WAD files are stored little endian.
  */
 
@@ -46,4 +51,4 @@
 #define SYS_BIG_ENDIAN
 #endif
 
-#endif
+#endif /* __I_SWAP__ */

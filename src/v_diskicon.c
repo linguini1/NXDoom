@@ -120,6 +120,16 @@ static void save_disk_data(const char *disk_lump, int xoffs, int yoffs)
   z_free(tmpscreen);
 }
 
+static pixel_t *disk_region_pointer(void)
+{
+  return i_video_buffer + loading_disk_yoffs * SCREENWIDTH +
+         loading_disk_xoffs;
+}
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
 void v_enable_loading_disk(const char *lump_name, int xoffs, int yoffs)
 {
   loading_disk_xoffs = xoffs;
@@ -137,16 +147,9 @@ void v_enable_loading_disk(const char *lump_name, int xoffs, int yoffs)
   save_disk_data(lump_name, xoffs, yoffs);
 }
 
-/****************************************************************************
- * Public Functions
- ****************************************************************************/
-
-void v_begin_read(size_t nbytes) { recent_bytes_read += nbytes; }
-
-static pixel_t *disk_region_pointer(void)
+void v_begin_read(size_t nbytes)
 {
-  return i_video_buffer + loading_disk_yoffs * SCREENWIDTH +
-         loading_disk_xoffs;
+  recent_bytes_read += nbytes;
 }
 
 void v_draw_disk_icon(void)

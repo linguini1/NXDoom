@@ -21,11 +21,16 @@
 #define TXT_CHECKBOX_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Public Types
  ****************************************************************************/
 
-/**
- * Checkbox widget.
+/* Checkbox widget.
  *
  * A checkbox is used to control boolean values that may be either on
  * or off.  The widget has a label that is displayed to the right of
@@ -36,10 +41,6 @@
  *
  * When a checkbox is changed, it emits the "changed" signal.
  */
-
-typedef struct txt_checkbox_s txt_checkbox_t;
-
-#include "txt_widget.h"
 
 struct txt_checkbox_s
 {

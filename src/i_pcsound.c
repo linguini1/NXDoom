@@ -40,7 +40,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#define TIMER_FREQ 1193181 /* hz */
+#define TIMER_FREQ 1193181 /* Hz */
 
 /****************************************************************************
  * Private Data
@@ -48,9 +48,6 @@
 
 static boolean g_pcs_initialized = false;
 
-#if 0
-static SDL_mutex *sound_lock;
-#endif
 static gamemission_t g_gamemission;
 
 static uint8_t *g_current_sound_lump = NULL;
@@ -103,50 +100,9 @@ const sound_module_t sound_pcsound_module =
  * Private Functions
  ****************************************************************************/
 
-#if 0
 static void pcs_callback_func(int *duration, int *freq)
 {
-  unsigned int tone;
-
-  *duration = 1000 / 140;
-
-  if (SDL_LockMutex(sound_lock) < 0)
-    {
-      *freq = 0;
-      return;
-    }
-
-  if (current_sound_lump != NULL && current_sound_remaining > 0)
-    {
-      /* Read the next tone */
-
-      tone = *current_sound_pos;
-
-      /* Use the tone -> frequency lookup table.  See pcspkr10.zip
-       * for a full discussion of this.
-       * Check we don't overflow the frequency table.
-       */
-
-      if (tone < arrlen(divisors) && divisors[tone] != 0)
-        {
-          *freq = (int)(TIMER_FREQ / divisors[tone]);
-        }
-      else
-        {
-          *freq = 0;
-        }
-
-      ++current_sound_pos;
-      --current_sound_remaining;
-    }
-  else
-    {
-      *freq = 0;
-    }
-
-  SDL_UnlockMutex(sound_lock);
 }
-#endif
 
 static boolean cache_pcs_lump(sfxinfo_t *sfxinfo)
 {
@@ -212,68 +168,14 @@ static boolean is_disabled_sound(sfxinfo_t *sfxinfo)
   return false;
 }
 
-#if 0
 static int i_pcs_start_sound(sfxinfo_t *sfxinfo, int channel, int vol,
                              int sep, int pitch)
 {
-  int result;
-
-  if (!pcs_initialized)
-    {
-      return -1;
-    }
-
-  if (is_disabled_sound(sfxinfo))
-    {
-      return -1;
-    }
-
-  if (SDL_LockMutex(sound_lock) < 0)
-    {
-      return -1;
-    }
-
-  result = cachepcslump(sfxinfo);
-
-  if (result)
-    {
-      current_sound_handle = channel;
-    }
-
-  SDL_UnlockMutex(sound_lock);
-
-  if (result)
-    {
-      return channel;
-    }
-  else
-    {
-      return -1;
-    }
 }
 
 static void i_pcs_stop_sound(int handle)
 {
-  if (!pcs_initialized)
-    {
-      return;
-    }
-
-  if (SDL_LockMutex(sound_lock) < 0)
-    {
-      return;
-    }
-
-  /* If this is the channel currently playing, immediately end it. */
-
-  if (current_sound_handle == handle)
-    {
-      current_sound_remaining = 0;
-    }
-
-  SDL_UnlockMutex(sound_lock);
 }
-#endif
 
 /* Retrieve the raw data lump index for a given SFX name. */
 
@@ -315,37 +217,13 @@ static boolean i_pcs_sound_is_playing(int handle)
   return g_current_sound_lump != NULL && g_current_sound_remaining > 0;
 }
 
-#if 0
 static boolean i_pcs_init_sound(gamemission_t mission)
 {
-  gamemission = mission;
-
-  /* Use the sample rate from the configuration file */
-
-  pc_sound_set_sample_rate(snd_samplerate);
-
-  /* Initialize the PC speaker subsystem. */
-
-  pcs_initialized = pc_sound_init(PCSCallbackFunc);
-
-  if (pcs_initialized)
-    {
-      sound_lock = SDL_CreateMutex();
-    }
-
-  return pcs_initialized;
 }
-#endif
 
-#if 0
 static void i_pcs_shutdown_sound(void)
 {
-  if (pcs_initialized)
-    {
-      pc_sound_shutdown();
-    }
 }
-#endif
 
 static void i_pcs_update_sound(void)
 {

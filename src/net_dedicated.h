@@ -1,5 +1,5 @@
 /****************************************************************************
- * apps/games/NXDoom/src/net_dedicated.c
+ * apps/games/NXDoom/src/net_dedicated.h
  *
  * SPDX-License-Identifier: GPLv2
  *
@@ -15,9 +15,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- *
- * Dedicated server code.
- *
+ * DESCRIPTION:
+ *   Dedicated server code.
  *
  ****************************************************************************/
 

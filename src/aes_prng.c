@@ -1,38 +1,32 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// This implements a cryptographically secure pseudorandom number
-// generator for implementing secure demos. The approach taken is to
-// use the AES (Rijndael) stream cipher in "counter" mode, encrypting
-// an incrementing counter. The cipher key acts as the random seed.
-// Cryptanalysis of AES used in this way has shown it to be an
-// effective PRNG (see: Empirical Evidence concerning AES, Hellekalek
-// & Wegenkittl, 2003).
-//
-// AES implementation is taken from the Linux kernel's AES
-// implementation, found in crypto/aes_generic.c. It has been hacked
-// up to work independently.
-//
-
-#include <stdint.h>
-
-#include "aes_prng.h"
-#include "doomtype.h"
-#include "i_swap.h"
-
-/*
- * Cryptographic API.
+/****************************************************************************
+ * apps/games/NXDoom/src/aes_prng.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ *
+ * This implements a cryptographically secure pseudorandom number
+ * generator for implementing secure demos. The approach taken is to
+ * use the AES (Rijndael) stream cipher in "counter" mode, encrypting
+ * an incrementing counter. The cipher key acts as the random seed.
+ * Cryptanalysis of AES used in this way has shown it to be an
+ * effective PRNG (see: Empirical Evidence concerning AES, Hellekalek
+ * & Wegenkittl, 2003).
+ *
+ * AES implementation is taken from the Linux kernel's AES
+ * implementation, found in crypto/aes_generic.c. It has been hacked
+ * up to work independently.
  *
  * AES Cipher Algorithm.
  *
@@ -49,7 +43,6 @@
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * ---------------------------------------------------------------------------
  * Copyright (c) 2002, Dr Brian Gladman <brg@gladman.me.uk>, Worcester, UK.
  * All rights reserved.
  *
@@ -68,17 +61,32 @@
  *   3. the copyright holder's name is not used to endorse products
  *      built using this software without specific written permission.
  *
- * ALTERNATIVELY, provided that this notice is retained in full, this product
- * may be distributed under the terms of the GNU General Public License (GPL),
- * in which case the provisions of the GPL apply INSTEAD OF those given above.
+ * ALTERNATIVELY, provided that this notice is retained in full, this
+ * product may be distributed under the terms of the GNU General Public
+ * License (GPL), in which case the provisions of the GPL apply INSTEAD OF
+ * those given above.
  *
  * DISCLAIMER
  *
  * This software is provided 'as is' with no explicit or implied warranties
  * in respect of its properties, including, but not limited to, correctness
  * and/or fitness for purpose.
- * ---------------------------------------------------------------------------
- */
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include <stdint.h>
+
+#include "aes_prng.h"
+#include "doomtype.h"
+#include "i_swap.h"
+
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
 #define AES_MIN_KEY_SIZE 16
 #define AES_MAX_KEY_SIZE 32
@@ -89,10 +97,146 @@
 #define AES_MAX_KEYLENGTH (15 * 16)
 #define AES_MAX_KEYLENGTH_U32 (AES_MAX_KEYLENGTH / sizeof(uint32_t))
 
-/*
- * Please ensure that the first two fields are 16-byte aligned
+#define cpu_to_le32(x) htole32(x)
+#define le32_to_cpu(x) le32toh(x)
+
+#define star_x(x)                                                            \
+  (((x) & 0x7f7f7f7f) << 1) ^ ((((x) & 0x80808080) >> 7) * 0x1b)
+
+#define imix_col(y, x)                                                       \
+  do                                                                         \
+    {                                                                        \
+      u = star_x(x);                                                         \
+      v = star_x(u);                                                         \
+      w = star_x(v);                                                         \
+      t = w ^ (x);                                                           \
+      (y) = u ^ v ^ w;                                                       \
+      (y) ^= aes_ror32(u ^ t, 8) ^ aes_ror32(v ^ t, 16) ^ aes_ror32(t, 24);  \
+    }                                                                        \
+  while (0)
+
+#define ls_box(x)                                                            \
+  crypto_fl_tab[0][get_byte(x, 0)] ^ crypto_fl_tab[1][get_byte(x, 1)] ^      \
+      crypto_fl_tab[2][get_byte(x, 2)] ^ crypto_fl_tab[3][get_byte(x, 3)]
+
+#define loop4(i)                                                             \
+  do                                                                         \
+    {                                                                        \
+      t = aes_ror32(t, 8);                                                   \
+      t = ls_box(t) ^ rco_tab[i];                                            \
+      t ^= ctx->key_enc[4 * i];                                              \
+      ctx->key_enc[4 * i + 4] = t;                                           \
+      t ^= ctx->key_enc[4 * i + 1];                                          \
+      ctx->key_enc[4 * i + 5] = t;                                           \
+      t ^= ctx->key_enc[4 * i + 2];                                          \
+      ctx->key_enc[4 * i + 6] = t;                                           \
+      t ^= ctx->key_enc[4 * i + 3];                                          \
+      ctx->key_enc[4 * i + 7] = t;                                           \
+    }                                                                        \
+  while (0)
+
+#define loop6(i)                                                             \
+  do                                                                         \
+    {                                                                        \
+      t = aes_ror32(t, 8);                                                   \
+      t = ls_box(t) ^ rco_tab[i];                                            \
+      t ^= ctx->key_enc[6 * i];                                              \
+      ctx->key_enc[6 * i + 6] = t;                                           \
+      t ^= ctx->key_enc[6 * i + 1];                                          \
+      ctx->key_enc[6 * i + 7] = t;                                           \
+      t ^= ctx->key_enc[6 * i + 2];                                          \
+      ctx->key_enc[6 * i + 8] = t;                                           \
+      t ^= ctx->key_enc[6 * i + 3];                                          \
+      ctx->key_enc[6 * i + 9] = t;                                           \
+      t ^= ctx->key_enc[6 * i + 4];                                          \
+      ctx->key_enc[6 * i + 10] = t;                                          \
+      t ^= ctx->key_enc[6 * i + 5];                                          \
+      ctx->key_enc[6 * i + 11] = t;                                          \
+    }                                                                        \
+  while (0)
+
+#define loop8tophalf(i)                                                      \
+  do                                                                         \
+    {                                                                        \
+      t = aes_ror32(t, 8);                                                   \
+      t = ls_box(t) ^ rco_tab[i];                                            \
+      t ^= ctx->key_enc[8 * i];                                              \
+      ctx->key_enc[8 * i + 8] = t;                                           \
+      t ^= ctx->key_enc[8 * i + 1];                                          \
+      ctx->key_enc[8 * i + 9] = t;                                           \
+      t ^= ctx->key_enc[8 * i + 2];                                          \
+      ctx->key_enc[8 * i + 10] = t;                                          \
+      t ^= ctx->key_enc[8 * i + 3];                                          \
+      ctx->key_enc[8 * i + 11] = t;                                          \
+    }                                                                        \
+  while (0)
+
+#define loop8(i)                                                             \
+  do                                                                         \
+    {                                                                        \
+      loop8tophalf(i);                                                       \
+      t = ctx->key_enc[8 * i + 4] ^ ls_box(t);                               \
+      ctx->key_enc[8 * i + 12] = t;                                          \
+      t ^= ctx->key_enc[8 * i + 5];                                          \
+      ctx->key_enc[8 * i + 13] = t;                                          \
+      t ^= ctx->key_enc[8 * i + 6];                                          \
+      ctx->key_enc[8 * i + 14] = t;                                          \
+      t ^= ctx->key_enc[8 * i + 7];                                          \
+      ctx->key_enc[8 * i + 15] = t;                                          \
+    }                                                                        \
+  while (0)
+
+/* encrypt a block of text */
+
+#define f_rn(bo, bi, n, k)                                                   \
+  do                                                                         \
+    {                                                                        \
+      bo[n] = crypto_ft_tab[0][get_byte(bi[n], 0)] ^                         \
+              crypto_ft_tab[1][get_byte(bi[(n + 1) & 3], 1)] ^               \
+              crypto_ft_tab[2][get_byte(bi[(n + 2) & 3], 2)] ^               \
+              crypto_ft_tab[3][get_byte(bi[(n + 3) & 3], 3)] ^ *(k + n);     \
+    }                                                                        \
+  while (0)
+
+#define f_nround(bo, bi, k)                                                  \
+  do                                                                         \
+    {                                                                        \
+      f_rn(bo, bi, 0, k);                                                    \
+      f_rn(bo, bi, 1, k);                                                    \
+      f_rn(bo, bi, 2, k);                                                    \
+      f_rn(bo, bi, 3, k);                                                    \
+      k += 4;                                                                \
+    }                                                                        \
+  while (0)
+
+#define f_rl(bo, bi, n, k)                                                   \
+  do                                                                         \
+    {                                                                        \
+      bo[n] = crypto_fl_tab[0][get_byte(bi[n], 0)] ^                         \
+              crypto_fl_tab[1][get_byte(bi[(n + 1) & 3], 1)] ^               \
+              crypto_fl_tab[2][get_byte(bi[(n + 2) & 3], 2)] ^               \
+              crypto_fl_tab[3][get_byte(bi[(n + 3) & 3], 3)] ^ *(k + n);     \
+    }                                                                        \
+  while (0)
+
+#define f_lround(bo, bi, k)                                                  \
+  do                                                                         \
+    {                                                                        \
+      f_rl(bo, bi, 0, k);                                                    \
+      f_rl(bo, bi, 1, k);                                                    \
+      f_rl(bo, bi, 2, k);                                                    \
+      f_rl(bo, bi, 3, k);                                                    \
+    }                                                                        \
+  while (0)
+
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
+
+/* Please ensure that the first two fields are 16-byte aligned
  * relative to the start of the structure, i.e., don't move them!
  */
+
 typedef struct
 {
   uint32_t key_enc[AES_MAX_KEYLENGTH_U32];
@@ -100,14 +244,23 @@ typedef struct
   uint32_t key_length;
 } aes_context_t;
 
-static inline uint8_t get_byte(const uint32_t x, const unsigned n)
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+static boolean prng_enabled = false;
+static aes_context_t prng_context;
+static uint32_t prng_input_counter;
+static uint32_t prng_values[4];
+static unsigned int prng_value_index = 0;
+
+static const uint32_t rco_tab[10] =
 {
-  return x >> (n << 3);
-}
+  1, 2, 4, 8, 16, 32, 64, 128, 27, 54,
+};
 
-static const uint32_t rco_tab[10] = {1, 2, 4, 8, 16, 32, 64, 128, 27, 54};
-
-static const uint32_t crypto_ft_tab[4][256] = {
+static const uint32_t crypto_ft_tab[4][256] =
+{
     {
         0xa56363c6, 0x847c7cf8, 0x997777ee, 0x8d7b7bf6, 0x0df2f2ff,
         0xbd6b6bd6, 0xb16f6fde, 0x54c5c591, 0x50303060, 0x03010102,
@@ -323,9 +476,11 @@ static const uint32_t crypto_ft_tab[4][256] = {
         0xd731e6e6, 0x84c64242, 0xd0b86868, 0x82c34141, 0x29b09999,
         0x5a772d2d, 0x1e110f0f, 0x7bcbb0b0, 0xa8fc5454, 0x6dd6bbbb,
         0x2c3a1616,
-    }};
+    },
+};
 
-static const uint32_t crypto_fl_tab[4][256] = {
+static const uint32_t crypto_fl_tab[4][256] =
+{
     {
         0x00000063, 0x0000007c, 0x00000077, 0x0000007b, 0x000000f2,
         0x0000006b, 0x0000006f, 0x000000c5, 0x00000030, 0x00000001,
@@ -541,7 +696,17 @@ static const uint32_t crypto_fl_tab[4][256] = {
         0xe6000000, 0x42000000, 0x68000000, 0x41000000, 0x99000000,
         0x2d000000, 0x0f000000, 0xb0000000, 0x54000000, 0xbb000000,
         0x16000000,
-    }};
+    },
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static inline uint8_t get_byte(const uint32_t x, const unsigned n)
+{
+  return x >> (n << 3);
+}
 
 /* initialise the key schedule from the user supplied key */
 
@@ -550,119 +715,38 @@ static uint32_t aes_ror32(uint32_t word, unsigned int shift)
   return (word >> shift) | (word << (32 - shift));
 }
 
-#define cpu_to_le32(x) htole32(x)
-#define le32_to_cpu(x) le32toh(x)
-
-#define star_x(x)                                                            \
-  (((x) & 0x7f7f7f7f) << 1) ^ ((((x) & 0x80808080) >> 7) * 0x1b)
-
-#define imix_col(y, x)                                                       \
-  do                                                                         \
-    {                                                                        \
-      u = star_x(x);                                                         \
-      v = star_x(u);                                                         \
-      w = star_x(v);                                                         \
-      t = w ^ (x);                                                           \
-      (y) = u ^ v ^ w;                                                       \
-      (y) ^= aes_ror32(u ^ t, 8) ^ aes_ror32(v ^ t, 16) ^ aes_ror32(t, 24);  \
-    }                                                                        \
-  while (0)
-
-#define ls_box(x)                                                            \
-  crypto_fl_tab[0][get_byte(x, 0)] ^ crypto_fl_tab[1][get_byte(x, 1)] ^      \
-      crypto_fl_tab[2][get_byte(x, 2)] ^ crypto_fl_tab[3][get_byte(x, 3)]
-
-#define loop4(i)                                                             \
-  do                                                                         \
-    {                                                                        \
-      t = aes_ror32(t, 8);                                                   \
-      t = ls_box(t) ^ rco_tab[i];                                            \
-      t ^= ctx->key_enc[4 * i];                                              \
-      ctx->key_enc[4 * i + 4] = t;                                           \
-      t ^= ctx->key_enc[4 * i + 1];                                          \
-      ctx->key_enc[4 * i + 5] = t;                                           \
-      t ^= ctx->key_enc[4 * i + 2];                                          \
-      ctx->key_enc[4 * i + 6] = t;                                           \
-      t ^= ctx->key_enc[4 * i + 3];                                          \
-      ctx->key_enc[4 * i + 7] = t;                                           \
-    }                                                                        \
-  while (0)
-
-#define loop6(i)                                                             \
-  do                                                                         \
-    {                                                                        \
-      t = aes_ror32(t, 8);                                                   \
-      t = ls_box(t) ^ rco_tab[i];                                            \
-      t ^= ctx->key_enc[6 * i];                                              \
-      ctx->key_enc[6 * i + 6] = t;                                           \
-      t ^= ctx->key_enc[6 * i + 1];                                          \
-      ctx->key_enc[6 * i + 7] = t;                                           \
-      t ^= ctx->key_enc[6 * i + 2];                                          \
-      ctx->key_enc[6 * i + 8] = t;                                           \
-      t ^= ctx->key_enc[6 * i + 3];                                          \
-      ctx->key_enc[6 * i + 9] = t;                                           \
-      t ^= ctx->key_enc[6 * i + 4];                                          \
-      ctx->key_enc[6 * i + 10] = t;                                          \
-      t ^= ctx->key_enc[6 * i + 5];                                          \
-      ctx->key_enc[6 * i + 11] = t;                                          \
-    }                                                                        \
-  while (0)
-
-#define loop8tophalf(i)                                                      \
-  do                                                                         \
-    {                                                                        \
-      t = aes_ror32(t, 8);                                                   \
-      t = ls_box(t) ^ rco_tab[i];                                            \
-      t ^= ctx->key_enc[8 * i];                                              \
-      ctx->key_enc[8 * i + 8] = t;                                           \
-      t ^= ctx->key_enc[8 * i + 1];                                          \
-      ctx->key_enc[8 * i + 9] = t;                                           \
-      t ^= ctx->key_enc[8 * i + 2];                                          \
-      ctx->key_enc[8 * i + 10] = t;                                          \
-      t ^= ctx->key_enc[8 * i + 3];                                          \
-      ctx->key_enc[8 * i + 11] = t;                                          \
-    }                                                                        \
-  while (0)
-
-#define loop8(i)                                                             \
-  do                                                                         \
-    {                                                                        \
-      loop8tophalf(i);                                                       \
-      t = ctx->key_enc[8 * i + 4] ^ ls_box(t);                               \
-      ctx->key_enc[8 * i + 12] = t;                                          \
-      t ^= ctx->key_enc[8 * i + 5];                                          \
-      ctx->key_enc[8 * i + 13] = t;                                          \
-      t ^= ctx->key_enc[8 * i + 6];                                          \
-      ctx->key_enc[8 * i + 14] = t;                                          \
-      t ^= ctx->key_enc[8 * i + 7];                                          \
-      ctx->key_enc[8 * i + 15] = t;                                          \
-    }                                                                        \
-  while (0)
-
-/**
- * AES_ExpandKey - Expands the AES key as described in FIPS-197
+/* aes_expand_key - Expands the AES key as described in FIPS-197
  * @ctx:    The location where the computed key will be stored.
  * @in_key:     The supplied key.
  * @key_len:    The length of the supplied key.
  *
  * Returns 0 on success. The function fails only if an invalid key size (or
  * pointer) is supplied.
- * The expanded key size is 240 bytes (max of 14 rounds with a unique 16 bytes
- * key schedule plus a 16 bytes key which is used before the first round).
- * The decryption key is prepared for the "Equivalent Inverse Cipher" as
- * described in FIPS-197. The first slot (16 bytes) of each key (enc or dec)
- * is for the initial combination, the second slot for the first round and so
- * on.
+ *
+ * The expanded key size is 240 bytes (max of 14 rounds with a unique 16
+ * bytes key schedule plus a 16 bytes key which is used before the first
+ * round). The decryption key is prepared for the "Equivalent Inverse Cipher"
+ * as described in FIPS-197. The first slot (16 bytes) of each key (enc or
+ * dec) is for the initial combination, the second slot for the first round
+ * and so on.
  */
-static int AES_ExpandKey(aes_context_t *ctx, const uint8_t *in_key,
+
+static int aes_expand_key(aes_context_t *ctx, const uint8_t *in_key,
                          unsigned int key_len)
 {
   const uint32_t *key = (const uint32_t *)in_key;
-  uint32_t i, t, u, v, w, j;
+  uint32_t i;
+  uint32_t t;
+  uint32_t u;
+  uint32_t v;
+  uint32_t w;
+  uint32_t j;
 
   if (key_len != AES_KEYSIZE_128 && key_len != AES_KEYSIZE_192 &&
       key_len != AES_KEYSIZE_256)
-    return -1;
+    {
+      return -1;
+    }
 
   ctx->key_length = key_len;
 
@@ -707,77 +791,36 @@ static int AES_ExpandKey(aes_context_t *ctx, const uint8_t *in_key,
       j = key_len + 24 - (i & ~3) + (i & 3);
       imix_col(ctx->key_dec[j], ctx->key_enc[i]);
     }
+
   return 0;
 }
 
-/**
- * AES_SetKey - Set the AES key.
+/* aes_set_key - Set the AES key.
  * @ctx:        AES context struct.
  * @in_key:     The input key.
  * @key_len:    The size of the key.
  *
  * Returns 0 on success, on failure -1 is returned.
- * The function uses AES_ExpandKey() to expand the key.
+ * The function uses aes_expand_key() to expand the key.
  */
-static int AES_SetKey(aes_context_t *ctx, const uint8_t *in_key,
+
+static int aes_set_key(aes_context_t *ctx, const uint8_t *in_key,
                       unsigned int key_len)
 {
   int ret;
 
-  ret = AES_ExpandKey(ctx, in_key, key_len);
+  ret = aes_expand_key(ctx, in_key, key_len);
   if (!ret) return 0;
 
   return -1;
 }
 
-/* encrypt a block of text */
-
-#define f_rn(bo, bi, n, k)                                                   \
-  do                                                                         \
-    {                                                                        \
-      bo[n] = crypto_ft_tab[0][get_byte(bi[n], 0)] ^                         \
-              crypto_ft_tab[1][get_byte(bi[(n + 1) & 3], 1)] ^               \
-              crypto_ft_tab[2][get_byte(bi[(n + 2) & 3], 2)] ^               \
-              crypto_ft_tab[3][get_byte(bi[(n + 3) & 3], 3)] ^ *(k + n);     \
-    }                                                                        \
-  while (0)
-
-#define f_nround(bo, bi, k)                                                  \
-  do                                                                         \
-    {                                                                        \
-      f_rn(bo, bi, 0, k);                                                    \
-      f_rn(bo, bi, 1, k);                                                    \
-      f_rn(bo, bi, 2, k);                                                    \
-      f_rn(bo, bi, 3, k);                                                    \
-      k += 4;                                                                \
-    }                                                                        \
-  while (0)
-
-#define f_rl(bo, bi, n, k)                                                   \
-  do                                                                         \
-    {                                                                        \
-      bo[n] = crypto_fl_tab[0][get_byte(bi[n], 0)] ^                         \
-              crypto_fl_tab[1][get_byte(bi[(n + 1) & 3], 1)] ^               \
-              crypto_fl_tab[2][get_byte(bi[(n + 2) & 3], 2)] ^               \
-              crypto_fl_tab[3][get_byte(bi[(n + 3) & 3], 3)] ^ *(k + n);     \
-    }                                                                        \
-  while (0)
-
-#define f_lround(bo, bi, k)                                                  \
-  do                                                                         \
-    {                                                                        \
-      f_rl(bo, bi, 0, k);                                                    \
-      f_rl(bo, bi, 1, k);                                                    \
-      f_rl(bo, bi, 2, k);                                                    \
-      f_rl(bo, bi, 3, k);                                                    \
-    }                                                                        \
-  while (0)
-
-static void AES_Encrypt(aes_context_t *ctx, uint8_t *out, const uint8_t *in)
+static void aes_encrypt(aes_context_t *ctx, uint8_t *out, const uint8_t *in)
 {
   const uint32_t *src = (const uint32_t *)in;
   uint32_t *dst = (uint32_t *)out;
-  uint32_t b0[4], b1[4];
+  uint32_t b0[4];
+  uint32_t b1[4];
   const uint32_t *kp = ctx->key_enc + 4;
   const int key_len = ctx->key_length;
 
@@ -815,32 +858,15 @@ static void AES_Encrypt(aes_context_t *ctx, uint8_t *out, const uint8_t *in)
   dst[3] = cpu_to_le32(b0[3]);
 }
 
-static boolean prng_enabled = false;
-static aes_context_t prng_context;
-static uint32_t prng_input_counter;
-static uint32_t prng_values[4];
-static unsigned int prng_value_index = 0;
+/* Generate a set of new PRNG values by encrypting a new block. */
 
-// Initialize Pseudo-RNG using the specified 128-bit key.
-
-void PRNG_Start(prng_seed_t key)
+static void prng_generate(void)
 {
-  AES_SetKey(&prng_context, key, sizeof(prng_seed_t));
-  prng_value_index = 4;
-  prng_input_counter = 0;
-  prng_enabled = true;
-}
-
-void PRNG_Stop(void) { prng_enabled = false; }
-
-// Generate a set of new PRNG values by encrypting a new block.
-
-static void PRNG_Generate(void)
-{
-  byte input[16], output[16];
+  byte input[16];
+  byte output[16];
   unsigned int i;
 
-  // Input for the cipher is a consecutively increasing 32-bit counter.
+  /* Input for the cipher is a consecutively increasing 32-bit counter. */
 
   for (i = 0; i < 4; ++i)
     {
@@ -851,7 +877,7 @@ static void PRNG_Generate(void)
       ++prng_input_counter;
     }
 
-  AES_Encrypt(&prng_context, output, input);
+  aes_encrypt(&prng_context, output, input);
 
   for (i = 0; i < 4; ++i)
     {
@@ -862,9 +888,28 @@ static void PRNG_Generate(void)
   prng_value_index = 0;
 }
 
-// Read a random 32-bit integer from the PRNG.
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
-unsigned int PRNG_Random(void)
+/* Initialize Pseudo-RNG using the specified 128-bit key. */
+
+void prng_start(prng_seed_t key)
+{
+  aes_set_key(&prng_context, key, sizeof(prng_seed_t));
+  prng_value_index = 4;
+  prng_input_counter = 0;
+  prng_enabled = true;
+}
+
+void prng_stop(void)
+{
+  prng_enabled = false;
+}
+
+/* Read a random 32-bit integer from the PRNG. */
+
+unsigned int prng_random(void)
 {
   unsigned int result;
 
@@ -875,7 +920,7 @@ unsigned int PRNG_Random(void)
 
   if (prng_value_index >= 4)
     {
-      PRNG_Generate();
+      prng_generate();
     }
 
   result = prng_values[prng_value_index];

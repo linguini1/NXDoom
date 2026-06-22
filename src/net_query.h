@@ -35,7 +35,8 @@
 
 typedef void (*net_query_callback_t)(net_addr_t *addr,
                                      net_querydata_t *querydata,
-                                     unsigned int ping_time, void *user_data);
+                                     unsigned int ping_time,
+                                     void *user_data);
 
 /****************************************************************************
  * Public Function Prototypes

@@ -64,7 +64,7 @@
 
 /* SCREEN SHOTS */
 
-begin_packed_struct typedef struct
+begin_packed_struct struct pcx_t
 {
   char manufacturer;
   char version;
@@ -88,7 +88,9 @@ begin_packed_struct typedef struct
 
   char filler[58];
   unsigned char data; /* unbounded */
-} pcx_t end_packed_struct;
+} end_packed_struct;
+
+typedef struct pcx_t pcx_t;
 
 /****************************************************************************
  * Private Data

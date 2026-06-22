@@ -1,25 +1,31 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// DESCRIPTION:
-//     MIDI file parsing.
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/midifile.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * DESCRIPTION:
+ *   MIDI file parsing.
+ *
+ ****************************************************************************/
 
 #ifndef MIDIFILE_H
 #define MIDIFILE_H
 
-typedef struct midi_file_s midi_file_t;
-typedef struct midi_track_iter_s midi_track_iter_t;
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
 #define MIDI_CHANNELS_PER_TRACK 16
 
@@ -27,21 +33,30 @@ typedef struct midi_track_iter_s midi_track_iter_t;
 #define MIDI_RPN_PITCH_BEND_SENS_LSB 0x00
 #define MIDI_RPN_FINE_TUNING_LSB 0x01
 #define MIDI_RPN_COARSE_TUNING_LSB 0x02
-#define MIDI_RPN_NULL 0x7F
+#define MIDI_RPN_NULL 0x7f
+
+#define EMIDI_LOOP_FLAG 0x7f
+
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
+
+typedef struct midi_file_s midi_file_t;
+typedef struct midi_track_iter_s midi_track_iter_t;
 
 typedef enum
 {
   MIDI_EVENT_NOTE_OFF = 0x80,
   MIDI_EVENT_NOTE_ON = 0x90,
-  MIDI_EVENT_AFTERTOUCH = 0xA0,
-  MIDI_EVENT_CONTROLLER = 0xB0,
-  MIDI_EVENT_PROGRAM_CHANGE = 0xC0,
-  MIDI_EVENT_CHAN_AFTERTOUCH = 0xD0,
-  MIDI_EVENT_PITCH_BEND = 0xE0,
+  MIDI_EVENT_AFTERTOUCH = 0xa0,
+  MIDI_EVENT_CONTROLLER = 0xb0,
+  MIDI_EVENT_PROGRAM_CHANGE = 0xc0,
+  MIDI_EVENT_CHAN_AFTERTOUCH = 0xd0,
+  MIDI_EVENT_PITCH_BEND = 0xe0,
 
-  MIDI_EVENT_SYSEX = 0xF0,
-  MIDI_EVENT_SYSEX_SPLIT = 0xF7,
-  MIDI_EVENT_META = 0xFF,
+  MIDI_EVENT_SYSEX = 0xf0,
+  MIDI_EVENT_SYSEX_SPLIT = 0xf7,
+  MIDI_EVENT_META = 0xff,
 } midi_event_type_t;
 
 typedef enum
@@ -53,8 +68,8 @@ typedef enum
   MIDI_CONTROLLER_PORTAMENTO = 0x05,
   MIDI_CONTROLLER_DATA_ENTRY_MSB = 0x06,
   MIDI_CONTROLLER_VOLUME_MSB = 0x07,
-  MIDI_CONTROLLER_PAN = 0x0A,
-  MIDI_CONTROLLER_EXPRESSION = 0x0B,
+  MIDI_CONTROLLER_PAN = 0x0a,
+  MIDI_CONTROLLER_EXPRESSION = 0x0b,
 
   MIDI_CONTROLLER_BANK_SELECT_LSB = 0x20,
   MIDI_CONTROLLER_DATA_ENTRY_LSB = 0x26,
@@ -63,8 +78,8 @@ typedef enum
   MIDI_CONTROLLER_HOLD1_PEDAL = 0x40,
   MIDI_CONTROLLER_SOFT_PEDAL = 0x43,
 
-  MIDI_CONTROLLER_REVERB = 0x5B,
-  MIDI_CONTROLLER_CHORUS = 0x5D,
+  MIDI_CONTROLLER_REVERB = 0x5b,
+  MIDI_CONTROLLER_CHORUS = 0x5d,
 
   MIDI_CONTROLLER_NRPN_LSB = 0x62,
   MIDI_CONTROLLER_NRPN_MSB = 0x63,
@@ -73,10 +88,10 @@ typedef enum
 
   MIDI_CONTROLLER_ALL_SOUND_OFF = 0x78,
   MIDI_CONTROLLER_RESET_ALL_CTRLS = 0x79,
-  MIDI_CONTROLLER_ALL_NOTES_OFF = 0x7B,
+  MIDI_CONTROLLER_ALL_NOTES_OFF = 0x7b,
 
-  MIDI_CONTROLLER_POLY_MODE_OFF = 0x7E,
-  MIDI_CONTROLLER_POLY_MODE_ON = 0x7F,
+  MIDI_CONTROLLER_POLY_MODE_OFF = 0x7e,
+  MIDI_CONTROLLER_POLY_MODE_ON = 0x7f,
 } midi_controller_t;
 
 typedef enum
@@ -92,16 +107,14 @@ typedef enum
   MIDI_META_CUE_POINT = 0x07,
 
   MIDI_META_CHANNEL_PREFIX = 0x20,
-  MIDI_META_END_OF_TRACK = 0x2F,
+  MIDI_META_END_OF_TRACK = 0x2f,
 
   MIDI_META_SET_TEMPO = 0x51,
   MIDI_META_SMPTE_OFFSET = 0x54,
   MIDI_META_TIME_SIGNATURE = 0x58,
   MIDI_META_KEY_SIGNATURE = 0x59,
-  MIDI_META_SEQUENCER_SPECIFIC = 0x7F,
+  MIDI_META_SEQUENCER_SPECIFIC = 0x7f,
 } midi_meta_event_type_t;
-
-#define EMIDI_LOOP_FLAG 0x7F
 
 typedef enum
 {
@@ -115,13 +128,13 @@ typedef enum
   EMIDI_DEVICE_ADLIB = 0x07,
   EMIDI_DEVICE_SOUNDSCAPE = 0x08,
   EMIDI_DEVICE_ULTRASOUND = 0x09,
-  EMIDI_DEVICE_ALL = 0x7F,
+  EMIDI_DEVICE_ALL = 0x7f,
 } emidi_device_t;
 
 typedef enum
 {
-  EMIDI_CONTROLLER_TRACK_DESIGNATION = 0x6E,
-  EMIDI_CONTROLLER_TRACK_EXCLUSION = 0x6F,
+  EMIDI_CONTROLLER_TRACK_DESIGNATION = 0x6e,
+  EMIDI_CONTROLLER_TRACK_EXCLUSION = 0x6f,
   EMIDI_CONTROLLER_PROGRAM_CHANGE = 0x70,
   EMIDI_CONTROLLER_VOLUME = 0x71,
   EMIDI_CONTROLLER_LOOP_BEGIN = 0x74,
@@ -132,37 +145,37 @@ typedef enum
 
 typedef struct
 {
-  // Meta event type:
+  /* Meta event type: */
 
   unsigned int type;
 
-  // Length:
+  /* Length: */
 
   unsigned int length;
 
-  // Meta event data:
+  /* Meta event data: */
 
   byte *data;
 } midi_meta_event_data_t;
 
 typedef struct
 {
-  // Length:
+  /* Length: */
 
   unsigned int length;
 
-  // Event data:
+  /* Event data: */
 
   byte *data;
 } midi_sysex_event_data_t;
 
 typedef struct
 {
-  // The channel number to which this applies:
+  /* The channel number to which this applies: */
 
   unsigned int channel;
 
-  // Extra parameters:
+  /* Extra parameters: */
 
   unsigned int param1;
   unsigned int param2;
@@ -170,10 +183,12 @@ typedef struct
 
 typedef struct
 {
-  // Time between the previous event and this event.
+  /* Time between the previous event and this event. */
+
   unsigned int delta_time;
 
-  // Type of event:
+  /* Type of event: */
+
   midi_event_type_t event_type;
 
   union
@@ -184,49 +199,53 @@ typedef struct
   } data;
 } midi_event_t;
 
-// Load a MIDI file.
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
 
-midi_file_t *MIDI_LoadFile(char *filename);
+/* Load a MIDI file. */
 
-// Free a MIDI file.
+midi_file_t *midi_loadfile(char *filename);
 
-void MIDI_FreeFile(midi_file_t *file);
+/* Free a MIDI file. */
 
-// Get the time division value from the MIDI header.
+void midi_free_file(midi_file_t *file);
 
-unsigned int MIDI_GetFileTimeDivision(midi_file_t *file);
+/* Get the time division value from the MIDI header. */
 
-// Get the number of tracks in a MIDI file.
+unsigned int midi_get_file_time_division(midi_file_t *file);
 
-unsigned int MIDI_NumTracks(midi_file_t *file);
+/* Get the number of tracks in a MIDI file. */
 
-// Start iterating over the events in a track.
+unsigned int midi_num_tracks(midi_file_t *file);
 
-midi_track_iter_t *MIDI_IterateTrack(midi_file_t *file,
+/* Start iterating over the events in a track. */
+
+midi_track_iter_t *midi_iterate_track(midi_file_t *file,
                                      unsigned int track_num);
 
-// Free an iterator.
+/* Free an iterator. */
 
-void MIDI_FreeIterator(midi_track_iter_t *iter);
+void midi_free_iterator(midi_track_iter_t *iter);
 
-// Get the time until the next MIDI event in a track.
+/* Get the time until the next MIDI event in a track. */
 
-unsigned int MIDI_GetDeltaTime(midi_track_iter_t *iter);
+unsigned int midi_get_delta_time(midi_track_iter_t *iter);
 
-// Get a pointer to the next MIDI event.
+/* Get a pointer to the next MIDI event. */
 
-int MIDI_GetNextEvent(midi_track_iter_t *iter, midi_event_t **event);
+int midi_get_next_event(midi_track_iter_t *iter, midi_event_t **event);
 
-// Reset an iterator to the beginning of a track.
+/* Reset an iterator to the beginning of a track. */
 
-void MIDI_RestartIterator(midi_track_iter_t *iter);
+void midi_restart_iterator(midi_track_iter_t *iter);
 
-// Set loop point to current position.
+/* Set loop point to current position. */
 
-void MIDI_SetLoopPoint(midi_track_iter_t *iter);
+void midi_set_loop_point(midi_track_iter_t *iter);
 
-// Set position to saved loop point.
+/* Set position to saved loop point. */
 
-void MIDI_RestartAtLoopPoint(midi_track_iter_t *iter);
+void midi_restart_at_loop_point(midi_track_iter_t *iter);
 
-#endif /* #ifndef MIDIFILE_H */
+#endif /* MIDIFILE_H */

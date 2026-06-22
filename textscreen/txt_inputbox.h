@@ -21,21 +21,22 @@
 #define TXT_INPUTBOX_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Public Types
  ****************************************************************************/
 
-/**
- * Input box widget.
+/* Input box widget.
  *
  * An input box is a widget that displays a value, which can be
  * selected to enter a new value.
  *
  * Input box widgets can be of an integer or string type.
  */
-
-typedef struct txt_inputbox_s txt_inputbox_t;
-
-#include "txt_widget.h"
 
 struct txt_inputbox_s
 {

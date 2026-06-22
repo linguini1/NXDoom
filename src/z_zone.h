@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/z_zone.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,10 +17,12 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *      Zone Memory Allocation, perhaps NeXT ObjectiveC inspired.
+ *  Zone Memory Allocation, perhaps NeXT ObjectiveC inspired.
+ *
  *  Remark: this was the only stuff that, according to John Carmack, might
  *  have been useful for Quake.
- */
+ *
+ ****************************************************************************/
 
 #ifndef __Z_ZONE__
 #define __Z_ZONE__

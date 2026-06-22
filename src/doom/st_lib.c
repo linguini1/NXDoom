@@ -150,8 +150,8 @@ void stlib_update_num(st_number_t *n, boolean refresh)
   if (*n->on) stlib_draw_num(n, refresh);
 }
 
-void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl, int *num,
-                        boolean *on, patch_t *percent)
+void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl,
+        int *num, boolean *on, patch_t *percent)
 {
   stlib_init_num(&p->n, x, y, pl, num, on, 3);
   p->p = percent;

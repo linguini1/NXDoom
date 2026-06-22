@@ -1,5 +1,5 @@
 /****************************************************************************
- * apps/games/NXDoom/src/v_video.c
+ * apps/games/NXDoom/src/i_video.h
  *
  * SPDX-License-Identifier: GPLv2
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	System specific interface stuff.
+ *  System specific interface stuff.
  *
  ****************************************************************************/
 
@@ -131,8 +131,8 @@ void i_init_window_title(void);
  *
  * Description:
  *  Called before processing any tics in a frame (just after displaying a
- *  frame). Time consuming synchronous operations are performed here (joystick
- *  reading).
+ *  frame). Time consuming synchronous operations are performed here
+ *  (joystick reading).
  *
  ****************************************************************************/
 
@@ -142,8 +142,8 @@ void i_start_frame(void);
  * Name: i_start_tic
  *
  * Description:
- *  Called before processing each tic in a frame. Quick synchronous operations
- *  are performed here.
+ *  Called before processing each tic in a frame. Quick synchronous
+ *  operations are performed here.
  *
  ****************************************************************************/
 

@@ -32,6 +32,19 @@
  * Public Types
  ****************************************************************************/
 
+/* Forward definitions */
+
+typedef struct txt_table_s txt_table_t;
+typedef struct txt_strut_s txt_strut_t;
+typedef struct txt_spincontrol_s txt_spincontrol_t;
+typedef struct txt_separator_s txt_separator_t;
+typedef struct txt_scrollpane_s txt_scrollpane_t;
+typedef struct txt_radiobutton_s txt_radiobutton_t;
+typedef struct txt_inputbox_s txt_inputbox_t;
+typedef struct txt_dropdown_list_s txt_dropdown_list_t;
+typedef struct txt_checkbox_s txt_checkbox_t;
+typedef struct txt_button_s txt_button_t;
+
 typedef enum
 {
   TXT_VERT_TOP,
@@ -46,8 +59,7 @@ typedef enum
   TXT_HORIZ_RIGHT,
 } txt_horiz_align_t;
 
-/**
- * A GUI widget.
+/* A GUI widget.
  *
  * A widget is an individual component of a GUI.  Various different widget
  * types exist.

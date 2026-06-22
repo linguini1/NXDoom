@@ -45,21 +45,25 @@
  * Private Types
  ****************************************************************************/
 
-begin_packed_struct typedef struct
+begin_packed_struct struct wadinfo_t
 {
   /* Should be "IWAD" or "PWAD". */
 
   char identification[4];
   int numlumps;
   int infotableofs;
-} end_packed_struct wadinfo_t;
+} end_packed_struct;
 
-begin_packed_struct typedef struct
+typedef struct wadinfo_t wadinfo_t;
+
+begin_packed_struct struct filelump_t
 {
   int filepos;
   int size;
   char name[8];
-} end_packed_struct filelump_t;
+} end_packed_struct;
+
+typedef struct filelump_t filelump_t;
 
 /****************************************************************************
  * Private Data
@@ -279,10 +283,6 @@ wad_file_t *w_add_file(const char *filename)
   return wad_file;
 }
 
-/* W_NumLumps */
-
-int W_NumLumps(void) { return numlumps; }
-
 /* w_check_num_for_name
  * Returns -1 if name not found.
  */
@@ -385,7 +385,8 @@ void w_read_lump(lumpindex_t lump, void *dest)
 
   if (c < l->size)
     {
-      i_error("w_read_lump: only read %i of %i on lump %i", c, l->size, lump);
+      i_error("w_read_lump: only read %i of %i on lump %i",
+              c, l->size, lump);
     }
 }
 

@@ -60,8 +60,8 @@ glob_t *i_start_glob(const char *directory, const char *glob, int flags);
  *
  ****************************************************************************/
 
-glob_t *i_start_multi_glob(const char *directory, int flags, const char *glob,
-                           ...);
+glob_t *i_start_multi_glob(const char *directory, int flags,
+                           const char *glob, ...);
 
 /****************************************************************************
  * Name: i_end_glob

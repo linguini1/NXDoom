@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_main.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Main program, simply calls d_doom_main high level loop.
- */
+ *  Main program, simply calls d_doom_main high level loop.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files

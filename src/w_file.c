@@ -38,11 +38,9 @@
  * Private Data
  ****************************************************************************/
 
-static wad_file_class_t *wad_file_classes[] = {
-#ifdef HAVE_MMAP
-    &posix_wad_file,
-#endif
-    &stdc_wad_file,
+static wad_file_class_t *wad_file_classes[] =
+{
+  &stdc_wad_file,
 };
 
 /****************************************************************************
@@ -62,7 +60,7 @@ wad_file_t *w_open_file(const char *path)
 
   if (!m_check_parm("-mmap"))
     {
-      return stdc_wad_file.OpenFile(path);
+      return stdc_wad_file.open_file(path);
     }
 
   /* Try all classes in order until we find one that works */
@@ -71,7 +69,7 @@ wad_file_t *w_open_file(const char *path)
 
   for (i = 0; i < arrlen(wad_file_classes); ++i)
     {
-      result = wad_file_classes[i]->OpenFile(path);
+      result = wad_file_classes[i]->open_file(path);
 
       if (result != NULL)
         {
@@ -82,10 +80,13 @@ wad_file_t *w_open_file(const char *path)
   return result;
 }
 
-void w_close_file(wad_file_t *wad) { wad->file_class->CloseFile(wad); }
+void w_close_file(wad_file_t *wad)
+{
+  wad->file_class->close_file(wad);
+}
 
 size_t w_read(wad_file_t *wad, unsigned int offset, void *buffer,
               size_t buffer_len)
 {
-  return wad->file_class->Read(wad, offset, buffer, buffer_len);
+  return wad->file_class->read(wad, offset, buffer, buffer_len);
 }

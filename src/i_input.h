@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_input.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,8 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *    System-specific keyboard/mouse input.
- */
+ *   System-specific keyboard/mouse input.
+ *
+ ****************************************************************************/
 
 #ifndef __I_INPUT__
 #define __I_INPUT__

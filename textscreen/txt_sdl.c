@@ -35,6 +35,14 @@
 #include "txt_sdl.h"
 #include "txt_utf8.h"
 
+/* Fonts: */
+
+#include "txt_font.h"
+#include "fonts/codepage.h"
+#include "fonts/large.h"
+#include "fonts/normal.h"
+#include "fonts/small.h"
+
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
@@ -46,25 +54,6 @@
 /* XXX: duplicate from doomtype.h */
 
 #define arrlen(array) (sizeof(array) / sizeof(*array))
-
-/****************************************************************************
- * Private Types
- ****************************************************************************/
-
-typedef struct
-{
-  const char *name;
-  const uint8_t *data;
-  unsigned int w;
-  unsigned int h;
-} txt_font_t;
-
-/* Fonts: */
-
-#include "fonts/codepage.h"
-#include "fonts/large.h"
-#include "fonts/normal.h"
-#include "fonts/small.h"
 
 /****************************************************************************
  * Private Data

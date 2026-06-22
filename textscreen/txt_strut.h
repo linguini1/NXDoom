@@ -21,20 +21,21 @@
 #define TXT_STRUT_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Public Types
  ****************************************************************************/
 
-/**
- * Strut widget.
+/* Strut widget.
  *
  * A strut is a widget that takes up a fixed amount of space.  It can
  * be visualised as a transparent box.  Struts are used to provide
  * spacing between widgets.
  */
-
-typedef struct txt_strut_s txt_strut_t;
-
-#include "txt_widget.h"
 
 struct txt_strut_s
 {

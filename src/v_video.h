@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	Gamma correction LUT.
- *	Functions to draw patches (by post) directly to screen.
- *	Functions to blit a block to the screen.
+ *  Gamma correction LUT.
+ *  Functions to draw patches (by post) directly to screen.
+ *  Functions to blit a block to the screen.
  *
  ****************************************************************************/
 
@@ -93,7 +93,7 @@ void v_draw_patch_flipped(int x, int y, patch_t *patch);
 void v_draw_tl_patch(int x, int y, patch_t *patch);
 void v_draw_alt_tl_patch(int x, int y, patch_t *patch);
 void v_draw_shadowed_patch(int x, int y, patch_t *patch);
-void v_draw_xla_patch(int x, int y, patch_t *patch); // villsa [STRIFE]
+void v_draw_xla_patch(int x, int y, patch_t *patch); /* villsa [STRIFE] */
 void v_draw_patch_direct(int x, int y, patch_t *patch);
 
 /****************************************************************************
@@ -158,7 +158,8 @@ void v_screenshot(const char *format);
  * Name: v_load_tint_table
  *
  * Description:
- *  Load the lookup table for translucency calculations from the TINTTAB lump.
+ *  Load the lookup table for translucency calculations from the TINTTAB
+ *  lump.
  *
  ****************************************************************************/
 

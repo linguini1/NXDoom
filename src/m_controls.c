@@ -42,7 +42,7 @@ int key_left = KEY_LEFTARROW;
 
 int key_up = KEY_UPARROW;
 int key_down = KEY_DOWNARROW;
-int key_strafeleft = ',';
+int key_strafeleft = 0x2c; /* Comma, ',' */
 int key_straferight = '.';
 int key_fire = KEY_RCTRL;
 int key_use = ' ';
