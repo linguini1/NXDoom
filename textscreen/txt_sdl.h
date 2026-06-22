@@ -26,19 +26,6 @@
  * Public Types
  ****************************************************************************/
 
-/* The textscreen API itself doesn't need SDL; however, SDL needs its
- * headers included where main() is defined.
-
- * Event callback function type: a function of this type can be used
- * to intercept events in the textscreen event processing loop.
- * Returning 1 will cause the event to be eaten; the textscreen code
- * will not see it.
- */
-
-#if 0
-typedef int (*TxtSDLEventCallbackFunc)(SDL_Event *event, void *user_data);
-#endif
-
 /****************************************************************************
  * Public Function Prototypes
  ****************************************************************************/
@@ -50,9 +37,5 @@ typedef int (*TxtSDLEventCallbackFunc)(SDL_Event *event, void *user_data);
  */
 
 void txt_sdl_set_event_callback(void *user_data);
-
-#if 0
-extern SDL_Window *TXT_SDLWindow;
-#endif
 
 #endif /* TXT_SDL_H */
