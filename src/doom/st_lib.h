@@ -73,8 +73,8 @@ typedef struct
   int data;
 } st_number_t;
 
-/* Percent widget ("child" of number widget,
- *  or, more precisely, contains a number widget.)
+/* Percent widget ("child" of number widget, or, more precisely, contains a
+ * number widget.)
  */
 
 typedef struct
@@ -165,8 +165,8 @@ void stlib_update_num(st_number_t *n, boolean refresh);
 
 /* Percent widget routines */
 
-void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl, int *num,
-                        boolean *on, patch_t *percent);
+void stlib_init_percent(st_percent_t *p, int x, int y, patch_t **pl,
+        int *num, boolean *on, patch_t *percent);
 
 void stlib_update_percent(st_percent_t *per, int refresh);
 

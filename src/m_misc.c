@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/m_misc.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 1993-2008 Raven Software
  * Copyright(C) 2005-2014 Simon Howard
@@ -14,8 +18,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *      Miscellaneous.
- */
+ *  Miscellaneous.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -39,7 +44,10 @@
  * Public Functions
  ****************************************************************************/
 
-void m_make_directory(const char *path) { mkdir(path, 0755); }
+void m_make_directory(const char *path)
+{
+  mkdir(path, 0755);
+}
 
 boolean m_file_exists(const char *filename)
 {
@@ -69,7 +77,9 @@ boolean m_file_exists(const char *filename)
 
 char *m_file_case_exists(const char *path)
 {
-  char *path_dup, *filename, *ext;
+  char *path_dup;
+  char *filename;
+  char *ext;
 
   path_dup = m_string_duplicate(path);
 
@@ -180,7 +190,8 @@ boolean m_write_file(const char *name, const void *source, int length)
 int m_read_file(const char *name, byte **buffer)
 {
   FILE *handle;
-  int count, length;
+  int count;
+  int length;
   byte *buf;
 
   handle = fopen(name, "rb");
@@ -242,7 +253,8 @@ boolean m_str_to_int(const char *str, int *result)
 char *m_dir_name(const char *path)
 {
   char *result;
-  const char *pf, *pb;
+  const char *pf;
+  const char *pb;
 
   pf = strrchr(path, '/');
   pb = NULL;
@@ -267,7 +279,8 @@ char *m_dir_name(const char *path)
 
 const char *m_base_name(const char *path)
 {
-  const char *pf, *pb;
+  const char *pf;
+  const char *pb;
 
   pf = strrchr(path, '/');
   pb = NULL;
@@ -384,10 +397,12 @@ char *m_string_duplicate(const char *orig)
 char *m_string_replace(const char *haystack, const char *needle,
                        const char *replacement)
 {
-  char *result, *dst;
+  char *result;
+  char *dst;
   const char *p;
   size_t needle_len = strlen(needle);
-  size_t result_len, dst_len;
+  size_t result_len;
+  size_t dst_len;
 
   /* Iterate through occurrences of 'needle' and calculate the size of
    * the new string.
@@ -396,7 +411,7 @@ char *m_string_replace(const char *haystack, const char *needle,
   result_len = strlen(haystack) + 1;
   p = haystack;
 
-  for (;;)
+  for (; ; )
     {
       p = strstr(p, needle);
       if (p == NULL)
@@ -513,7 +528,8 @@ char *m_string_join(const char *s, ...)
   result_len = strlen(s) + 1;
 
   va_start(args, s);
-  for (;;)
+
+  for (; ; )
     {
       v = va_arg(args, const char *);
       if (v == NULL)
@@ -523,6 +539,7 @@ char *m_string_join(const char *s, ...)
 
       result_len += strlen(v);
     }
+
   va_end(args);
 
   result = malloc(result_len);
@@ -536,7 +553,8 @@ char *m_string_join(const char *s, ...)
   m_str_copy(result, s, result_len);
 
   va_start(args, s);
-  for (;;)
+
+  for (; ; )
     {
       v = va_arg(args, const char *);
       if (v == NULL)
@@ -546,6 +564,7 @@ char *m_string_join(const char *s, ...)
 
       m_string_concat(result, v, result_len);
     }
+
   va_end(args);
 
   return result;
@@ -589,7 +608,7 @@ void m_normalize_slashes(char *str)
 
   /* Collapse multiple slashes */
 
-  for (p = str; (*str++ = *p);)
+  for (p = str; (*str++ = *p); )
     {
       if (*p++ == DIR_SEPARATOR)
         {

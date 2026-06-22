@@ -21,6 +21,12 @@
 #define TXT_TABLE_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
 
@@ -57,8 +63,7 @@
  * Public Types
  ****************************************************************************/
 
-/**
- * Table widget.
+/* Table widget.
  *
  * A table is a widget that contains other widgets.  It may have
  * multiple columns, in which case the child widgets are laid out
@@ -70,10 +75,6 @@
  * widgets to place inside a horizontal list.  A vertical list is
  * possible simply by creating a table containing a single column.
  */
-
-typedef struct txt_table_s txt_table_t;
-
-#include "txt_widget.h"
 
 struct txt_table_s
 {

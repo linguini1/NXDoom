@@ -64,21 +64,23 @@
  * and possibly other attributes.
  */
 
-begin_packed_struct typedef struct
+begin_packed_struct struct mappatch_t
 {
   short originx;
   short originy;
   short patch;
   short stepdir;
   short colormap;
-} mappatch_t end_packed_struct;
+} end_packed_struct;
+
+typedef struct mappatch_t mappatch_t;
 
 /* Texture definition.
  * A DOOM wall texture is a list of patches
  * which are to be combined in a predefined order.
  */
 
-begin_packed_struct typedef struct
+begin_packed_struct struct maptexture_t
 {
   char name[8];
   int masked;
@@ -87,7 +89,9 @@ begin_packed_struct typedef struct
   int obsolete;
   short patchcount;
   mappatch_t patches[1];
-} maptexture_t end_packed_struct;
+} end_packed_struct;
+
+typedef struct maptexture_t maptexture_t;
 
 /* A single patch from a texture definition, basically a rectangular area
  * within the texture rectangle.

@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/gusconf.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 2005-2014 Simon Howard
  *
  * This program is free software; you can redistribute it and/or
@@ -12,13 +16,14 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *     GUS emulation code.
+ *   GUS emulation code.
  *
- *     Actually emulating a GUS is far too much work; fortunately
- *     GUS "emulation" already exists in the form of Timidity, which
- *     supports GUS patch files. This code therefore converts Doom's
- *     DMXGUS lump into an equivalent Timidity configuration file.
- */
+ *   Actually emulating a GUS is far too much work; fortunately
+ *   GUS "emulation" already exists in the form of Timidity, which
+ *   supports GUS patch files. This code therefore converts Doom's
+ *   DMXGUS lump into an equivalent Timidity configuration file.
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files
@@ -135,7 +140,8 @@ static void parse_line(gus_config_t *config, char *line)
   char *fields[6];
   unsigned int i;
   unsigned int num_fields;
-  unsigned int instr_id, mapped_id;
+  unsigned int instr_id;
+  unsigned int mapped_id;
 
   num_fields = split_line(line, fields, 6);
 
@@ -174,12 +180,14 @@ static void parse_line(gus_config_t *config, char *line)
       config->used[i] = mapped_id;
       config->count++;
     }
+
   config->mapping[instr_id] = i;
 }
 
 static void parse_dmx_config(char *dmxconf, gus_config_t *config)
 {
-  char *p, *newline;
+  char *p;
+  char *newline;
   unsigned int i;
 
   memset(config, 0, sizeof(gus_config_t));
@@ -194,7 +202,7 @@ static void parse_dmx_config(char *dmxconf, gus_config_t *config)
 
   p = dmxconf;
 
-  for (;;)
+  for (; ; )
     {
       newline = strchr(p, '\n');
 

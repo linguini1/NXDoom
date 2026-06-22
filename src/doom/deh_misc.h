@@ -1,22 +1,30 @@
-//
-// Copyright(C) 2005-2014 Simon Howard
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-//
-// Parses "Misc" sections in dehacked files
-//
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/deh_misc.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Parses "Misc" sections in dehacked files
+ *
+ ****************************************************************************/
 
 #ifndef DEH_MISC_H
 #define DEH_MISC_H
+
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
 #define DEH_DEFAULT_INITIAL_HEALTH 100
 #define DEH_DEFAULT_INITIAL_BULLETS 50
@@ -34,6 +42,10 @@
 #define DEH_DEFAULT_IDKFA_ARMOR_CLASS 2
 #define DEH_DEFAULT_BFG_CELLS_PER_SHOT 40
 #define DEH_DEFAULT_SPECIES_INFIGHTING 0
+
+/****************************************************************************
+ * Public Data
+ ****************************************************************************/
 
 extern int deh_initial_health;
 extern int deh_initial_bullets;
@@ -54,7 +66,7 @@ extern int deh_species_infighting;
 
 #if 0
 
-// To compile without dehacked, it's possible to use these:
+/* To compile without dehacked, it's possible to use these: */
 
 #define deh_initial_health DEH_DEFAULT_INITIAL_HEALTH
 #define deh_initial_bullets DEH_DEFAULT_INITIAL_BULLETS
@@ -75,4 +87,4 @@ extern int deh_species_infighting;
 
 #endif
 
-#endif /* #ifndef DEH_MISC_H */
+#endif /* DEH_MISC_H */

@@ -1,23 +1,28 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/doom/statdump.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * Copyright(C) 2005-2014 Simon Howard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Functions for presenting the information captured from the statistics
+ * buffer to a file.
+ *
+ ****************************************************************************/
 
-Copyright(C) 2005-2014 Simon Howard
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
---
-
-Functions for presenting the information captured from the statistics
-buffer to a file.
-
-*/
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,33 +35,58 @@ buffer to a file.
 
 #include "statdump.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+#define MAX_CAPTURES 32
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
 /* Par times for E1M1-E1M9. */
-static const int doom1_par_times[] = {
-    30, 75, 120, 90, 165, 180, 180, 30, 165,
+
+static const int doom1_par_times[] =
+{
+  30, 75, 120, 90, 165, 180, 180, 30, 165,
 };
 
 /* Par times for MAP01-MAP09. */
-static const int doom2_par_times[] = {
-    30, 90, 120, 120, 90, 150, 120, 120, 270,
+
+static const int doom2_par_times[] =
+{
+  30, 90, 120, 120, 90, 150, 120, 120, 270,
 };
 
 /* Player colors. */
-static const char *player_colors[] = {"Green", "Indigo", "Brown", "Red"};
 
-// Array of end-of-level statistics that have been captured.
+static const char *player_colors[] =
+{
+  "Green",
+  "Indigo",
+  "Brown",
+  "Red",
+};
 
-#define MAX_CAPTURES 32
+/* Array of end-of-level statistics that have been captured. */
+
 static wbstartstruct_t captured_stats[MAX_CAPTURES];
 static int num_captured_stats = 0;
 
 static gamemission_t discovered_gamemission = none;
 
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
 /* Try to work out whether this is a Doom 1 or Doom 2 game, by looking
  * at the episode and map, and the par times.  This is used to decide
  * how to format the level name.  Unfortunately, in some cases it is
- * impossible to determine whether this is Doom 1 or Doom 2. */
+ * impossible to determine whether this is Doom 1 or Doom 2.
+ */
 
-static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
+static void discover_game_mode(const wbstartstruct_t *stats, int num_stats)
 {
   int partime;
   int level;
@@ -79,8 +109,9 @@ static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
           return;
         }
 
-      /* This is episode 1.  If this is level 10 or higher,
-         it must be Doom 2. */
+      /* This is episode 1.  If this is level 10 or higher, it must be
+       * Doom 2.
+       */
 
       if (level >= 9)
         {
@@ -88,8 +119,9 @@ static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
           return;
         }
 
-      /* Try to work out if this is Doom 1 or Doom 2 by looking
-         at the par time. */
+      /* Try to work out if this is Doom 1 or Doom 2 by looking at the par
+       * time.
+       */
 
       partime = stats[i].partime;
 
@@ -111,7 +143,7 @@ static void DiscoverGamemode(const wbstartstruct_t *stats, int num_stats)
 
 /* Returns the number of players active in the given stats buffer. */
 
-static int GetNumPlayers(const wbstartstruct_t *stats)
+static int get_num_players(const wbstartstruct_t *stats)
 {
   int i;
   int num_players = 0;
@@ -127,12 +159,12 @@ static int GetNumPlayers(const wbstartstruct_t *stats)
   return num_players;
 }
 
-static void PrintBanner(FILE *stream)
+static void print_banner(FILE *stream)
 {
   fprintf(stream, "===========================================\n");
 }
 
-static void PrintPercentage(FILE *stream, int amount, int total)
+static void print_percentage(FILE *stream, int amount, int total)
 {
   if (total == 0)
     {
@@ -142,10 +174,11 @@ static void PrintPercentage(FILE *stream, int amount, int total)
     {
       fprintf(stream, "%i / %i", amount, total);
 
-      // statdump.exe is a 16-bit program, so very occasionally an
-      // integer overflow can occur when doing this calculation with
-      // a large value. Therefore, cast to short to give the same
-      // output.
+      /* statdump.exe is a 16-bit program, so very occasionally an
+       * integer overflow can occur when doing this calculation with
+       * a large value. Therefore, cast to short to give the same
+       * output.
+       */
 
       fprintf(stream, " (%i%%)", (short)(amount * 100) / total);
     }
@@ -153,7 +186,7 @@ static void PrintPercentage(FILE *stream, int amount, int total)
 
 /* Display statistics for a single player. */
 
-static void PrintPlayerStats(FILE *stream, const wbstartstruct_t *stats,
+static void print_player_stats(FILE *stream, const wbstartstruct_t *stats,
                              int player_num)
 {
   const wbplayerstruct_t *player = &stats->plyr[player_num];
@@ -164,27 +197,28 @@ static void PrintPlayerStats(FILE *stream, const wbstartstruct_t *stats,
   /* Kills percentage */
 
   fprintf(stream, "\tKills: ");
-  PrintPercentage(stream, player->skills, stats->maxkills);
+  print_percentage(stream, player->skills, stats->maxkills);
   fprintf(stream, "\n");
 
   /* Items percentage */
 
   fprintf(stream, "\tItems: ");
-  PrintPercentage(stream, player->sitems, stats->maxitems);
+  print_percentage(stream, player->sitems, stats->maxitems);
   fprintf(stream, "\n");
 
   /* Secrets percentage */
 
   fprintf(stream, "\tSecrets: ");
-  PrintPercentage(stream, player->ssecret, stats->maxsecret);
+  print_percentage(stream, player->ssecret, stats->maxsecret);
   fprintf(stream, "\n");
 }
 
 /* Frags table for multiplayer games. */
 
-static void PrintFragsTable(FILE *stream, const wbstartstruct_t *stats)
+static void print_frags_table(FILE *stream, const wbstartstruct_t *stats)
 {
-  int x, y;
+  int x;
+  int y;
 
   fprintf(stream, "Frags:\n");
 
@@ -194,7 +228,6 @@ static void PrintFragsTable(FILE *stream, const wbstartstruct_t *stats)
 
   for (x = 0; x < MAXPLAYERS; ++x)
     {
-
       if (!stats->plyr[x].in)
         {
           continue;
@@ -237,13 +270,12 @@ static void PrintFragsTable(FILE *stream, const wbstartstruct_t *stats)
 
 /* Displays the level name: MAPxy or ExMy, depending on game mode. */
 
-static void PrintLevelName(FILE *stream, int episode, int level)
+static void print_level_name(FILE *stream, int episode, int level)
 {
-  PrintBanner(stream);
+  print_banner(stream);
 
   switch (discovered_gamemission)
     {
-
     case doom:
       fprintf(stream, "E%iM%i\n", episode + 1, level + 1);
       break;
@@ -257,17 +289,18 @@ static void PrintLevelName(FILE *stream, int episode, int level)
       break;
     }
 
-  PrintBanner(stream);
+  print_banner(stream);
 }
 
 /* Print details of a statistics buffer to the given file. */
 
-static void PrintStats(FILE *stream, const wbstartstruct_t *stats)
+static void print_stats(FILE *stream, const wbstartstruct_t *stats)
 {
-  short leveltime, partime;
+  short leveltime;
+  short partime;
   int i;
 
-  PrintLevelName(stream, stats->epsd, stats->last);
+  print_level_name(stream, stats->epsd, stats->last);
   fprintf(stream, "\n");
 
   leveltime = stats->plyr[0].stime / TICRATE;
@@ -280,17 +313,21 @@ static void PrintStats(FILE *stream, const wbstartstruct_t *stats)
     {
       if (stats->plyr[i].in)
         {
-          PrintPlayerStats(stream, stats, i);
+          print_player_stats(stream, stats, i);
         }
     }
 
-  if (GetNumPlayers(stats) >= 2)
+  if (get_num_players(stats) >= 2)
     {
-      PrintFragsTable(stream, stats);
+      print_frags_table(stream, stats);
     }
 
   fprintf(stream, "\n");
 }
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 void stat_copy(const wbstartstruct_t *stats)
 {
@@ -307,14 +344,13 @@ void stat_dump(void)
   FILE *dumpfile;
   int i;
 
-  //!
-  // @category compat
-  // @arg <filename>
-  //
-  // Dump statistics information to the specified file on the levels
-  // that were played. The output from this option matches the output
-  // from statdump.exe (see ctrlapi.zip in the /idgames archive).
-  //
+  /* @category compat
+   * @arg <filename>
+   *
+   * Dump statistics information to the specified file on the levels
+   * that were played. The output from this option matches the output
+   * from statdump.exe (see ctrlapi.zip in the /idgames archive).
+   */
 
   i = m_check_parm_with_args("-statdump", 1);
 
@@ -322,12 +358,13 @@ void stat_dump(void)
     {
       printf("Statistics captured for %i level(s)\n", num_captured_stats);
 
-      // We actually know what the real gamemission is, but this has
-      // to match the output from statdump.exe.
+      /* We actually know what the real gamemission is, but this has
+       * to match the output from statdump.exe.
+       */
 
-      DiscoverGamemode(captured_stats, num_captured_stats);
+      discover_game_mode(captured_stats, num_captured_stats);
 
-      // Allow "-" as output file, for stdout.
+      /* Allow "-" as output file, for stdout. */
 
       if (strcmp(myargv[i + 1], "-") != 0)
         {
@@ -340,7 +377,7 @@ void stat_dump(void)
 
       for (i = 0; i < num_captured_stats; ++i)
         {
-          PrintStats(dumpfile, &captured_stats[i]);
+          print_stats(dumpfile, &captured_stats[i]);
         }
 
       if (dumpfile != stdout)

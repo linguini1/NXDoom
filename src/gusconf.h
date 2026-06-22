@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/gusconf.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 2005-2014 Simon Howard
  *
  * This program is free software; you can redistribute it and/or
@@ -12,8 +16,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *     GUS emulation code.
- */
+ *   GUS emulation code.
+ *
+ ****************************************************************************/
 
 #ifndef __GUSCONF_H__
 #define __GUSCONF_H__

@@ -21,19 +21,20 @@
 #define TXT_BUTTON_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Public Types
  ****************************************************************************/
 
-/**
- * Button widget.
+/* Button widget.
  *
  * A button is a widget that can be selected to perform some action.
  * When a button is pressed, it emits the "pressed" signal.
  */
-
-typedef struct txt_button_s txt_button_t;
-
-#include "txt_widget.h"
 
 struct txt_button_s
 {

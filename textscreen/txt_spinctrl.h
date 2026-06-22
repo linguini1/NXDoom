@@ -21,18 +21,14 @@
 #define TXT_SPINCONTROL_H
 
 /****************************************************************************
- * Public Types
+ * Included Files
  ****************************************************************************/
 
-/**
- * Spin control widget.
- *
- * A spin control widget works as an input box that can be used to
- * set numeric values, but also has buttons that allow its value
- * to be increased or decreased.
- */
+#include "txt_widget.h"
 
-typedef struct txt_spincontrol_s txt_spincontrol_t;
+/****************************************************************************
+ * Public Types
+ ****************************************************************************/
 
 typedef enum
 {
@@ -40,17 +36,27 @@ typedef enum
   TXT_SPINCONTROL_FLOAT,
 } txt_spincontrol_type_t;
 
-#include "txt_widget.h"
+union _float_n_int
+{
+  float f;
+  int i;
+};
+
+/* Spin control widget.
+ *
+ * A spin control widget works as an input box that can be used to
+ * set numeric values, but also has buttons that allow its value
+ * to be increased or decreased.
+ */
 
 struct txt_spincontrol_s
 {
   txt_widget_t widget;
   txt_spincontrol_type_t type;
-  union
-  {
-    float f;
-    int i;
-  } min, max, *value, step;
+  union _float_n_int min;
+  union _float_n_int max;
+  union _float_n_int *value;
+  union _float_n_int step;
   int editing;
   char *buffer;
   size_t buffer_len;

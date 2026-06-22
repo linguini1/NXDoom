@@ -433,14 +433,54 @@ static menu_t g_new_def =
 
 static menuitem_t g_options_menu[] =
 {
-    {1, "M_ENDGAM", m_end_game, 'e'},
-    {1, "M_MESSG", m_change_messages, 'm'},
-    {1, "M_DETAIL", m_change_detail, 'g'},
-    {2, "M_SCRNSZ", m_size_display, 's'},
-    {-1, "", 0, '\0'},
-    {2, "M_MSENS", m_change_sensitivity, 'm'},
-    {-1, "", 0, '\0'},
-    {1, "M_SVOL", m_sound, 's'},
+    {
+        1,
+        "M_ENDGAM",
+        m_end_game,
+        'e',
+    },
+    {
+        1,
+        "M_MESSG",
+        m_change_messages,
+        'm',
+    },
+    {
+        1,
+        "M_DETAIL",
+        m_change_detail,
+        'g',
+    },
+    {
+        2,
+        "M_SCRNSZ",
+        m_size_display,
+        's',
+    },
+    {
+        -1,
+        "",
+        0,
+        '\0',
+    },
+    {
+        2,
+        "M_MSENS",
+        m_change_sensitivity,
+        'm',
+    },
+    {
+        -1,
+        "",
+        0,
+        '\0',
+    },
+    {
+        1,
+        "M_SVOL",
+        m_sound,
+        's',
+    },
 };
 
 static menu_t g_options_def =
@@ -473,10 +513,30 @@ static menu_t g_read_def2 =
 #ifdef CONFIG_GAMES_NXDOOM_SOUND
 static menuitem_t g_sound_menu[] =
 {
-    {2, "M_SFXVOL", m_sfx_vol, 's'},
-    {-1, "", 0, '\0'},
-    {2, "M_MUSVOL", m_music_vol, 'm'},
-    {-1, "", 0, '\0'},
+    {
+        2,
+        "M_SFXVOL",
+        m_sfx_vol,
+        's',
+    },
+    {
+        -1,
+        "",
+        0,
+        '\0',
+    },
+    {
+        2,
+        "M_MUSVOL",
+        m_music_vol,
+        'm',
+    },
+    {
+        -1,
+        "",
+        0,
+        '\0',
+    },
 };
 
 static menu_t g_sound_def =

@@ -37,6 +37,50 @@
 static int g_total_packet_memory = 0;
 
 /****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+/* Dynamically increases the size of a packet */
+
+static void net_increase_packet(net_packet_t *packet)
+{
+  byte *newdata;
+
+  g_total_packet_memory -= packet->alloced;
+
+  packet->alloced *= 2;
+
+  newdata = z_malloc(packet->alloced, PU_STATIC, 0);
+
+  memcpy(newdata, packet->data, packet->len);
+
+  z_free(packet->data);
+  packet->data = newdata;
+
+  g_total_packet_memory += packet->alloced;
+}
+
+#if 0 /* Unused */
+static boolean net_read_sint32(net_packet_t *packet, signed int *data)
+{
+  if (net_read_int32(packet, (unsigned int *)data))
+    {
+      if (*data & (1U << 31))
+        {
+          *data &= ~(1U << 31);
+          *data -= (1U << 31);
+        }
+
+      return true;
+    }
+  else
+    {
+      return false;
+    }
+}
+#endif
+
+/****************************************************************************
  * Public Functions
  ****************************************************************************/
 
@@ -146,6 +190,7 @@ boolean net_read_sint8(net_packet_t *packet, signed int *data)
           *data &= ~(1 << 7);
           *data -= (1 << 7);
         }
+
       return true;
     }
   else
@@ -163,24 +208,7 @@ boolean net_read_sint16(net_packet_t *packet, signed int *data)
           *data &= ~(1 << 15);
           *data -= (1 << 15);
         }
-      return true;
-    }
-  else
-    {
-      return false;
-    }
-}
 
-#if 0 /* Unused */
-static boolean net_read_sint32(net_packet_t *packet, signed int *data)
-{
-  if (net_read_int32(packet, (unsigned int *)data))
-    {
-      if (*data & (1U << 31))
-        {
-          *data &= ~(1U << 31);
-          *data -= (1U << 31);
-        }
       return true;
     }
   else
@@ -188,7 +216,6 @@ static boolean net_read_sint32(net_packet_t *packet, signed int *data)
       return false;
     }
 }
-#endif
 
 /* Read a string from the packet.  Returns NULL if a terminating
  * NUL character was not found before the end of the packet.
@@ -231,7 +258,9 @@ char *net_read_string(net_packet_t *packet)
 
 char *net_read_safe_string(net_packet_t *packet)
 {
-  char *r, *w, *result;
+  char *r;
+  char *w;
+  char *result;
 
   result = net_read_string(packet);
   if (result == NULL)
@@ -256,36 +285,17 @@ char *net_read_safe_string(net_packet_t *packet)
           ++w;
         }
     }
+
   *w = '\0';
 
   return result;
-}
-
-/* Dynamically increases the size of a packet */
-
-static void NET_IncreasePacket(net_packet_t *packet)
-{
-  byte *newdata;
-
-  g_total_packet_memory -= packet->alloced;
-
-  packet->alloced *= 2;
-
-  newdata = z_malloc(packet->alloced, PU_STATIC, 0);
-
-  memcpy(newdata, packet->data, packet->len);
-
-  z_free(packet->data);
-  packet->data = newdata;
-
-  g_total_packet_memory += packet->alloced;
 }
 
 /* Write a single byte to the packet */
 
 void net_write_int8(net_packet_t *packet, unsigned int i)
 {
-  if (packet->len + 1 > packet->alloced) NET_IncreasePacket(packet);
+  if (packet->len + 1 > packet->alloced) net_increase_packet(packet);
 
   packet->data[packet->len] = i;
   packet->len += 1;
@@ -297,7 +307,7 @@ void net_write_int16(net_packet_t *packet, unsigned int i)
 {
   byte *p;
 
-  if (packet->len + 2 > packet->alloced) NET_IncreasePacket(packet);
+  if (packet->len + 2 > packet->alloced) net_increase_packet(packet);
 
   p = packet->data + packet->len;
 
@@ -313,7 +323,7 @@ void net_write_int32(net_packet_t *packet, unsigned int i)
 {
   byte *p;
 
-  if (packet->len + 4 > packet->alloced) NET_IncreasePacket(packet);
+  if (packet->len + 4 > packet->alloced) net_increase_packet(packet);
 
   p = packet->data + packet->len;
 
@@ -336,7 +346,7 @@ void net_write_string(net_packet_t *packet, const char *string)
 
   while (packet->len + string_size > packet->alloced)
     {
-      NET_IncreasePacket(packet);
+      net_increase_packet(packet);
     }
 
   p = packet->data + packet->len;

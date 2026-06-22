@@ -21,21 +21,22 @@
 #define TXT_SEPARATOR_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Public Types
  ****************************************************************************/
 
-/**
- * Horizontal separator.
+/* Horizontal separator.
  *
  * A horizontal separator appears as a horizontal line divider across
  * the length of the window in which it is added.  An optional label
  * allows the separator to be used as a section divider for grouping
  * related controls.
  */
-
-typedef struct txt_separator_s txt_separator_t;
-
-#include "txt_widget.h"
 
 struct txt_separator_s
 {

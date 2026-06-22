@@ -1156,7 +1156,7 @@ typedef enum
 
 /* Tightly packed to save space! */
 
-begin_packed_struct typedef struct
+begin_packed_struct struct state_t
 {
   actionf_t action; /* void (*action) (); */
   spritenum_t sprite;
@@ -1179,7 +1179,9 @@ begin_packed_struct typedef struct
   int misc1;
   int misc2;
 #endif
-} state_t end_packed_struct;
+} end_packed_struct;
+
+typedef struct state_t state_t;
 
 typedef enum
 {
@@ -1327,7 +1329,7 @@ typedef enum
  * array at game startup.
  */
 
-begin_packed_struct typedef struct
+begin_packed_struct struct mobjinfo_t
 {
   uint32_t flags;        /* 0 to 33557510 */
   uint32_t radius;       /* 393216 to 8388608 */
@@ -1354,7 +1356,9 @@ begin_packed_struct typedef struct
   uint8_t deathsound;  /* 0 to 104 */
   uint8_t activesound; /* 0 to 105 */
 #endif
-} mobjinfo_t end_packed_struct;
+} end_packed_struct;
+
+typedef struct mobjinfo_t mobjinfo_t;
 
 /****************************************************************************
  * Public Data

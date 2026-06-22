@@ -1,6 +1,17 @@
-/* NuttX compatible config.h file.
+/****************************************************************************
+ * apps/games/NXDoom/src/config.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
+ * NuttX compatible config.h file.
+ *
  * TODO: can we take a cleaner approach later by baking this into logic?
- */
+ *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
 #define HAVE_DECL_STRCASECMP 1
 #define HAVE_DECL_STRNCASECMP 1

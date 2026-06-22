@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_endoom.c
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 2005-2014 Simon Howard
  *
  * This program is free software; you can redistribute it and/or
@@ -13,7 +17,8 @@
  *
  * DESCRIPTION:
  *    Exit text-mode ENDOOM screen.
- */
+ *
+ ****************************************************************************/
 
 /****************************************************************************
  * Included Files

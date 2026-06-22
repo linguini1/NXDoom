@@ -85,8 +85,6 @@
 
 #define PACKEDPREFIX
 
-#define PACKED_STRUCT(...) PACKEDPREFIX struct __VA_ARGS__ PACKEDATTR
-
 /****************************************************************************
  * Public Types
  ****************************************************************************/

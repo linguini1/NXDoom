@@ -21,11 +21,16 @@
 #define TXT_RADIOBUTTON_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Public Types
  ****************************************************************************/
 
-/**
- * A radio button widget.
+/* A radio button widget.
  *
  * Radio buttons are typically used in groups, to allow a value to be
  * selected from a range of options.  Each radio button corresponds
@@ -41,10 +46,6 @@
  *
  * When a radio button is selected, the "selected" signal is emitted.
  */
-
-typedef struct txt_radiobutton_s txt_radiobutton_t;
-
-#include "txt_widget.h"
 
 struct txt_radiobutton_s
 {

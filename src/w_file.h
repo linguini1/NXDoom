@@ -41,17 +41,17 @@ typedef struct
 {
   /* Open a file for reading. */
 
-  wad_file_t *(*OpenFile)(const char *path);
+  wad_file_t *(*open_file)(const char *path);
 
   /* Close the specified file. */
 
-  void (*CloseFile)(wad_file_t *file);
+  void (*close_file)(wad_file_t *file);
 
   /* Read data from the specified position in the file into the provided
    * buffer. Returns the number of bytes read.
    */
 
-  size_t (*Read)(wad_file_t *file, unsigned int offset, void *buffer,
+  size_t (*read)(wad_file_t *file, unsigned int offset, void *buffer,
                  size_t buffer_len);
 } wad_file_class_t;
 

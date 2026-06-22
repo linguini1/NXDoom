@@ -1,5 +1,5 @@
 /****************************************************************************
- * src/net_sdl.h
+ * apps/games/NXDoom/src/net_sdl.h
  *
  * SPDX-License-Identifer: GPLv2
  *

@@ -55,17 +55,17 @@ void net_send_packet(net_addr_t *addr, net_packet_t *packet);
 
 void net_send_broadcast(net_context_t *context, net_packet_t *packet);
 
-/* Check all modules in the given context and receive a packet, returning true
- * if a packet was received. The result is stored in *packet and the source is
- * stored in *addr, with an implicit reference added. The packet must be freed
- * by the caller and the reference releasd.
+/* Check all modules in the given context and receive a packet, returning
+ * true if a packet was received. The result is stored in *packet and the
+ * source is stored in *addr, with an implicit reference added. The packet
+ * must be freed by the caller and the reference released.
  */
 
 boolean net_recv_packet(net_context_t *context, net_addr_t **addr,
                         net_packet_t **packet);
 
-/* Return a string representation of the given address. The result points to a
- * static buffer and will become invalid with the next call.
+/* Return a string representation of the given address. The result points
+ * to a static buffer and will become invalid with the next call.
  */
 
 char *net_addr_to_string(net_addr_t *addr);

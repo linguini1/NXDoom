@@ -21,11 +21,16 @@
 #define TXT_DROPDOWN_H
 
 /****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
+#include "txt_widget.h"
+
+/****************************************************************************
  * Public Types
  ****************************************************************************/
 
-/**
- * Dropdown list widget.
+/* Dropdown list widget.
  *
  * A dropdown list allows the user to select from a list of values,
  * which appears when the list is selected.
@@ -33,12 +38,6 @@
  * When the value of a dropdown list is changed, the "changed" signal
  * is emitted.
  */
-
-typedef struct txt_dropdown_list_s txt_dropdown_list_t;
-
-#include "txt_widget.h"
-
-/* Drop-down list box. */
 
 struct txt_dropdown_list_s
 {
