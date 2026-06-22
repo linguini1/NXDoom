@@ -317,10 +317,6 @@ void i_quit(void)
       entry = entry->next;
     }
 
-#if 0
-    SDL_Quit();
-#endif
-
   exit(0);
 }
 
@@ -386,17 +382,9 @@ void i_error(const char *error, ...)
 
   if (exit_gui_popup && !i_console_stdout())
     {
-#if 0
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-                                 PACKAGE_STRING, msgbuf, NULL);
-#endif
     }
 
   /* abort(); */
-
-#if 0
-    SDL_Quit();
-#endif
 
   exit(-1);
 }

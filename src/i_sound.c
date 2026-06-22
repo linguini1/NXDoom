@@ -75,23 +75,15 @@ static int snd_mport = 0;
 
 // Compiled-in sound modules:
 
-static const sound_module_t *sound_modules[] = {
-#ifndef DISABLE_SDL2MIXER
-    &sound_sdl_module,
-#endif // DISABLE_SDL2MIXER
-    &sound_pcsound_module,
-    NULL,
+static const sound_module_t *sound_modules[] =
+{
+  &sound_pcsound_module,
+  NULL,
 };
 
 // Compiled-in music modules:
 
 static const music_module_t *music_modules[] = {
-#ifdef HAVE_FLUIDSYNTH
-    &music_fl_module,
-#endif // HAVE_FLUIDSYNTH
-#ifndef DISABLE_SDL2MIXER
-    &music_sdl_module,
-#endif // DISABLE_SDL2MIXER
 #if 0
     &music_opl_module,
 #endif
@@ -468,23 +460,6 @@ void i_bind_sound_variables(void)
   m_bind_string_variable("timidity_cfg_path", &timidity_cfg_path);
   m_bind_string_variable("gus_patch_path", &gus_patch_path);
   m_bind_int_variable("gus_ram_kb", &gus_ram_kb);
-
-#ifdef HAVE_FLUIDSYNTH
-  m_bind_int_variable("fsynth_chorus_active", &fsynth_chorus_active);
-  m_bind_float_variable("fsynth_chorus_depth", &fsynth_chorus_depth);
-  m_bind_float_variable("fsynth_chorus_level", &fsynth_chorus_level);
-  m_bind_int_variable("fsynth_chorus_nr", &fsynth_chorus_nr);
-  m_bind_float_variable("fsynth_chorus_speed", &fsynth_chorus_speed);
-  m_bind_string_variable("fsynth_midibankselect", &fsynth_midibankselect);
-  m_bind_int_variable("fsynth_polyphony", &fsynth_polyphony);
-  m_bind_int_variable("fsynth_reverb_active", &fsynth_reverb_active);
-  m_bind_float_variable("fsynth_reverb_damp", &fsynth_reverb_damp);
-  m_bind_float_variable("fsynth_reverb_level", &fsynth_reverb_level);
-  m_bind_float_variable("fsynth_reverb_roomsize", &fsynth_reverb_roomsize);
-  m_bind_float_variable("fsynth_reverb_width", &fsynth_reverb_width);
-  m_bind_float_variable("fsynth_gain", &fsynth_gain);
-  m_bind_string_variable("fsynth_sf_path", &fsynth_sf_path);
-#endif // HAVE_FLUIDSYNTH
 
   m_bind_int_variable("use_libsamplerate", &use_libsamplerate);
   m_bind_float_variable("libsamplerate_scale", &libsamplerate_scale);
