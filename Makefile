@@ -35,7 +35,6 @@ BASESRCS =        \
   deh_str.c       \
   gusconf.c       \
   i_cdmus.c       \
-  i_flmusic.c     \
   i_glob.c        \
   i_input.c       \
   i_joystick.c    \

@@ -86,7 +86,8 @@ static const short g_code_page_to_unicode[] = CODE_PAGE_TO_UNICODE;
 
 static int txt_has_blinking_chars(void)
 {
-  int x, y;
+  int x;
+  int y;
   unsigned char *p;
 
   /* Check all characters in screen buffer */
