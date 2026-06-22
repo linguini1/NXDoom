@@ -191,7 +191,6 @@ ifeq ($(CONFIG_GAMES_NXDOOM_SOUND),y)
 CSRCS += $(COMMONSRCDIR)/i_musicpack.c
 CSRCS += $(COMMONSRCDIR)/i_pcsound.c
 CSRCS += $(COMMONSRCDIR)/i_sdlmusic.c
-CSRCS += $(COMMONSRCDIR)/i_sdlsound.c
 CSRCS += $(COMMONSRCDIR)/i_sound.c
 CSRCS += $(COMMONSRCDIR)/midifile.c
 CSRCS += $(COMMONSRCDIR)/mus2mid.c

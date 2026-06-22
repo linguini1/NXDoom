@@ -1,4 +1,8 @@
-/*
+/****************************************************************************
+ * apps/games/NXDoom/src/i_sound.h
+ *
+ * SPDX-License-Identifer: GPLv2
+ *
  * Copyright(C) 1993-1996 Id Software, Inc.
  * Copyright(C) 2005-2014 Simon Howard
  *
@@ -13,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * DESCRIPTION:
- *	The not so system specific sound interface.
+ *  The not so system specific sound interface.
  *
- */
+ ****************************************************************************/
 
 #ifndef __I_SOUND__
 #define __I_SOUND__
@@ -139,46 +143,46 @@ typedef struct
   const snddevice_t *sound_devices;
   int num_sound_devices;
 
-  /* Initialise sound module
+  /* initialise sound module
    * Returns true if successfully initialised
    */
 
-  boolean (*Init)(gamemission_t mission);
+  boolean (*init)(gamemission_t mission);
 
-  /* Shutdown sound module */
+  /* shutdown sound module */
 
-  void (*Shutdown)(void);
+  void (*shutdown)(void);
 
   /* Returns the lump index of the given sound. */
 
-  int (*GetSfxLumpNum)(sfxinfo_t *sfxinfo);
+  int (*get_sfx_lumpnum)(sfxinfo_t *sfxinfo);
 
   /* Called periodically to update the subsystem. */
 
-  void (*Update)(void);
+  void (*update)(void);
 
   /* Update the sound settings on the given channel. */
 
-  void (*UpdateSoundParams)(int channel, int vol, int sep);
+  void (*update_sound_params)(int channel, int vol, int sep);
 
   /* Start a sound on a given channel.  Returns the channel id
    * or -1 on failure.
    */
 
-  int (*StartSound)(sfxinfo_t *sfxinfo, int channel, int vol, int sep,
+  int (*start_sound)(sfxinfo_t *sfxinfo, int channel, int vol, int sep,
                     int pitch);
 
   /* Stop the sound playing on the given channel. */
 
-  void (*StopSound)(int channel);
+  void (*stop_sound)(int channel);
 
   /* Query if a sound is playing on the given channel */
 
-  boolean (*SoundIsPlaying)(int channel);
+  boolean (*sound_is_playing)(int channel);
 
   /* Called on startup to precache sound effects (if necessary) */
 
-  void (*CacheSounds)(sfxinfo_t *sounds, int num_sounds);
+  void (*cache_sounds)(sfxinfo_t *sounds, int num_sounds);
 } sound_module_t;
 
 /* Interface for music modules */
@@ -190,43 +194,43 @@ typedef struct
   const snddevice_t *sound_devices;
   int num_sound_devices;
 
-  /* Initialise the music subsystem */
+  /* initialise the music subsystem */
 
-  boolean (*Init)(void);
+  boolean (*init)(void);
 
-  /* Shutdown the music subsystem */
+  /* shutdown the music subsystem */
 
-  void (*Shutdown)(void);
+  void (*shutdown)(void);
 
   /* Set music volume - range 0-127 */
 
-  void (*SetMusicVolume)(int volume);
+  void (*set_music_volume)(int volume);
 
   /* Pause music */
 
-  void (*PauseMusic)(void);
+  void (*pause_music)(void);
 
   /* Un-pause music */
 
-  void (*ResumeMusic)(void);
+  void (*resume_music)(void);
 
   /* Register a song handle from data
    * Returns a handle that can be used to play the song
    */
 
-  void *(*RegisterSong)(void *data, int len);
+  void *(*register_song)(void *data, int len);
 
   /* Un-register (free) song data */
 
-  void (*UnRegisterSong)(void *handle);
+  void (*unregister_song)(void *handle);
 
   /* Play the song */
 
-  void (*PlaySong)(void *handle, boolean looping);
+  void (*play_song)(void *handle, boolean looping);
 
   /* Stop playing the current song. */
 
-  void (*StopSong)(void);
+  void (*stop_song)(void);
 
   /* Query if music is playing. */
 
@@ -234,7 +238,7 @@ typedef struct
 
   /* Invoked periodically to poll. */
 
-  void (*Poll)(void);
+  void (*poll)(void);
 } music_module_t;
 
 #if 0
@@ -272,25 +276,6 @@ extern const music_module_t music_fl_module;
 
 extern char *music_pack_path;
 extern char *timidity_cfg_path;
-
-/* For FluidSynth module: */
-
-#ifdef HAVE_FLUIDSYNTH
-extern char *fsynth_sf_path;
-extern int fsynth_chorus_active;
-extern float fsynth_chorus_depth;
-extern float fsynth_chorus_level;
-extern int fsynth_chorus_nr;
-extern float fsynth_chorus_speed;
-extern char *fsynth_midibankselect;
-extern int fsynth_polyphony;
-extern int fsynth_reverb_active;
-extern float fsynth_reverb_damp;
-extern float fsynth_reverb_level;
-extern float fsynth_reverb_roomsize;
-extern float fsynth_reverb_width;
-extern float fsynth_gain;
-#endif /* HAVE_FLUIDSYNTH */
 
 /****************************************************************************
  * Public Function Prototypes

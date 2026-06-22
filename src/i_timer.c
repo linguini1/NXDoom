@@ -37,7 +37,10 @@
 
 /* The start time of the game used as the base for tic calculations. */
 
-static struct timespec basetime = {.tv_nsec = 0, .tv_sec = 0};
+static struct timespec basetime =
+{
+  .tv_nsec = 0, .tv_sec = 0
+};
 
 /****************************************************************************
  * Public Functions

@@ -1615,12 +1615,6 @@ void i_init_graphics(void)
 
   /* clear out any events waiting at the start and center the mouse */
 
-#if 0
-  while (SDL_PollEvent(&dummy))
-    {
-    };
-#endif
-
   g_graphics_state.inited = true;
 
   /* Call i_shutdown_graphics on quit */
