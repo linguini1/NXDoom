@@ -286,192 +286,37 @@ static void blit_screen(void)
     }
 }
 
-#if 0
-static boolean mouse_should_be_grabbed(void)
+static void update_grab(void)
 {
-  /* never grab the mouse when in screensaver mode */
-
-  if (screensaver_mode) return false;
-
-  /* if the window doesn't have focus, never grab it */
-
-  if (!window_focused) return false;
-
-  /* always grab the mouse when full screen (dont want to
-   * see the mouse pointer)
-   */
-
-  if (fullscreen) return true;
-
-  /* Don't grab the mouse if mouse input is disabled */
-
-  if (!usemouse || nomouse) return false;
-
-  /* if we specify not to grab the mouse, never grab */
-
-  if (nograbmouse_override || !grabmouse) return false;
-
-  /* Invoke the grabmouse callback function to determine whether
-   * the mouse should be grabbed
-   */
-
-  if (grabmouse_callback != NULL)
-    {
-      return grabmouse_callback();
-    }
-  else
-    {
-      return true;
-    }
-}
-#endif
-
-#if 0
-static void set_show_cursor(boolean show)
-{
-  if (!screensaver_mode)
-    {
-      /* When the cursor is hidden, grab the input.
-       * Relative mode implicitly hides the cursor.
-       */
-
-      SDL_SetRelativeMouseMode(!show);
-      SDL_GetRelativeMouseState(NULL, NULL);
-    }
 }
 
-/* Adjust window_width / window_height variables to be an an aspect
- * ratio consistent with the aspect_ratio_correct variable.
- */
-
-static void adjust_window_size(void)
+static void set_video_mode(void)
 {
-  if (aspect_ratio_correct || integer_scaling)
-    {
-      if (window_width * actualheight <= window_height * SCREENWIDTH)
-        {
-          /* We round up window_height if the ratio is not exact; this leaves
-           * the result stable.
-           */
+}
 
-          window_height =
-              (window_width * actualheight + SCREENWIDTH - 1) / SCREENWIDTH;
-        }
-      else
+static void i_get_event(void)
+{
+  int err;
+#if CONFIG_GAMES_NXDOOM_KEYBOARD
+  struct keyboard_event_s kbdevent;
+
+  while ((err = get_kbd_event(&kbdevent)) == 0)
+    {
+      switch (kbdevent.type)
         {
-          window_width = window_height * SCREENWIDTH / actualheight;
+        case KEYBOARD_PRESS:
+          /* deliberate fall-though */
+
+        case KEYBOARD_RELEASE:
+          i_handle_keyboard_event(&kbdevent);
+          break;
+
+        default:
+          break;
         }
     }
-}
-
-static void handle_window_event(SDL_WindowEvent *event)
-{
-  int i;
-
-  switch (event->event)
-    {
-#if 0 /* SDL2-TODO */
-     case SDL_ACTIVEEVENT:
-
-       /* need to update our focus state */
-
-       UpdateFocus();
-       break;
 #endif
-    case SDL_WINDOWEVENT_EXPOSED:
-      palette_to_set = true;
-      break;
-
-    case SDL_WINDOWEVENT_RESIZED:
-      need_resize = true;
-      last_resize_time = SDL_GetTicks();
-      break;
-
-      /* Don't render the screen when the window is minimized: */
-
-    case SDL_WINDOWEVENT_MINIMIZED:
-      screenvisible = false;
-      break;
-
-    case SDL_WINDOWEVENT_MAXIMIZED:
-    case SDL_WINDOWEVENT_RESTORED:
-      screenvisible = true;
-      break;
-
-      /* Update the value of window_focused when we get a focus event
-       *
-       * We try to make ourselves be well-behaved: the grab on the mouse
-       * is removed if we lose focus (such as a popup window appearing),
-       * and we dont move the mouse around if we aren't focused either.
-       */
-
-    case SDL_WINDOWEVENT_FOCUS_GAINED:
-      window_focused = true;
-      break;
-
-    case SDL_WINDOWEVENT_FOCUS_LOST:
-      window_focused = false;
-      break;
-
-      /* We want to save the user's preferred monitor to use for running the
-       * game, so that next time we're run we start on the same display. So
-       * every time the window is moved, find which display we're now on and
-       * update the video_display config variable.
-       */
-
-    case SDL_WINDOWEVENT_MOVED:
-      i = SDL_GetWindowDisplayIndex(screen);
-      if (i >= 0)
-        {
-          video_display = i;
-        }
-      break;
-
-    default:
-      break;
-    }
 }
-
-static boolean toggle_fullscreen_keyshortcut(char key)
-{
-  /* Argument was SDL_Keysym *sym */
-
-  Uint16 flags = (KMOD_LALT | KMOD_RALT);
-  return (sym->scancode == SDL_SCANCODE_RETURN ||
-          sym->scancode == SDL_SCANCODE_KP_ENTER) &&
-         (sym->mod & flags) != 0;
-}
-
-static void i_toggle_fullscreen(void)
-{
-  unsigned int flags = 0;
-
-  /* TODO: Consider implementing fullscreen toggle for SDL_WINDOW_FULLSCREEN
-   * (mode-changing) setup. This is hard because we have to shut down and
-   * restart again.
-   */
-
-  if (fullscreen_width != 0 || fullscreen_height != 0)
-    {
-      return;
-    }
-
-  fullscreen = !fullscreen;
-
-  if (fullscreen)
-    {
-      flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    }
-
-  SDL_SetWindowFullscreen(screen, flags);
-
-  if (!fullscreen)
-    {
-      AdjustWindowSize();
-      SDL_SetWindowSize(screen, window_width, window_height);
-    }
-}
-#endif
 
 /****************************************************************************
  * Public Functions
@@ -507,501 +352,6 @@ void i_start_frame(void)
   /* er? */
 }
 
-void I_GetEvent(void)
-{
-  int err;
-#if CONFIG_GAMES_NXDOOM_KEYBOARD
-  struct keyboard_event_s kbdevent;
-
-  while ((err = get_kbd_event(&kbdevent)) == 0)
-    {
-      switch (kbdevent.type)
-        {
-        case KEYBOARD_PRESS:
-#if 0
-          if (toggle_fullscreen_key_shortcut(&sdlevent.key.keysym))
-            {
-              i_toggle_fullscreen();
-              break;
-            }
-
-#endif
-          /* deliberate fall-though */
-
-        case KEYBOARD_RELEASE:
-          i_handle_keyboard_event(&kbdevent);
-          break;
-
-#if 0
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        case SDL_MOUSEWHEEL:
-          if (usemouse && !nomouse && window_focused)
-            {
-              i_handle_mouse_event(&sdlevent);
-            }
-          break;
-
-        case SDL_QUIT:
-          if (screensaver_mode)
-            {
-              i_quit();
-            }
-          else
-            {
-              event_t event;
-              event.type = ev_quit;
-              d_post_event(&event);
-            }
-          break;
-
-        case SDL_WINDOWEVENT:
-          if (sdlevent.window.windowID == SDL_GetWindowID(screen))
-            {
-              HandleWindowEvent(&sdlevent.window);
-            }
-          break;
-#endif
-        default:
-          break;
-        }
-    }
-#endif
-}
-
-static void update_grab(void)
-{
-#if 0
-  static boolean currently_grabbed = false;
-  boolean grab;
-
-  grab = mouse_should_be_grabbed();
-
-  if (screensaver_mode)
-    {
-      /* Hide the cursor in screensaver mode */
-
-      set_show_cursor(false);
-    }
-  else if (grab && !currently_grabbed)
-    {
-      set_show_cursor(false);
-    }
-  else if (!grab && currently_grabbed)
-    {
-      int screen_w;
-      int screen_h;
-
-      set_show_cursor(true);
-
-      /* When releasing the mouse from grab, warp the mouse cursor to
-       * the bottom-right of the screen. This is a minimally distracting
-       * place for it to appear - we may only have released the grab
-       * because we're at an end of level intermission screen, for
-       * example.
-       */
-
-      SDL_GetWindowSize(screen, &screen_w, &screen_h);
-      SDL_WarpMouseInWindow(screen, screen_w - 16, screen_h - 16);
-      SDL_GetRelativeMouseState(NULL, NULL);
-    }
-
-  currently_grabbed = grab;
-#endif
-}
-
-#if 0
-static void limit_texture_size(int *w_upscale, int *h_upscale)
-{
-  SDL_RendererInfo rinfo;
-  int orig_w;
-  int orig_h;
-
-  orig_w = *w_upscale;
-  orig_h = *h_upscale;
-
-  /* Query renderer and limit to maximum texture dimensions of hardware: */
-
-  if (SDL_GetRendererInfo(renderer, &rinfo) != 0)
-    {
-      i_error("CreateUpscaledTexture: SDL_GetRendererInfo() call failed: %s",
-              SDL_GetError());
-    }
-
-  while (*w_upscale * SCREENWIDTH > rinfo.max_texture_width)
-    {
-      --*w_upscale;
-    }
-  while (*h_upscale * SCREENHEIGHT > rinfo.max_texture_height)
-    {
-      --*h_upscale;
-    }
-
-  if ((*w_upscale < 1 && rinfo.max_texture_width > 0) ||
-      (*h_upscale < 1 && rinfo.max_texture_height > 0))
-    {
-      i_error("CreateUpscaledTexture: Can't create a texture big enough for "
-              "the whole screen! Maximum texture size %dx%d",
-              rinfo.max_texture_width, rinfo.max_texture_height);
-    }
-
-  /* We limit the amount of texture memory used for the intermediate buffer,
-   * since beyond a certain point there are diminishing returns. Also,
-   * depending on the hardware there may be performance problems with very
-   * huge textures, so the user can use this to reduce the maximum texture
-   * size if desired.
-   */
-
-  if (max_scaling_buffer_pixels < SCREENWIDTH * SCREENHEIGHT)
-    {
-      i_error("CreateUpscaledTexture: max_scaling_buffer_pixels too small "
-              "to create a texture buffer: %d < %d",
-              max_scaling_buffer_pixels, SCREENWIDTH * SCREENHEIGHT);
-    }
-
-  while (*w_upscale * *h_upscale * SCREENWIDTH * SCREENHEIGHT >
-         max_scaling_buffer_pixels)
-    {
-      if (*w_upscale > *h_upscale)
-        {
-          --*w_upscale;
-        }
-      else
-        {
-          --*h_upscale;
-        }
-    }
-
-  if (*w_upscale != orig_w || *h_upscale != orig_h)
-    {
-      printf("CreateUpscaledTexture: Limited texture size to %dx%d "
-             "(max %d pixels, max texture size %dx%d)\n",
-             *w_upscale * SCREENWIDTH, *h_upscale * SCREENHEIGHT,
-             max_scaling_buffer_pixels, rinfo.max_texture_width,
-             rinfo.max_texture_height);
-    }
-}
-
-static void create_upscaled_texture(boolean force)
-{
-  int w;
-  int h;
-  int h_upscale;
-  int w_upscale;
-  static int h_upscale_old;
-  static int w_upscale_old;
-
-  SDL_Texture *new_texture;
-  SDL_Texture *old_texture;
-
-  /* Get the size of the renderer output. The units this gives us will be
-   * real world pixels, which are not necessarily equivalent to the screen's
-   * window size (because of highdpi).
-   */
-
-  if (SDL_GetRendererOutputSize(renderer, &w, &h) != 0)
-    {
-      i_error("Failed to get renderer output size: %s", SDL_GetError());
-    }
-
-  w = fbstate.vinfo.xres;
-  h = fbstate.vinfo.yres;
-
-  /* When the screen or window dimensions do not match the aspect ratio
-   * of the texture, the rendered area is scaled down to fit. Calculate
-   * the actual dimensions of the rendered area.
-   */
-
-  if (w * actualheight < h * SCREENWIDTH)
-    {
-      /* Tall window. */
-
-      h = w * actualheight / SCREENWIDTH;
-    }
-  else
-    {
-      /* Wide window. */
-
-      w = h * SCREENWIDTH / actualheight;
-    }
-
-  /* Pick texture size the next integer multiple of the screen dimensions.
-   * If one screen dimension matches an integer multiple of the original
-   * resolution, there is no need to overscale in this direction.
-   */
-
-  w_upscale = (w + SCREENWIDTH - 1) / SCREENWIDTH;
-  h_upscale = (h + SCREENHEIGHT - 1) / SCREENHEIGHT;
-
-  /* Minimum texture dimensions of 320x200. */
-
-  if (w_upscale < 1)
-    {
-      w_upscale = 1;
-    }
-
-  if (h_upscale < 1)
-    {
-      h_upscale = 1;
-    }
-
-  limit_texture_size(&w_upscale, &h_upscale);
-
-  /* Create a new texture only if the upscale factors have actually changed.
-   */
-
-  if (h_upscale == h_upscale_old && w_upscale == w_upscale_old && !force)
-    {
-      return;
-    }
-
-  h_upscale_old = h_upscale;
-  w_upscale_old = w_upscale;
-
-  /* Set the scaling quality for rendering the upscaled texture to "linear",
-   * which looks much softer and smoother than "nearest" but does a better
-   * job at downscaling from the upscaled texture to screen.
-   */
-
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
-  new_texture = SDL_CreateTexture(
-      renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
-      w_upscale * SCREENWIDTH, h_upscale * SCREENHEIGHT);
-
-  old_texture = texture_upscaled;
-  texture_upscaled = new_texture;
-
-  if (old_texture != NULL)
-    {
-      SDL_DestroyTexture(old_texture);
-    }
-}
-#endif
-
-static void set_video_mode(void)
-{
-#if 0
-  int w;
-  int h;
-  int x;
-  int y;
-  int window_flags = 0;
-  int renderer_flags = 0;
-  SDL_DisplayMode mode;
-
-  w = window_width;
-  h = window_height;
-
-  /* In windowed mode, the window can be resized while the game is
-   * running.
-   */
-
-  window_flags = SDL_WINDOW_RESIZABLE;
-
-  /* Set the highdpi flag - this makes a big difference on Macs with
-   * retina displays, especially when using small window sizes.
-   */
-
-  window_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
-
-  if (fullscreen)
-    {
-      if (fullscreen_width == 0 && fullscreen_height == 0)
-        {
-          /* This window_flags means "Never change the screen resolution!
-           * Instead, draw to the entire screen by scaling the texture
-           * appropriately".
-           */
-
-          window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-        }
-      else
-        {
-          w = fullscreen_width;
-          h = fullscreen_height;
-          window_flags |= SDL_WINDOW_FULLSCREEN;
-        }
-    }
-
-  /* Running without window decorations is potentially useful if you're
-   * playing in three window mode and want to line up three game windows
-   * next to each other on a single desktop.
-   * Deliberately not documented because I'm not sure how useful this is yet.
-   */
-
-  if (m_parm_exists("-borderless"))
-    {
-      window_flags |= SDL_WINDOW_BORDERLESS;
-    }
-
-  i_get_window_position(&x, &y, w, h);
-
-  /* Create window and renderer contexts. We set the window title
-   * later anyway and leave the window position "undefined". If
-   * "window_flags" contains the fullscreen flag (see above), then
-   * w and h are ignored.
-   */
-
-  if (screen == NULL)
-    {
-      screen = SDL_CreateWindow(NULL, x, y, w, h, window_flags);
-
-      if (screen == NULL)
-        {
-          i_error("Error creating window for video startup: %s",
-                  SDL_GetError());
-        }
-
-      SDL_SetWindowMinimumSize(screen, SCREENWIDTH, actualheight);
-    }
-
-  /* The SDL_RENDERER_TARGETTEXTURE flag is required to render the
-   * intermediate texture into the upscaled texture.
-   */
-
-  renderer_flags = SDL_RENDERER_TARGETTEXTURE;
-
-  if (SDL_GetCurrentDisplayMode(video_display, &mode) != 0)
-    {
-      i_error("Could not get display mode for video display #%d: %s",
-              video_display, SDL_GetError());
-    }
-
-  /* Turn on vsync if we aren't in a -timedemo */
-
-  if (!singletics && mode.refresh_rate > 0)
-    {
-      renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
-    }
-
-  if (force_software_renderer)
-    {
-      renderer_flags |= SDL_RENDERER_SOFTWARE;
-      renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
-    }
-
-  if (renderer != NULL)
-    {
-      SDL_DestroyRenderer(renderer);
-
-      /* all associated textures get destroyed */
-
-      texture = NULL;
-      texture_upscaled = NULL;
-    }
-
-  renderer = SDL_CreateRenderer(screen, -1, renderer_flags);
-
-  /* If we could not find a matching render driver,
-   * try again without hardware acceleration.
-   */
-
-  if (renderer == NULL && !force_software_renderer)
-    {
-      renderer_flags |= SDL_RENDERER_SOFTWARE;
-      renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
-
-      renderer = SDL_CreateRenderer(screen, -1, renderer_flags);
-
-      /* If this helped, save the setting for later. */
-
-      if (renderer != NULL)
-        {
-          force_software_renderer = 1;
-        }
-    }
-
-  if (renderer == NULL)
-    {
-      i_error("Error creating renderer for screen window: %s",
-              SDL_GetError());
-    }
-
-  /* Important: Set the "logical size" of the rendering context. At the same
-   * time this also defines the aspect ratio that is preserved while scaling
-   * and stretching the texture into the window.
-   */
-
-  if (aspect_ratio_correct || integer_scaling)
-    {
-      SDL_RenderSetLogicalSize(renderer, SCREENWIDTH, actualheight);
-    }
-
-  /* Force integer scales for resolution-independent rendering. */
-
-  SDL_RenderSetIntegerScale(renderer, integer_scaling);
-
-  /* Blank out the full screen area in case there is any junk in
-   * the borders that won't otherwise be overwritten.
-   */
-
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-  SDL_RenderClear(renderer);
-  SDL_RenderPresent(renderer);
-
-  /* Create the 8-bit paletted and the 32-bit RGBA screenbuffer surfaces. */
-
-  if (screenbuffer != NULL)
-    {
-      SDL_FreeSurface(screenbuffer);
-      screenbuffer = NULL;
-    }
-
-  if (screenbuffer == NULL)
-    {
-      screenbuffer =
-          SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 8, 0, 0, 0, 0);
-      SDL_FillRect(screenbuffer, NULL, 0);
-    }
-
-  /* Format of argbbuffer must match the screen pixel format because we
-   * import the surface data into the texture.
-   */
-
-  if (argbbuffer != NULL)
-    {
-      SDL_FreeSurface(argbbuffer);
-      argbbuffer = NULL;
-    }
-
-  if (argbbuffer == NULL)
-    {
-      /* pixels and pitch will be filled with the texture's values
-       * in i_finish_update()
-       */
-
-      argbbuffer = SDL_CreateRGBSurfaceWithFormatFrom(
-          NULL, w, h, 0, 0, SDL_PIXELFORMAT_ARGB8888);
-    }
-
-  if (texture != NULL)
-    {
-      SDL_DestroyTexture(texture);
-    }
-
-  /* Set the scaling quality for rendering the intermediate texture into
-   * the upscaled texture to "nearest", which is gritty and pixelated and
-   * resembles software scaling pretty well.
-   */
-
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-
-  /* Create the intermediate texture that the RGBA surface gets loaded into.
-   * The SDL_TEXTUREACCESS_STREAMING flag means that this texture's content
-   * is going to change frequently.
-   */
-
-  texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
-                              SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH,
-                              SCREENHEIGHT);
-
-  /* Initially create the upscaled texture for rendering to screen */
-
-  CreateUpscaledTexture(true);
-#endif
-}
-
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -1013,7 +363,7 @@ void i_start_tic(void)
       return;
     }
 
-  I_GetEvent();
+  i_get_event();
 
   if (usemouse && !nomouse && window_focused)
     {
@@ -1041,53 +391,6 @@ void i_finish_update(void)
 
   if (noblit) return;
 
-#if 0
-  if (need_resize)
-    {
-      if (SDL_GetTicks() > last_resize_time + RESIZE_DELAY)
-        {
-          int flags;
-
-          /* When the window is resized (we're not in fullscreen mode),
-           * save the new window size.
-           */
-
-          flags = SDL_GetWindowFlags(screen);
-          if ((flags & SDL_WINDOW_FULLSCREEN_DESKTOP) == 0)
-            {
-              SDL_GetWindowSize(screen, &window_width, &window_height);
-
-              /* Adjust the window by resizing again so that the window
-               * is the right aspect ratio.
-               */
-
-              AdjustWindowSize();
-              SDL_SetWindowSize(screen, window_width, window_height);
-            }
-
-          CreateUpscaledTexture(false);
-          need_resize = false;
-          palette_to_set = true;
-        }
-      else
-        {
-          return;
-        }
-    }
-
-  update_grab();
-#endif
-
-#if 0 /* SDL2-TODO */
-
-  /* Don't update the screen if the window isn't visible.
-   * Not doing this breaks under Windows when we alt-tab away
-   * while fullscreen.
-   */
-
-  if (!(SDL_GetAppState() & SDL_APPACTIVE)) return;
-#endif
-
   /* draws little dots on the bottom of the screen */
 
   if (display_fps_dots)
@@ -1114,44 +417,7 @@ void i_finish_update(void)
 
   blit_screen();
 
-#if 0
-  SDL_LockTexture(texture, &blit_rect, &argbbuffer->pixels,
-                  &argbbuffer->pitch);
-  SDL_LowerBlit(screenbuffer, &blit_rect, argbbuffer, &blit_rect);
-  SDL_UnlockTexture(texture);
-
-  /* Make sure the pillarboxes are kept clear each frame. */
-
-  SDL_RenderClear(renderer);
-
-  if (smooth_pixel_scaling && !force_software_renderer)
-    {
-      /* Render this intermediate texture into the upscaled texture
-       * using "nearest" integer scaling.
-       */
-
-      SDL_SetRenderTarget(renderer, texture_upscaled);
-      SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-      /* Finally, render this upscaled texture to screen using linear
-       * scaling.
-       */
-
-      SDL_SetRenderTarget(renderer, NULL);
-      SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
-    }
-  else
-    {
-      SDL_SetRenderTarget(renderer, NULL);
-      SDL_RenderCopy(renderer, texture, NULL, NULL);
-    }
-#endif
-
   /* Draw! */
-
-#if 0
-  SDL_RenderPresent(renderer);
-#endif
 
   /* Restore background and undo the disk indicator, if it was drawn. */
 
@@ -1246,13 +512,6 @@ void i_set_window_title(const char *title)
 
 void i_init_window_title(void)
 {
-#if 0
-  char *buf;
-
-  buf = m_string_join(g_window_title, " - ", PACKAGE_STRING, NULL);
-  SDL_SetWindowTitle(screen, buf);
-  free(buf);
-#endif
 }
 
 /****************************************************************************
@@ -1392,24 +651,6 @@ void i_check_is_screensaver(void)
     }
 }
 
-#if 0
-static void set_sdl_video_driver(void)
-{
-  /* Allow a default value for the SDL video driver to be specified
-   * in the configuration file.
-   */
-
-  if (strcmp(video_driver, "") != 0)
-    {
-      char *env_string;
-
-      env_string = m_string_join("SDL_VIDEODRIVER=", video_driver, NULL);
-      putenv(env_string);
-      free(env_string);
-    }
-}
-#endif
-
 /* Check the display bounds of the display referred to by 'video_display' and
  * set x and y to a location that places the window in the center of that
  * display.
@@ -1417,43 +658,12 @@ static void set_sdl_video_driver(void)
 
 static void center_window(int *x, int *y, int w, int h)
 {
-#if 0
-  SDL_Rect bounds;
-
-  if (SDL_GetDisplayBounds(video_display, &bounds) < 0)
-    {
-      fprintf(stderr,
-              "CenterWindow: Failed to read display bounds "
-              "for display #%d!\n",
-              video_display);
-      return;
-    }
-
-  *x = bounds.x + SDL_max((bounds.w - w) / 2, 0);
-  *y = bounds.y + SDL_max((bounds.h - h) / 2, 0);
-#endif
   *x = MAX((g_graphics_state.vinfo.xres - w) / 2, 0);
   *y = MAX((g_graphics_state.vinfo.yres - h) / 2, 0);
 }
 
 void i_get_window_position(int *x, int *y, int w, int h)
 {
-#if 0
-  /* Check that video_display corresponds to a display that really exists,
-   * and if it doesn't, reset it.
-   */
-
-  if (video_display < 0 || video_display >= SDL_GetNumVideoDisplays())
-    {
-      fprintf(
-          stderr,
-          "i_get_window_position: We were configured to run on display #%d, "
-          "but it no longer exists (max %d). Moving to display 0.\n",
-          video_display, SDL_GetNumVideoDisplays() - 1);
-      video_display = 0;
-    }
-#endif
-
   /* in fullscreen mode, the window "position" still matters, because
    * we use it to control which display we run fullscreen on.
    */
@@ -1463,35 +673,6 @@ void i_get_window_position(int *x, int *y, int w, int h)
       center_window(x, y, w, h);
       return;
     }
-
-#if 0
-
-  /* in windowed mode, the desired window position can be specified
-   * in the configuration file.
-   */
-
-  if (window_position == NULL || !strcmp(window_position, ""))
-    {
-      *x = *y = SDL_WINDOWPOS_UNDEFINED;
-    }
-  else if (!strcmp(window_position, "center"))
-    {
-      /* Note: SDL has a SDL_WINDOWPOS_CENTER, but this is useless for our
-       * purposes, since we also want to control which display we appear on.
-       * So we have to do this ourselves.
-       */
-
-      CenterWindow(x, y, w, h);
-    }
-  else if (sscanf(window_position, "%i,%i", x, y) != 2)
-    {
-      /* invalid format: revert to default */
-
-      fprintf(stderr,
-              "i_get_window_position: invalid window_position setting\n");
-      *x = *y = SDL_WINDOWPOS_UNDEFINED;
-    }
-#endif
 }
 
 void i_init_graphics(void)
