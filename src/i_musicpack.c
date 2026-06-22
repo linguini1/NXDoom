@@ -50,16 +50,20 @@
 #include "z_zone.h"
 
 /****************************************************************************
- * Pre-processor Definitions
+ * Private Function Prototypes
  ****************************************************************************/
 
-/****************************************************************************
- * Private Types
- ****************************************************************************/
-
-/****************************************************************************
- * Private Data
- ****************************************************************************/
+static boolean i_null_init_music(void);
+static void i_null_shutdown_music(void);
+static void i_null_set_music_volume(int volume);
+static void i_null_pause_song(void);
+static void i_null_resume_song(void);
+static void *i_null_register_song(void *data, int len);
+static void i_null_unregister_song(void *handle);
+static void i_null_play_song(void *handle, boolean looping);
+static void i_null_stop_song(void);
+static boolean i_null_musicisplaying(void);
+static void i_null_pollmusic(void);
 
 /****************************************************************************
  * Public Data
@@ -67,44 +71,82 @@
 
 char *music_pack_path = "";
 
+const music_module_t music_pack_module =
+{
+  NULL,
+  0,
+  i_null_init_music,
+  i_null_shutdown_music,
+  i_null_set_music_volume,
+  i_null_pause_song,
+  i_null_resume_song,
+  i_null_register_song,
+  i_null_unregister_song,
+  i_null_play_song,
+  i_null_stop_song,
+  i_null_musicisplaying,
+  i_null_pollmusic,
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+static boolean i_null_init_music(void)
+{
+  return false;
+}
+
+static void i_null_shutdown_music(void)
+{
+  return;
+}
+
+static void i_null_set_music_volume(int volume)
+{
+  return;
+}
+
+static void i_null_pause_song(void)
+{
+  return;
+}
+
+static void i_null_resume_song(void)
+{
+  return;
+}
+
+static void *i_null_register_song(void *data, int len)
+{
+  return NULL;
+}
+
+static void i_null_unregister_song(void *handle)
+{
+  return;
+}
+
+static void i_null_play_song(void *handle, boolean looping)
+{
+  return;
+}
+
+static void i_null_stop_song(void)
+{
+  return;
+}
+
+static boolean i_null_musicisplaying(void)
+{
+  return false;
+}
+
+static void i_null_pollmusic(void)
+{
+  return;
+}
+
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
-
-static boolean I_NULL_InitMusic(void) { return false; }
-
-static void I_NULL_ShutdownMusic(void) { return; }
-
-static void I_NULL_SetMusicVolume(int volume) { return; }
-
-static void I_NULL_PauseSong(void) { return; }
-
-static void I_NULL_ResumeSong(void) { return; }
-
-static void *I_NULL_RegisterSong(void *data, int len) { return NULL; }
-
-static void I_NULL_UnRegisterSong(void *handle) { return; }
-
-static void I_NULL_PlaySong(void *handle, boolean looping) { return; }
-
-static void I_NULL_StopSong(void) { return; }
-
-static boolean I_NULL_MusicIsPlaying(void) { return false; }
-
-static void I_NULL_PollMusic(void) { return; }
-
-const music_module_t music_pack_module = {
-    NULL,
-    0,
-    I_NULL_InitMusic,
-    I_NULL_ShutdownMusic,
-    I_NULL_SetMusicVolume,
-    I_NULL_PauseSong,
-    I_NULL_ResumeSong,
-    I_NULL_RegisterSong,
-    I_NULL_UnRegisterSong,
-    I_NULL_PlaySong,
-    I_NULL_StopSong,
-    I_NULL_MusicIsPlaying,
-    I_NULL_PollMusic,
-};

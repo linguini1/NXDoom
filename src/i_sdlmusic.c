@@ -57,7 +57,8 @@ static char *temp_timidity_cfg = NULL;
  * so can't use a string directly, have to do this silliness
  */
 
-static char sdl_mixer_disable_fluidsynth[] = "SDL_MIXER_DISABLE_FLUIDSYNTH=1";
+static char sdl_mixer_disable_fluidsynth[] =
+                                "SDL_MIXER_DISABLE_FLUIDSYNTH=1";
 
 /****************************************************************************
  * Public Data
