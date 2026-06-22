@@ -305,6 +305,7 @@ static void i_get_event(void)
       switch (kbdevent.type)
         {
         case KEYBOARD_PRESS:
+
           /* deliberate fall-though */
 
         case KEYBOARD_RELEASE:

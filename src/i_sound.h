@@ -234,7 +234,7 @@ typedef struct
 
   /* Query if music is playing. */
 
-  boolean (*MusicIsPlaying)(void);
+  boolean (*music_is_playing)(void);
 
   /* Invoked periodically to poll. */
 
