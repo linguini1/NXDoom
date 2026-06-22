@@ -41,9 +41,6 @@ static pcsound_driver_t *g_drivers[] =
 #ifdef HAVE_LINUX_KD_H
   &pcsound_linux_driver,
 #endif
-#ifndef DISABLE_SDL2MIXER
-  &pcsound_sdl_driver,
-#endif /* DISABLE_SDL2MIXER */
   NULL,
 };
 
